@@ -331,7 +331,6 @@ gtk3()
 	cd $__BASE_DIR__
 }
 
-rem1(){
 pixman
 libffi
 pth
@@ -358,6 +357,5 @@ atk
 atkmm
 gdk-pixbuf
 gtk2
-}
 gtk3
 
