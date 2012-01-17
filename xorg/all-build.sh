@@ -256,11 +256,33 @@ xterm()
 	make install-ti
 
 cat >> $XORG_ETC/X11/app-defaults/XTerm << "EOF"
+
 *VT100*locale: true
-*VT100*faceName: Monospace
+*VT100*faceName: courier 
 *VT100*faceSize: 12
 *backarrowKeyIsErase: true
 *ptyInitialErase: true
+
+*VT100*foreground: #ffffff
+*VT100*background: #112233
+
+*VT100*color0: #112233
+*VT100*color1: #ffbbbb
+*VT100*color2: #bbffbb
+*VT100*color3: #ffffbb
+*VT100*color4: #bbbbff
+*VT100*color5: #ffbbff
+*VT100*color6: #bbffff
+*VT100*color7: #ffffff
+*VT100*color8: #112233
+*VT100*color9: #cc8888
+*VT100*color10: #88cc88
+*VT100*color11: #cccc88
+*VT100*color12: #8888cc
+*VT100*color13: #cc88cc
+*VT100*color14: #88cccc
+*VT100*color15: #cccccc
+
 EOF
 
 	cd $__BASE_DIR__
