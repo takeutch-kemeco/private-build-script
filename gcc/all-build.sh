@@ -2,12 +2,14 @@
 
 BASE_DIR=$(pwd)
 PREFIX=/usr
+MAKE_CLEAN=
+#MAKE_CLEAN="make clean"
 
 build-zlib()
 {
-	cd zlib-1.2.5
+	cd $BASE_DIR/zlib-1.2.5
 	./configure --prefix=$PREFIX
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	cd $BASE_DIR
@@ -15,13 +17,13 @@ build-zlib()
 
 build-mpfr()
 {
-	cd mpfr
+	cd $BASE_DIR/mpfr
 	aclocal
 	libtoolize
 	automake -a -c -f
 	autoconf
 	./configure --prefix=$PREFIX --enable-thread-safe
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -30,10 +32,10 @@ build-mpfr()
 
 build-gmp()
 {
-	cd gmp
+	cd $BASE_DIR/gmp
 	./.bootstrap
 	./configure --prefix=$PREFIX --enable-cxx --enable-maintainer-mode
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig 
@@ -42,14 +44,14 @@ build-gmp()
 
 build-mpc()
 {
-	cd mpc
+	cd $BASE_DIR/mpc
 	aclocal
 	libtoolize
 	autoheader
 	automake -a -c -f
 	autoconf
 	./configure --prefix=$PREFIX
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -58,9 +60,9 @@ build-mpc()
 
 build-gcc()
 {
-	mkdir -p build-gcc
-	cd build-gcc
-	../gcc/configure \
+	mkdir -p $BASE_DIR/build-gcc
+	cd $BASE_DIR/build-gcc
+	$BASE_DIR/gcc/configure \
 		--prefix=$PREFIX \
 		--libexecdir=$PREFIX/lib \
 		--enable-shared \
@@ -71,13 +73,24 @@ build-gcc()
 		--disable-multilib \
 		--disable-bootstrap \
 		--with-system-zlib
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 
 	# ???
-	rm $PREFIX/lib/libstdc++.so.6.0.17-gdb.py
+###	rm $PREFIX/lib/libstdc++.so.*-gdb.py
 
+	ldconfig
+	cd $BASE_DIR
+}
+
+build-gdb()
+{
+	cd $BASE_DIR/gdb
+	../configure --prefix=$PREFIX --disable-werror
+	$MAKE_CLEAN
+	make
+	make install
 	ldconfig
 	cd $BASE_DIR
 }
@@ -87,4 +100,5 @@ build-gmp
 build-mpfr
 build-mpc
 build-gcc
+build-gdb
 

@@ -2,37 +2,21 @@
 
 BASE_DIR=$(pwd)
 
-update-mpfr()
-{
-	cd mpfr
-	svn update
-	cd $BASE_DIR
-}
+cd $BASE_DIR/mpfr
+#svn upgrade
+svn update
 
-update-gmp()
-{
-	cd gmp
-	hg pull
-	hg update
-	cd $BASE_DIR
-}
+cd $BASE_DIR/gmp
+hg pull
+hg update
 
-update-mpc()
-{
-	cd mpc
-	svn update
-	cd $BASE_DIR
-}
+cd $BASE_DIR/mpc
+#svn upgrade
+svn update
 
-update-gcc()
-{
-	cd gcc
-	svn update
-	cd $BASE_DIR
-}
+#cd $BASE_DIR/gcc
+#svn upgrade
+#svn update
 
-update-mpfr
-update-gmp
-update-mpc
-update-gcc
+#gdb
 
