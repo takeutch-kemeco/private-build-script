@@ -14,9 +14,9 @@ cd $BASE_DIR/mpc
 #svn upgrade
 svn update
 
-#cd $BASE_DIR/gcc
+cd $BASE_DIR/gcc
 #svn upgrade
-#svn update
+svn update
 
 #gdb
 
