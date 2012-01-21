@@ -2,8 +2,8 @@
 
 BASE_DIR=$(pwd)
 PREFIX=/usr
-#MAKE_CLEAN=
-MAKE_CLEAN="make clean"
+MAKE_CLEAN=
+#MAKE_CLEAN="make clean"
 
 build-zlib()
 {
@@ -60,7 +60,7 @@ build-mpc()
 
 build-gcc()
 {
-	rm -rf $BASE_DIR/build-gcc
+#	rm -rf $BASE_DIR/build-gcc
 	mkdir -p $BASE_DIR/build-gcc
 	cd $BASE_DIR/build-gcc
 	$BASE_DIR/gcc/configure \
@@ -74,7 +74,6 @@ build-gcc()
 		--disable-multilib \
 		--disable-bootstrap \
 		--with-system-zlib
-	$MAKE_CLEAN
 	make
 	make install
 
@@ -88,7 +87,7 @@ build-gcc()
 build-gdb()
 {
 	cd $BASE_DIR/gdb
-	../configure --prefix=$PREFIX --disable-werror
+	./configure --prefix=$PREFIX --disable-werror
 	$MAKE_CLEAN
 	make
 	make install
