@@ -173,7 +173,6 @@ lame()
 }
 
 lame
-rem(){
 libav
 common
 gstreamer-core
@@ -181,6 +180,5 @@ gst-plugins-base
 gst-plugins-good
 gst-plugins-ugly
 gst-plugins-bad
-}
 #gst-ffmpeg
 
