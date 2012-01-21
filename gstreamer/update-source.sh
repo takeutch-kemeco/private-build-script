@@ -26,3 +26,5 @@ git pull origin
 cd $BASE_DIR/gstreamer
 git pull origin
 
+#lame
+

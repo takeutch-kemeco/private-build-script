@@ -159,6 +159,21 @@ gst-ffmpeg()
 	cd $BASE_DIR
 }
 
+lame()
+{
+	cd $BASE_DIR/lame-3.99.3
+	./configure --prefix=$PREFIX \
+		--enable-mp3rtp
+	$MAKE_CLEAN
+	make
+	make install
+	ldconfig
+
+	cd $BASE_DIR
+}
+
+lame
+rem(){
 libav
 common
 gstreamer-core
@@ -166,6 +181,6 @@ gst-plugins-base
 gst-plugins-good
 gst-plugins-ugly
 gst-plugins-bad
-
+}
 #gst-ffmpeg
 
