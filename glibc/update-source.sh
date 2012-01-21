@@ -3,5 +3,5 @@
 BASE_DIR=$(pwd)
 
 cd $BASE_DIR/glibc
-git pull
+git pull origin
 
