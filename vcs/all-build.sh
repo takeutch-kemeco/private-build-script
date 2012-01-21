@@ -118,10 +118,21 @@ gdbm()
 	cd $BASE_DIR
 }
 
-rem(){
-git
-hg
+cvs()
+{
+	cd $BASE_DIR/cvs-1.11.23
+	./configure --prefix=$PREFIX
+	$MAKE_CLEAN
+	make
+	make install
+	ldconfig
+
+	cd $BASE_DIR
 }
+
+git
+
+hg
 
 apr1
 apr1-util
@@ -130,7 +141,6 @@ serf
 sqlite3
 svn
 
-rem2(){
-gdbm
-}
+###gdbm
+cvs
 
