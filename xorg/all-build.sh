@@ -10,12 +10,14 @@ XORG_CONFIG="--prefix=$XORG_PREFIX \
 	--localstatedir=/var"
 export XORG_PREFIX XORG_ETC XORG_CONFIG
 
+MAKE_CLEAN="make clean"
+
 util_macros()
 {
 	cd macros
 
 	./autogen.sh $XORG_CONFIG
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -32,7 +34,7 @@ proto()
 	do
 		cd $__PROTO_BASE_DIR__/$package
 		./autogen.sh $XORG_CONFIG
-#		make clean
+		$MAKE_CLEAN
 		make
 		make install
 		ldconfig
@@ -46,7 +48,7 @@ makedepend()
 	cd makedepend
 
 	./autogen.sh $XORG_CONFIG
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -59,7 +61,7 @@ libXau()
 	cd libXau
 	
 	./autogen.sh $XORG_CONFIG
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -72,7 +74,7 @@ libXdmcp()
 	cd libXdmcp
 	
 	./autogen.sh $XORG_CONFIG
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -85,7 +87,7 @@ libpthread-stubs()
 	cd pthread-stubs
 	
 	./autogen.sh $XORG_CONFIG
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -98,7 +100,7 @@ xcb-proto()
 	cd xcb/proto
 	
 	./autogen.sh $XORG_CONFIG
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -111,7 +113,7 @@ libxcb()
 	cd xcb/libxcb
 	
 	./autogen.sh $XORG_CONFIG --enable-xinput --enable-xkb
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -128,7 +130,7 @@ libs()
 	do
 		cd $__LIBS_BASE_DIR__/$package
 		./autogen.sh $XORG_CONFIG
-#		make clean
+		$MAKE_CLEAN
 		make
 		make install
 		ldconfig
@@ -143,7 +145,7 @@ xcb-util()
 	cd xcb/util
 	
 	./autogen.sh $XORG_CONFIG
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -156,7 +158,7 @@ mesa()
 	cd mesa/mesa
 	
 	./autogen.sh $XORG_CONFIG --enable-xcb
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ln -s -v ${XORG_PREFIX}/include/GL  /usr/include
@@ -175,8 +177,9 @@ apps()
 	for package in $(ls)
 	do
 		cd $__APPS_BASE_DIR__/$package
-		./autogen.sh $XORG_CONFIG
-#		make clean
+		./autogen.sh $XORG_CONFIG \
+			--with-xinitdir=$XORG_ETC/X11/app-defaults
+		$MAKE_CLEAN
 		make
 		make install
 		ldconfig
@@ -200,7 +203,7 @@ xkeyboard-config()
 	cd xkeyboard-config
 	
 	./autogen.sh $XORG_CONFIG --with-xkb-rules-symlink=xorg
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -216,7 +219,7 @@ xserver()
 		--with-module-dir=$XORG_PREFIX/lib/X11/modules \
 		--with-xkb-output=/var/lib/xkb \
 		--enable-install-setuid
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -233,7 +236,7 @@ driver()
 	do
 		cd $__DRIVER_BASE_DIR__/$package
 		./autogen.sh $XORG_CONFIG
-#		make clean
+		$MAKE_CLEAN
 		make
 		make install
 		ldconfig

@@ -91,7 +91,47 @@ cd $__BASE_DIR__
 
 mkdir -p apps
 cd apps
-#apps is null
+git clone git://anongit.freedesktop.org/git/xorg/app/bdftopcf
+git clone git://anongit.freedesktop.org/git/xorg/app/iceauth
+git clone git://anongit.freedesktop.org/git/xorg/app/luit
+git clone git://anongit.freedesktop.org/git/xorg/app/mkfontdir
+git clone git://anongit.freedesktop.org/git/xorg/app/mkfontscale
+git clone git://anongit.freedesktop.org/git/xorg/app/sessreg
+git clone git://anongit.freedesktop.org/git/xorg/app/setxkbmap
+git clone git://anongit.freedesktop.org/git/xorg/app/smproxy
+git clone git://anongit.freedesktop.org/git/xorg/app/twm
+git clone git://anongit.freedesktop.org/git/xorg/app/x11perf
+git clone git://anongit.freedesktop.org/git/xorg/app/xauth
+git clone git://anongit.freedesktop.org/git/xorg/app/xbacklight
+git clone git://anongit.freedesktop.org/git/xorg/app/xbitmaps
+git clone git://anongit.freedesktop.org/git/xorg/app/xclock
+git clone git://anongit.freedesktop.org/git/xorg/app/xcmsdb
+git clone git://anongit.freedesktop.org/git/xorg/app/xcursorgen
+git clone git://anongit.freedesktop.org/git/xorg/app/xdpyinfo
+git clone git://anongit.freedesktop.org/git/xorg/app/xdriinfo
+git clone git://anongit.freedesktop.org/git/xorg/app/xev
+git clone git://anongit.freedesktop.org/git/xorg/app/xgamma
+git clone git://anongit.freedesktop.org/git/xorg/app/xhost
+git clone git://anongit.freedesktop.org/git/xorg/app/xinit
+git clone git://anongit.freedesktop.org/git/xorg/app/xinput
+git clone git://anongit.freedesktop.org/git/xorg/app/xkbcomp
+git clone git://anongit.freedesktop.org/git/xorg/app/xkbevd
+git clone git://anongit.freedesktop.org/git/xorg/app/xkbutils
+git clone git://anongit.freedesktop.org/git/xorg/app/xkill
+git clone git://anongit.freedesktop.org/git/xorg/app/xlsatoms
+git clone git://anongit.freedesktop.org/git/xorg/app/xlsclients
+git clone git://anongit.freedesktop.org/git/xorg/app/xmodmap
+git clone git://anongit.freedesktop.org/git/xorg/app/xpr
+git clone git://anongit.freedesktop.org/git/xorg/app/xprop
+git clone git://anongit.freedesktop.org/git/xorg/app/xrandr
+git clone git://anongit.freedesktop.org/git/xorg/app/xrdb
+git clone git://anongit.freedesktop.org/git/xorg/app/xrefresh
+git clone git://anongit.freedesktop.org/git/xorg/app/xset
+git clone git://anongit.freedesktop.org/git/xorg/app/xsetroot
+git clone git://anongit.freedesktop.org/git/xorg/app/xvinfo
+git clone git://anongit.freedesktop.org/git/xorg/app/xwd
+git clone git://anongit.freedesktop.org/git/xorg/app/xwininfo
+git clone git://anongit.freedesktop.org/git/xorg/app/xwud
 cd $__BASE_DIR__
 
 #xcursor-themes is null
