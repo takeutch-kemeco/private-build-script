@@ -310,5 +310,5 @@ xserver
 driver
 xterm
 
-cp 50-wacom.conf $XORG_ETC/X11/xorg.conf.d/
+cp $__BASE_DIR__/50-wacom.conf $XORG_ETC/X11/xorg.conf.d/
 
