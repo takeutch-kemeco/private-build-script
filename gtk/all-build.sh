@@ -72,6 +72,19 @@ glib()
 	cd $__BASE_DIR__
 }
 
+gobject-introspection()
+{
+	cd gobject-introspection
+
+	./autogen.sh --prefix=$PREFIX
+	$MAKE_CLEAN
+	make
+	make install
+	ldconfig
+
+	cd $__BASE_DIR__
+}
+
 libsigcpp()
 {
 	cd libsigc++2
@@ -395,6 +408,7 @@ libffi
 pth
 python27
 glib
+gobject-introspection
 libsigcpp
 glibmm
 

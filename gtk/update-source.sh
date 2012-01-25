@@ -33,6 +33,13 @@ glib()
 	cd $__BASE_DIR__
 }
 
+gobject-introspection()
+{
+	cd gobject-introspection
+	git pull
+	cd $__BASE_DIR__
+}
+
 libsigcpp()
 {
 	cd libsigc++2
@@ -182,6 +189,7 @@ libffi
 pth
 python27
 glib
+gobject-introspection
 libsigcpp
 glibmm
 

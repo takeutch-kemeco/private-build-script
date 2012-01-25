@@ -63,3 +63,5 @@ git clone git://git.gnome.org/gtk+
 
 git clone git://git.gnome.org/gtkmm
 
+git clone git://git.gnome.org/gobject-introspection
+
