@@ -4,12 +4,15 @@ __BASE_DIR__=$(pwd)
 PREFIX=/usr
 XORG_PREFIX=/usr
 
+#MAKE_CLEAN=
+MAKE_CLEAN="make clean"
+
 pixman()
 {
 	cd pixman
 
 	./autogen.sh --prefix=$PREFIX
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -22,7 +25,7 @@ libffi()
 	cd libffi
 
 	./configure --prefix=$PREFIX
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -35,7 +38,7 @@ pth()
 	cd pth-2.0.7
 
 	./configure --prefix=$PREFIX
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -48,7 +51,7 @@ python27()
 	cd Python-2.7.2
 
 	./configure --prefix=$PREFIX --enable-shared
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -61,7 +64,7 @@ glib()
 	cd glib
 
 	./autogen.sh --prefix=$PREFIX
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -74,7 +77,7 @@ libsigcpp()
 	cd libsigc++2
 
 	./autogen.sh --prefix=$PREFIX
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -87,7 +90,7 @@ glibmm()
 	cd glibmm
 
 	./autogen.sh --prefix=$PREFIX
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -101,7 +104,7 @@ freetype2()
 
 	./autogen.sh
 	./configure --prefix=$PREFIX
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -114,7 +117,7 @@ expat()
 	cd expat
 
 	./configure --prefix=$PREFIX
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -127,7 +130,50 @@ libxml2()
 	cd libxml2
 
 	./autogen.sh --prefix=$PREFIX
-#	make clean
+	$MAKE_CLEAN
+	make
+	make install
+	ldconfig
+
+	cd $__BASE_DIR__
+}
+
+dbus()
+{
+	cd $__BASE_DIR__/dbus
+
+	groupadd -g 27 messagebus
+	useradd -c "D-BUS Message Daemon User" \
+		-d /dev/null \
+		-u 27 \
+		-g messagebus \
+		-s /bin/false messagebus
+
+	./autogen.sh --prefix=$PREFIX \
+		--sysconfdir=/etc \
+		--libexecdir=$PREFIX/lib/dbus-1.0 \
+		--localstatedir=/var \
+		--enable-maintainer-mode CFLAGS="-Wall"
+	$MAKE_CLEAN
+	make
+	make install
+	ldconfig
+
+	dbus-uuidgen --ensure
+	make install-dbus
+	ldconfig
+
+	cd $__BASE_DIR__
+}
+
+dbus-glib()
+{
+	cd $__BASE_DIR__/dbus-glib
+	./autogen.sh --prefix=$PREFIX \
+		--sysconfdir=/etc \
+		--localstatedir=/var \
+		--enable-maintainer-mode
+	$MAKE_INSTALL
 	make
 	make install
 	ldconfig
@@ -145,7 +191,7 @@ fontconfig()
 		--disable-docs \
 		--without-add-fonts \
 		--docdir=/usr/share/doc/fontconfig
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -158,7 +204,7 @@ freeglut()
 	cd freeglut-2.8.0
 
 	./configure  --prefix=$XORG_PREFIX
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -172,7 +218,7 @@ libpng()
 
 	./autogen.sh
 	./configure --prefix=$PREFIX
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -185,7 +231,7 @@ libjpeg8()
 	cd jpeg-8d
 
 	./configure --prefix=$PREFIX
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -198,7 +244,7 @@ libtiff()
 	cd tiff-4.0.0
 
 	./configure --prefix=$PREFIX
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -215,7 +261,7 @@ cairo()
 		--enable-gl
 #		--enable-drm=yes
 #		--enable-gallium=yes
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -228,7 +274,7 @@ cairomm()
 	cd cairomm
 
 	./autogen.sh --prefix=$PREFIX
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -241,7 +287,7 @@ pango()
 	cd pango
 
 	./autogen.sh --prefix=$PREFIX --sysconfdir=/etc
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -254,7 +300,7 @@ pangomm()
 	cd pangomm
 
 	./autogen.sh --prefix=$PREFIX
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -267,7 +313,7 @@ atk()
 	cd atk
 
 	./autogen.sh --prefix=$PREFIX
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -280,7 +326,7 @@ atkmm()
 	cd atkmm
 
 	./autogen.sh --prefix=$PREFIX
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -293,7 +339,7 @@ gdk-pixbuf()
 	cd gdk-pixbuf
 
 	./autogen.sh --prefix=$PREFIX
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -310,7 +356,7 @@ gtk2()
 		--with-xinput=yes \
 		--with-gdktarget=x11 \
 		--with-x
-#	make clean
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -323,7 +369,20 @@ gtk3()
 	cd gtk+
 
 	./autogen.sh --prefix=$PREFIX --sysconfdir=/etc
-#	make clean
+	$MAKE_CLEAN
+	make
+	make install
+	ldconfig
+
+	cd $__BASE_DIR__
+}
+
+gtkmm()
+{
+	cd gtkmm
+
+	./autogen.sh --prefix=$PREFIX
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -342,6 +401,10 @@ glibmm
 freetype2
 expat
 libxml2
+
+dbus
+#dbus-glib
+
 fontconfig
 freeglut
 
@@ -358,4 +421,5 @@ atkmm
 gdk-pixbuf
 gtk2
 gtk3
+gtkmm
 

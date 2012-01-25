@@ -24,6 +24,10 @@ mv expat-2.0.1 expat
 
 git clone git://git.gnome.org/libxml2
 
+git clone git://anongit.freedesktop.org/dbus/dbus
+
+git clone git://anongit.freedesktop.org/dbus/dbus-glib
+
 git clone git://anongit.freedesktop.org/fontconfig
 
 #svn checkout http://freeglut.svn.sourceforge.net/svnroot/freeglut/trunk/freeglut/freeglut freeglut
@@ -56,4 +60,6 @@ wget -c ftp://ftp.gnome.org/pub/gnome/sources/gtk+/2.24/gtk+-2.24.8.tar.xz
 xz -dc gtk+-2.24.8.tar.xz | tar xvf -
 
 git clone git://git.gnome.org/gtk+
+
+git clone git://git.gnome.org/gtkmm
 
