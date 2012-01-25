@@ -93,7 +93,15 @@ libs()
 	cd $__BASE_DIR__
 }
 
-###err
+xcb-util-common-m4()
+{
+	cd xcb/util-common-m4
+	
+	git pull
+
+	cd $__BASE_DIR__
+}
+
 xcb-util()
 {
 	cd xcb/util
@@ -103,9 +111,54 @@ xcb-util()
 	cd $__BASE_DIR__
 }
 
+xcb-util-image()
+{
+	cd xcb/util-image
+	
+	git pull
+
+	cd $__BASE_DIR__
+}
+
+xcb-util-keysyms()
+{
+	cd xcb/util-keysyms
+	
+	git pull
+
+	cd $__BASE_DIR__
+}
+
+xcb-util-renderutil()
+{
+	cd xcb/util-renderutil
+	
+	git pull
+
+	cd $__BASE_DIR__
+}
+
+xcb-util-wm()
+{
+	cd xcb/util-wm
+	
+	git pull
+
+	cd $__BASE_DIR__
+}
+
 mesa()
 {
 	cd mesa/mesa
+	
+	git pull
+
+	cd $__BASE_DIR__
+}
+
+mesa-drm()
+{
+	cd mesa/drm
 	
 	git pull
 
@@ -180,11 +233,21 @@ makedepend
 libXau
 libXdmcp
 pthread-stubs
+
 xcb-proto
 libxcb
+
 libs
+
 xcb-util
+xcb-util-image()
+xcb-util-keysyms()
+xcb-util-renderutil()
+xcb-util-wm()
+
 mesa
+mesa-drm
+
 apps
 xcursor-themes
 fonts

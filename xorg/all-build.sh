@@ -99,7 +99,8 @@ xcb-proto()
 {
 	cd xcb/proto
 	
-	./autogen.sh $XORG_CONFIG
+	./autogen.sh
+	./configure $XORG_CONFIG
 	$MAKE_CLEAN
 	make
 	make install
@@ -139,10 +140,18 @@ libs()
 	cd $__BASE_DIR__
 }
 
-###err
+xcb-util-common-m4()
+{
+	cd xcb/util-common-m4
+	cd $__BASE_DIR__
+}
+
 xcb-util()
 {
 	cd xcb/util
+
+	rm $__BASE_DIR__/xcb/util/m4 -rf
+	ln -s $__BASE_DIR__/xcb/util-common-m4 $__BASE_DIR__/xcb/util/m4
 	
 	./autogen.sh $XORG_CONFIG
 	$MAKE_CLEAN
@@ -153,11 +162,93 @@ xcb-util()
 	cd $__BASE_DIR__
 }
 
+xcb-util-image()
+{
+	cd xcb/util-image
+
+	rm $__BASE_DIR__/xcb/util-image/m4 -rf
+	ln -s $__BASE_DIR__/xcb/util-common-m4 $__BASE_DIR__/xcb/util-image/m4
+	
+	./autogen.sh $XORG_CONFIG
+	$MAKE_CLEAN
+	make
+	make install
+	ldconfig
+
+	cd $__BASE_DIR__
+}
+
+xcb-util-keysyms()
+{
+	cd xcb/util-keysyms
+
+	rm $__BASE_DIR__/xcb/util-keysyms/m4 -rf
+	ln -s $__BASE_DIR__/xcb/util-common-m4 $__BASE_DIR__/xcb/util-keysyms/m4
+	
+	./autogen.sh $XORG_CONFIG
+	$MAKE_CLEAN
+	make
+	make install
+	ldconfig
+
+	cd $__BASE_DIR__
+}
+
+xcb-util-renderutil()
+{
+	cd xcb/util-renderutil
+
+	rm $__BASE_DIR__/xcb/util-renderutil/m4 -rf
+	ln -s $__BASE_DIR__/xcb/util-common-m4 $__BASE_DIR__/xcb/util-renderutil/m4
+	
+	./autogen.sh $XORG_CONFIG
+	$MAKE_CLEAN
+	make
+	make install
+	ldconfig
+
+	cd $__BASE_DIR__
+}
+
+xcb-util-wm()
+{
+	cd xcb/util-wm
+
+	rm $__BASE_DIR__/xcb/util-wm/m4 -rf
+	ln -s $__BASE_DIR__/xcb/util-common-m4 $__BASE_DIR__/xcb/util-wm/m4
+	
+	./autogen.sh $XORG_CONFIG
+	$MAKE_CLEAN
+	make
+	make install
+	ldconfig
+
+	cd $__BASE_DIR__
+}
+
+mesa-drm()
+{
+	cd mesa/drm
+	
+	./autogen.sh $XORG_CONFIG --disable-radeon
+	$MAKE_CLEAN
+	make
+	make install
+	ldconfig
+
+	cd $__BASE_DIR__
+
+}
+
 mesa()
 {
 	cd mesa/mesa
 	
-	./autogen.sh $XORG_CONFIG --enable-xcb
+	./autogen.sh $XORG_CONFIG \
+		--enable-xcb \
+		--enable-dri \
+		--enable-xorg \
+		--with-x
 	$MAKE_CLEAN
 	make
 	make install
@@ -229,6 +320,9 @@ xserver()
 
 driver()
 {
+	echo "/usr/lib/xorg/modules/drivers"  \
+		> /etc/ld.so.conf.d/xorg_modules_drivers.conf
+
 	cd driver
 
 	__DRIVER_BASE_DIR__=$__BASE_DIR__/driver
@@ -297,11 +391,22 @@ makedepend
 libXau
 libXdmcp
 libpthread-stubs
+
 xcb-proto
 libxcb
+
 libs
+
+xcb-util-common-m4
 xcb-util
+xcb-util-image
+xcb-util-keysyms
+xcb-util-renderutil
+xcb-util-wm
+
+mesa-drm
 mesa
+
 apps
 xcursor-themes
 fonts
@@ -311,4 +416,3 @@ driver
 xterm
 
 cp $__BASE_DIR__/50-wacom.conf $XORG_ETC/X11/xorg.conf.d/
-

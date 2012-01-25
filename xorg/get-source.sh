@@ -45,7 +45,12 @@ mkdir -p xcb
 cd xcb
 git clone git://anongit.freedesktop.org/xcb/proto
 git clone git://anongit.freedesktop.org/xcb/libxcb
+git clone git://anongit.freedesktop.org/xcb/util-common-m4
 git clone git://anongit.freedesktop.org/xcb/util
+git clone git://anongit.freedesktop.org/xcb/util-image
+git clone git://anongit.freedesktop.org/xcb/util-keysyms
+git clone git://anongit.freedesktop.org/xcb/util-renderutil
+git clone git://anongit.freedesktop.org/xcb/util-wm
 cd $__BASE_DIR__
 
 mkdir -p libs
@@ -87,6 +92,7 @@ cd $__BASE_DIR__
 mkdir -p mesa
 cd mesa
 git clone git://anongit.freedesktop.org/mesa/mesa
+git clone git://anongit.freedesktop.org/git/mesa/drm
 cd $__BASE_DIR__
 
 mkdir -p apps
