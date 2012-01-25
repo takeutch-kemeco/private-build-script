@@ -47,6 +47,13 @@ libsigcpp()
 	cd $__BASE_DIR__
 }
 
+mm-common()
+{
+	cd mm-common
+	git pull
+	cd $__BASE_DIR__
+}
+
 glibmm()
 {
 	cd glibmm
@@ -191,6 +198,7 @@ python27
 glib
 gobject-introspection
 libsigcpp
+mm-common
 glibmm
 
 freetype2

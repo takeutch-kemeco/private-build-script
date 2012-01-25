@@ -98,6 +98,19 @@ libsigcpp()
 	cd $__BASE_DIR__
 }
 
+mm-common()
+{
+	cd mm-common
+
+	./autogen.sh --prefix=$PREFIX
+	$MAKE_CLEAN
+	make
+	make install
+	ldconfig
+
+	cd $__BASE_DIR__
+}
+
 glibmm()
 {
 	cd glibmm
@@ -403,6 +416,12 @@ gtkmm()
 	cd $__BASE_DIR__
 }
 
+__test__()
+{
+	exit
+}
+#__test__
+
 pixman
 libffi
 pth
@@ -410,6 +429,7 @@ python27
 glib
 gobject-introspection
 libsigcpp
+mm-common
 glibmm
 
 freetype2
