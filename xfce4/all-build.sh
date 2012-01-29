@@ -4,8 +4,8 @@ __BASE_DIR__=$(pwd)
 PREFIX=/usr
 __X11_LIB__=/usr/X11R6/lib
 
-__MAKE_CLEAN__=""
-#__MAKE_CLEAN__="make clean"
+#__MAKE_CLEAN__=""
+__MAKE_CLEAN__="make clean"
 
 xfce4-dev-tools()
 {
@@ -209,6 +209,29 @@ xfce-utils()
 	cd $__BASE_DIR__
 }
 
+xfce4-settings()
+{
+	cd $__BASE_DIR__/xfce4-settings
+
+	./autogen.sh --prefix=$PREFIX \
+		--enable-debug=no \
+		--sysconfdir=/etc/xfce
+		--libexecdir=$PREFIX/lib/xfce4
+	$__MAKE_CLEAN__
+	make
+	make install
+	ldconfig
+
+	cd $__BASE_DIR__
+}
+
+__test__()
+{
+
+	exit
+}
+#__test__
+
 xfce4-dev-tools
 libxfce4util
 xfconf
@@ -223,4 +246,5 @@ xfce4-session
 xfwm4
 xfdesktop
 xfce-utils
+xfce4-settings
 
