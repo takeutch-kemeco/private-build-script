@@ -40,4 +40,6 @@ git clone git://git.xfce.org/xfce/xfconf
 git clone git://git.xfce.org/xfce/xfdesktop
 git clone git://git.xfce.org/art/xfwm4-themes
 git clone git://git.xfce.org/xfce/xfwm4
+git clone git://git.xfce.org/apps/ristretto
+git clone git://git.xfce.org/apps/parole
 

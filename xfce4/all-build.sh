@@ -215,8 +215,69 @@ xfce4-settings()
 
 	./autogen.sh --prefix=$PREFIX \
 		--enable-debug=no \
-		--sysconfdir=/etc/xfce
+		--sysconfdir=/etc/xfce \
 		--libexecdir=$PREFIX/lib/xfce4
+	$__MAKE_CLEAN__
+	make
+	make install
+	ldconfig
+
+	cd $__BASE_DIR__
+}
+
+tumbler()
+{
+	cd $__BASE_DIR__/tumbler
+
+	./autogen.sh --prefix=$PREFIX \
+		--enable-debug=no \
+		--sysconfdir=/etc/xfce \
+		--libexecdir=$PREFIX/lib/tumbler
+	$__MAKE_CLEAN__
+	make
+	make install
+	ldconfig
+
+	cd $__BASE_DIR__
+}
+
+xfce4-wavelan-plugin()
+{
+	cd $__BASE_DIR__/xfce4-wavelan-plugin
+
+	./autogen.sh --prefix=$PREFIX \
+		--enable-debug=no \
+		--sysconfdir=/etc/xfce
+	$__MAKE_CLEAN__
+	make
+	make install
+	ldconfig
+
+	cd $__BASE_DIR__
+}
+
+ristretto()
+{
+	cd $__BASE_DIR__/ristretto
+
+	./autogen.sh --prefix=$PREFIX \
+		--enable-maintainer-mode \
+		--enable-debug=no
+	$__MAKE_CLEAN__
+	make
+	make install
+	ldconfig
+
+	cd $__BASE_DIR__
+}
+
+parole()
+{
+	cd $__BASE_DIR__/parole
+
+	./autogen.sh --prefix=$PREFIX \
+		--enable-maintainer-mode \
+		--enable-debug=no
 	$__MAKE_CLEAN__
 	make
 	make install
@@ -227,7 +288,6 @@ xfce4-settings()
 
 __test__()
 {
-
 	exit
 }
 #__test__
@@ -247,4 +307,8 @@ xfwm4
 xfdesktop
 xfce-utils
 xfce4-settings
+tumbler
+xfce4-wavelan-plugin
+ristretto
+parole
 
