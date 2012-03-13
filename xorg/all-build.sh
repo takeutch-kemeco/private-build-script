@@ -10,7 +10,7 @@ XORG_CONFIG="--prefix=$XORG_PREFIX \
 	--localstatedir=/var"
 export XORG_PREFIX XORG_ETC XORG_CONFIG
 
-MAKE_CLEAN="make clean"
+#MAKE_CLEAN="make clean"
 
 util_macros()
 {

@@ -4,8 +4,8 @@ __BASE_DIR__=$(pwd)
 PREFIX=/usr
 XORG_PREFIX=/usr
 
-#MAKE_CLEAN=
-MAKE_CLEAN="make clean"
+MAKE_CLEAN=
+#MAKE_CLEAN="make clean"
 
 pixman()
 {
@@ -375,7 +375,7 @@ gdk-pixbuf()
 
 gtk2()
 {
-	cd gtk+-2.24.8
+	cd gtk+-2.0
 
 	./configure --prefix=$PREFIX \
 		--sysconfdir=/etc \
