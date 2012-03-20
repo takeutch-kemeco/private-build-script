@@ -4,8 +4,8 @@ __BASE_DIR__=$(pwd)
 PREFIX=/usr
 XORG_PREFIX=/usr
 
-MAKE_CLEAN=
-#MAKE_CLEAN="make clean"
+#MAKE_CLEAN=
+MAKE_CLEAN="make clean"
 
 pixman()
 {
@@ -179,7 +179,12 @@ dbus()
 		--sysconfdir=/etc \
 		--libexecdir=$PREFIX/lib/dbus-1.0 \
 		--localstatedir=/var \
-		--enable-maintainer-mode CFLAGS="-Wall"
+		--enable-maintainer-mode \
+		--enable-embedded-tests=no \
+		--enable-modular-tests=no \
+		--enable-tests=no \
+		--enable-installed-tests=no
+
 	$MAKE_CLEAN
 	make
 	make install
@@ -196,8 +201,6 @@ dbus-glib()
 {
 	cd $__BASE_DIR__/dbus-glib
 	./autogen.sh --prefix=$PREFIX \
-		--sysconfdir=/etc \
-		--localstatedir=/var \
 		--enable-maintainer-mode
 	$MAKE_INSTALL
 	make
@@ -212,8 +215,6 @@ fontconfig()
 	cd fontconfig
 
 	./autogen.sh --prefix=$PREFIX \
-		--sysconfdir=/etc \
-		--localstatedir=/var \
 		--disable-docs \
 		--without-add-fonts \
 		--docdir=/usr/share/doc/fontconfig
@@ -284,8 +285,8 @@ cairo()
 
 	./autogen.sh --prefix=$PREFIX \
 		--enable-tee \
-		--enable-gl
-#		--enable-drm=yes
+		--enable-gl \
+		--enable-drm=yes
 #		--enable-gallium=yes
 	$MAKE_CLEAN
 	make
@@ -378,7 +379,6 @@ gtk2()
 	cd gtk+-2.0
 
 	./configure --prefix=$PREFIX \
-		--sysconfdir=/etc \
 		--with-xinput=yes \
 		--with-gdktarget=x11 \
 		--with-x
@@ -394,7 +394,7 @@ gtk3()
 {
 	cd gtk+
 
-	./autogen.sh --prefix=$PREFIX --sysconfdir=/etc
+	./autogen.sh --prefix=$PREFIX
 	$MAKE_CLEAN
 	make
 	make install
@@ -437,7 +437,7 @@ expat
 libxml2
 
 dbus
-#dbus-glib
+dbus-glib
 
 fontconfig
 freeglut
