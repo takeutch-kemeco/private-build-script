@@ -4,8 +4,8 @@ __BASE_DIR__=$(pwd)
 PREFIX=/usr
 XORG_PREFIX=/usr
 
-#MAKE_CLEAN=
-MAKE_CLEAN="make clean"
+MAKE_CLEAN=
+#MAKE_CLEAN="make clean"
 
 pixman()
 {
@@ -50,7 +50,8 @@ python27()
 {
 	cd Python-2.7.2
 
-	./configure --prefix=$PREFIX --enable-shared
+	./configure --prefix=$PREFIX \
+		--enable-shared
 	$MAKE_CLEAN
 	make
 	make install
@@ -313,7 +314,8 @@ pango()
 {
 	cd pango
 
-	./autogen.sh --prefix=$PREFIX --sysconfdir=/etc
+	./autogen.sh --prefix=$PREFIX \
+		--sysconfdir=/etc
 	$MAKE_CLEAN
 	make
 	make install

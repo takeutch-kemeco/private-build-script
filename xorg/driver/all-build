@@ -1,0 +1,31 @@
+#!/bin/bash
+
+base_dir=$(pwd)
+
+__build()
+{
+	git pull
+	./autogen.sh $XORG_CONFIG \
+		--with-xorg-module-dir=$XORG_PREFIX/lib/X11/modules
+#	make clean
+	make
+	make install
+	ldconfig
+}
+
+for package in $(ls)
+do
+	cd $base_dir/$package
+	case $package in
+		xf86-input-evdev)	__build ;;
+		xf86-input-vmmouse)	__build ;;
+		xf86-input-void)	__build ;;
+		xf86-input-wacom)	__build ;;
+		xf86-video-dummy)	__build ;;
+		xf86-video-fbdev)	__build ;;
+		xf86-video-intel)	__build ;;
+		xf86-video-vesa)	__build ;;
+	esac
+	cd $base_dir
+done
+

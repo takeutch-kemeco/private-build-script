@@ -10,7 +10,8 @@ XORG_CONFIG="--prefix=$XORG_PREFIX \
 	--localstatedir=/var"
 export XORG_PREFIX XORG_ETC XORG_CONFIG
 
-#MAKE_CLEAN="make clean"
+#MAKE_CLEAN=
+MAKE_CLEAN="make clean"
 
 util_macros()
 {
@@ -230,7 +231,7 @@ mesa-drm()
 {
 	cd mesa/drm
 	
-	./autogen.sh $XORG_CONFIG --disable-radeon
+	./autogen.sh $XORG_CONFIG --disable-radeon --disable-nouveau
 	$MAKE_CLEAN
 	make
 	make install
@@ -245,9 +246,9 @@ mesa()
 	cd mesa/mesa
 	
 	./autogen.sh $XORG_CONFIG \
-		--enable-xcb \
 		--enable-dri \
 		--enable-xorg \
+		--with-dri-drivers=i965 \
 		--with-x
 	$MAKE_CLEAN
 	make
@@ -385,6 +386,12 @@ EOF
 	cd $__BASE_DIR__
 }
 
+__test__()
+{
+	exit
+}
+#__test__
+
 util_macros
 proto
 makedepend
@@ -416,3 +423,4 @@ driver
 xterm
 
 cp $__BASE_DIR__/50-wacom.conf $XORG_ETC/X11/xorg.conf.d/
+
