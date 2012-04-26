@@ -56,9 +56,15 @@ binutils()
 	cd $BASE_DIR
 }
 
+# $BASE_DIR/sed/lib/stdio.h の1000行目あたりに、
+# ソースコードのgetsを検知してビルド終了させるコードが含まれてるので、
+# ビルドできない場合は、そこをコメントアウトしてビルドすれば通る
 sed()
 {
 	cd $BASE_DIR/sed
+	rm $BASE_DIR/sed/gnulib -rf
+	ln -s $BASE_DIR/gnulib $BASE_DIR/sed/gnulib
+	./autoboot
 	./configure --prefix=$PREFIX --bindir=/bin
 	$MAKE_CLEAN
 	make
@@ -66,6 +72,26 @@ sed()
 	ldconfig
 
 	cd $BASE_DIR
+}
+
+gmp()
+{
+	echo
+}
+
+mpfr()
+{
+	echo
+}
+
+mpc()
+{
+	echo
+}
+
+gcc()
+{
+	echo
 }
 
 bzip2()
@@ -119,6 +145,18 @@ util-linux()
 	cd $BASE_DIR
 }
 
+psmisc()
+{
+	cd $BASE_DIR/psmisc
+	./autogen.sh --prefix=$PREFIX
+	$MAKE_CLEAN
+	make
+	make install
+	ldconfig
+
+	cd $BASE_DIR
+}
+
 e2fsprogs()
 {
 	rm -rf $BASE_DIR/build-e2fsprogs
@@ -158,9 +196,10 @@ rsync()
 coreutils()
 {
 	cd $BASE_DIR/coreutils
+	rm $BASE_DIR/coreutils/gnulib -rf
+	ln -s $BASE_DIR/gnulib $BASE_DIR/coreutils/gnulib
 	./bootstrap
-	./configure --prefix=$PREFIX \
-		--enable-no-install-program=kill,uptime
+	FORCE_UNSAFE_CONFIGURE=1 ./configure --prefix=$PREFIX
 	$MAKE_CLEAN
 	make
 	make install
@@ -172,11 +211,150 @@ coreutils()
 	cd $BASE_DIR
 }
 
+iana-etc()
+{
+	cd $BASE_DIR/iana-etc
+	$MAKE_CLEAN
+	make
+	make install
+	ldconfig
+
+	cd $BASE_DIR
+}
+
+# gnulib を使う系のだと、getsの問題がどれでも関係してくるっぽい
+m4()
+{
+	cd $BASE_DIR/m4
+	rm $BASE_DIR/m4/gnulib -rf
+	ln -s $BASE_DIR/gnulib $BASE_DIR/m4/gnulib
+	./bootstrap
+	./configure --prefix=$PREFIX
+	$MAKE_CLEAN
+	make
+	make install
+	ldconfig
+
+	cd $BASE_DIR
+}
+
+bison()
+{
+	cd $BASE_DIR/bison
+	rm $BASE_DIR/bison/gnulib -rf
+	ln -s $BASE_DIR/gnulib $BASE_DIR/bison/gnulib
+	./bootstrap
+	./configure --prefix=/usr
+	echo '#define YYENABLE_NLS 1' >> lib/config.h
+	$MAKE_CLEAN
+	make
+	make check
+	make install
+	ldconfig
+
+	cd $BASE_DIR
+}
+
 procps()
 {
 	cd $BASE_DIR/procps
 	./autogen.sh
 	./configure --prefix=$PREFIX
+	$MAKE_CLEAN
+	make
+	make install
+	ldconfig
+	
+	cd $BASE_DIR
+}
+
+grep()
+{
+	cd $BASE_DIR/grep
+	rm $BASE_DIR/grep/gnulib -rf
+	ln -s $BASE_DIR/gnulib $BASE_DIR/grep/gnulib
+	./bootstrap
+	./configure --prefix=$PREFIX
+	$MAKE_CLEAN
+	make
+	make install
+	ldconfig
+	
+	cd $BASE_DIR
+}
+
+readline()
+{
+	cd $BASE_DIR/readline
+	./configure --prefix=$PREFIX \
+		--libdir=/lib \
+		--enable-shared=yes \
+		--enable-static=yes
+	$MAKE_CLEAN
+	make
+	make install
+	ldconfig
+	
+	cd $BASE_DIR
+}
+
+bash()
+{
+	cd $BASE_DIR/bash
+	./configure --prefix=$PREFIX \
+		--bindir=/bin \
+		--with-installed-readline
+	$MAKE_CLEAN
+	make
+	make install
+	ldconfig
+	
+	cd $BASE_DIR
+}
+
+libtool()
+{
+	cd $BASE_DIR/libtool
+	rm $BASE_DIR/libtool/gnulib -rf
+	ln -s $BASE_DIR/gnulib $BASE_DIR/libtool/gnulib
+	./bootstrap
+	./configure --prefix=$PREFIX
+	$MAKE_CLEAN
+	make
+	make install
+	ldconfig
+	
+	cd $BASE_DIR
+}
+
+gdbm()
+{
+	cd $BASE_DIR/gdbm
+	./bootstrap
+	./configure --prefix=$PREFIX \
+		--enable-libgdbm-compat
+	$MAKE_CLEAN
+	make
+	make install
+	ldconfig
+	
+	cd $BASE_DIR
+}
+
+inetutils()
+{
+	cd $BASE_DIR/inetutils
+	rm $BASE_DIR/inetutils/gnulib -rf
+	ln -s $BASE_DIR/gnulib $BASE_DIR/inetutils/gnulib
+	./bootstrap
+	./configure --prefix=$PREFIX \
+		--libexecdir=/usr/sbin \
+		--localstatedir=/var \
+		--disable-logger \
+		--disable-syslogd \
+		--disable-whois \
+		--disable-servers
+	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
@@ -243,7 +421,33 @@ EOF
 
 __test__()
 {
+#man-pages
+#zlib
+###file
+#binutils
+#sed
+#bzip2
+#ncurses
+#util-linux
+#psmisc
+#e2fsprogs
+#coreutils
+#iana-etc
+###m4
+#bison
+#procps
+#grep
+#readline
+#bash
+###libtool
+#gdbm
+#inetutils
 perl
+
+
+
+
+#perl
 #procps
 	exit
 }

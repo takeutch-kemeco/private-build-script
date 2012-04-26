@@ -2,13 +2,16 @@
 
 git clone git://github.com/mkerrisk/man-pages.git
 
-#zlib
+git clone git://github.com/madler/zlib.git
 
 #file
 
-#binutils
+cvs -z 9 -d :pserver:anoncvs@sourceware.org:/cvs/src co binutils
+mv src binutils
 
-#sed
+git clone git://git.savannah.gnu.org/gnulib.git
+git clone git://git.savannah.gnu.org/sed.git
+ln -s gnulib sed/gnulib
 
 wget -c http://bzip.org/1.0.6/bzip2-1.0.6.tar.gz
 gzip -dc bzip2-1.0.6.tar.gz | tar xvf -
@@ -19,6 +22,8 @@ gzip -dc ncurses-5.9.tar.gz | tar xvf -
 mv ncurses-5.9 ncurses
 
 git clone git://gitorious.org/util-linux-ng/util-linux-ng.git
+
+git clone git://psmisc.git.sourceforge.net/gitroot/psmisc/psmisc
 
 git clone git://e2fsprogs.git.sourceforge.net/gitroot/e2fsprogs/e2fsprogs
 
@@ -34,11 +39,11 @@ git clone git://git.sv.gnu.org/bison.git
 
 git clone git://gitorious.org/procps/procps.git
 
-#grep
+git clone git://git.savannah.gnu.org/grep.git
 
-git clone git://pkgs.fedoraproject.org/readline.git
+git clone git://git.savannah.gnu.org/readline.git
 
-#bash
+git clone git://git.savannah.gnu.org/bash.git
 
 git clone git://git.savannah.gnu.org/libtool.git
 
