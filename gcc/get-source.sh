@@ -1,7 +1,6 @@
 #!/bin/bash
 
-wget -c http://zlib.net/zlib-1.2.5.tar.bz2
-bzip2 -dc zlib-1.2.5.tar.bz2 | tar xvf -
+git clone git://github.com/madler/zlib.git
 
 svn checkout svn://scm.gforge.inria.fr/svn/mpfr/trunk mpfr
 

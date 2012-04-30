@@ -22,7 +22,7 @@ zlib()
 	make install
 
 	mv -v $PREFIX/lib/libz.so.* /lib
-	ln -sfv /lib/libz.so.1.2.5 $PREFIX/lib/libz.so
+	ln -sfv /lib/libz.so.1 $PREFIX/lib/libz.so
 	ldconfig
 
 	cd $BASE_DIR

@@ -7,11 +7,16 @@ MAKE_CLEAN="make clean"
 
 build-zlib()
 {
-	cd $BASE_DIR/zlib-1.2.5
-	./configure --prefix=$PREFIX
+	cd $BASE_DIR/zlib
+	CFLAGS='-mstackrealign -fPIC -O4' ./configure --prefix=$PREFIX
 	$MAKE_CLEAN
 	make
 	make install
+
+	mv -v $PREFIX/lib/libz.so.* /lib
+	ln -sfv /lib/libz.so.1 $PREFIX/lib/libz.so
+	ldconfig
+
 	cd $BASE_DIR
 }
 
@@ -73,7 +78,9 @@ build-gcc()
 		--enable-languages=c,c++ \
 		--disable-multilib \
 		--disable-bootstrap \
-		--with-system-zlib
+		--without-system-zlib \
+		--enable-lto \
+
 	make
 	make install
 
@@ -94,6 +101,11 @@ build-gdb()
 	ldconfig
 	cd $BASE_DIR
 }
+
+test() {
+	exit
+}
+#test
 
 build-zlib
 build-gmp

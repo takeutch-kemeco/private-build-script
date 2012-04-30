@@ -2,6 +2,9 @@
 
 BASE_DIR=$(pwd)
 
+cd $BASE_DIR/zlib
+git pull
+
 cd $BASE_DIR/mpfr
 svn update
 
