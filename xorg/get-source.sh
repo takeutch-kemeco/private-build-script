@@ -39,7 +39,7 @@ git clone git://anongit.freedesktop.org/xorg/lib/libXau
 
 git clone git://anongit.freedesktop.org/xorg/lib/libXdmcp
 
-git git://anongit.freedesktop.org/xcb/pthread-stubs
+git clone git://anongit.freedesktop.org/xcb/pthread-stubs
 
 mkdir -p xcb
 cd xcb
