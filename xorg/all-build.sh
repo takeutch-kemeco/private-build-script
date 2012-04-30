@@ -10,8 +10,8 @@ XORG_CONFIG="--prefix=$XORG_PREFIX \
 	--localstatedir=/var"
 export XORG_PREFIX XORG_ETC XORG_CONFIG
 
-#MAKE_CLEAN=
-MAKE_CLEAN="make clean"
+MAKE_CLEAN=
+#MAKE_CLEAN="make clean"
 
 util_macros()
 {
@@ -47,6 +47,19 @@ proto()
 makedepend()
 {
 	cd makedepend
+
+	./autogen.sh $XORG_CONFIG
+	$MAKE_CLEAN
+	make
+	make install
+	ldconfig
+
+	cd $__BASE_DIR__
+}
+
+fontutil()
+{
+	cd fontutil
 
 	./autogen.sh $XORG_CONFIG
 	$MAKE_CLEAN
@@ -395,6 +408,7 @@ __test__()
 util_macros
 proto
 makedepend
+fontutil
 libXau
 libXdmcp
 libpthread-stubs

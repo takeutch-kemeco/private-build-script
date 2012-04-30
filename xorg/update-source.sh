@@ -25,6 +25,15 @@ proto()
 	cd $__BASE_DIR__
 }
 
+fontutil()
+{
+	cd fontutil
+
+	git pull
+
+	cd $__BASE_DIR__
+}
+
 makedepend()
 {
 	cd makedepend
@@ -229,6 +238,7 @@ xterm()
 
 util_macros
 proto
+fontutil
 makedepend
 libXau
 libXdmcp

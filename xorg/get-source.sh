@@ -33,6 +33,8 @@ git clone git://anongit.freedesktop.org/xorg/proto/xineramaproto
 git clone git://anongit.freedesktop.org/xorg/proto/xproto
 cd $__BASE_DIR__
 
+git clone git://anongit.freedesktop.org/xorg/font/util fontutil
+
 git clone git://anongit.freedesktop.org/xorg/util/makedepend
 
 git clone git://anongit.freedesktop.org/xorg/lib/libXau
@@ -156,6 +158,7 @@ git clone git://anongit.freedesktop.org/xorg/driver/xf86-input-evdev
 git clone git://anongit.freedesktop.org/xorg/driver/xf86-input-joystick
 git clone git://anongit.freedesktop.org/xorg/driver/xf86-input-vmmouse
 git clone git://anongit.freedesktop.org/xorg/driver/xf86-input-void
+git clone git://linuxwacom.git.sourceforge.net/gitroot/linuxwacom/xf86-input-wacom
 git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-apm
 git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-ark
 git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-ast
