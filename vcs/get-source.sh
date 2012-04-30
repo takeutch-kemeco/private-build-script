@@ -5,8 +5,8 @@ git clone git://git.kernel.org/pub/scm/git/git.git
 hg clone http://selenic.com/hg
 
 #apr1
-wget -c http://ftp.riken.jp/net/apache/apr/apr-1.4.5.tar.bz2
-bzip2 -dc apr-1.4.5.tar.bz2 | tar xvf -
+wget -c http://ftp.riken.jp/net/apache/apr/apr-1.4.6.tar.bz2
+bzip2 -dc apr-1.4.6.tar.bz2 | tar xvf -
 
 wget -c http://ftp.riken.jp/net/apache//apr/apr-util-1.4.1.tar.bz2
 bzip2 -dc apr-util-1.4.1.tar.bz2 | tar xvf -

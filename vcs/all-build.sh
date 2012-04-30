@@ -27,7 +27,7 @@ hg()
 
 apr1()
 {
-	cd $BASE_DIR/apr-1.4.5
+	cd $BASE_DIR/apr-1.4.6
 	./configure --prefix=$PREFIX \
 		--with-installbuilddir=$PREFIX/lib/apr-1
 	$MAKE_CLEAN
