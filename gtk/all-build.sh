@@ -378,7 +378,7 @@ gdk-pixbuf()
 
 gtk2()
 {
-	cd gtk+-2.0
+	cd gtk+-2.24
 
 	./configure --prefix=$PREFIX \
 		--with-xinput=yes \

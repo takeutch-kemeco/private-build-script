@@ -1,5 +1,7 @@
 #!/bin/bash
 
+__BASE_DIR__=$(pwd)
+
 git clone git://anongit.freedesktop.org/git/pixman.git
 
 git clone git://github.com/atgreen/libffi.git
@@ -56,8 +58,15 @@ git clone git://git.gnome.org/atkmm
 
 git clone git://git.gnome.org/gdk-pixbuf
 
-wget -c ftp://ftp.gnome.org/pub/gnome/sources/gtk+/2.24/gtk+-2.24.8.tar.xz
-xz -dc gtk+-2.24.8.tar.xz | tar xvf -
+git clone git://git.gnome.org/gtk+ gtk+-2.24
+cd gtk+-2.24
+if [ $? -eq 0 ]
+then
+	git checkout 2.24.10
+	git checkout -b 2.24.10
+	git branch --set-upstream 2.24.10 origin/gtk-2-24
+fi
+cd $__BASE_DIR__
 
 git clone git://git.gnome.org/gtk+
 

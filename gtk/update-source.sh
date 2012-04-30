@@ -174,7 +174,9 @@ gdk-pixbuf()
 
 gtk2()
 {
-	echo
+	cd gtk+-2.24
+	git pull
+	cd $__BASE_DIR__
 }
 
 gtk3()
