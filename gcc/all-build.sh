@@ -2,8 +2,8 @@
 
 BASE_DIR=$(pwd)
 PREFIX=/usr
-#MAKE_CLEAN=
-MAKE_CLEAN="make clean"
+MAKE_CLEAN=
+#MAKE_CLEAN="make clean"
 
 build-zlib()
 {
@@ -39,7 +39,7 @@ build-gmp()
 {
 	cd $BASE_DIR/gmp
 	./.bootstrap
-	./configure --prefix=$PREFIX --enable-cxx --enable-maintainer-mode
+	./configure --prefix=$PREFIX --enable-cxx --enable-maintainer-mode ABI="32"
 	$MAKE_CLEAN
 	make
 	make install
@@ -85,7 +85,7 @@ build-gcc()
 	make install
 
 	# ???
-###	rm $PREFIX/lib/libstdc++.so.*-gdb.py
+	rm $PREFIX/lib/libstdc++.so.*-gdb.py
 
 	ldconfig
 	cd $BASE_DIR
