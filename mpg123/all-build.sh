@@ -8,11 +8,21 @@ MAKE_CLEAN="make clean"
 mpg123()
 {
 	cd $BASE_DIR/mpg123
-	./configure --prefix=$PREFIX
-	$MAKE_CLEAN
-	make
-	make install
-	ldconfig
+
+	if [ $? -eq 0 ]
+	then
+		aclocal --force -I m4
+		libtoolize --force
+		autoheader
+		automake -acf
+		autoconf
+
+		./configure --prefix=$PREFIX
+		$MAKE_CLEAN
+		make
+		make install
+		ldconfig
+	fi
 
 	cd $BASE_DIR
 }
