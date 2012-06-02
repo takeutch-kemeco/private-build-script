@@ -43,3 +43,5 @@ cvs update
 cd $BASE_DIR/diffutils
 cvs update
 
+#bazaar
+

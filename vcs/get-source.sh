@@ -39,3 +39,8 @@ git clone git://git.gnu.org.ua/gdbm.git
 cvs -z3 -d:pserver:anonymous@cvs.savannah.nongnu.org:/sources/cvs co ccvs
 cvs -z3 -d:pserver:anonymous@cvs.savannah.nongnu.org:/sources/cvs co diffutils
 
+#bazaar
+wget -c https://launchpadlibrarian.net/96882740/bzr-2.6b1.tar.gz
+gzip -dc bzr-2.6b1.tar.gz | tar xvf -
+ln -s bzr-2.6b1 bzr
+

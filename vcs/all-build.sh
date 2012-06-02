@@ -149,6 +149,15 @@ __cvs()
 	cd $BASE_DIR
 }
 
+__bzr()
+{
+	cd $BASE_DIR/bzr
+	python setup.py install
+	ldconfig
+
+	cd $BASE_DIR
+}
+
 __git
 __gitg
 
@@ -165,4 +174,6 @@ __gdbm
 
 __diffutils
 __cvs
+
+__bzr
 
