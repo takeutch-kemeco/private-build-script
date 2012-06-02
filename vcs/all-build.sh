@@ -34,7 +34,7 @@ __hg()
 	cd $BASE_DIR/hg
 	python setup.py install
 
-	cd $BASE_DIR	
+	cd $BASE_DIR
 }
 
 __apr1()
