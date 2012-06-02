@@ -17,6 +17,18 @@ git()
 	cd $BASE_DIR
 }
 
+gitg()
+{
+	cd $BASE_DIR/gitg
+	./autogen.sh --prefix=$PREFIX --enable-glade-catalog=auto
+	$MAKE_CLEAN
+	make
+	make install
+	ldconfig
+
+	cd $BASE_DIR
+}
+
 hg()
 {
 	cd $BASE_DIR/hg
@@ -118,9 +130,21 @@ gdbm()
 	cd $BASE_DIR
 }
 
+diffutils()
+{
+	cd $BASE_DIR/diffutils
+	./configure --prefix=$PREFIX
+	$MAKE_CLEAN
+	make
+	make install
+	ldconfig
+
+	cd $BASE_DIR
+}
+
 cvs()
 {
-	cd $BASE_DIR/cvs-1.11.23
+	cd $BASE_DIR/ccvs
 	./configure --prefix=$PREFIX
 	$MAKE_CLEAN
 	make
@@ -131,16 +155,18 @@ cvs()
 }
 
 git
+gitg
 
 hg
 
-apr1
-apr1-util
+#apr1
+#apr1-util
 ###apr2
-serf
-sqlite3
+#serf
+#sqlite3
 svn
 
 ###gdbm
+diffutils
 cvs
 

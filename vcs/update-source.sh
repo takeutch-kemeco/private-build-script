@@ -5,6 +5,9 @@ BASE_DIR=$(pwd)
 cd $BASE_DIR/git
 git pull
 
+cd $BASE_DIR/gitg
+git pull
+
 cd $BASE_DIR/hg
 hg pull
 hg update
@@ -28,4 +31,10 @@ svn update
 # gdbm
 
 # cvs
+cd ccvs
+cvs update
+
+#diffutils
+cd diffutils
+cvs update
 

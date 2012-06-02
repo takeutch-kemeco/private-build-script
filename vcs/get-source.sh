@@ -2,6 +2,8 @@
 
 git clone git://git.kernel.org/pub/scm/git/git.git
 
+git clone git://git.gnome.org/gitg
+
 hg clone http://selenic.com/hg
 
 #apr1
@@ -26,6 +28,7 @@ bzip2 -dc subversion-1.7.2.tar.bz2 | tar xvf -
 wget -c ftp://ftp.gnu.org/gnu/gdbm/gdbm-1.10.tar.gz
 gzip -dc gdbm-1.10.tar.gz | tar xvf -
 
-wget -c http://ftp.gnu.org/non-gnu/cvs/source/stable/1.11.23/cvs-1.11.23.tar.bz2
-bzip2 -dc cvs-1.11.23.tar.bz2 | tar xvf -
+cvs -z3 -d:pserver:anonymous@cvs.savannah.nongnu.org:/sources/cvs co ccvs
+
+cvs -z3 -d:pserver:anonymous@cvs.savannah.nongnu.org:/sources/cvs co diffutils
 
