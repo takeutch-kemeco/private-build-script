@@ -6,14 +6,14 @@ PREFIX=/usr
 #MAKE_CLEAN="make clean"
 MAKE_CLEAN=
 
-man-pages()
+__man-pages()
 {
 	cd $BASE_DIR/man-pages
 	make install
 	cd $BASE_DIR
 }
 
-zlib()
+__zlib()
 {
 	cd $BASE_DIR/zlib
 	CFLAGS='-mstackrealign -fPIC -O4' ./configure --prefix=$PREFIX
@@ -28,7 +28,7 @@ zlib()
 	cd $BASE_DIR
 }
 
-file()
+__file()
 {
 	cd $BASE_DIR/file
 	./configure --prefix=$PREFIX
@@ -40,7 +40,7 @@ file()
 	cd $BASE_DIR
 }
 
-binutils()
+__binutils()
 {
 	rmdir $BASE_DIR/build-binutils
 	mkdir -p $BASE_DIR/build-binutils
@@ -59,7 +59,7 @@ binutils()
 # $BASE_DIR/sed/lib/stdio.h の1000行目あたりに、
 # ソースコードのgetsを検知してビルド終了させるコードが含まれてるので、
 # ビルドできない場合は、そこをコメントアウトしてビルドすれば通る
-sed()
+__sed()
 {
 	cd $BASE_DIR/sed
 	rm $BASE_DIR/sed/gnulib -rf
@@ -74,27 +74,27 @@ sed()
 	cd $BASE_DIR
 }
 
-gmp()
+__gmp()
 {
 	echo
 }
 
-mpfr()
+__mpfr()
 {
 	echo
 }
 
-mpc()
+__mpc()
 {
 	echo
 }
 
-gcc()
+__gcc()
 {
 	echo
 }
 
-bzip2()
+__bzip2()
 {
 	cd $BASE_DIR/bzip2
 	make -f Makefile-libbz2_so
@@ -102,18 +102,18 @@ bzip2()
 	make
 	make PREFIX=$PREFIX install
 
-	cp -vf bzip2-shared /bin/bzip2
-	cp -avf libbz2.so* /lib
-	ln -svf /lib/libbz2.so.1.0 /usr/lib/libbz2.so
-	rm -vf /usr/bin/{bunzip2,bzcat,bzip2}
-	ln -svf bzip2 /bin/bunzip2
-	ln -svf bzip2 /bin/bzcat
+#	cp -vf bzip2-shared /bin/bzip2
+#	cp -avf libbz2.so* /lib
+#	ln -svf /lib/libbz2.so.1.0 /usr/lib/libbz2.so
+#	rm -vf /usr/bin/{bunzip2,bzcat,bzip2}
+#	ln -svf bzip2 /bin/bunzip2
+#	ln -svf bzip2 /bin/bzcat
 	ldconfig
 
 	cd $BASE_DIR
 }
 
-ncurses()
+__ncurses()
 {
 	cd $BASE_DIR/ncurses
 	./configure --prefix=$PREFIX \
@@ -130,7 +130,7 @@ ncurses()
 	cd $BASE_DIR
 }
 
-util-linux()
+__util-linux()
 {
 	cd $BASE_DIR/util-linux-ng
 	./autogen.sh
@@ -145,7 +145,7 @@ util-linux()
 	cd $BASE_DIR
 }
 
-psmisc()
+__psmisc()
 {
 	cd $BASE_DIR/psmisc
 	./autogen.sh --prefix=$PREFIX
@@ -157,7 +157,7 @@ psmisc()
 	cd $BASE_DIR
 }
 
-e2fsprogs()
+__e2fsprogs()
 {
 	rm -rf $BASE_DIR/build-e2fsprogs
 	mkdir -p $BASE_DIR/build-e2fsprogs
@@ -181,7 +181,7 @@ e2fsprogs()
 	cd $BASE_DIR
 }
 
-rsync()
+__rsync()
 {
 	cd $BASE_DIR/rsync
 	./configure --prefix=$PREFIX
@@ -193,7 +193,7 @@ rsync()
 	cd $BASE_DIR
 }
 
-coreutils()
+__coreutils()
 {
 	cd $BASE_DIR/coreutils
 	rm $BASE_DIR/coreutils/gnulib -rf
@@ -211,7 +211,7 @@ coreutils()
 	cd $BASE_DIR
 }
 
-iana-etc()
+__iana-etc()
 {
 	cd $BASE_DIR/iana-etc
 	$MAKE_CLEAN
@@ -223,7 +223,7 @@ iana-etc()
 }
 
 # gnulib を使う系のだと、getsの問題がどれでも関係してくるっぽい
-m4()
+__m4()
 {
 	cd $BASE_DIR/m4
 	rm $BASE_DIR/m4/gnulib -rf
@@ -238,7 +238,7 @@ m4()
 	cd $BASE_DIR
 }
 
-bison()
+__bison()
 {
 	cd $BASE_DIR/bison
 	rm $BASE_DIR/bison/gnulib -rf
@@ -255,7 +255,7 @@ bison()
 	cd $BASE_DIR
 }
 
-procps()
+__procps()
 {
 	cd $BASE_DIR/procps
 	./autogen.sh
@@ -268,7 +268,7 @@ procps()
 	cd $BASE_DIR
 }
 
-grep()
+__grep()
 {
 	cd $BASE_DIR/grep
 	rm $BASE_DIR/grep/gnulib -rf
@@ -283,7 +283,7 @@ grep()
 	cd $BASE_DIR
 }
 
-readline()
+__readline()
 {
 	cd $BASE_DIR/readline
 	./configure --prefix=$PREFIX \
@@ -298,7 +298,7 @@ readline()
 	cd $BASE_DIR
 }
 
-bash()
+__bash()
 {
 	cd $BASE_DIR/bash
 	./configure --prefix=$PREFIX \
@@ -312,7 +312,7 @@ bash()
 	cd $BASE_DIR
 }
 
-libtool()
+__libtool()
 {
 	cd $BASE_DIR/libtool
 	rm $BASE_DIR/libtool/gnulib -rf
@@ -327,7 +327,7 @@ libtool()
 	cd $BASE_DIR
 }
 
-gdbm()
+__gdbm()
 {
 	cd $BASE_DIR/gdbm
 	./bootstrap
@@ -341,7 +341,7 @@ gdbm()
 	cd $BASE_DIR
 }
 
-inetutils()
+__inetutils()
 {
 	cd $BASE_DIR/inetutils
 	rm $BASE_DIR/inetutils/gnulib -rf
@@ -362,7 +362,7 @@ inetutils()
 	cd $BASE_DIR
 }
 
-perl()
+__perl()
 {
 	cd $BASE_DIR/perl
 	sh Configure -des -Dprefix=/usr \
@@ -380,7 +380,28 @@ perl()
 	cd $BASE_DIR
 }
 
-gettext()
+__perl_modules()
+{
+	cd $BASE_DIR/perl-modules
+	if [ $? -eq 0 ]
+	then
+		for n in $(ls)
+		do
+			cd $BASE_DIR/perl-modules/$n
+			if [ $? -eq 0 ]
+			then
+				perl Makefile.PL
+				make
+				make install
+			fi
+		done
+		ldconfig
+	fi
+
+	cd $BASE_DIR
+}
+
+__gettext()
 {
 	cd $BASE_DIR/gettext
 	./autogen.sh --prefix=PREFIX
@@ -394,7 +415,9 @@ gettext()
 
 
 
-sysklogd()
+
+
+__sysklogd()
 {
 	cd $BASE_DIR/sysklogd
 	$MAKE_CLEAN
@@ -418,61 +441,42 @@ EOF
 	cd $BASE_DIR
 }
 
-
 __test__()
 {
-#man-pages
-#zlib
-###file
-#binutils
-#sed
-#bzip2
-#ncurses
-#util-linux
-#psmisc
-#e2fsprogs
-#coreutils
-#iana-etc
-###m4
-#bison
-#procps
-#grep
-#readline
-#bash
-###libtool
-#gdbm
-#inetutils
-perl
-
-
-
-
-#perl
-#procps
+	__perl_modules
 	exit
 }
 __test__
 
-man-pages
-#zlib
-#file
-#binutils
-#sed
-bzip2
-ncurses
-util-linux
-e2fsprogs
-rsync
-###err### coreutils
+__man-pages
+__zlib
+###__file
+#__binutils
+__sed
+__bzip2
+__ncurses
+__util-linux
+__psmisc
+__e2fsprogs
+#__coreutils
+__iana-etc
+#__m4
+__bison
+__procps
+__grep
+__readline
+__bash
+###__libtool
+__gdbm
+__inetutils
+__perl
+__perl_modules
 
 
-
-gettext
-
-
-
-sysklogd
-
-
-
+__rsync
+__gettest
+__sysklogd
+__rsync
+__gettext
+__sysklogd
 
