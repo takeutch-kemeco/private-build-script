@@ -1,5 +1,7 @@
 #!/bin/bash
 
+BASE_DIR=$(pwd)
+
 git clone git://github.com/mkerrisk/man-pages.git
 
 git clone git://github.com/madler/zlib.git
@@ -49,7 +51,7 @@ git clone git://git.savannah.gnu.org/libtool.git
 
 git clone git://git.sv.gnu.org/gdbm.git
 
-git clone git://git.sv.gnu.org/inetutils.git
+git clone git://git.savannah.gnu.org/inetutils.git
 
 git clone git://perl5.git.perl.org/perl.git perl
 
@@ -109,4 +111,47 @@ git clone git://git.savannah.gnu.org/tar.git
 git clone git://vcs.progress-linux.org/packages/udev.git
 
 #vim
+
+bzr branch bzr://bzr.savannah.gnu.org/grub/trunk/grub
+
+#perl-modules
+__perl_modules() {
+	mkdir -p $BASE_DIR/perl-modules
+	cd $BASE_DIR/perl-modules
+	if [ $? -eq 0 ]
+	then
+		wget -c http://www.cpan.org/authors/id/A/AD/ADAMK/Archive-Zip-1.30.tar.gz
+		wget -c http://cpan.org/authors/id/S/SB/SBECK/Date-Manip-6.31.tar.gz
+		wget -c http://www.cpan.org/authors/id/F/FL/FLORA/ExtUtils-Depends-0.304.tar.gz
+		wget -c http://www.cpan.org/authors/id/T/TS/TSCH/ExtUtils-PkgConfig-1.12.tar.gz
+		wget -c http://www.cpan.org/authors/id/X/XA/XAOC/Glib-1.242.tar.gz
+		wget -c http://cpan.org/authors/id/G/GA/GAAS/HTML-Parser-3.69.tar.gz
+		wget -c http://search.cpan.org/CPAN/authors/id/P/PE/PETDANCE/HTML-Tagset-3.20.tar.gz
+		wget -c http://search.cpan.org/CPAN/authors/id/D/DW/DWHEELER/Test-Pod-1.45.tar.gz
+		wget -c http://cpan.org/authors/id/M/MS/MSISK/HTML-TableExtract-2.11.tar.gz
+		wget -c http://search.cpan.org/CPAN/authors/id/M/MS/MSISK/HTML-Element-Extended-1.18.tar.gz
+		wget -c http://search.cpan.org/CPAN/authors/id/J/JF/JFEARN/HTML-Tree-4.2.tar.gz
+		wget -c http://cpan.org/authors/id/G/GA/GAAS/libwww-perl-6.04.tar.gz
+		wget -c http://www.cpan.org/authors/id/G/GA/GAAS/URI-1.60.tar.gz
+		wget -c http://search.cpan.org/CPAN/authors/id/N/NA/NANIS/Crypt-SSLeay-0.59_03.tar.gz
+		wget -c http://search.cpan.org/CPAN/authors/id/R/RA/RAAB/SGMLSpm-1.1.tar.gz
+		wget -c http://search.cpan.org/CPAN/authors/id/T/TO/TODDR/XML-Parser-2.41.tar.gz
+		wget -c http://cpan.org/authors/id/G/GR/GRANTM/XML-Simple-2.18.tar.gz
+		wget -c http://search.cpan.org/CPAN/authors/id/G/GR/GRANTM/XML-SAX-0.99.tar.gz
+		wget -c http://search.cpan.org/CPAN/authors/id/P/PE/PERIGRIN/XML-NamespaceSupport-1.11.tar.gz
+		wget -c http://search.cpan.org/CPAN/authors/id/B/BJ/BJOERN/XML-SAX-Expat-0.40.tar.gz
+		wget -c http://search.cpan.org/CPAN/authors/id/S/SH/SHLOMIF/XML-LibXML-1.99.tar.gz
+		wget -c http://search.cpan.org/CPAN/authors/id/C/CH/CHORNY/Tie-IxHash-1.22.tar.gz
+	fi
+
+	cd $BASE_DIR/perl-modules
+	if [ $? -eq 0 ]
+	then
+		for n in $(ls)
+		do
+			gzip -dc $n | tar xvf -
+		done
+	fi
+}
+__perl_modules
 
