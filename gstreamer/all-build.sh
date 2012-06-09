@@ -2,15 +2,22 @@
 
 BASE_DIR=$(pwd)
 PREFIX=/usr
+
 GST_VERSION=0.10
+#GST_VERSION=0.11
+#GST_VERSION=master
 
 #MAKE_CLEAN=
 MAKE_CLEAN="make clean"
 
-libav()
+#DIST_CLEAN=
+DIST_CLEAN="make distclean"
+
+__libav()
 {
 	cd $BASE_DIR/libav
-	./autogen.sh --prefix=/usr
+	$DIST_CLEAN
+	./configure --prefix=/usr --enable-shared
 	$MAKE_CLEAN
 	make
 	make install
@@ -19,16 +26,17 @@ libav()
 	cd $BASE_DIR
 }
 
-common()
+__common()
 {
 	cd $BASE_DIR/common
+	$DIST_CLEAN
 	git checkout -b $GST_VERSION origin/$GST_VERSION
 	git checkout $GST_VERSION
 
 	cd $BASE_DIR
 }
 
-gstreamer-core()
+__gstreamer-core()
 {
 	cd $BASE_DIR/gstreamer
 
@@ -38,10 +46,13 @@ gstreamer-core()
 	git checkout -b $GST_VERSION origin/$GST_VERSION
 	git checkout $GST_VERSION
 
+	$DIST_CLEAN
 	./autogen.sh --prefix=$PREFIX \
 		--enable-maintainer-mode \
 		--disable-gst-debug \
-		--disable-debug
+		--disable-debug \
+		--disable-fatal-warnings \
+		--enable-shared
 	$MAKE_CLEAN
 	make
 	make install
@@ -50,7 +61,7 @@ gstreamer-core()
 	cd $BASE_DIR
 }
 
-gst-plugins-base()
+__gst-plugins-base()
 {
 	cd $BASE_DIR/gst-plugins-base
 
@@ -60,9 +71,14 @@ gst-plugins-base()
 	git checkout -b $GST_VERSION origin/$GST_VERSION
 	git checkout $GST_VERSION
 
+	$DIST_CLEAN
 	./autogen.sh --prefix=$PREFIX \
 		--enable-maintainer-mode \
-		--disable-debug
+		--disable-debug \
+		--disable-fatal-warnings \
+		--disable-directfb \
+		--disable-wayland \
+		--enable-shared
 	$MAKE_CLEAN
 	make
 	make install
@@ -71,7 +87,7 @@ gst-plugins-base()
 	cd $BASE_DIR
 }
 
-gst-plugins-good()
+__gst-plugins-good()
 {
 	cd $BASE_DIR/gst-plugins-good
 
@@ -81,11 +97,14 @@ gst-plugins-good()
 	git checkout -b $GST_VERSION origin/$GST_VERSION
 	git checkout $GST_VERSION
 
+	$DIST_CLEAN
 	./autogen.sh --prefix=$PREFIX \
 		--sysconfdir=/etc/gnome \
 		--enable-maintainer-mode \
 		--disable-debug \
-		--disable-debugutils
+		--disable-debugutils \
+		--disable-fatal-warnings \
+		--enable-shared
 	$MAKE_CLEAN
 	make
 	make install
@@ -94,7 +113,7 @@ gst-plugins-good()
 	cd $BASE_DIR
 }
 
-gst-plugins-ugly()
+__gst-plugins-ugly()
 {
 	cd $BASE_DIR/gst-plugins-ugly
 
@@ -104,9 +123,12 @@ gst-plugins-ugly()
 	git checkout -b $GST_VERSION origin/$GST_VERSION
 	git checkout $GST_VERSION
 
+	$DIST_CLEAN
 	./autogen.sh --prefix=$PREFIX \
 		--enable-maintainer-mode \
-		--disable-debug
+		--disable-debug \
+		--disable-fatal-warnings \
+		--enable-shared
 	$MAKE_CLEAN
 	make
 	make install
@@ -115,7 +137,7 @@ gst-plugins-ugly()
 	cd $BASE_DIR
 }
 
-gst-plugins-bad()
+__gst-plugins-bad()
 {
 	cd $BASE_DIR/gst-plugins-bad
 
@@ -125,9 +147,12 @@ gst-plugins-bad()
 	git checkout -b $GST_VERSION origin/$GST_VERSION
 	git checkout $GST_VERSION
 
+	$DIST_CLEAN
 	./autogen.sh --prefix=$PREFIX \
 		--enable-maintainer-mode \
-		--disable-debug
+		--disable-debug \
+		--disable-fatal-warnings \
+		--enable-shared
 	$MAKE_CLEAN
 	make
 	make install
@@ -136,7 +161,7 @@ gst-plugins-bad()
 	cd $BASE_DIR
 }
 
-gst-ffmpeg()
+__gst-ffmpeg()
 {
 	cd $BASE_DIR/gst-ffmpeg
 
@@ -146,11 +171,14 @@ gst-ffmpeg()
 	rm -rf $BASE_DIR/gst-ffmpeg/gst-libs/ext/libav
 	ln -s $BASE_DIR/libav $BASE_DIR/gst-ffmpeg/gst-libs/ext/libav
 
-	git checkout -b $GST_VERSION.13 origin/$GST_VERSION.13
-	git checkout $GST_VERSION.13
+	git checkout -b $GST_VERSION origin/$GST_VERSION
+	git checkout $GST_VERSION
 
+	$DIST_CLEAN
 	./autogen.sh --prefix=$PREFIX \
-		--enable-maintainer-mode
+		--enable-maintainer-mode \
+		--disable-fatal-warnings \
+		--enable-shared
 	$MAKE_CLEAN
 	make
 	make install
@@ -159,11 +187,13 @@ gst-ffmpeg()
 	cd $BASE_DIR
 }
 
-lame()
+__lame()
 {
-	cd $BASE_DIR/lame-3.99.3
+	cd $BASE_DIR/lame
+	$DIST_CLEAN
 	./configure --prefix=$PREFIX \
-		--enable-mp3rtp
+		--enable-mp3rtp \
+		--enable-shared
 	$MAKE_CLEAN
 	make
 	make install
@@ -172,13 +202,19 @@ lame()
 	cd $BASE_DIR
 }
 
-lame
-libav
-common
-gstreamer-core
-gst-plugins-base
-gst-plugins-good
-gst-plugins-ugly
-gst-plugins-bad
-#gst-ffmpeg
+test()
+{
+	exit
+}
+#test
+
+__lame
+__libav
+__common
+__gstreamer-core
+__gst-plugins-base
+__gst-plugins-good
+__gst-plugins-ugly
+__gst-plugins-bad
+__gst-ffmpeg
 

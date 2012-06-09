@@ -16,6 +16,5 @@ git clone git://anongit.freedesktop.org/gstreamer/gst-plugins-ugly
 
 git clone git://anongit.freedesktop.org/gstreamer/gstreamer
 
-wget -c http://sourceforge.net/projects/lame/files/lame/3.99/lame-3.99.3.tar.gz
-gzip -dc lame-3.99.3.tar.gz | tar xvf -
+cvs -z3 -d:pserver:anonymous@lame.cvs.sourceforge.net:/cvsroot/lame co -P lame
 

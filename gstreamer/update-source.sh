@@ -26,5 +26,6 @@ git pull origin
 cd $BASE_DIR/gstreamer
 git pull origin
 
-#lame
+cd $BASE_DIR/lame
+cvs update
 
