@@ -14,7 +14,8 @@ do
 
 	if [ $? -eq 0 ]
 	then
-		./autogen.sh --prefix=$PREFIX
+		./autogen.sh --prefix=$PREFIX --enable-gtk-doc --enable-xinput --with-x
+
 		$__MAKE_CLEAN__
 		make
 		if [ $? -eq 0 ]
