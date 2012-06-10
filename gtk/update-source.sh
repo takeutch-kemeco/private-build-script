@@ -2,13 +2,6 @@
 
 __BASE_DIR__=$(pwd)
 
-pixman()
-{
-	cd pixman
-	git pull
-	cd $__BASE_DIR__
-}
-
 libffi()
 {
 	cd libffi
@@ -70,7 +63,9 @@ freetype2()
 
 expat()
 {
-	echo
+	cd expat
+	cvs update
+	cd $__BASE_DIR__
 }
 
 libxml2()
@@ -193,7 +188,31 @@ gtkmm()
 	cd $__BASE_DIR__
 }
 
-pixman
+freeglut()
+{
+	cd freeglut
+	svn update
+	cd $__BASE_DIR__
+}
+
+pygtk()
+{
+	cd $__BASE_DIR__/pygtk
+	git pull
+}
+
+pygobject()
+{
+	cd $__BASE_DIR__/pygobject
+	git pull
+}
+
+py2cairo()
+{
+	cd $__BASE_DIR__/pygobject
+	git pull
+}
+
 libffi
 pth
 python27
@@ -225,4 +244,8 @@ gdk-pixbuf
 gtk2
 gtk3
 gtkmm
+
+freeglut
+pygtk
+pygobject
 

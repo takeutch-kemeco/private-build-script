@@ -2,8 +2,6 @@
 
 __BASE_DIR__=$(pwd)
 
-git clone git://anongit.freedesktop.org/git/pixman.git
-
 git clone git://github.com/atgreen/libffi.git
 
 wget -c http://python.org/ftp/python/2.7.2/Python-2.7.2.tar.xz
@@ -20,9 +18,7 @@ git clone git://git.gnome.org/glibmm
 
 git clone git://git.sv.gnu.org/freetype/freetype2.git
 
-wget -c http://downloads.sourceforge.net/expat/expat-2.0.1.tar.gz
-gzip -dc expat-2.0.1.tar.gz | tar xvf -
-mv expat-2.0.1 expat
+cvs -z3 -d:pserver:anonymous@expat.cvs.sourceforge.net:/cvsroot/expat co expat
 
 git clone git://git.gnome.org/libxml2
 
@@ -32,9 +28,9 @@ git clone git://anongit.freedesktop.org/dbus/dbus-glib
 
 git clone git://anongit.freedesktop.org/fontconfig
 
-#svn checkout http://freeglut.svn.sourceforge.net/svnroot/freeglut/trunk/freeglut/freeglut freeglut
-wget -c http://prdownloads.sourceforge.net/freeglut/freeglut-2.8.0.tar.gz
-gzip -dc freeglut-2.8.0.tar.gz | tar xvf -
+svn co http://freeglut.svn.sourceforge.net/svnroot/freeglut/trunk/freeglut/freeglut freeglut
+#wget -c http://prdownloads.sourceforge.net/freeglut/freeglut-2.8.0.tar.gz
+#gzip -dc freeglut-2.8.0.tar.gz | tar xvf -
 
 git clone git://libpng.git.sourceforge.net/gitroot/libpng/libpng
 
@@ -75,4 +71,10 @@ git clone git://git.gnome.org/gtkmm
 git clone git://git.gnome.org/gobject-introspection
 
 git clone git://git.gnome.org/mm-common
+
+git clone git://git.gnome.org/pygtk
+
+git clone git://git.gnome.org/pygobject
+
+git clone git://git.cairographics.org/git/py2cairo
 

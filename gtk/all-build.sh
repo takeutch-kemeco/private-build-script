@@ -4,21 +4,8 @@ __BASE_DIR__=$(pwd)
 PREFIX=/usr
 XORG_PREFIX=/usr
 
-MAKE_CLEAN=
-#MAKE_CLEAN="make clean"
-
-pixman()
-{
-	cd pixman
-
-	./autogen.sh --prefix=$PREFIX
-	$MAKE_CLEAN
-	make
-	make install
-	ldconfig
-
-	cd $__BASE_DIR__
-}
+#MAKE_CLEAN=
+MAKE_CLEAN="make clean"
 
 libffi()
 {
@@ -177,14 +164,22 @@ dbus()
 		-s /bin/false messagebus
 
 	./autogen.sh --prefix=$PREFIX \
+	./configure --prefix=$PREFIX \
 		--sysconfdir=/etc \
-		--libexecdir=$PREFIX/lib/dbus-1.0 \
 		--localstatedir=/var \
 		--enable-maintainer-mode \
 		--enable-embedded-tests=no \
 		--enable-modular-tests=no \
 		--enable-tests=no \
-		--enable-installed-tests=no
+		--enable-installed-tests=no \
+		--enable-stats \
+		--with-dbus-user=messagebus \
+		--enable-dnotify \
+		--enable-x11-autolaunch \
+		--with-x \
+		--disable-Werror
+
+#		--libexecdir=$PREFIX/lib/dbus-1.0 \
 
 	$MAKE_CLEAN
 	make
@@ -229,7 +224,7 @@ fontconfig()
 
 freeglut()
 {
-	cd freeglut-2.8.0
+	cd freeglut
 
 	./configure  --prefix=$XORG_PREFIX
 	$MAKE_CLEAN
@@ -287,8 +282,7 @@ cairo()
 	./autogen.sh --prefix=$PREFIX \
 		--enable-tee \
 		--enable-gl \
-		--enable-drm=yes
-#		--enable-gallium=yes
+		--enable-xcb
 	$MAKE_CLEAN
 	make
 	make install
@@ -418,13 +412,65 @@ gtkmm()
 	cd $__BASE_DIR__
 }
 
+py2cairo()
+{
+	cd py2cairo
+
+	./autogen.sh --prefix=$PREFIX
+	$MAKE_CLEAN
+	make
+	make install
+	ldconfig
+
+	cd $__BASE_DIR__
+}
+
+pygobject()
+{
+	cd pygobject
+
+	./autogen.sh --prefix=$PREFIX
+	$MAKE_CLEAN
+	make
+	make install
+	ldconfig
+
+	cd $__BASE_DIR__
+}
+
+pygtk()
+{
+	cd pygtk
+
+	./autogen.sh --prefix=$PREFIX
+	$MAKE_CLEAN
+	make
+	make install
+	ldconfig
+
+	cd $__BASE_DIR__
+}
+
 __test__()
 {
+cairomm
+pango
+pangomm
+atk
+atkmm
+gdk-pixbuf
+gtk2
+gtk3
+gtkmm
+
+py2cairo
+pygobject
+pygtk
+
 	exit
 }
-#__test__
+__test__
 
-pixman
 libffi
 pth
 python27
@@ -458,4 +504,9 @@ gdk-pixbuf
 gtk2
 gtk3
 gtkmm
+
+py2cairo
+pygobject
+pygtk
+
 
