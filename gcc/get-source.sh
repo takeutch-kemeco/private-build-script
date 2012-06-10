@@ -10,5 +10,6 @@ svn checkout svn://scm.gforge.inria.fr/svn/mpc/trunk mpc
 
 svn checkout svn://gcc.gnu.org/svn/gcc/trunk gcc
 
-cvs -z3 -d:pserver:anonymous@cvs.savannah.gnu.org:/web/gdb co gdb
+#cvs -d :pserver:anoncvs@sourceware.org:/cvs/src co gdb
+#mv src gdb
 

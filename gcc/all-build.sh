@@ -2,13 +2,14 @@
 
 BASE_DIR=$(pwd)
 PREFIX=/usr
-MAKE_CLEAN=
-#MAKE_CLEAN="make clean"
+#MAKE_CLEAN=
+MAKE_CLEAN="make clean"
+CFLAGS=""
 
 build-zlib()
 {
 	cd $BASE_DIR/zlib
-	CFLAGS='-mstackrealign -fPIC -O4' ./configure --prefix=$PREFIX
+	CFLAGS='-mstackrealign -fPIC -O2' ./configure --prefix=$PREFIX
 	$MAKE_CLEAN
 	make
 	make install
@@ -79,7 +80,7 @@ build-gcc()
 		--disable-multilib \
 		--disable-bootstrap \
 		--without-system-zlib \
-		--enable-lto \
+		--enable-lto
 
 	make
 	make install
