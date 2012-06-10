@@ -17,7 +17,7 @@ __libav()
 {
 	cd $BASE_DIR/libav
 	$DIST_CLEAN
-	./configure --prefix=/usr --enable-shared
+	./configure --prefix=/usr --enable-shared --enable-gpl
 	$MAKE_CLEAN
 	make
 	make install
