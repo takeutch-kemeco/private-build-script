@@ -57,9 +57,13 @@ cd $__BASE_DIR__
 
 mkdir -p libs
 cd libs
+git clone git://anongit.freedesktop.org/git/pixman.git
+git clone git://anongit.freedesktop.org/xorg/lib/liblbxutil
 git clone git://anongit.freedesktop.org/xorg/lib/libxtrans
 git clone git://anongit.freedesktop.org/xorg/lib/libX11
 git clone git://anongit.freedesktop.org/xorg/lib/libXext
+git clone git://anongit.freedesktop.org/xorg/lib/libXevie
+git clone git://anongit.freedesktop.org/xorg/lib/libXfontcache
 git clone git://anongit.freedesktop.org/xorg/lib/libFS
 git clone git://anongit.freedesktop.org/xorg/lib/libICE
 git clone git://anongit.freedesktop.org/xorg/lib/libSM
@@ -85,10 +89,12 @@ git clone git://anongit.freedesktop.org/xorg/lib/libXtst
 git clone git://anongit.freedesktop.org/xorg/lib/libXv
 git clone git://anongit.freedesktop.org/xorg/lib/libXvMC
 git clone git://anongit.freedesktop.org/xorg/lib/libXxf86dga
+git clone git://anongit.freedesktop.org/xorg/lib/libXxf86misc
 git clone git://anongit.freedesktop.org/xorg/lib/libXxf86vm
 git clone git://anongit.freedesktop.org/xorg/lib/libdmx
 git clone git://anongit.freedesktop.org/xorg/lib/libpciaccess
 git clone git://anongit.freedesktop.org/xorg/lib/libxkbfile
+git clone git://anongit.freedesktop.org/xorg/lib/libxkbui
 cd $__BASE_DIR__
 
 mkdir -p mesa
@@ -152,6 +158,8 @@ git clone git://anongit.freedesktop.org/xorg/xserver
 
 mkdir -p driver
 cd driver
+git clone git://anongit.freedesktop.org/xorg/driver/xf86-input-mouse
+git clone git://anongit.freedesktop.org/xorg/driver/xf86-input-keyboard
 git clone git://anongit.freedesktop.org/xorg/driver/xf86-input-acecad
 git clone git://anongit.freedesktop.org/xorg/driver/xf86-input-aiptek
 git clone git://anongit.freedesktop.org/xorg/driver/xf86-input-evdev

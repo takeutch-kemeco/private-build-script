@@ -13,10 +13,14 @@ export XORG_PREFIX XORG_ETC XORG_CONFIG
 MAKE_CLEAN=
 #MAKE_CLEAN="make clean"
 
+DIST_CLEAN=
+#DIST_CLEAN="make distclean"
+
 util_macros()
 {
 	cd macros
 
+	$DIST_CLEAN
 	./autogen.sh $XORG_CONFIG
 	$MAKE_CLEAN
 	make
@@ -34,11 +38,15 @@ proto()
 	for package in $(ls)
 	do
 		cd $__PROTO_BASE_DIR__/$package
-		./autogen.sh $XORG_CONFIG
-		$MAKE_CLEAN
-		make
-		make install
-		ldconfig
+		if [ $? -eq 0 ]
+		then
+			$DIST_CLEAN
+			./autogen.sh $XORG_CONFIG
+			$MAKE_CLEAN
+			make
+			make install
+			ldconfig
+		fi
 	done
 
 	cd $__BASE_DIR__
@@ -48,6 +56,7 @@ makedepend()
 {
 	cd makedepend
 
+	$DIST_CLEAN
 	./autogen.sh $XORG_CONFIG
 	$MAKE_CLEAN
 	make
@@ -61,6 +70,7 @@ fontutil()
 {
 	cd fontutil
 
+	$DIST_CLEAN
 	./autogen.sh $XORG_CONFIG
 	$MAKE_CLEAN
 	make
@@ -74,6 +84,7 @@ libXau()
 {
 	cd libXau
 	
+	$DIST_CLEAN
 	./autogen.sh $XORG_CONFIG
 	$MAKE_CLEAN
 	make
@@ -87,6 +98,7 @@ libXdmcp()
 {
 	cd libXdmcp
 	
+	$DIST_CLEAN
 	./autogen.sh $XORG_CONFIG
 	$MAKE_CLEAN
 	make
@@ -100,6 +112,7 @@ libpthread-stubs()
 {
 	cd pthread-stubs
 	
+	$DIST_CLEAN
 	./autogen.sh $XORG_CONFIG
 	$MAKE_CLEAN
 	make
@@ -113,6 +126,7 @@ xcb-proto()
 {
 	cd xcb/proto
 	
+	$DIST_CLEAN
 	./autogen.sh
 	./configure $XORG_CONFIG
 	$MAKE_CLEAN
@@ -127,7 +141,8 @@ libxcb()
 {
 	cd xcb/libxcb
 	
-	./autogen.sh $XORG_CONFIG --enable-xinput --enable-xkb
+	$DIST_CLEAN
+	./autogen.sh $XORG_CONFIG --enable-xinput --enable-xkb --with-xkb-rules-symlink=xorg
 	$MAKE_CLEAN
 	make
 	make install
@@ -144,11 +159,15 @@ libs()
 	for package in $(ls)
 	do
 		cd $__LIBS_BASE_DIR__/$package
-		./autogen.sh $XORG_CONFIG
-		$MAKE_CLEAN
-		make
-		make install
-		ldconfig
+		if [ $? -eq 0 ]
+		then
+			$DIST_CLEAN
+			./autogen.sh $XORG_CONFIG
+			$MAKE_CLEAN
+			make
+			make install
+			ldconfig
+		fi
 	done
 
 	cd $__BASE_DIR__
@@ -167,6 +186,7 @@ xcb-util()
 	rm $__BASE_DIR__/xcb/util/m4 -rf
 	ln -s $__BASE_DIR__/xcb/util-common-m4 $__BASE_DIR__/xcb/util/m4
 	
+	$DIST_CLEAN
 	./autogen.sh $XORG_CONFIG
 	$MAKE_CLEAN
 	make
@@ -183,6 +203,7 @@ xcb-util-image()
 	rm $__BASE_DIR__/xcb/util-image/m4 -rf
 	ln -s $__BASE_DIR__/xcb/util-common-m4 $__BASE_DIR__/xcb/util-image/m4
 	
+	$DIST_CLEAN
 	./autogen.sh $XORG_CONFIG
 	$MAKE_CLEAN
 	make
@@ -199,6 +220,7 @@ xcb-util-keysyms()
 	rm $__BASE_DIR__/xcb/util-keysyms/m4 -rf
 	ln -s $__BASE_DIR__/xcb/util-common-m4 $__BASE_DIR__/xcb/util-keysyms/m4
 	
+	$DIST_CLEAN
 	./autogen.sh $XORG_CONFIG
 	$MAKE_CLEAN
 	make
@@ -215,6 +237,7 @@ xcb-util-renderutil()
 	rm $__BASE_DIR__/xcb/util-renderutil/m4 -rf
 	ln -s $__BASE_DIR__/xcb/util-common-m4 $__BASE_DIR__/xcb/util-renderutil/m4
 	
+	$DIST_CLEAN
 	./autogen.sh $XORG_CONFIG
 	$MAKE_CLEAN
 	make
@@ -231,6 +254,7 @@ xcb-util-wm()
 	rm $__BASE_DIR__/xcb/util-wm/m4 -rf
 	ln -s $__BASE_DIR__/xcb/util-common-m4 $__BASE_DIR__/xcb/util-wm/m4
 	
+	$DIST_CLEAN
 	./autogen.sh $XORG_CONFIG
 	$MAKE_CLEAN
 	make
@@ -244,7 +268,8 @@ mesa-drm()
 {
 	cd mesa/drm
 	
-	./autogen.sh $XORG_CONFIG --disable-radeon --disable-nouveau
+	$DIST_CLEAN
+	./autogen.sh $XORG_CONFIG --disable-radeon --disable-nouveau --enable-udev
 	$MAKE_CLEAN
 	make
 	make install
@@ -258,11 +283,22 @@ mesa()
 {
 	cd mesa/mesa
 	
+	$DIST_CLEAN
 	./autogen.sh $XORG_CONFIG \
-		--enable-dri \
 		--enable-xorg \
 		--with-dri-drivers=i965 \
-		--with-x
+		--with-x \
+		--enable-xcb \
+		--enable-shared-dricore \
+		--with-gallium-drivers=i915 \
+		--disable-radeon \
+		--disable-nouveau \
+		--enable-udev \
+		--enable-gallium-egl \
+		--enable-gles1 \
+		--enable-gles2 \
+		--enable-glx
+
 	$MAKE_CLEAN
 	make
 	make install
@@ -282,13 +318,32 @@ apps()
 	for package in $(ls)
 	do
 		cd $__APPS_BASE_DIR__/$package
-		./autogen.sh $XORG_CONFIG \
-			--with-xinitdir=$XORG_ETC/X11/app-defaults
-		$MAKE_CLEAN
-		make
-		make install
-		ldconfig
+		if [ $? -eq 0 ]
+		then
+			$DIST_CLEAN
+			./autogen.sh $XORG_CONFIG \
+				--with-xinitdir=$XORG_ETC/X11/app-defaults
+			$MAKE_CLEAN
+			make
+			make install
+			ldconfig
+		fi
 	done
+
+	cd $__BASE_DIR__
+}
+
+xhost()
+{
+	cd apps/xhost
+
+	$DIST_CLEAN
+	./autogen.sh $XORG_CONFIG \
+		--with-xinitdir=$XORG_ETC/X11/app-defaults
+	$MAKE_CLEAN
+	make
+	make install
+	ldconfig
 
 	cd $__BASE_DIR__
 }
@@ -307,7 +362,9 @@ xkeyboard-config()
 {
 	cd xkeyboard-config
 	
-	./autogen.sh $XORG_CONFIG --with-xkb-rules-symlink=xorg
+	$DIST_CLEAN
+	./autogen.sh $XORG_CONFIG \
+		--with-xkb-rules-symlink=xorg
 	$MAKE_CLEAN
 	make
 	make install
@@ -320,6 +377,7 @@ xserver()
 {
 	cd xserver
 	
+	$DIST_CLEAN
 	./autogen.sh $XORG_CONFIG \
 		--with-module-dir=$XORG_PREFIX/lib/X11/modules \
 		--with-xkb-output=/var/lib/xkb \
@@ -343,11 +401,15 @@ driver()
 	for package in $(ls)
 	do
 		cd $__DRIVER_BASE_DIR__/$package
-		./autogen.sh $XORG_CONFIG
-		$MAKE_CLEAN
-		make
-		make install
-		ldconfig
+		if [ $? -eq 0 ]
+		then
+			$DIST_CLEAN
+			./autogen.sh $XORG_CONFIG
+			$MAKE_CLEAN
+			make
+			make install
+			ldconfig
+		fi
 	done
 
 	cd $__BASE_DIR__
@@ -357,6 +419,7 @@ xterm()
 {
 	cd xterm
 
+	$DIST_CLEAN
 	sed -i '/v0/,+1s/new:/new:kb=^?:/' termcap &&
 	echo -e '\tkbs=\\177,' >>terminfo &&
 	TERMINFO=$XORG_PREFIX/lib/terminfo ./configure $XORG_CONFIG \

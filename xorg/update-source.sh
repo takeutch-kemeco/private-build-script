@@ -19,7 +19,10 @@ proto()
 	for package in $(ls)
 	do
 		cd $__PROTO_BASE_DIR__/$package
-		git pull
+		if [ $? -eq 0 ]
+		then
+			git pull
+		fi
 	done
 
 	cd $__BASE_DIR__
@@ -96,7 +99,10 @@ libs()
 	for package in $(ls)
 	do
 		cd $__LIBS_BASE_DIR__/$package
-		git pull
+		if [ $? -eq 0 ]
+		then
+			git pull
+		fi
 	done
 
 	cd $__BASE_DIR__
@@ -182,7 +188,10 @@ apps()
 	for package in $(ls)
 	do
 		cd $__APPS_BASE_DIR__/$package
-		git pull
+		if [ $? -eq 0 ]
+		then
+			git pull
+		fi
 	done
 
 	cd $__BASE_DIR__
@@ -224,7 +233,10 @@ driver()
 	for package in $(ls)
 	do
 		cd $__DRIVER_BASE_DIR__/$package
-		git pull
+		if [ $? -eq 0 ]
+		then
+			git pull
+		fi
 	done
 
 	cd $__BASE_DIR__
