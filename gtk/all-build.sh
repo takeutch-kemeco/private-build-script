@@ -7,7 +7,7 @@ XORG_PREFIX=/usr
 #MAKE_CLEAN=
 MAKE_CLEAN="make clean"
 
-libffi()
+__libffi()
 {
 	cd libffi
 
@@ -20,7 +20,7 @@ libffi()
 	cd $__BASE_DIR__
 }
 
-pth()
+__pth()
 {
 	cd pth-2.0.7
 
@@ -33,21 +33,29 @@ pth()
 	cd $__BASE_DIR__
 }
 
-python27()
+__python27()
 {
-	cd Python-2.7.2
+	cd python27
+
+	sed -i "s/ndbm_libs = \[\]/ndbm_libs = ['gdbm', 'gdbm_compat']/" setup.py
 
 	./configure --prefix=$PREFIX \
 		--enable-shared
 	$MAKE_CLEAN
 	make
 	make install
+
+	chmod -v 755 /usr/lib/libpython2.7.so.1.0
 	ldconfig
+
+	install -v -m755 -d /usr/share/doc/Python-2.7.3
+	tar --strip-components=1 -C /usr/share/doc/Python-2.7.3 \
+		    -xvf ../python-2.7.3-docs-html.tar.bz2
 
 	cd $__BASE_DIR__
 }
 
-glib()
+__glib()
 {
 	cd glib
 
@@ -60,7 +68,7 @@ glib()
 	cd $__BASE_DIR__
 }
 
-gobject-introspection()
+__gobject-introspection()
 {
 	cd gobject-introspection
 
@@ -73,7 +81,7 @@ gobject-introspection()
 	cd $__BASE_DIR__
 }
 
-libsigcpp()
+__libsigcpp()
 {
 	cd libsigc++2
 
@@ -86,7 +94,7 @@ libsigcpp()
 	cd $__BASE_DIR__
 }
 
-mm-common()
+__mm-common()
 {
 	cd mm-common
 
@@ -99,7 +107,7 @@ mm-common()
 	cd $__BASE_DIR__
 }
 
-glibmm()
+__glibmm()
 {
 	cd glibmm
 
@@ -112,7 +120,7 @@ glibmm()
 	cd $__BASE_DIR__
 }
 
-freetype2()
+__freetype2()
 {
 	cd freetype2
 
@@ -126,7 +134,7 @@ freetype2()
 	cd $__BASE_DIR__
 }
 
-expat()
+__expat()
 {
 	cd expat
 
@@ -139,7 +147,7 @@ expat()
 	cd $__BASE_DIR__
 }
 
-libxml2()
+__libxml2()
 {
 	cd libxml2
 
@@ -152,7 +160,7 @@ libxml2()
 	cd $__BASE_DIR__
 }
 
-dbus()
+__dbus()
 {
 	cd $__BASE_DIR__/dbus
 
@@ -193,7 +201,7 @@ dbus()
 	cd $__BASE_DIR__
 }
 
-dbus-glib()
+__dbus-glib()
 {
 	cd $__BASE_DIR__/dbus-glib
 	./autogen.sh --prefix=$PREFIX \
@@ -206,7 +214,7 @@ dbus-glib()
 	cd $__BASE_DIR__
 }
 
-fontconfig()
+__fontconfig()
 {
 	cd fontconfig
 
@@ -222,7 +230,7 @@ fontconfig()
 	cd $__BASE_DIR__
 }
 
-freeglut()
+__freeglut()
 {
 	cd freeglut
 
@@ -235,7 +243,7 @@ freeglut()
 	cd $__BASE_DIR__
 }
 
-libpng()
+__libpng()
 {
 	cd libpng
 
@@ -249,7 +257,7 @@ libpng()
 	cd $__BASE_DIR__
 }
 
-libjpeg8()
+__libjpeg8()
 {
 	cd jpeg-8d
 
@@ -262,7 +270,7 @@ libjpeg8()
 	cd $__BASE_DIR__
 }
 
-libtiff()
+__libtiff()
 {
 	cd tiff-4.0.0
 
@@ -275,14 +283,15 @@ libtiff()
 	cd $__BASE_DIR__
 }
 
-cairo()
+__cairo()
 {
 	cd cairo
 
 	./autogen.sh --prefix=$PREFIX \
 		--enable-tee \
 		--enable-gl \
-		--enable-xcb
+		--enable-xcb \
+		--enable-gtk-doc
 	$MAKE_CLEAN
 	make
 	make install
@@ -291,7 +300,7 @@ cairo()
 	cd $__BASE_DIR__
 }
 
-cairomm()
+__cairomm()
 {
 	cd cairomm
 
@@ -304,7 +313,7 @@ cairomm()
 	cd $__BASE_DIR__
 }
 
-pango()
+__pango()
 {
 	cd pango
 
@@ -318,7 +327,7 @@ pango()
 	cd $__BASE_DIR__
 }
 
-pangomm()
+__pangomm()
 {
 	cd pangomm
 
@@ -331,7 +340,7 @@ pangomm()
 	cd $__BASE_DIR__
 }
 
-atk()
+__atk()
 {
 	cd atk
 
@@ -344,7 +353,7 @@ atk()
 	cd $__BASE_DIR__
 }
 
-atkmm()
+__atkmm()
 {
 	cd atkmm
 
@@ -357,7 +366,7 @@ atkmm()
 	cd $__BASE_DIR__
 }
 
-gdk-pixbuf()
+__gdk-pixbuf()
 {
 	cd gdk-pixbuf
 
@@ -370,7 +379,7 @@ gdk-pixbuf()
 	cd $__BASE_DIR__
 }
 
-gtk2()
+__gtk2()
 {
 	cd gtk+-2.24
 
@@ -386,7 +395,7 @@ gtk2()
 	cd $__BASE_DIR__
 }
 
-gtk3()
+__gtk3()
 {
 	cd gtk+
 
@@ -399,7 +408,7 @@ gtk3()
 	cd $__BASE_DIR__
 }
 
-gtkmm()
+__gtkmm()
 {
 	cd gtkmm
 
@@ -412,7 +421,7 @@ gtkmm()
 	cd $__BASE_DIR__
 }
 
-py2cairo()
+__py2cairo()
 {
 	cd py2cairo
 
@@ -425,7 +434,7 @@ py2cairo()
 	cd $__BASE_DIR__
 }
 
-pygobject()
+__pygobject()
 {
 	cd pygobject
 
@@ -438,7 +447,7 @@ pygobject()
 	cd $__BASE_DIR__
 }
 
-pygtk()
+__pygtk()
 {
 	cd pygtk
 
@@ -453,60 +462,45 @@ pygtk()
 
 __test__()
 {
-cairomm
-pango
-pangomm
-atk
-atkmm
-gdk-pixbuf
-gtk2
-gtk3
-gtkmm
-
-py2cairo
-pygobject
-pygtk
-
 	exit
 }
-__test__
+#__test__
 
-libffi
-pth
-python27
-glib
-gobject-introspection
-libsigcpp
-mm-common
-glibmm
+__libffi
+__pth
+__python27
+__glib
+__gobject-introspection
+__libsigcpp
+__mm-common
+__glibmm
 
-freetype2
-expat
-libxml2
+__freetype2
+__expat
+__libxml2
 
-dbus
-dbus-glib
+__dbus
+__dbus-glib
 
-fontconfig
-freeglut
+__fontconfig
+__freeglut
 
-libpng
-libjpeg8
-libtiff
+__libpng
+__libjpeg8
+__libtiff
 
-cairo
-cairomm
-pango
-pangomm
-atk
-atkmm
-gdk-pixbuf
-gtk2
-gtk3
-gtkmm
+__cairo
+__cairomm
+__pango
+__pangomm
+__atk
+__atkmm
+__gdk-pixbuf
+__gtk2
+__gtk3
+__gtkmm
 
-py2cairo
-pygobject
-pygtk
-
+__py2cairo
+__pygobject
+__pygtk
 

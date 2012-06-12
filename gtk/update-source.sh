@@ -2,250 +2,228 @@
 
 __BASE_DIR__=$(pwd)
 
-libffi()
+__libffi()
 {
-	cd libffi
+	cd $__BASE_DIR__/libffi
 	git pull
-	cd $__BASE_DIR__
 }
 
-python27()
+__python27()
 {
 	echo
 }
 
-pth()
+__pth()
 {
 	echo
 }
 
-glib()
+__glib()
 {
-	cd glib
+	cd $__BASE_DIR__/glib
 	git pull
-	cd $__BASE_DIR__
 }
 
-gobject-introspection()
+__gobject-introspection()
 {
-	cd gobject-introspection
+	cd $__BASE_DIR__/gobject-introspection
 	git pull
-	cd $__BASE_DIR__
 }
 
-libsigcpp()
+__libsigcpp()
 {
-	cd libsigc++2
+	cd $__BASE_DIR__/libsigc++2
 	git pull
-	cd $__BASE_DIR__
 }
 
-mm-common()
+__mm-common()
 {
-	cd mm-common
+	cd $__BASE_DIR__/mm-common
 	git pull
-	cd $__BASE_DIR__
 }
 
-glibmm()
+__glibmm()
 {
-	cd glibmm
+	cd $__BASE_DIR__/glibmm
 	git pull
-	cd $__BASE_DIR__
 }
 
-freetype2()
+__freetype2()
 {
-	cd freetype2
+	cd $__BASE_DIR__/freetype2
 	git pull
-	cd $__BASE_DIR__
 }
 
-expat()
+__expat()
 {
-	cd expat
+	cd $__BASE_DIR__/expat
 	cvs update
-	cd $__BASE_DIR__
 }
 
-libxml2()
+__libxml2()
 {
-	cd libxml2
+	cd $__BASE_DIR__/libxml2
 	git pull
-	cd $__BASE_DIR__
 }
 
-dbus()
+__dbus()
 {
-	cd dbus
+	cd $__BASE_DIR__/dbus
 	git pull origin
-	cd $__BASE_DIR__
 }
 
-dbus-glib()
+__dbus-glib()
 {
-	cd dbus-glib
+	cd $__BASE_DIR__/dbus-glib
 	git pull
-	cd $__BASE_DIR__
 }
 
-fontconfig()
+__fontconfig()
 {
-	cd fontconfig
+	cd $__BASE_DIR__/fontconfig
 	git pull
-	cd $__BASE_DIR__
 }
 
-freeglut()
+__freeglut()
 {
-	echo
-}
-
-libpng()
-{
-	cd libpng
-	git pull
-	cd $__BASE_DIR__
-}
-
-libjpeg8()
-{
-	echo
-}
-
-libtiff()
-{
-	echo
-}
-
-cairo()
-{
-	cd cairo
-	git pull
-	cd $__BASE_DIR__
-}
-
-cairomm()
-{
-	cd cairomm
-	git pull
-	cd $__BASE_DIR__
-}
-
-pango()
-{
-	cd pango
-	git pull
-	cd $__BASE_DIR__
-}
-
-pangomm()
-{
-	cd pangomm
-	git pull
-	cd $__BASE_DIR__
-}
-
-atk()
-{
-	cd atk
-	git pull
-	cd $__BASE_DIR__
-}
-
-atkmm()
-{
-	cd atkmm
-	git pull
-	cd $__BASE_DIR__
-}
-
-gdk-pixbuf()
-{
-	cd gdk-pixbuf
-	git pull
-	cd $__BASE_DIR__
-}
-
-gtk2()
-{
-	cd gtk+-2.24
-	git pull
-	cd $__BASE_DIR__
-}
-
-gtk3()
-{
-	cd gtk+
-	git pull
-	cd $__BASE_DIR__
-}
-
-gtkmm()
-{
-	cd gtkmm
-	git pull
-	cd $__BASE_DIR__
-}
-
-freeglut()
-{
-	cd freeglut
+	cd $__BASE_DIR__/freeglut
 	svn update
-	cd $__BASE_DIR__
 }
 
-pygtk()
+__libpng()
+{
+	cd $__BASE_DIR__/libpng
+	git pull
+}
+
+__libjpeg8()
+{
+	echo
+}
+
+__libtiff()
+{
+	cd $__BASE_DIR__/libffi
+	git pull
+}
+
+__cairo()
+{
+	cd $__BASE_DIR__/cairo
+	git pull
+}
+
+__cairomm()
+{
+	cd $__BASE_DIR__/cairomm
+	git pull
+}
+
+__pango()
+{
+	cd $__BASE_DIR__/pango
+	git pull
+}
+
+__pangomm()
+{
+	cd $__BASE_DIR__/pangomm
+	git pull
+}
+
+__atk()
+{
+	cd $__BASE_DIR__/atk
+	git pull
+}
+
+__atkmm()
+{
+	cd $__BASE_DIR__/atkmm
+	git pull
+}
+
+__gdk-pixbuf()
+{
+	cd $__BASE_DIR__/gdk-pixbuf
+	git pull
+}
+
+__gtk2()
+{
+	cd $__BASE_DIR__/gtk+-2.24
+	git pull
+}
+
+__gtk3()
+{
+	cd $__BASE_DIR__/gtk+
+	git pull
+}
+
+__gtkmm()
+{
+	cd $__BASE_DIR__/gtkmm
+	git pull
+}
+
+__freeglut()
+{
+	cd $__BASE_DIR__/freeglut
+	svn update
+}
+
+__pygtk()
 {
 	cd $__BASE_DIR__/pygtk
 	git pull
 }
 
-pygobject()
+__pygobject()
 {
 	cd $__BASE_DIR__/pygobject
 	git pull
 }
 
-py2cairo()
+__py2cairo()
 {
 	cd $__BASE_DIR__/pygobject
 	git pull
 }
 
-libffi
-pth
-python27
-glib
-gobject-introspection
-libsigcpp
-mm-common
-glibmm
+__libffi
+###pth
+###python27
+__glib
+__gobject-introspection
+__libsigcpp
+__mm-common
+__glibmm
 
-freetype2
-expat
-libxml2
-dbus
-dbus-glib
-fontconfig
-freeglut
+__freetype2
+__expat
+__libxml2
+__dbus
+__dbus-glib
+__fontconfig
+__freeglut
 
-libpng
-libjpeg8
-libtiff
+__libpng
+###__libjpeg8
+__libtiff
 
-cairo
-cairomm
-pango
-pangomm
-atk
-atkmm
-gdk-pixbuf
-gtk2
-gtk3
-gtkmm
+__cairo
+__cairomm
+__pango
+__pangomm
+__atk
+__atkmm
+__gdk-pixbuf
+__gtk2
+__gtk3
+__gtkmm
 
-freeglut
-pygtk
-pygobject
+__freeglut
+__pygtk
+__pygobject
 

@@ -4,8 +4,9 @@ __BASE_DIR__=$(pwd)
 
 git clone git://github.com/atgreen/libffi.git
 
-wget -c http://python.org/ftp/python/2.7.2/Python-2.7.2.tar.xz
-xz -dc Python-2.7.2.tar.xz | tar xvf -
+wget -c http://www.python.org/ftp/python/2.7.3/Python-2.7.3.tar.xz
+xz -dc Python-2.7.3.tar.xz | tar xvf -
+ln -s Python-2.7.3 python27
 
 wget -c ftp://ftp.gnu.org/gnu/pth/pth-2.0.7.tar.gz
 gzip -dc pth-2.0.7.tar.gz | tar xvf -
