@@ -51,10 +51,10 @@ build-gmp()
 build-mpc()
 {
 	cd $BASE_DIR/mpc
-	aclocal
-	libtoolize
+	aclocal --install -I m4
+	libtoolize --force
 	autoheader
-	automake -a -c -f
+	automake -acf
 	autoconf
 	./configure --prefix=$PREFIX
 	$MAKE_CLEAN
