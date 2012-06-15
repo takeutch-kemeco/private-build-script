@@ -2,29 +2,34 @@
 
 BASE_DIR=$(pwd)
 
+f() {
+	git checkout master
+	git pull
+}
+
 cd $BASE_DIR/common
-git pull origin
+f
 
 cd $BASE_DIR/gst-ffmpeg
-git pull origin
+f
 
 cd $BASE_DIR/libav
-git pull origin
+f
 
 cd $BASE_DIR/gst-plugins-bad
-git pull origin
+f
 
 cd $BASE_DIR/gst-plugins-base
-git pull origin
+f
 
 cd $BASE_DIR/gst-plugins-good
-git pull origin
+f
 
 cd $BASE_DIR/gst-plugins-ugly
-git pull origin
+f
 
 cd $BASE_DIR/gstreamer
-git pull origin
+f
 
 cd $BASE_DIR/lame
 cvs update
