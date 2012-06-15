@@ -150,12 +150,26 @@ __xdg-utils()
 	ldconfig
 }
 
+__pkg-config()
+{
+	cd $__BASE_DIR__/pkg-config-0.26
+	./configure --prefix=$PREFIX \
+		--with-installed-popt \
+		--with-internal-glib \
+		--docdir=/usr/share/doc/pkg-config-0.26-internal-glib
+	$MAKE_CLEAN
+	make
+	make install
+	ldconfig
+}
+
 __test__() {
 
 	exit
 }
-__test__
+#__test__
 
+__pkg-config
 __pciutils
 __usbutils
 __consolekit
