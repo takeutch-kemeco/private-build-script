@@ -12,6 +12,7 @@ DIST_CLEAN="make distclean"
 __libav()
 {
 	cd $BASE_DIR/libav
+
 	$DIST_CLEAN
 	./configure --prefix=/usr --enable-shared --enable-gpl
 	$MAKE_CLEAN
@@ -34,9 +35,6 @@ __gstreamer-core()
 {
 	cd $BASE_DIR/gstreamer
 
-	rm -rf $BASE_DIR/gstreamer/common
-	ln -s $BASE_DIR/common $BASE_DIR/gstreamer/common
-
 	$DIST_CLEAN
 	./autogen.sh --prefix=$PREFIX \
 		--enable-maintainer-mode \
@@ -55,9 +53,6 @@ __gstreamer-core()
 __gst-plugins-base()
 {
 	cd $BASE_DIR/gst-plugins-base
-
-	rm -rf $BASE_DIR/gst-plugins-base/common
-	ln -s $BASE_DIR/common $BASE_DIR/gst-plugins-base/common
 
 	$DIST_CLEAN
 	./autogen.sh --prefix=$PREFIX \
@@ -79,9 +74,6 @@ __gst-plugins-good()
 {
 	cd $BASE_DIR/gst-plugins-good
 
-	rm -rf $BASE_DIR/gst-plugins-good/common
-	ln -s $BASE_DIR/common $BASE_DIR/gst-plugins-good/common
-
 	$DIST_CLEAN
 	./autogen.sh --prefix=$PREFIX \
 		--sysconfdir=/etc/gnome \
@@ -102,9 +94,6 @@ __gst-plugins-ugly()
 {
 	cd $BASE_DIR/gst-plugins-ugly
 
-	rm -rf $BASE_DIR/gst-plugins-ugly/common
-	ln -s $BASE_DIR/common $BASE_DIR/gst-plugins-ugly/common
-
 	$DIST_CLEAN
 	./autogen.sh --prefix=$PREFIX \
 		--enable-maintainer-mode \
@@ -122,9 +111,6 @@ __gst-plugins-ugly()
 __gst-plugins-bad()
 {
 	cd $BASE_DIR/gst-plugins-bad
-
-	rm -rf $BASE_DIR/gst-plugins-bad/common
-	ln -s $BASE_DIR/common $BASE_DIR/gst-plugins-bad/common
 
 	$DIST_CLEAN
 	./autogen.sh --prefix=$PREFIX \
@@ -144,12 +130,6 @@ __gst-ffmpeg()
 {
 	cd $BASE_DIR/gst-ffmpeg
 
-	rm -rf $BASE_DIR/gst-ffmpeg/common
-	ln -s $BASE_DIR/common $BASE_DIR/gst-ffmpeg/common
-
-	rm -rf $BASE_DIR/gst-ffmpeg/gst-libs/ext/libav
-	ln -s $BASE_DIR/libav $BASE_DIR/gst-ffmpeg/gst-libs/ext/libav
-
 	$DIST_CLEAN
 	./autogen.sh --prefix=$PREFIX \
 		--enable-maintainer-mode \
@@ -166,6 +146,7 @@ __gst-ffmpeg()
 __lame()
 {
 	cd $BASE_DIR/lame
+	
 	$DIST_CLEAN
 	./configure --prefix=$PREFIX \
 		--enable-mp3rtp \
