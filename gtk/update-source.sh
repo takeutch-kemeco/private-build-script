@@ -8,11 +8,6 @@ __libffi()
 	git pull
 }
 
-__python27()
-{
-	echo
-}
-
 __pth()
 {
 	echo
@@ -173,27 +168,8 @@ __freeglut()
 	svn update
 }
 
-__pygtk()
-{
-	cd $__BASE_DIR__/pygtk
-	git pull
-}
-
-__pygobject()
-{
-	cd $__BASE_DIR__/pygobject
-	git pull
-}
-
-__py2cairo()
-{
-	cd $__BASE_DIR__/pygobject
-	git pull
-}
-
 __libffi
 ###pth
-###python27
 __glib
 __gobject-introspection
 __libsigcpp
@@ -224,6 +200,4 @@ __gtk3
 __gtkmm
 
 __freeglut
-__pygtk
-__pygobject
 

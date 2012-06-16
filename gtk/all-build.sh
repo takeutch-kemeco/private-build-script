@@ -33,28 +33,6 @@ __pth()
 	cd $__BASE_DIR__
 }
 
-__python27()
-{
-	cd python27
-
-	sed -i "s/ndbm_libs = \[\]/ndbm_libs = ['gdbm', 'gdbm_compat']/" setup.py
-
-	./configure --prefix=$PREFIX \
-		--enable-shared
-	$MAKE_CLEAN
-	make
-	make install
-
-	chmod -v 755 /usr/lib/libpython2.7.so.1.0
-	ldconfig
-
-	install -v -m755 -d /usr/share/doc/Python-2.7.3
-	tar --strip-components=1 -C /usr/share/doc/Python-2.7.3 \
-		    -xvf ../python-2.7.3-docs-html.tar.bz2
-
-	cd $__BASE_DIR__
-}
-
 __glib()
 {
 	cd glib
@@ -421,54 +399,35 @@ __gtkmm()
 	cd $__BASE_DIR__
 }
 
-__py2cairo()
-{
-	cd py2cairo
-
-	./autogen.sh --prefix=$PREFIX
-	$MAKE_CLEAN
-	make
-	make install
-	ldconfig
-
-	cd $__BASE_DIR__
-}
-
-__pygobject()
-{
-	cd pygobject
-
-	./autogen.sh --prefix=$PREFIX
-	$MAKE_CLEAN
-	make
-	make install
-	ldconfig
-
-	cd $__BASE_DIR__
-}
-
-__pygtk()
-{
-	cd pygtk
-
-	./autogen.sh --prefix=$PREFIX
-	$MAKE_CLEAN
-	make
-	make install
-	ldconfig
-
-	cd $__BASE_DIR__
-}
-
 __test__()
 {
+__dbus
+__dbus-glib
+
+__fontconfig
+__freeglut
+
+__libpng
+__libjpeg8
+__libtiff
+
+__cairo
+__cairomm
+__pango
+__pangomm
+__atk
+__atkmm
+__gdk-pixbuf
+__gtk2
+__gtk3
+__gtkmm
+
 	exit
 }
-#__test__
+__test__
 
 __libffi
 __pth
-__python27
 __glib
 __gobject-introspection
 __libsigcpp
@@ -499,8 +458,4 @@ __gdk-pixbuf
 __gtk2
 __gtk3
 __gtkmm
-
-__py2cairo
-__pygobject
-__pygtk
 
