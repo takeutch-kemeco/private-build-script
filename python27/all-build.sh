@@ -23,8 +23,8 @@ __py2cairo() {
 	./waf install
 }
 
-__pygobject() {
-	cd $BASE_DIR/pygobject
+__pygobject2() {
+	cd $BASE_DIR/pygobject2
 	patch -p1 < ../pygobject-2.28.6-introspection-1.patch
 	./configure --prefix=/usr
 	make
@@ -32,6 +32,13 @@ __pygobject() {
 	make install
 }
 
+__pygobject3() {
+	cd $BASE_DIR/pygobject3
+	./configure --prefix=/usr
+	make
+
+	make install
+}
 __numpy() {
 	cd $BASE_DIR/numpy
 	python setup.py install --prefix=/usr	
@@ -74,14 +81,16 @@ __ipython() {
 }
 
 __test__() {
-
+#__pygobject2
+#__pygobject3
 	exit
 }
 #__test__
 
 __pyxml
 __py2cairo
-__pygobject
+__pygobject2
+__pygobject3
 __numpy
 __scipy
 __pygtk

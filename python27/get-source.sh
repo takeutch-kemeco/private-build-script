@@ -9,12 +9,13 @@ bzip2 -dc py2cairo-1.10.0.tar.bz2 | tar xvf -
 ln -s py2cairo-1.10.0 py2cairo
 
 wget -c ftp://ftp.gnome.org/pub/gnome/sources/pygobject/2.28/pygobject-2.28.6.tar.xz
+wget -c http://www.linuxfromscratch.org/patches/blfs/svn/pygobject-2.28.6-introspection-1.patch
 xz -dc pygobject-2.28.6.tar.xz | tar xvf -
-ln -s pygobject-2.28.6 pygobject
+ln -s pygobject-2.28.6 pygobject2
 
-#wget -c ftp://ftp.gnome.org/pub/gnome/sources/pygobject/3.2/pygobject-3.2.2.tar.xz
-#xz -dc pygobject-3.2.2.tar.xz | tar xvf -
-#ln -s pygobject-3.2.2 pygobject
+wget -c ftp://ftp.gnome.org/pub/gnome/sources/pygobject/3.2/pygobject-3.2.2.tar.xz
+xz -dc pygobject-3.2.2.tar.xz | tar xvf -
+ln -s pygobject-3.2.2 pygobject3
 
 wget -c ftp://ftp.gnome.org/pub/gnome/sources/pygtk/2.24/pygtk-2.24.0.tar.bz2
 bzip2 -dc pygtk-2.24.0.tar.bz2 | tar xvf -
