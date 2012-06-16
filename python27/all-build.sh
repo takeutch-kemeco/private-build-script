@@ -1,6 +1,15 @@
 #!/bin/bash
 
 BASE_DIR=$(pwd)
+PREFIX=/usr
+
+__python27() {
+	cd $BASE_DIR/python27
+	./configure --prefix=$PREFIX --enable-shared
+	make
+	make install
+	ldconfig
+}
 
 __pyxml() {
 	cd $BASE_DIR/pyxml
@@ -80,12 +89,58 @@ __ipython() {
 	python setup.py install --prefix=/usr
 }
 
+__tcl() {
+	$BASE_DIR/tcl
+	tar -xf ../tcl8.5.11-html.tar.gz --strip-components=1
+	cd unix
+	./configure --prefix=$PREFIX \
+           	--enable-threads \
+            	--mandir=$PREFIX/share/man
+	make
+
+sed -e "s@^\(TCL_SRC_DIR='\).*@\1/usr/include'@" \
+    -e "/TCL_B/s@='\(-L\)\?.*unix@='\1/usr/lib@" \
+    -i tclConfig.sh
+
+	make install
+	make install-private-headers
+	ln -v -sf tclsh8.5 /usr/bin/tclsh
+	chmod -v 755 /usr/lib/libtcl8.5.so
+
+	mkdir -v -p /usr/share/doc/tcl-8.5.11
+	cp -v -r  ../html/* /usr/share/doc/tcl-8.5.11
+
+	ldconfig
+}
+
+__tk() {
+	cd $BASE_DIR/tk
+	cd unix
+	./configure --prefix=$PREFIX \
+            	--enable-threads \
+            	--mandir=$PREFIX/share/man
+	make
+sed -e "s@^\(TK_SRC_DIR='\).*@\1/usr/include'@" \
+    -e "/TK_B/s@='\(-L\)\?.*unix@='\1/usr/lib@" \
+    -i tkConfig.sh
+
+	make install
+	make install-private-headers
+	ln -v -sf wish8.5 /usr/bin/wish
+	chmod -v 755 /usr/lib/libtk8.5.so
+
+	ldconfig
+}
+
 __test__() {
-#__pygobject2
-#__pygobject3
+
 	exit
 }
 #__test__
+
+__python27
+__tcl
+__tk
 
 __pyxml
 __py2cairo

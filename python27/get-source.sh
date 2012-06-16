@@ -41,3 +41,12 @@ wget -c http://archive.ipython.org/release/0.12/ipython-0.12.tar.gz
 gzip -dc ipython-0.12.tar.gz | tar xvf -
 ln -s ipython-0.12 ipython
 
+wget -c ftp://mirror.ovh.net/gentoo-distfiles/distfiles/tcl8.5.11-src.tar.gz
+wget -c http://downloads.sourceforge.net/tcl/tcl8.5.11-html.tar.gz
+gzip -dc tcl8.5.11-src.tar.gz | tar xvf -
+ln -s tcl8.5.11-src tcl
+
+wget -c ftp://mirror.ovh.net/gentoo-distfiles/distfiles/tk8.5.11-src.tar.gz
+gzip -dc tk8.5.11-src.tar.gz | tar xvf -
+ln -s tk8.5.11-src tk
+
