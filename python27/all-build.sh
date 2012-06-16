@@ -90,7 +90,7 @@ __ipython() {
 }
 
 __tcl() {
-	$BASE_DIR/tcl
+	cd $BASE_DIR/tcl
 	tar -xf ../tcl8.5.11-html.tar.gz --strip-components=1
 	cd unix
 	./configure --prefix=$PREFIX \
