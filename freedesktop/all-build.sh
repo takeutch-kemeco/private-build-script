@@ -170,6 +170,14 @@ __desktop-file-utils() {
 	make
 	make install
 	ldconfig
+
+	update-desktop-database $PREFIX/share/applications
+
+### memo ###
+### /etc/bashrc ###
+# XDG_DATA_DIRS=/usr/share
+# XDG_CONFIG_DIRS=/etc/xdg
+# export XDG_DATA_DIRS XDG_CONFIG_DIRS
 }
 
 __test__() {
