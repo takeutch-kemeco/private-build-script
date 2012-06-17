@@ -165,13 +165,22 @@ test()
 }
 #test
 
-__lame
-__libav
-__common
-__gstreamer-core
-__gst-plugins-base
-__gst-plugins-good
-__gst-plugins-ugly
-__gst-plugins-bad
-__gst-ffmpeg
+__gst() {
+	__common
+	__gstreamer-core
+	__gst-plugins-base
+	__gst-plugins-good
+	__gst-plugins-ugly
+	__gst-plugins-bad
+	__gst-ffmpeg
+}
+
+__full() {
+	__lame
+	__libav
+	__gst
+}
+
+__gst
+#__full
 

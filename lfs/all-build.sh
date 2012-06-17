@@ -3,8 +3,8 @@
 BASE_DIR=$(pwd)
 PREFIX=/usr
 
-#MAKE_CLEAN="make clean"
-MAKE_CLEAN=
+MAKE_CLEAN="make clean"
+#MAKE_CLEAN=
 
 __man-pages()
 {
@@ -443,22 +443,21 @@ EOF
 
 __test__()
 {
-	__perl_modules
 	exit
 }
-__test__
+#__test__
 
 __man-pages
 __zlib
-###__file
-#__binutils
+__file
+__binutils
 __sed
 __bzip2
 __ncurses
 __util-linux
 __psmisc
 __e2fsprogs
-#__coreutils
+__coreutils
 __iana-etc
 #__m4
 __bison

@@ -37,7 +37,11 @@ __glib()
 {
 	cd glib
 
-	./autogen.sh --prefix=$PREFIX
+	./autogen.sh
+	PCRE_LIBS=-lpcre PCRE_CFLAGS=" " \
+	LIBFFI_LIBS=-lffi LIBFFI_CFLAGS=" " \
+	./configure --prefix=$PREFIX --sysconfdir=/etc --with-pcre=system
+
 	$MAKE_CLEAN
 	make
 	make install
@@ -417,10 +421,10 @@ __libxml2() {
 
 __test__()
 {
-
+__glib
 	exit
 }
-#__test__
+__test__
 
 __libffi
 __libsigc++2

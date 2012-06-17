@@ -30,3 +30,14 @@ do
 	cd $__BASE_DIR__
 done
 
+
+
+exit
+
+### memo ####
+### bullet
+cmake -DCMAKE_INSTALL_PREFIX=/usr . -G "Unix Makefiles"
+make
+make install
+のあとに、/usr/local/以下へとインストールされたincludeやpkgconfig等を/usr/以下へ手動で移動する
+

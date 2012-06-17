@@ -6,6 +6,21 @@ PREFIX=/usr
 MAKE_CLEAN=
 #MAKE_CLEAN="make clean"
 
+__pcre() {
+	cd $__BASE_DIR__/pcre
+	./configure --prefix=$PREFIX \
+		--libdir=/lib \
+		--docdir=$PREFIX/share/doc/pcre-8 \
+		--enable-utf8 \
+		--enable-unicode-properties \
+		--enable-pcregrep-libz \
+		--enable-pcregrep-libbz2
+	$MAKE_CLEAN
+	make
+	make install
+	ldconfig
+}
+
 __popt() {
 	cd $__BASE_DIR__/popt
 	./configure --prefix=$PREFIX
@@ -29,8 +44,7 @@ __gc() {
 	ln -sfv gc_malloc.3 /usr/share/man/man3/gc.3 
 }
 
-__nettle()
-{
+__nettle() {
 	cd $__BASE_DIR__/nettle
 	./configure --prefix=$PREFIX \
 		--enable-shared
@@ -40,11 +54,17 @@ __nettle()
 	ldconfig
 }
 
+__tetex() {
+	cd $__BASE_DIR__/tetex
+}
+
 __test__() {
+###__tetex
 	exit
 }
 #__test__
 
+__pcre
 __popt
 __gc
 __nettle
