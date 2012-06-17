@@ -399,34 +399,33 @@ __gtkmm()
 	cd $__BASE_DIR__
 }
 
+__libsigc++2() {
+	cd $__BASE_DIR__/libsigc++2
+	./autogen.sh --prefix=$PREFIX
+	make
+	make install
+	ldconfig
+}
+
+__libxml2() {
+	cd $__BASE_DIR__/libxml2
+	./autogen.sh --prefix=$PREFIX
+	make
+	make install
+	ldconfig
+}
+
 __test__()
 {
-__dbus
-__dbus-glib
-
-__fontconfig
-__freeglut
-
-__libpng
-__libjpeg8
-__libtiff
-
-__cairo
-__cairomm
-__pango
-__pangomm
-__atk
-__atkmm
-__gdk-pixbuf
-__gtk2
-__gtk3
-__gtkmm
 
 	exit
 }
-__test__
+#__test__
 
 __libffi
+__libsigc++2
+__libxml2
+__tk
 __pth
 __glib
 __gobject-introspection
