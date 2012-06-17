@@ -75,11 +75,35 @@ __intel-driver()
 __polkit()
 {
 	cd $__BASE_DIR__/polkit
-	./configure --prefix=$PREFIX
+
+	groupadd -fg 28 polkitd
+	useradd -c "PolicyKit Daemon Owner" \
+		-d /etc/polkit-1 \
+		-u 28 \
+		-g polkitd \
+		-s /bin/false polkitd
+
+	./autogen.sh --prefix=$PREFIX \
+            	--sysconfdir=/etc \
+            	--localstatedir=/var \
+            	--libexecdir=$PREFIX/lib/polkit-1 \
+            	--with-authfw=shadow \
+            	--disable-static
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
+
+cat > /etc/pam.d/polkit-1 << "EOF"
+# Begin /etc/pam.d/polkit-1
+
+auth     include        system-auth
+account  include        system-account
+password include        system-password
+session  include        system-session
+
+# End /etc/pam.d/polkit-1
+EOF
 }
 
 __pyxdg()
