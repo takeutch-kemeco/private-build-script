@@ -50,3 +50,5 @@ wget -c ftp://mirror.ovh.net/gentoo-distfiles/distfiles/tk8.5.11-src.tar.gz
 gzip -dc tk8.5.11-src.tar.gz | tar xvf -
 ln -s tk8.5.11-src tk
 
+git clone git://github.com/matplotlib/matplotlib.git
+

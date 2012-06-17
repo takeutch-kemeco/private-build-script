@@ -110,6 +110,8 @@ sed -e "s@^\(TCL_SRC_DIR='\).*@\1/usr/include'@" \
 	mkdir -v -p /usr/share/doc/tcl-8.5.11
 	cp -v -r  ../html/* /usr/share/doc/tcl-8.5.11
 
+	ln -sf libtcl.so.8 /lib/libtcl.so
+
 	ldconfig
 }
 
@@ -129,7 +131,14 @@ sed -e "s@^\(TK_SRC_DIR='\).*@\1/usr/include'@" \
 	ln -v -sf wish8.5 /usr/bin/wish
 	chmod -v 755 /usr/lib/libtk8.5.so
 
+	ln -sf libtk.so.8 /lib/libtk.so
+
 	ldconfig
+}
+
+__matplotlib() {
+	cd $BASE_DIR/matplotlib
+	python setup.py install --prefix=/usr
 }
 
 __test__() {
@@ -148,6 +157,7 @@ __pygobject2
 __pygobject3
 __numpy
 __scipy
+__matplotlib
 __pygtk
 __pygtksourceview
 __pyatspi
