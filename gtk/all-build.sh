@@ -15,6 +15,8 @@ __libffi()
 	$MAKE_CLEAN
 	make
 	make install
+	cp -f $__BASE_DIR__/libffi/i686-pc-linux-gnu/include/ffi.h $PREFIX/include/
+	cp -f $__BASE_DIR__/libffi/i686-pc-linux-gnu/include/ffitarget.h $PREFIX/include/
 	ldconfig
 
 	cd $__BASE_DIR__
@@ -421,10 +423,10 @@ __libxml2() {
 
 __test__()
 {
-__glib
+
 	exit
 }
-__test__
+#__test__
 
 __libffi
 __libsigc++2
