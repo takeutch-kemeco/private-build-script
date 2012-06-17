@@ -5,7 +5,7 @@ PREFIX=/usr
 
 __python27() {
 	cd $BASE_DIR/python27
-	./configure --prefix=$PREFIX --enable-shared
+	./configure --prefix=$PREFIX --enable-shared --with-system-ffi
 	make
 	make install
 	ldconfig
