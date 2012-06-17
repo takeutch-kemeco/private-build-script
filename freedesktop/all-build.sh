@@ -163,12 +163,22 @@ __pkg-config()
 	ldconfig
 }
 
+__desktop-file-utils() {
+	cd $__BASE_DIR__/desktop-file-utils
+	./autogen.sh --prefix=$PREFIX
+	$MAKE_CLEAN
+	make
+	make install
+	ldconfig
+}
+
 __test__() {
 
 	exit
 }
 #__test__
 
+__desktop-file-utils
 __pkg-config
 __pciutils
 __usbutils
