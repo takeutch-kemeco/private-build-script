@@ -6,7 +6,10 @@ git clone git://github.com/mkerrisk/man-pages.git
 
 git clone git://github.com/madler/zlib.git
 
-#file
+###file
+wget -c ftp://ftp.astron.com/pub/file/file-5.10.tar.gz
+gzip -dc file-5.10.tar.gz | tar xvf -
+ln -s file-5.10 file
 
 cvs -z 9 -d :pserver:anoncvs@sourceware.org:/cvs/src co binutils
 mv src binutils
@@ -29,13 +32,14 @@ git clone git://psmisc.git.sourceforge.net/gitroot/psmisc/psmisc
 
 git clone git://e2fsprogs.git.sourceforge.net/gitroot/e2fsprogs/e2fsprogs
 
-git clone git://git.samba.org/rsync.git
-
 git clone git://git.sv.gnu.org/coreutils
 
 git clone git://gitorious.org/baserock-morphs/iana-etc.git
 
-git clone git://git.sv.gnu.org/m4.git
+###git clone git://git.sv.gnu.org/m4.git
+wget -c http://ftp.gnu.org/gnu/m4/m4-1.4.16.tar.bz2
+bzip2 -dc m4-1.4.16.tar.bz2 | tar xvf -
+ln -s m4-1.4.16 m4
 
 git clone git://git.sv.gnu.org/bison.git
 
@@ -47,7 +51,10 @@ git clone git://git.savannah.gnu.org/readline.git
 
 git clone git://git.savannah.gnu.org/bash.git
 
-git clone git://git.savannah.gnu.org/libtool.git
+###git clone git://git.savannah.gnu.org/libtool.git
+wget -c http://ftp.gnu.org/gnu/libtool/libtool-2.4.2.tar.gz
+gzip -dc libtool-2.4.2.tar.gz | tar xvf -
+ln -s libtool-2.4.2 libtool
 
 git clone git://git.sv.gnu.org/gdbm.git
 
@@ -55,9 +62,15 @@ git clone git://git.savannah.gnu.org/inetutils.git
 
 git clone git://perl5.git.perl.org/perl.git perl
 
-git clone git://git.sv.gnu.org/autoconf.git
+###git clone git://git.sv.gnu.org/autoconf.git
+wget -c http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.xz
+xz -dc autoconf-2.69.tar.xz | tar xvf -
+ln -s autoconf-2.69 autoconf
 
-git clone git://git.sv.gnu.org/automake.git
+###git clone git://git.sv.gnu.org/automake.git
+wget -c http://ftp.gnu.org/gnu/automake/automake-1.12.1.tar.xz
+xz -dc automake-1.12.1.tar.xz | tar xvf -
+ln -s automake-1.12.1 automake
 
 git clone git://git.sv.gnu.org/diffutils.git
 
@@ -65,56 +78,104 @@ git clone git://git.sv.gnu.org/gawk.git
 
 git clone git://git.sv.gnu.org/findutils.git
 
-#flex
+###flex
+wget -c http://prdownloads.sourceforge.net/flex/flex-2.5.35.tar.bz2
+bzip2 -dc flex-2.5.35.tar.bz2 | tar xvf -
+ln -s flex-2.5.35 flex
 
-git clone git://git.sv.gnu.org/gettext.git
+###git clone git://git.sv.gnu.org/gettext.git
+wget -c http://ftp.gnu.org/gnu/gettext/gettext-0.18.1.1.tar.gz
+gzip -dc gettext-0.18.1.1.tar.gz | tar xvf -
+ln -s gettext-0.18.1.1 gettext
 
-git clone git://gitorious.org/baserock-morphs/groff.git
+###git clone git://gitorious.org/baserock-morphs/groff.git
+wget -c http://ftp.gnu.org/gnu/groff/groff-1.21.tar.gz
+gzip -dc groff-1.21.tar.gz | tar xvf -
+ln -s groff-1.21 groff
 
-#grub
+###grub
+wget -c http://ftp.gnu.org/gnu/grub/grub-1.99.tar.gz
+gzip -dc grub-1.99.tar.gz | tar xvf -
+ln -s grub-1.99 grub
 
 git clone git://git.sv.gnu.org/gzip.git
 
 git clone git://github.com/shemminger/iproute2.git
 
-git clone git://github.com/gooselinux/kbd.git
+###kbd
+wget -c http://ftp.altlinux.org/pub/people/legion/kbd/kbd-1.15.3.tar.gz
+gzip -dc kbd-1.15.3.tar.gz | tar xvf -
+ln -s kbd-1.15.3 kbd
+wget -c http://www.linuxfromscratch.org/patches/lfs/development/kbd-1.15.3-upstream_fixes-1.patch
+wget -c http://www.linuxfromscratch.org/patches/lfs/development/kbd-1.15.3-backspace-1.patch
 
-#less
+###less
+wget -c http://www.greenwoodsoftware.com/less/less-444.tar.gz
+gzip -dc less-444.tar.gz | tar xvf -
+ln -s less-444 less
 
 git clone git://gitorious.org/baserock-morphs/libpipeline.git
 
-git clone git://git.savannah.gnu.org/make.git
+###git clone git://git.savannah.gnu.org/make.git
+wget -c http://ftp.gnu.org/gnu/make/make-3.82.tar.bz2
+bzip2 -dc make-3.82.tar.bz2 | tar xvf -
+ln -s make-3.82 make
 
 git clone http://git.tukaani.org/xz.git
 
 ###git clone git://gitorious.org/baserock-morphs/man-db.git
+wget -c http://download.savannah.gnu.org/releases/man-db/man-db-2.6.1.tar.gz
+gzip -dc man-db-2.6.1.tar.gz | tar xvf -
+ln -s man-db-2.6.1 man-db
 
 git clone git://git.kernel.org/pub/scm/utils/kernel/module-init-tools/module-init-tools.git
 
-#patch
+###patch
+wget -c http://ftp.gnu.org/gnu/patch/patch-2.6.1.tar.bz2
+bzip2 -dc patch-2.6.1.tar.bz2 | tar xvf -
+ln -s patch-2.6.1 patch
 
 git clone git://psmisc.git.sourceforge.net/gitroot/psmisc/psmisc
 
-git clone git://github.com/TheBreeze/shadow.git
+###shadow
+wget -c http://pkg-shadow.alioth.debian.org/releases/shadow-4.1.5.1.tar.bz2
+bzip2 -dc shadow-4.1.5.1.tar.bz2 | tar xvf -
+ln -s shadow-4.1.5.1 shadow
 
 ###git clone git://git.infodrom.org/infodrom/sysklogd
 wget -c http://www.infodrom.org/projects/sysklogd/download/sysklogd-1.5.tar.gz
 gzip -dc sysklogd-1.5.tar.gz | tar xvf -
 mv sysklogd-1.5 sysklogd
 
-#Sysvinit
+###Sysvinit
+wget -c http://download.savannah.gnu.org/releases/sysvinit/sysvinit-2.88dsf.tar.bz2
+bzip2 -dc sysvinit-2.88dsf.tar.bz2 | tar xvf -
+ln -s sysvinit-2.88dsf sysvinit
 
-git clone git://git.savannah.gnu.org/tar.git
+###git clone git://git.savannah.gnu.org/tar.git
+wget -c http://ftp.gnu.org/gnu/tar/tar-1.26.tar.bz2
+bzip2 -dc tar-1.26.tar.bz2 | tar xvf -
+ln -s tar-1.26 tar
 
-#texinfo
+###texinfo
+wget -c http://ftp.gnu.org/gnu/texinfo/texinfo-4.13a.tar.gz
+gzip -dc texinfo-4.13a.tar.gz | tar xvf -
+ln -s texinfo-4.13a texinfo
 
-git clone git://vcs.progress-linux.org/packages/udev.git
+###git clone git://vcs.progress-linux.org/packages/udev.git
+wget -c http://www.kernel.org/pub/linux/utils/kernel/hotplug/udev-182.tar.xz
+xz -dc udev-182.tar.xz | tar xvf -
+ln -s udev-182 udev
+wget -c http://www.linuxfromscratch.org/lfs/downloads/development/udev-config-20100128.tar.bz2
 
-#vim
+###vim
+wget -c ftp://ftp.vim.org/pub/vim/unix/vim-7.3.tar.bz2
+bzip2 -dc vim-7.3.tar.bz2 | tar xvf -
+ln -s vim-7.3 vim
 
 bzr branch bzr://bzr.savannah.gnu.org/grub/trunk/grub
 
-#perl-modules
+###perl-modules
 __perl_modules() {
 	mkdir -p $BASE_DIR/perl-modules
 	cd $BASE_DIR/perl-modules
@@ -154,4 +215,37 @@ __perl_modules() {
 	fi
 }
 __perl_modules
+
+###popt
+wget -c http://rpm5.org/files/popt/popt-1.16.tar.gz
+gzip -dc popt-1.16.tar.gz | tar xvf -
+ln -s popt-1.16 popt
+
+###pkgconfig
+git clone git://anongit.freedesktop.org/pkg-config
+
+###diffutils
+wget -c http://ftp.gnu.org/gnu/diffutils/diffutils-3.2.tar.gz
+gzip -dc diffutils-3.2.tar.gz | tar xvf -
+ln -s diffutils-3.2 diffutils
+
+###gawk
+wget -c http://ftp.gnu.org/gnu/gawk/gawk-4.0.1.tar.xz
+xz -dc gawk-4.0.1.tar.xz | tar xvf -
+ln -s gawk-4.0.1 gawk
+
+###findutils
+wget -c http://ftp.gnu.org/gnu/findutils/findutils-4.4.2.tar.gz
+gzip -dc findutils-4.4.2.tar.gz | tar xvf -
+ln -s findutils-4.4.2 findutils
+
+###kmod
+wget -c http://www.kernel.org/pub/linux/utils/kernel/kmod/kmod-9.tar.xz
+xz -dc kmod-9.tar.xz | tar xvf -
+ln -s kmod-9 kmod
+
+###libpipeline
+wget -c http://download.savannah.gnu.org/releases/libpipeline/libpipeline-1.2.1.tar.gz
+gzip -dc libpipeline-1.2.1.tar.gz | tar xvf -
+ln -s libpipeline-1.2.1 libpipeline
 
