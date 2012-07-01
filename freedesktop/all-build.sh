@@ -3,8 +3,8 @@
 __BASE_DIR__=$(pwd)
 PREFIX=/usr
 
-MAKE_CLEAN=
-#MAKE_CLEAN="make clean"
+#MAKE_CLEAN=
+MAKE_CLEAN="make clean"
 
 __pciutils() {
 	cd $__BASE_DIR__/pciutils
@@ -174,19 +174,6 @@ __xdg-utils()
 	ldconfig
 }
 
-__pkg-config()
-{
-	cd $__BASE_DIR__/pkg-config-0.26
-	./configure --prefix=$PREFIX \
-		--with-installed-popt \
-		--with-internal-glib \
-		--docdir=/usr/share/doc/pkg-config-0.26-internal-glib
-	$MAKE_CLEAN
-	make
-	make install
-	ldconfig
-}
-
 __desktop-file-utils() {
 	cd $__BASE_DIR__/desktop-file-utils
 	./autogen.sh --prefix=$PREFIX
@@ -204,14 +191,22 @@ __desktop-file-utils() {
 # export XDG_DATA_DIRS XDG_CONFIG_DIRS
 }
 
-__test__() {
+__liboil() {
+	cd $__BASE_DIR__/liboil
+	./autogen.sh
+	./configure --prefix=/usr
+	$MAKE_CLEAN
+	make
+	make install
+	ldconfig
+}
 
+__test__() {
 	exit
 }
 #__test__
 
 __desktop-file-utils
-__pkg-config
 __pciutils
 __usbutils
 __consolekit
@@ -227,4 +222,5 @@ __telepathy-logger
 __udev
 __upower
 __xdg-utils
+__liboil
 

@@ -10,18 +10,25 @@ __f() {
 	cd $__BASE_DIR__/$n
 	if [ $? -eq 0 ]
 	then
-		git branch del
-		git checkout del
-		git commit -a -m "del"
+		echo $GST_VERSION | grep master
+		if [ $? -eq 0 ]
+		then
+			git checkout master
+			git branch --set-upstream master origin/master
+		else
+			git branch del
+			git checkout del
+			git commit -a -m "del"
 
-		git checkout master
-		git branch -D del
-		git branch -D $GST_VERSION
+			git checkout master
+			git branch -D del
+			git branch -D $GST_VERSION
 
-		git checkout origin/$GST_VERSION
-		git checkout -b $GST_VERSION
+			git checkout origin/$GST_VERSION
+			git checkout -b $GST_VERSION
 
-		git branch --set-upstream $GST_VERSION origin/$GST_VERSION
+			git branch --set-upstream $GST_VERSION origin/$GST_VERSION
+		fi
 	fi
 }
 	

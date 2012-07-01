@@ -106,7 +106,7 @@ __cdbt()
 
 __mk()
 {
-	__echo-g $CURBUILDAPP "[ make" $@ "]"
+	__echo-g "\n\n\n" $CURBUILDAPP "[ make" $@ "]"
 
 	make $@
 	if [ $? -ne 0 ]
@@ -539,7 +539,16 @@ __sed()
 
 __tar()
 {
-	__common $SRC/tar-1.26
+        __dcd $SRC/tar-1.26
+
+        ./configure --prefix=/tools \
+		FORCE_UNSAFE_CONFIGURE=1
+
+        __mk
+
+#       __mk check
+
+        __mk install
 }
 
 __texinfo()
@@ -575,7 +584,6 @@ __backup()
 #	xz tools.tar
 }
 
-rem(){
 __init
 
 __binutils-1
@@ -586,7 +594,7 @@ __glibc
 __configure
 __binutils-2
 __gcc-2
-}
+
 ###__tcl
 __expect
 __dejagnu

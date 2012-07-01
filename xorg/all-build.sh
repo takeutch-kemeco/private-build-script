@@ -1,6 +1,6 @@
 #!/bin/bash
 
-__BASE_DIR__=$(pwd)
+BASE_DIR=$(pwd)
 
 XORG_PREFIX=/usr
 XORG_ETC=/etc
@@ -16,31 +16,37 @@ MAKE_CLEAN=
 DIST_CLEAN=
 #DIST_CLEAN="make distclean"
 
+__cd()
+{
+	echo "------------------------------"
+	echo $1
+	echo "------------------------------"
+
+	cd $1
+	$DIST_CLEAN
+}
+
 util_macros()
 {
-	cd macros
+	__cd $BASE_DIR/macros
 
-	$DIST_CLEAN
 	./autogen.sh $XORG_CONFIG
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 proto()
 {
-	cd proto
+	__cd $BASE_DIR/proto
 
-	__PROTO_BASE_DIR__=$__BASE_DIR__/proto
+	__PROTO_BASE_DIR__=$BASE_DIR/proto
 	for package in $(ls)
 	do
-		cd $__PROTO_BASE_DIR__/$package
+		__cd $__PROTO_BASE_DIR__/$package
 		if [ $? -eq 0 ]
 		then
-			$DIST_CLEAN
 			./autogen.sh $XORG_CONFIG
 			$MAKE_CLEAN
 			make
@@ -48,120 +54,96 @@ proto()
 			ldconfig
 		fi
 	done
-
-	cd $__BASE_DIR__
 }
 
 makedepend()
 {
-	cd makedepend
+	__cd $BASE_DIR/makedepend
 
-	$DIST_CLEAN
 	./autogen.sh $XORG_CONFIG
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 fontutil()
 {
-	cd fontutil
+	__cd $BASE_DIR/fontutil
 
-	$DIST_CLEAN
 	./autogen.sh $XORG_CONFIG
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 libXau()
 {
-	cd libXau
+	__cd $BASE_DIR/libXau
 	
-	$DIST_CLEAN
 	./autogen.sh $XORG_CONFIG
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 libXdmcp()
 {
-	cd libXdmcp
+	__cd $BASE_DIR/libXdmcp
 	
-	$DIST_CLEAN
 	./autogen.sh $XORG_CONFIG
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 libpthread-stubs()
 {
-	cd pthread-stubs
+	__cd $BASE_DIR/pthread-stubs
 	
-	$DIST_CLEAN
 	./autogen.sh $XORG_CONFIG
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 xcb-proto()
 {
-	cd xcb/proto
+	__cd $BASE_DIR/xcb/proto
 	
-	$DIST_CLEAN
 	./autogen.sh
 	./configure $XORG_CONFIG
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 libxcb()
 {
-	cd xcb/libxcb
+	__cd $BASE_DIR/xcb/libxcb
 	
-	$DIST_CLEAN
 	./autogen.sh $XORG_CONFIG --enable-xinput --enable-xkb --with-xkb-rules-symlink=xorg
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 libs()
 {
-	cd libs
+	__cd $BASE_DIR/libs
 
-	__LIBS_BASE_DIR__=$__BASE_DIR__/libs
+	__LIBS_BASE_DIR__=$BASE_DIR/libs
 	for package in $(ls)
 	do
-		cd $__LIBS_BASE_DIR__/$package
+		__cd $__LIBS_BASE_DIR__/$package
 		if [ $? -eq 0 ]
 		then
-			$DIST_CLEAN
 			./autogen.sh $XORG_CONFIG
 			$MAKE_CLEAN
 			make
@@ -169,135 +151,109 @@ libs()
 			ldconfig
 		fi
 	done
-
-	cd $__BASE_DIR__
 }
 
 xcb-util-common-m4()
 {
-	cd xcb/util-common-m4
-	cd $__BASE_DIR__
+	__cd $BASE_DIR/xcb/util-common-m4
 }
 
 xcb-util()
 {
-	cd xcb/util
+	__cd $BASE_DIR/xcb/util
 
-	rm $__BASE_DIR__/xcb/util/m4 -rf
-	ln -s $__BASE_DIR__/xcb/util-common-m4 $__BASE_DIR__/xcb/util/m4
+	rm $BASE_DIR/xcb/util/m4 -rf
+	ln -s $BASE_DIR/xcb/util-common-m4 $BASE_DIR/xcb/util/m4
 	
-	$DIST_CLEAN
 	./autogen.sh $XORG_CONFIG
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 xcb-util-image()
 {
-	cd xcb/util-image
+	__cd $BASE_DIR/xcb/util-image
 
-	rm $__BASE_DIR__/xcb/util-image/m4 -rf
-	ln -s $__BASE_DIR__/xcb/util-common-m4 $__BASE_DIR__/xcb/util-image/m4
+	rm $BASE_DIR/xcb/util-image/m4 -rf
+	ln -s $BASE_DIR/xcb/util-common-m4 $BASE_DIR/xcb/util-image/m4
 	
-	$DIST_CLEAN
 	./autogen.sh $XORG_CONFIG
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 xcb-util-keysyms()
 {
-	cd xcb/util-keysyms
+	__cd $BASE_DIR/xcb/util-keysyms
 
-	rm $__BASE_DIR__/xcb/util-keysyms/m4 -rf
-	ln -s $__BASE_DIR__/xcb/util-common-m4 $__BASE_DIR__/xcb/util-keysyms/m4
+	rm $BASE_DIR/xcb/util-keysyms/m4 -rf
+	ln -s $BASE_DIR/xcb/util-common-m4 $BASE_DIR/xcb/util-keysyms/m4
 	
-	$DIST_CLEAN
 	./autogen.sh $XORG_CONFIG
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 xcb-util-renderutil()
 {
-	cd xcb/util-renderutil
+	__cd $BASE_DIR/xcb/util-renderutil
 
-	rm $__BASE_DIR__/xcb/util-renderutil/m4 -rf
-	ln -s $__BASE_DIR__/xcb/util-common-m4 $__BASE_DIR__/xcb/util-renderutil/m4
+	rm $BASE_DIR/xcb/util-renderutil/m4 -rf
+	ln -s $BASE_DIR/xcb/util-common-m4 $BASE_DIR/xcb/util-renderutil/m4
 	
-	$DIST_CLEAN
 	./autogen.sh $XORG_CONFIG
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 xcb-util-wm()
 {
-	cd xcb/util-wm
+	__cd $BASE_DIR/xcb/util-wm
 
-	rm $__BASE_DIR__/xcb/util-wm/m4 -rf
-	ln -s $__BASE_DIR__/xcb/util-common-m4 $__BASE_DIR__/xcb/util-wm/m4
+	rm $BASE_DIR/xcb/util-wm/m4 -rf
+	ln -s $BASE_DIR/xcb/util-common-m4 $BASE_DIR/xcb/util-wm/m4
 	
-	$DIST_CLEAN
 	./autogen.sh $XORG_CONFIG
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 mesa-drm()
 {
-	cd mesa/drm
+	__cd $BASE_DIR/mesa/drm
 	
-	$DIST_CLEAN
 	./autogen.sh $XORG_CONFIG --disable-radeon --disable-nouveau --enable-udev
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
-
 }
 
 mesa()
 {
-	cd mesa/mesa
-	
-	$DIST_CLEAN
+	__cd $BASE_DIR/mesa/mesa
+
 	./autogen.sh $XORG_CONFIG \
 		--enable-xorg \
 		--with-dri-drivers=i965 \
 		--with-x \
-		--enable-xcb \
-		--enable-shared-dricore \
 		--with-gallium-drivers=i915 \
-		--disable-radeon \
-		--disable-nouveau \
-		--enable-udev \
 		--enable-gallium-egl \
 		--enable-gles1 \
 		--enable-gles2 \
-		--enable-glx
+		--enable-glx \
+		--enable-shared-glapi \
+		--enable-dri
 
 	$MAKE_CLEAN
 	make
@@ -306,21 +262,18 @@ mesa()
 	ln -s -v ${XORG_PREFIX}/include/EGL /usr/include
 	ln -s -v ${XORG_PREFIX}/include/KHR /usr/include
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 apps()
 {
-	cd apps
+	__cd $BASE_DIR/apps
 
-	__APPS_BASE_DIR__=$__BASE_DIR__/apps
+	__APPS_BASE_DIR__=$BASE_DIR/apps
 	for package in $(ls)
 	do
-		cd $__APPS_BASE_DIR__/$package
+		__cd $__APPS_BASE_DIR__/$package
 		if [ $? -eq 0 ]
 		then
-			$DIST_CLEAN
 			./autogen.sh $XORG_CONFIG \
 				--with-xinitdir=$XORG_ETC/X11/app-defaults
 			$MAKE_CLEAN
@@ -329,23 +282,18 @@ apps()
 			ldconfig
 		fi
 	done
-
-	cd $__BASE_DIR__
 }
 
 xhost()
 {
-	cd apps/xhost
+	__cd $BASE_DIR/apps/xhost
 
-	$DIST_CLEAN
 	./autogen.sh $XORG_CONFIG \
 		--with-xinitdir=$XORG_ETC/X11/app-defaults
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 xcursor-themes()
@@ -360,24 +308,20 @@ fonts()
 
 xkeyboard-config()
 {
-	cd xkeyboard-config
+	__cd $BASE_DIR/xkeyboard-config
 	
-	$DIST_CLEAN
 	./autogen.sh $XORG_CONFIG \
 		--with-xkb-rules-symlink=xorg
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 xserver()
 {
-	cd xserver
+	__cd $BASE_DIR/xserver
 	
-	$DIST_CLEAN
 	./autogen.sh $XORG_CONFIG \
 		--with-module-dir=$XORG_PREFIX/lib/X11/modules \
 		--with-xkb-output=/var/lib/xkb \
@@ -386,8 +330,6 @@ xserver()
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 driver()
@@ -395,15 +337,14 @@ driver()
 	echo "/usr/lib/xorg/modules/drivers"  \
 		> /etc/ld.so.conf.d/xorg_modules_drivers.conf
 
-	cd driver
+	__cd $BASE_DIR/driver
 
-	__DRIVER_BASE_DIR__=$__BASE_DIR__/driver
+	__DRIVER_BASE_DIR__=$BASE_DIR/driver
 	for package in $(ls)
 	do
-		cd $__DRIVER_BASE_DIR__/$package
+		__cd $__DRIVER_BASE_DIR__/$package
 		if [ $? -eq 0 ]
 		then
-			$DIST_CLEAN
 			./autogen.sh $XORG_CONFIG
 			$MAKE_CLEAN
 			make
@@ -411,15 +352,12 @@ driver()
 			ldconfig
 		fi
 	done
-
-	cd $__BASE_DIR__
 }
 
 xterm()
 {
-	cd xterm
+	__cd $BASE_DIR/xterm
 
-	$DIST_CLEAN
 	sed -i '/v0/,+1s/new:/new:kb=^?:/' termcap &&
 	echo -e '\tkbs=\\177,' >>terminfo &&
 	TERMINFO=$XORG_PREFIX/lib/terminfo ./configure $XORG_CONFIG \
@@ -458,15 +396,14 @@ cat >> $XORG_ETC/X11/app-defaults/XTerm << "EOF"
 *VT100*color15: #cccccc
 
 EOF
-
-	cd $__BASE_DIR__
 }
 
 __test__()
 {
+mesa
 	exit
 }
-#__test__
+__test__
 
 util_macros
 proto
@@ -499,5 +436,5 @@ xserver
 driver
 xterm
 
-cp $__BASE_DIR__/50-wacom.conf $XORG_ETC/X11/xorg.conf.d/
+cp $BASE_DIR/50-wacom.conf $XORG_ETC/X11/xorg.conf.d/
 

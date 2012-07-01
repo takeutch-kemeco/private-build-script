@@ -1,5 +1,10 @@
 #!/bin/bash
 
+#talloc
+wget -c http://samba.org/ftp/talloc/talloc-2.0.7.tar.gz
+gzip -dc talloc-2.0.7.tar.gz | tar xvf -
+ln -s talloc-2.0.7 talloc
+
 #gc
 wget -c http://www.hpl.hp.com/personal/Hans_Boehm/gc/gc_source/gc-7.2.tar.gz
 gzip -dc gc-7.2.tar.gz | tar xvf -
@@ -27,4 +32,24 @@ ln -s nettle-2.4 nettle
 wget -c ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.30.tar.bz2
 bzip2 -dc pcre-8.30.tar.bz2 | tar xvf -
 ln -s pcre-8.30 pcre
+
+###tcl
+wget -c http://prdownloads.sourceforge.net/tcl/tcl8.6b2-src.tar.gz 
+gzip -dc tcl8.6b2-src.tar.gz | tar xvf -
+ln -s tcl8.6b2 tcl
+
+###tk
+wget -c http://prdownloads.sourceforge.net/tcl/tk8.6b2-src.tar.gz
+gzip -dc tk8.6b2-src.tar.gz | tar xvf -
+ln -s tk8.6b2 tk
+
+wget -c -O tomoyo-tools-2.5.0-20120414.tar.gz 'http://sourceforge.jp/frs/redir.php?m=jaist&f=/tomoyo/53357/tomoyo-tools-2.5.0-20120414.tar.gz'
+gzip -dc tomoyo-tools-2.5.0-20120414.tar.gz | tar xvf -
+
+git clone git://git.fedorahosted.org/linux-pam.git
+
+###freeglut
+wget -c http://downloads.sourceforge.net/freeglut/freeglut-2.8.0.tar.gz
+gzip -dc freeglut-2.8.0.tar.gz | tar xvf -
+ln -s freeglut-2.8.0 freeglut
 

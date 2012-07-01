@@ -18,3 +18,7 @@ git clone git://anongit.freedesktop.org/gstreamer/gstreamer
 
 cvs -z3 -d:pserver:anonymous@lame.cvs.sourceforge.net:/cvsroot/lame co -P lame
 
+svn co http://svn.xiph.org/trunk/ogg
+svn co http://svn.xiph.org/trunk/vorbis
+svn co http://svn.xiph.org/trunk/theora
+cvs -z3 -d:pserver:anonymous@flac.cvs.sourceforge.net:/cvsroot/flac co -P flac

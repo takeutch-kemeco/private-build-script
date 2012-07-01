@@ -2,14 +2,27 @@
 
 BASE_DIR=$(pwd)
 PREFIX=/usr
+#DIST_CLEAN=
+DIST_CLEAN="make distclean"
 #MAKE_CLEAN=
 MAKE_CLEAN="make clean"
-CFLAGS=""
+#CFLAGS=""
+
+__cd()
+{
+	echo "------------------------------"
+	echo $1
+	echo "------------------------------"
+
+	cd $1
+	$DIST_CLEAN
+}
 
 build-zlib()
 {
-	cd $BASE_DIR/zlib
-	CFLAGS='-mstackrealign -fPIC -O2' ./configure --prefix=$PREFIX
+	__cd $BASE_DIR/zlib
+
+	CFLAGS='-mstackrealign -fPIC -O4' ./configure --prefix=$PREFIX
 	$MAKE_CLEAN
 	make
 	make install
@@ -17,13 +30,12 @@ build-zlib()
 	mv -v $PREFIX/lib/libz.so.* /lib
 	ln -sfv /lib/libz.so.1 $PREFIX/lib/libz.so
 	ldconfig
-
-	cd $BASE_DIR
 }
 
 build-mpfr()
 {
-	cd $BASE_DIR/mpfr
+	__cd $BASE_DIR/mpfr
+
 	aclocal
 	libtoolize
 	automake -a -c -f
@@ -33,42 +45,44 @@ build-mpfr()
 	make
 	make install
 	ldconfig
-	cd $BASE_DIR
 }
 
 build-gmp()
 {
-	cd $BASE_DIR/gmp
+	__cd $BASE_DIR/gmp
+
 	./.bootstrap
 	./configure --prefix=$PREFIX --enable-cxx --enable-maintainer-mode ABI="32"
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig 
-	cd $BASE_DIR
 }
 
 build-mpc()
 {
-	cd $BASE_DIR/mpc
+	__cd $BASE_DIR/mpc
+
 	aclocal --install -I m4
 	libtoolize --force
 	autoheader
 	automake -acf
 	autoconf
+
 	./configure --prefix=$PREFIX
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-	cd $BASE_DIR
 }
 
 build-gcc()
 {
 	rm -rf $BASE_DIR/build-gcc
 	mkdir -p $BASE_DIR/build-gcc
-	cd $BASE_DIR/build-gcc
+
+	__cd $BASE_DIR/build-gcc
+
 	$BASE_DIR/gcc/configure \
 		--prefix=$PREFIX \
 		--libexecdir=$PREFIX/lib \
@@ -79,14 +93,14 @@ build-gcc()
 		--enable-languages=c,c++ \
 		--disable-multilib \
 		--disable-bootstrap \
-		--without-system-zlib \
-		--enable-lto
+		--with-system-zlib
+#		--enable-lto
 
 	make
 	make install
 
 	# ???
-	rm $PREFIX/lib/libstdc++.so.*-gdb.py
+#	rm $PREFIX/lib/libstdc++.so.*-gdb.py
 
 	ldconfig
 	cd $BASE_DIR
@@ -94,7 +108,8 @@ build-gcc()
 
 build-gdb()
 {
-	cd $BASE_DIR/gdb
+	__cd $BASE_DIR/gdb
+
 	./configure --prefix=$PREFIX --disable-werror
 	$MAKE_CLEAN
 	make
@@ -103,10 +118,12 @@ build-gdb()
 	cd $BASE_DIR
 }
 
-test() {
+test()
+{
+build-gcc
 	exit
 }
-#test
+test
 
 build-zlib
 build-gmp

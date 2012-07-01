@@ -96,12 +96,12 @@ __indent() {
 	ldconfig
 }
 
-__test__() {
-__indent
+__test__()
+{
 
 	exit
 }
-__test__
+#__test__
 
 __libunistring
 __guile
@@ -109,6 +109,6 @@ __gnutls
 __ed
 __gperf
 __acl
-__attr
+#__attr
 __indent
 

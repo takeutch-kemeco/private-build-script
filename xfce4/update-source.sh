@@ -1,18 +1,27 @@
 #!/bin/bash
 
-__BASE_DIR__=$(pwd)
+BASE_DIR=$(pwd)
 
-for __PACKAGE__ in $(ls)
+__cd()
+{
+	echo "------------------------------"
+	echo $1	
+	echo "------------------------------"
+
+	cd $1
+}
+
+for __PACKAGE__ in $(ls -F | grep / | sed -e "s/\/$//g")
 do
-	cd $__BASE_DIR__/$__PACKAGE__
+	__cd $BASE_DIR/$__PACKAGE__
 	if [ $? -eq 0 ]
 	then
-#		rm $__BASE_DIR__/$__PACKAGE__/* -rf
+#		rm $BASE_DIR/$__PACKAGE__/* -rf
 #		git checkout master
-#		rm $__BASE_DIR__/$__PACKAGE__/* -rf
-#		git clone $__BASE_DIR__/$__PACKAGE__/. $__BASE_DIR__/$__PACKAGE__/b
-#		mv $__BASE_DIR__/$__PACKAGE__/b/* $__BASE_DIR__/$__PACKAGE__/
-#		rm $__BASE_DIR__/$__PACKAGE__/b -rf
+#		rm $BASE_DIR/$__PACKAGE__/* -rf
+#		git clone $BASE_DIR/$__PACKAGE__/. $BASE_DIR/$__PACKAGE__/b
+#		mv $BASE_DIR/$__PACKAGE__/b/* $BASE_DIR/$__PACKAGE__/
+#		rm $BASE_DIR/$__PACKAGE__/b -rf
 
 		git pull
 	fi

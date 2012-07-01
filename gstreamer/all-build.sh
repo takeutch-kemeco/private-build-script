@@ -161,6 +161,7 @@ __lame()
 
 test()
 {
+
 	exit
 }
 #test
@@ -181,6 +182,6 @@ __full() {
 	__gst
 }
 
-__gst
-#__full
+#__gst
+__full
 

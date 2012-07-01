@@ -89,53 +89,6 @@ __ipython() {
 	python setup.py install --prefix=/usr
 }
 
-__tcl() {
-	cd $BASE_DIR/tcl
-	tar -xf ../tcl8.5.11-html.tar.gz --strip-components=1
-	cd unix
-	./configure --prefix=$PREFIX \
-           	--enable-threads \
-            	--mandir=$PREFIX/share/man
-	make
-
-sed -e "s@^\(TCL_SRC_DIR='\).*@\1/usr/include'@" \
-    -e "/TCL_B/s@='\(-L\)\?.*unix@='\1/usr/lib@" \
-    -i tclConfig.sh
-
-	make install
-	make install-private-headers
-	ln -v -sf tclsh8.5 /usr/bin/tclsh
-	chmod -v 755 /usr/lib/libtcl8.5.so
-
-	mkdir -v -p /usr/share/doc/tcl-8.5.11
-	cp -v -r  ../html/* /usr/share/doc/tcl-8.5.11
-
-	ln -sf libtcl.so.8 /lib/libtcl.so
-
-	ldconfig
-}
-
-__tk() {
-	cd $BASE_DIR/tk
-	cd unix
-	./configure --prefix=$PREFIX \
-            	--enable-threads \
-            	--mandir=$PREFIX/share/man
-	make
-sed -e "s@^\(TK_SRC_DIR='\).*@\1/usr/include'@" \
-    -e "/TK_B/s@='\(-L\)\?.*unix@='\1/usr/lib@" \
-    -i tkConfig.sh
-
-	make install
-	make install-private-headers
-	ln -v -sf wish8.5 /usr/bin/wish
-	chmod -v 755 /usr/lib/libtk8.5.so
-
-	ln -sf libtk.so.8 /lib/libtk.so
-
-	ldconfig
-}
-
 __matplotlib() {
 	cd $BASE_DIR/matplotlib
 	python setup.py install --prefix=/usr
@@ -148,8 +101,6 @@ __test__() {
 #__test__
 
 __python27
-__tcl
-__tk
 
 __pyxml
 __py2cairo

@@ -1,15 +1,17 @@
 #!/bin/bash
 
-base_dir=$(pwd)
+BASE_DIR=$(pwd)
+PREFIX=/usr/local
 
-for package in $(ls)
+for PACKAGE in $(ls)
 do
-  cd $base_dir/$package
-  ./autogen.sh --prefix=/usr --disable-python
-  make clean
-  make
-  make install
-  ldconfig
-  cd $base_dir
+	cd $BASE_DIR/$PACKAGE
+	make distclean
+	./autogen.sh
+	./configure --prefix=$PREFIX --disable-python
+	make clean
+	make
+	make install
+	ldconfig
 done
 

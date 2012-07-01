@@ -1,13 +1,24 @@
 #!/bin/bash
 
 PREFIX=/usr
-__BASE_DIR__=$(pwd)
-__MAKE_CLEAN__=
-#__MAKE_CLEAN__="make clean"
+BASE_DIR=$(pwd)
 
-for __PACKAGE__ in $(ls)
+#MAKE_CLEAN=
+MAKE_CLEAN="make clean"
+
+__cd()
+{
+	echo "------------------------------"
+	echo $1
+	echo "------------------------------"
+
+	cd $1
+	$DIST_CLEAN
+}
+
+for PACKAGE in $(ls -F | grep / | sed -e "s/$\///")
 do
-	cd $__BASE_DIR__/$__PACKAGE__
+	__cd $BASE_DIR/$PACKAGE
 
 	if [ $? -eq 0 ]
 	then
@@ -15,11 +26,10 @@ do
 			--enable-maintainer-mode \
 			--enable-debug=no \
 			--enable-vala=yes --enable-introspection=yes
-		$__MAKE_CLEAN__
+		$MAKE_CLEAN
 		make
 		make install
 		ldconfig
 	fi
-
-	cd $__BASE_DIR__
 done
+

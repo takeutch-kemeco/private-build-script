@@ -1,43 +1,52 @@
 #!/bin/bash
 
-__BASE_DIR__=$(pwd)
+BASE_DIR=$(pwd)
 PREFIX=/usr
 XORG_PREFIX=/usr
 
 #MAKE_CLEAN=
 MAKE_CLEAN="make clean"
 
+#DIST_CLEAN=
+DIST_CLEAN="make distclean"
+
+__cd()
+{
+	echo "------------------------------"
+	echo $1
+	echo "------------------------------"
+
+	cd $1
+	$DIST_CLEAN
+}
+
 __libffi()
 {
-	cd libffi
+	__cd $BASE_DIR/libffi
 
 	./configure --prefix=$PREFIX
 	$MAKE_CLEAN
 	make
 	make install
-	cp -f $__BASE_DIR__/libffi/i686-pc-linux-gnu/include/ffi.h $PREFIX/include/
-	cp -f $__BASE_DIR__/libffi/i686-pc-linux-gnu/include/ffitarget.h $PREFIX/include/
+	cp -f $BASE_DIR/libffi/i686-pc-linux-gnu/include/ffi.h $PREFIX/include/
+	cp -f $BASE_DIR/libffi/i686-pc-linux-gnu/include/ffitarget.h $PREFIX/include/
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 __pth()
 {
-	cd pth-2.0.7
+	__cd $BASE_DIR/pth-2.0.7
 
 	./configure --prefix=$PREFIX
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 __glib()
 {
-	cd glib
+	__cd $BASE_DIR/glib
 
 	./autogen.sh
 	PCRE_LIBS=-lpcre PCRE_CFLAGS=" " \
@@ -48,65 +57,55 @@ __glib()
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 __gobject-introspection()
 {
-	cd gobject-introspection
+	__cd $BASE_DIR/gobject-introspection
 
 	./autogen.sh --prefix=$PREFIX
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 __libsigcpp()
 {
-	cd libsigc++2
+	__cd $BASE_DIR/libsigc++2
 
 	./autogen.sh --prefix=$PREFIX
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 __mm-common()
 {
-	cd mm-common
+	__cd $BASE_DIR/mm-common
 
 	./autogen.sh --prefix=$PREFIX
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 __glibmm()
 {
-	cd glibmm
+	__cd $BASE_DIR/glibmm
 
 	./autogen.sh --prefix=$PREFIX
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 __freetype2()
 {
-	cd freetype2
+	__cd $BASE_DIR/freetype2
 
 	./autogen.sh
 	./configure --prefix=$PREFIX
@@ -114,39 +113,33 @@ __freetype2()
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 __expat()
 {
-	cd expat
+	__cd $BASE_DIR/expat
 
 	./configure --prefix=$PREFIX
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 __libxml2()
 {
-	cd libxml2
+	__cd $BASE_DIR/libxml2
 
 	./autogen.sh --prefix=$PREFIX
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 __dbus()
 {
-	cd $__BASE_DIR__/dbus
+	__cd $BASE_DIR/dbus
 
 	groupadd -g 27 messagebus
 	useradd -c "D-BUS Message Daemon User" \
@@ -181,26 +174,22 @@ __dbus()
 	dbus-uuidgen --ensure
 	make install-dbus
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 __dbus-glib()
 {
-	cd $__BASE_DIR__/dbus-glib
+	__cd $BASE_DIR/dbus-glib
 	./autogen.sh --prefix=$PREFIX \
 		--enable-maintainer-mode
 	$MAKE_INSTALL
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 __fontconfig()
 {
-	cd fontconfig
+	__cd $BASE_DIR/fontconfig
 
 	./autogen.sh --prefix=$PREFIX \
 		--disable-docs \
@@ -210,26 +199,22 @@ __fontconfig()
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 __freeglut()
 {
-	cd freeglut
+	__cd $BASE_DIR/freeglut
 
 	./configure  --prefix=$XORG_PREFIX
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 __libpng()
 {
-	cd libpng
+	__cd $BASE_DIR/libpng
 
 	./autogen.sh
 	./configure --prefix=$PREFIX
@@ -237,39 +222,33 @@ __libpng()
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 __libjpeg8()
 {
-	cd jpeg-8d
+	__cd $BASE_DIR/jpeg-8d
 
 	./configure --prefix=$PREFIX
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 __libtiff()
 {
-	cd tiff-4.0.0
+	__cd $BASE_DIR/tiff-4.0.0
 
 	./configure --prefix=$PREFIX
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 __cairo()
 {
-	cd cairo
+	__cd $BASE_DIR/cairo
 
 	./autogen.sh --prefix=$PREFIX \
 		--enable-tee \
@@ -280,26 +259,22 @@ __cairo()
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 __cairomm()
 {
-	cd cairomm
+	__cd $BASE_DIR/cairomm
 
 	./autogen.sh --prefix=$PREFIX
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 __pango()
 {
-	cd pango
+	__cd $BASE_DIR/pango
 
 	./autogen.sh --prefix=$PREFIX \
 		--sysconfdir=/etc
@@ -307,65 +282,55 @@ __pango()
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 __pangomm()
 {
-	cd pangomm
+	__cd $BASE_DIR/pangomm
 
 	./autogen.sh --prefix=$PREFIX
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 __atk()
 {
-	cd atk
+	__cd $BASE_DIR/atk
 
 	./autogen.sh --prefix=$PREFIX
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 __atkmm()
 {
-	cd atkmm
+	__cd $BASE_DIR/atkmm
 
 	./autogen.sh --prefix=$PREFIX
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 __gdk-pixbuf()
 {
-	cd gdk-pixbuf
+	__cd $BASE_DIR/gdk-pixbuf
 
 	./autogen.sh --prefix=$PREFIX
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 __gtk2()
 {
-	cd gtk+-2.24
+	__cd $BASE_DIR/gtk+-2.24
 
 	./configure --prefix=$PREFIX \
 		--with-xinput=yes \
@@ -375,46 +340,44 @@ __gtk2()
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 __gtk3()
 {
-	cd gtk+
+	__cd $BASE_DIR/gtk+
 
 	./autogen.sh --prefix=$PREFIX
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
 __gtkmm()
 {
-	cd gtkmm
+	__cd $BASE_DIR/gtkmm
 
 	./autogen.sh --prefix=$PREFIX
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
-__libsigc++2() {
-	cd $__BASE_DIR__/libsigc++2
+__libsigc++2()
+{
+	__cd $BASE_DIR/libsigc++2
+
 	./autogen.sh --prefix=$PREFIX
 	make
 	make install
 	ldconfig
 }
 
-__libxml2() {
-	cd $__BASE_DIR__/libxml2
+__libxml2()
+{
+	__cd $BASE_DIR/libxml2
+
 	./autogen.sh --prefix=$PREFIX
 	make
 	make install
