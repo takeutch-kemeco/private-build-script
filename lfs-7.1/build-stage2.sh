@@ -307,7 +307,7 @@ __zlib()
 	__common zlib-1.2.7
 
 	mv -v /usr/lib/libz.so.* /lib
-	ln -sfv ../../lib/libz.so.1.2.6 /usr/lib/libz.so	
+	ln -sfv ../../lib/libz.so.1.2.6 /usr/lib/libz.so
 }
 
 __file()
@@ -462,7 +462,7 @@ __gcc()
 
 	grep found dummy.log
 
-	rm -v dummy.c a.out dummy.log	
+	rm -v dummy.c a.out dummy.log
 
 	__mes "do you have this message appear in the above?" \
         	"[Requesting program interpreter: /lib/ld-linux.so.2]"
