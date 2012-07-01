@@ -3,28 +3,15 @@
 #SRC=$LFS/sources
 SRC=$(pwd)
 
-set +h
-umask 022
-LFS=/mnt/lfs
-LC_ALL=POSIX
-LFS_TGT=i686-lfs-linux-gnu
-PATH=/tools/bin:/bin:/usr/bin
-
 MAKEFLAGS='-j4'
 
 #CFLAGS='-O4 -march=native -mtune=native -msse3'
 CFLAGS=
 CXXFLAGS=$CFLAGS
 
-export SRC LFS LC_ALL LFS_TGT PATH MAKEFLAGS CFLAGS CXXFLAGS
+export SRC MAKEFLAGS CFLAGS CXXFLAGS
 
 CURBUILDAPP=
-
-__init()
-{
-	mkdir -v $LFS/tools
-	ln -sv $LFS/tools /
-}
 
 __echo-g()
 {
@@ -583,8 +570,6 @@ __backup()
 	tar cvf tools.$(date +"%Y%m%y").tar tools
 #	xz tools.tar
 }
-
-__init
 
 __binutils-1
 __gcc-1
