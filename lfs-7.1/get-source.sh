@@ -20,7 +20,7 @@ wget -c http://www.greenwoodsoftware.com/less/less-444.tar.gz
 wget -c http://download.savannah.gnu.org/releases/libpipeline/libpipeline-1.2.0.tar.gz
 wget -c http://ftp.gnu.org/gnu/libtool/libtool-2.4.2.tar.gz
 wget -c http://download.savannah.gnu.org/releases/man-db/man-db-2.6.1.tar.gz
-wget -c http://man7.org/linux/download/man-pages/man-pages-3.35.tar.gz
+wget -c http://www.kernel.org/pub/linux/docs/man-pages/man-pages-3.41.tar.xz
 wget -c http://www.multiprecision.org/mpc/download/mpc-0.9.tar.gz
 wget -c ftp://ftp.gnu.org/gnu/ncurses/ncurses-5.9.tar.gz
 wget -c http://procps.sourceforge.net/procps-3.2.8.tar.gz
@@ -51,7 +51,7 @@ wget -c http://www.linuxfromscratch.org/lfs/downloads/7.1/udev-config-20100128.t
 wget -c http://www.kernel.org/pub/linux/utils/util-linux/v2.20/util-linux-2.20.1.tar.bz2
 wget -c ftp://ftp.vim.org/pub/vim/unix/vim-7.3.tar.bz2
 wget -c http://tukaani.org/xz/xz-5.0.3.tar.bz2
-wget -c http://www.zlib.net/zlib-1.2.6.tar.bz2
+wget -c http://www.zlib.net/zlib-1.2.7.tar.bz2
 wget -c http://ftp.gnu.org/gnu/automake/automake-1.11.3.tar.xz
 wget -c http://ftp.gnu.org/gnu/coreutils/coreutils-8.15.tar.xz
 wget -c http://ftp.gnu.org/gnu/gmp/gmp-5.0.4.tar.xz

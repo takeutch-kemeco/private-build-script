@@ -3,24 +3,11 @@
 #SRC=$LFS/sources
 SRC=$(pwd)
 
-set +h
-umask 022
-HOME=/root
-TERM="$TERM"
-PS1='\u:\w\$ '
-PATH=/bin:/usr/bin:/sbin:/usr/sbin:/tools/bin
-
-LFS=/mnt/lfs
-LC_ALL=POSIX
-LFS_TGT=i686-lfs-linux-gnu
-
-MAKEFLAGS='-j4'
-
 #CFLAGS='-O4 -march=native -mtune=native -msse3'
 CFLAGS=
 CXXFLAGS=$CFLAGS
 
-export SRC HOME TERM PS1 LFS LC_ALL LFS_TGT PATH MAKEFLAGS CFLAGS CXXFLAGS
+export SRC CFLAGS CXXFLAGS
 
 CURBUILDAPP=
 
@@ -30,6 +17,8 @@ __init()
 	chgrp -v utmp /var/log/lastlog
 	chmod -v 664  /var/log/lastlog
 	chmod -v 600  /var/log/btmp
+
+	cp /tools/lib/* /lib/ -rf
 }
 
 __echo-g()
@@ -125,74 +114,10 @@ __common()
 {
 	__dcd $1
 
-	./configure --prefix=/tools
+	./configure --prefix=/usr
 	__mk
 #	__mk check
 	__mk install
-}
-
-__binutils-1()
-{
-	__dcd $SRC/binutils-2.22
-
-	__cdbt
-
-	../binutils-2.22/configure 	\
-		--target=$LFS_TGT 	\
-		--prefix=/tools 	\
-		--disable-nls 		\
-		--disable-werror
-
-	__mk
-
-	__mk install
-}
-
-__gcc-slcp()
-{
-	tar -jxf ../mpfr-3.1.0.tar.bz2
-	mv -v mpfr-3.1.0 mpfr
-	tar -Jxf ../gmp-5.0.4.tar.xz
-	mv -v gmp-5.0.4 gmp
-	tar -zxf ../mpc-0.9.tar.gz
-	mv -v mpc-0.9 mpc
-}
-
-__gcc-1()
-{
-	__dcd $SRC/gcc-4.6.2
-
-	__gcc-slcp
-
-	patch -Np1 -i ../gcc-4.6.2-cross_compile-1.patch
-
-	__cdbt
-
-	../gcc-4.6.2/configure 		\
-		--target=$LFS_TGT 	\
-		--prefix=/tools 	\
-		--disable-nls 		\
-		--disable-shared 	\
-		--disable-multilib 	\
-		--disable-decimal-float \
-		--disable-threads 	\
-		--disable-libmudflap 	\
-		--disable-libssp 	\
-		--disable-libgomp 	\
-		--disable-libquadmath 	\
-		--disable-target-libiberty \
-		--disable-target-zlib 	\
-		--enable-languages=c 	\
-		--without-ppl 		\
-		--without-cloog 	\
-		--with-mpfr-include=$(pwd)/../gcc-4.6.2/mpfr/src \
-		--with-mpfr-lib=$(pwd)/mpfr/src/.libs
-
-	__mk
-
-	__mk install
-
-	ln -vs libgcc.a `$LFS_TGT-gcc -print-libgcc-file-name | sed 's/libgcc/&_eh/'`
 }
 
 __linux-header()
@@ -201,399 +126,395 @@ __linux-header()
 
 	__mk mrproper
 
-	make headers_check
-	make INSTALL_HDR_PATH=dest headers_install
+	__mk headers_check
+	__mk INSTALL_HDR_PATH=dest headers_install
 	find dest/include \( -name .install -o -name ..install.cmd \) -delete
 	cp -rv dest/include/* /usr/include
+}
+
+__man-pages()
+{
+	__dcd $SRC/man-pages-3.41
+
+	__mk install
 }
 
 __glibc()
 {
 	__dcd $SRC/glibc-2.14.1
 
+	DL=$(readelf -l /bin/sh | sed -n 's@.*interpret.*/tools\(.*\)]$@\1@p')
+	sed -i "s|libs -o|libs -L/usr/lib -Wl,-dynamic-linker=$DL -o|" scripts/test-installation.pl
+	unset DL
+
+	sed -i -e 's/"db1"/& \&\& $name ne "nss_test1"/' scripts/test-installation.pl
+
+	sed -i 's|@BASH@|/bin/bash|' elf/ldd.bash.in
+
+	patch -Np1 -i ../glibc-2.14.1-fixes-1.patch
+	patch -Np1 -i ../glibc-2.14.1-sort-1.patch
+
 	patch -Np1 -i ../glibc-2.14.1-gcc_fix-1.patch
 
-	patch -Np1 -i ../glibc-2.14.1-cpuid-1.patch
+	sed -i '195,213 s/PRIVATE_FUTEX/FUTEX_CLOCK_REALTIME/' \
+	nptl/sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timed{rd,wr}lock.S
 
 	__cdbt
 
 	case `uname -m` in
-		i?86) echo "CFLAGS += -O2 -march=i686 -mtune=native" > configparms ;;
+		i?86) echo "CFLAGS += -O2 -march=i486 -mtune=native -O3 -pipe" > configparms ;;
 	esac
 
-	../glibc-2.14.1/configure 	\
-		--prefix=/tools 	\
-		--host=$LFS_TGT 	\
-		--build=$(../glibc-2.14.1/scripts/config.guess) \
-		--disable-profile --enable-add-ons \
-		--enable-kernel=3.0	\
-		--with-headers=/tools/include \
-		libc_cv_forced_unwind=yes \
-		libc_cv_c_cleanup=yes
+	../glibc-2.14.1/configure	\
+		--prefix=/usr 		\
+		--disable-profile 	\
+		--enable-add-ons 	\
+		--enable-kernel=2.6.25 	\
+		--libexecdir=/usr/lib/glibc
 
 	__mk
 
+	cp -v ../glibc-2.14.1/iconvdata/gconv-modules iconvdata
+	### not use __mk() !!
+	make -k check 2>&1 | tee glibc-check-log
+	grep Error glibc-check-log
+
+	touch /etc/ld.so.conf
+
 	__mk install
+
+	cp -v ../glibc-2.14.1/sunrpc/rpc/*.h /usr/include/rpc
+	cp -v ../glibc-2.14.1/sunrpc/rpcsvc/*.h /usr/include/rpcsvc
+	cp -v ../glibc-2.14.1/nis/rpcsvc/*.h /usr/include/rpcsvc
+
+	mkdir -pv /usr/lib/locale
+	localedef -i cs_CZ -f UTF-8 cs_CZ.UTF-8
+	localedef -i de_DE -f ISO-8859-1 de_DE
+	localedef -i de_DE@euro -f ISO-8859-15 de_DE@euro
+	localedef -i de_DE -f UTF-8 de_DE.UTF-8
+	localedef -i en_HK -f ISO-8859-1 en_HK
+	localedef -i en_PH -f ISO-8859-1 en_PH
+	localedef -i en_US -f ISO-8859-1 en_US
+	localedef -i en_US -f UTF-8 en_US.UTF-8
+	localedef -i es_MX -f ISO-8859-1 es_MX
+	localedef -i fa_IR -f UTF-8 fa_IR
+	localedef -i fr_FR -f ISO-8859-1 fr_FR
+	localedef -i fr_FR@euro -f ISO-8859-15 fr_FR@euro
+	localedef -i fr_FR -f UTF-8 fr_FR.UTF-8
+	localedef -i it_IT -f ISO-8859-1 it_IT
+	localedef -i ja_JP -f EUC-JP ja_JP
+	localedef -i ja_JP -f UTF-8 ja_JP.UTF-8
+	localedef -i tr_TR -f UTF-8 tr_TR.UTF-8
+	localedef -i zh_CN -f GB18030 zh_CN.GB18030
+
+###	__mk localedata/install-locales
 }
 
-__configure()
+__glibc-config()
 {
-	__mes "tools specs configure" ""
+	__mes "glibc configure" ""
 	__wait
 
-	SPECS=`dirname $($LFS_TGT-gcc -print-libgcc-file-name)`/specs
-	$LFS_TGT-gcc -dumpspecs | sed \
-		-e 's@/lib\(64\)\?/ld@/tools&@g' \
-		-e "/^\*cpp:$/{n;s,$, -isystem /tools/include,}" > $SPECS
-	echo "New specs file is: $SPECS"
-	unset SPECS
+cat > /etc/nsswitch.conf << "EOF"
+# Begin /etc/nsswitch.conf
+
+passwd: files
+group: files
+shadow: files
+
+hosts: files dns
+networks: files
+
+protocols: files
+services: files
+ethers: files
+rpc: files
+
+# End /etc/nsswitch.conf
+EOF
+
+	tzselect
+
+	cp -v --remove-destination /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
+
+cat > /etc/ld.so.conf << "EOF"
+# Begin /etc/ld.so.conf
+/usr/local/lib
+/opt/lib
+
+# Add an include directory
+include /etc/ld.so.conf.d/*.conf
+
+EOF
+
+	mkdir /etc/ld.so.conf.d
+}
+
+__chain-config()
+{
+	__mes "chain configure" ""
+	__wait
+
+	mv -v /tools/bin/{ld,ld-old}
+	mv -v /tools/$(gcc -dumpmachine)/bin/{ld,ld-old}
+	mv -v /tools/bin/{ld-new,ld}
+	ln -sv /tools/bin/ld /tools/$(gcc -dumpmachine)/bin/ld
+
+	gcc -dumpspecs | sed -e 's@/tools@@g' \
+		-e '/\*startfile_prefix_spec:/{n;s@.*@/usr/lib/ @}' \
+		-e '/\*cpp:/{n;s@$@ -isystem /usr/include@}' > \
+		`dirname $(gcc --print-libgcc-file-name)`/specs
 
 	###test
 	echo 'main(){}' > dummy.c
-	$LFS_TGT-gcc -B/tools/lib dummy.c
-	readelf -l a.out | grep ': /tools'
+	cc dummy.c -v -Wl,--verbose &> dummy.log
+	readelf -l a.out | grep ': /lib'
 
-	rm -v dummy.c a.out
+        grep -o '/usr/lib.*/crt[1in].*succeeded' dummy.log
 
-	__mes "do you have this message appear in the above?" \
-		"[requesting program interpreter: /tools/lib/ld-linux.so.2]"
-	__wait
+	grep -B1 '^ /usr/include' dummy.log
+
+	grep 'SEARCH.*/usr/lib' dummy.log |sed 's|; |\n|g'
+
+	grep "/lib.*/libc.so.6 " dummy.log
+
+	grep found dummy.log
+
+	rm -v dummy.c a.out dummy.log
+
+        __mes "do you have this message appear in the above?" \
+                "[Requesting program interpreter: /lib/ld-linux.so.2]"
+	__echo-g ""
+	__echo-g "/usr/lib/crt1.o succeeded"
+	__echo-g "/usr/lib/crti.o succeeded"
+	__echo-g "/usr/lib/crtn.o succeeded"
+	__echo-g ""
+	__echo-g "#include <...> search starts here:"
+	__echo-g " /usr/include"
+	__echo-g ""
+	__echo-g 'SEARCH_DIR("/tools/i686-pc-linux-gnu/lib")'
+	__echo-g 'SEARCH_DIR("/usr/lib")'
+	__echo-g 'SEARCH_DIR("/lib");'
+	__echo-g ""
+	__echo-g "attempt to open /lib/libc.so.6 succeeded"
+	__echo-g ""
+	__echo-g "found ld-linux.so.2 at /lib/ld-linux.so.2"
+       __wait
 }
 
-__binutils-2()
+__zlib()
 {
-	__dcd $SRC/binutils-2.22
+	__common zlib-1.2.7
 
-	__cdbt
-
-	CC="$LFS_TGT-gcc -B/tools/lib/"	\
-	AR=$LFS_TGT-ar 			\
-	RANLIB=$LFS_TGT-ranlib 		\
-	../binutils-2.22/configure	\
-		--prefix=/tools 	\
-		--disable-nls 		\
-		--with-lib-path=/tools/lib
-
-	__mk
-
-	__mk install
-
-	__mk -C ld clean
-	__mk -C ld LIB_PATH=/usr/lib:/lib
-	cp -v ld/ld-new /tools/bin
-}
-
-__gcc-2()
-{
-	__dcd $SRC/gcc-4.6.2
-
-	patch -Np1 -i ../gcc-4.6.2-startfiles_fix-1.patch
-
-	cp -v gcc/Makefile.in{,.orig}
-	sed 's@\./fixinc\.sh@-c true@' gcc/Makefile.in.orig > gcc/Makefile.in
-
-	cp -v gcc/Makefile.in{,.tmp}
-	sed 's/^T_CFLAGS =$/& -fomit-frame-pointer/' gcc/Makefile.in.tmp > gcc/Makefile.in
-
-	for file in $(find gcc/config -name linux64.h -o -name linux.h -o -name sysv4.h)
-	do
-		cp -uv $file{,.orig}
-		sed -e 's@/lib\(64\)\?\(32\)\?/ld@/tools&@g' -e 's@/usr@/tools@g' $file.orig > $file
-
-		echo '
-#undef STANDARD_INCLUDE_DIR
-#define STANDARD_INCLUDE_DIR 0
-#define STANDARD_STARTFILE_PREFIX_1 ""
-#define STANDARD_STARTFILE_PREFIX_2 ""' >> $file
-
-		touch $file.orig
-	done
-
-	__gcc-slcp
-
-	__cdbt
-
-	CC="$LFS_TGT-gcc -B/tools/lib/" \
-	AR=$LFS_TGT-ar RANLIB=$LFS_TGT-ranlib \
-    	../gcc-4.6.2/configure		\
-		--prefix=/tools 	\
-    		--with-local-prefix=/tools \
-		--enable-clocale=gnu 	\
-    		--enable-shared 	\
-		--enable-threads=posix 	\
-    		--enable-__cxa_atexit 	\
-		--enable-languages=c,c++ \
-    		--disable-libstdcxx-pch \
-		--disable-multilib 	\
-    		--disable-bootstrap 	\
-		--disable-libgomp 	\
-    		--without-ppl 		\
-		--without-cloog 	\
-    		--with-mpfr-include=$(pwd)/../gcc-4.6.2/mpfr/src \
-    		--with-mpfr-lib=$(pwd)/mpfr/src/.libs
-
-	__mk
-
-	__mk install
-
-	ln -vs gcc /tools/bin/cc
-
-	###test
-	echo 'main(){}' > dummy.c
-	cc dummy.c
-	readelf -l a.out | grep ': /tools'
-
-	rm -v dummy.c a.out
-
-	__mes "do you have this message appear in the above?" \
-		"[requesting program interpreter: /tools/lib/ld-linux.so.2]"
-	__wait
-}
-
-__tcl()
-{
-	__dcd $SRC/tcl8.5.11
-
-	cd unix
-	./configure --prefix=/tools
-
-	__mk
-
-#	TZ=UTC __mk test
-
-	__mk install
-
-	chmod -v u+w /tools/lib/libtcl8.5.so
-
-	__mk install-private-headers
-
-	ln -sv tclsh8.5 /tools/bin/tclsh
-}
-
-__expect()
-{
-	__dcd $SRC/expect5.45
-
-	cp -v configure{,.orig}
-	sed 's:/usr/local/bin:/bin:' configure.orig > configure
-
-	./configure --prefix=/tools 	\
-		--with-tcl=/tools/lib 	\
-		--with-tclinclude=/tools/include
-
-	__mk
-
-#	__mk test
-
-	__mk SCRIPTS="" install
-}
-
-__dejagnu()
-{
-	__common $SRC/dejagnu-1.5
-}
-
-__check()
-{
-	__common $SRC/check-0.9.8
-}
-
-__ncurses()
-{
-	__dcd $SRC/ncurses-5.9
-
-	./configure --prefix=/tools 	\
-		--with-shared 		\
-    		--without-debug 	\
-		--without-ada 		\
-		--enable-overwrite
-
-	__mk
-
-	__mk install
-}
-
-__bash()
-{
-	__dcd $SRC/bash-4.2
-
-	patch -Np1 -i ../bash-4.2-fixes-4.patch	
-
-	./configure --prefix=/tools 	\
-		--without-bash-malloc
-
-	__mk
-
-#	__mk tests
-
-	__mk install
-
-	ln -vs bash /tools/bin/sh
-}
-
-__bzip2()
-{
-	__dcd $SRC/bzip2-1.0.6
-
-	__mk
-
-	__mk PREFIX=/tools install
-}
-
-__coreutils()
-{
-	__dcd $SRC/coreutils-8.15
-
-	./configure --prefix=/tools 	\
-		--enable-install-program=hostname
-
-	__mk
-
-#	__mk RUN_EXPENSIVE_TESTS=yes check
-
-	__mk install
-
-	cp -v src/su /tools/bin/su-tools
-}
-
-__diffutils()
-{
-	__common $SRC/diffutils-3.2
+	mv -v /usr/lib/libz.so.* /lib
+	ln -sfv ../../lib/libz.so.1.2.6 /usr/lib/libz.so	
 }
 
 __file()
 {
-	__common $SRC/file-5.10
+	__common file-5.10
 }
 
-__findutils()
+__binutils()
 {
-	__common $SRC/findutils-4.4.2
-}
+	__dcd binutils-2.22
 
-__gawk()
-{
-	__common $SRC/gawk-4.0.0
-}
+	###test
+	expect -c "spawn ls"
+	__mes "do you have this message appear in the above?" "spawn ls"
+	__wait
 
-__gettext()
-{
-	__dcd $SRC/gettext-0.18.1.1
+	###build
+	rm -fv etc/standards.info
+	sed -i.bak '/^INFO/s/standards.info //' etc/Makefile.in
 
-	cd gettext-tools
-	./configure --prefix=/tools 	\
-		--disable-shared
+	sed -i "/exception_defines.h/d" ld/testsuite/ld-elf/new.cc
+	sed -i "s/-fvtable-gc //" ld/testsuite/ld-selective/selective.exp
 
-	__mk -C gnulib-lib
-	__mk -C src msgfmt
+	__cdbt
 
-	cp -v src/msgfmt /tools/bin
-}
+	../binutils-2.22/configure --prefix=/usr \
+		--enable-shared
 
-__grep()
-{
-	__dcd $SRC/grep-2.10
+	__mk tooldir=/usr
 
-	./configure --prefix=/tools 	\
-		--disable-perl-regexp
+	###test
+	__mk -k check
 
-	__mk
+	__mk tooldir=/usr install
 
-#	__mk check
-
-	__mk install
-}
-
-__gzip()
-{
-	__common $SRC/gzip-1.4
+	cp -v ../binutils-2.22/include/libiberty.h /usr/include
 }
 
 __m4()
 {
-	__common $SRC/m4-1.4.16
-}
-
-__make()
-{
-	__common $SRC/make-3.82
-}
-
-__patch()
-{
-	__common $SRC/patch-2.6.1
-}
-
-__perl()
-{
-	__dcd perl-5.14.2
-
-	patch -Np1 -i ../perl-5.14.2-libc-1.patch
-
-	sh Configure -des -Dprefix=/tools
+	__dcd m4-1.4.16
 
 	__mk
 
-	cp -v perl cpan/podlators/pod2man /tools/bin
-	mkdir -pv /tools/lib/perl5/5.14.2
-	cp -Rv lib/* /tools/lib/perl5/5.14.2
+	echo "exit 0" > tests/test-update-copyright.sh
+
+	sed -i -e '41s/ENOENT/& || errno == EINVAL/' tests/test-readlink.h
+	__mk check
+
+	__mk install
 }
 
-__sed()
+__gmp()
 {
-	__common $SRC/sed-4.2.1
+	__dcd gmp-5.0.4
+
+	ABI=32 ./configure --prefix=/usr \
+		--enable-cxx \
+		--enable-mpbsd
+
+	__mk
+
+	### not use __mk() !!
+	make check 2>&1 | tee gmp-check-log
+
+	awk '/tests passed/{total+=$2} ; END{print total}' gmp-check-log
+
+	__mk install
+
+	mkdir -v /usr/share/doc/gmp-5.0.4
+	cp -v doc/{isa_abi_headache,configuration} doc/*.html /usr/share/doc/gmp-5.0.4
 }
 
-__tar()
+__mpfr()
 {
-        __dcd $SRC/tar-1.26
+	__dcd mpfr-3.1.0
 
-        ./configure --prefix=/tools \
-		FORCE_UNSAFE_CONFIGURE=1
+	patch -Np1 -i ../mpfr-3.1.0-fixes-1.patch
 
-        __mk
+	./configure --prefix=/usr 	\
+		--enable-thread-safe 	\
+		--docdir=/usr/share/doc/mpfr-3.1.0
 
-#       __mk check
+	__mk
 
-        __mk install
+	__mk check
+
+	__mk install
+
+	__mk html
+	__mk install-html
 }
 
-__texinfo()
+__mpc()
 {
-	__common $SRC/texinfo-4.13
+	__common mpc-0.9
 }
 
-__xz()
+__gcc()
 {
-	__common $SRC/xz-5.0.3
-}
+	__dcd gcc-4.6.2
 
-__strip()
-{
-	__mes "build compleate" ""
-	__mes "Are you sure you want to strip?" ""
+	sed -i 's/install_to_$(INSTALL_DEST) //' libiberty/Makefile.in
+
+	case `uname -m` in
+ 		i?86) sed -i 's/^T_CFLAGS =$/& -fomit-frame-pointer/' gcc/Makefile.in ;;
+	esac
+
+	sed -i 's@\./fixinc\.sh@-c true@' gcc/Makefile.in
+
+	__cdbt
+
+	../gcc-4.6.2/configure --prefix=/usr \
+		--libexecdir=/usr/lib	\
+		--enable-shared 	\
+    		--enable-threads=posix	\
+		--enable-__cxa_atexit 	\
+    		--enable-clocale=gnu	\
+		--enable-languages=c,c++ \
+    		--disable-multilib 	\
+		--disable-bootstrap 	\
+		--with-system-zlib
+
+	__mk
+
+	###test
+	ulimit -s 16384
+
+	__mk -k check
+
+	../gcc-4.6.2/contrib/test_summary | grep -A7 Summ
+
+	###inst
+	__mk install
+
+	ln -sv ../usr/bin/cpp /lib
+
+	ln -sv gcc /usr/bin/cc
+
+	###test
+	echo 'main(){}' > dummy.c
+	cc dummy.c -v -Wl,--verbose &> dummy.log
+	readelf -l a.out | grep ': /lib'
+
+	grep -o '/usr/lib.*/crt[1in].*succeeded' dummy.log
+
+	grep -B4 '^ /usr/include' dummy.log
+
+	grep 'SEARCH.*/usr/lib' dummy.log |sed 's|; |\n|g'
+
+	grep "/lib.*/libc.so.6 " dummy.log
+
+	grep found dummy.log
+
+	rm -v dummy.c a.out dummy.log	
+
+	__mes "do you have this message appear in the above?" \
+        	"[Requesting program interpreter: /lib/ld-linux.so.2]"
+	__echo-g ""
+	__echo-g "/usr/lib/gcc/i686-pc-linux-gnu/4.6.2/../../../crt1.o succeeded"
+	__echo-g "/usr/lib/gcc/i686-pc-linux-gnu/4.6.2/../../../crti.o succeeded"
+	__echo-g "/usr/lib/gcc/i686-pc-linux-gnu/4.6.2/../../../crtn.o succeeded"
+	__echo-g ""
+	__echo-g "#include <...> search starts here:"
+	__echo-g " /usr/local/include"
+	__echo-g " /usr/lib/gcc/i686-pc-linux-gnu/4.6.2/include"
+	__echo-g " /usr/lib/gcc/i686-pc-linux-gnu/4.6.2/include-fixed"
+	__echo-g " /usr/include"
+	__echo-g ""
+	__echo-g 'SEARCH_DIR("/usr/i686-pc-linux-gnu/lib")'
+	__echo-g 'SEARCH_DIR("/usr/local/lib")'
+	__echo-g 'SEARCH_DIR("/lib")'
+	__echo-g 'SEARCH_DIR("/usr/lib");'
+	__echo-g ""
+	__echo-g "attempt to open /lib/libc.so.6 succeeded"
+	__echo-g ""
+	__echo-g "found ld-linux.so.2 at /lib/ld-linux.so.2"
 	__wait
-
-	strip --strip-debug /tools/lib/*
-	strip --strip-unneeded /tools/{,s}bin/*
-
-	rm -rf /tools/{,share}/{info,man,doc}
 }
 
-__backup()
-{
-	__mes "Are you sure you want to backup?" ""
-	__wait
 
-	cd $LFS
-	ls
-	tar cvf tools.$(date +"%Y%m%y").tar tools
-#	xz tools.tar
-}
 
-#rem(){
+
+
+
+
+
+
+
+rem(){
 __init
+
 __linux-header
+__man-pages
+__glibc
+__glibc-config
+__chain-config
+
+__zlib
+__file
+__binutils
+__m4
+__gmp
+__mpfr
+__mpc
+}
+__gcc
 
 
 

@@ -3,7 +3,8 @@
 #SRC=$LFS/sources
 SRC=$(pwd)
 
-MAKEFLAGS='-j4'
+MAKEFLAGS=
+#MAKEFLAGS='-j2'
 
 #CFLAGS='-O4 -march=native -mtune=native -msse3'
 CFLAGS=
@@ -46,7 +47,7 @@ __mes()
 __wait()
 {
 	__echo-g "<<< Prease enter key >>>"
-	read
+#	read
 }
 
 __cd()
@@ -198,7 +199,7 @@ __glibc()
 	__cdbt
 
 	case `uname -m` in
-		i?86) echo "CFLAGS += -O2 -march=i686 -mtune=native" > configparms ;;
+		i?86) echo "CFLAGS += -O2 -march=i486 -mtune=native" > configparms ;;
 	esac
 
 	../glibc-2.14.1/configure 	\
@@ -206,7 +207,7 @@ __glibc()
 		--host=$LFS_TGT 	\
 		--build=$(../glibc-2.14.1/scripts/config.guess) \
 		--disable-profile --enable-add-ons \
-		--enable-kernel=3.0	\
+		--enable-kernel=2.6.25	\
 		--with-headers=/tools/include \
 		libc_cv_forced_unwind=yes \
 		libc_cv_c_cleanup=yes
@@ -341,7 +342,8 @@ __tcl()
 
 #	TZ=UTC __mk test
 
-	__mk install
+	### not use __mk() !!
+	make install
 
 	chmod -v u+w /tools/lib/libtcl8.5.so
 
@@ -580,7 +582,7 @@ __configure
 __binutils-2
 __gcc-2
 
-###__tcl
+__tcl
 __expect
 __dejagnu
 __check
@@ -605,6 +607,6 @@ __tar
 __texinfo
 __xz
 
-__strip
+###__strip
 __backup
 
