@@ -43,6 +43,7 @@ wget -c http://ftp.gnu.org/gnu/make/make-3.82.tar.bz2
 wget -c http://www.mpfr.org/mpfr-3.1.0/mpfr-3.1.0.tar.bz2
 wget -c http://ftp.gnu.org/gnu/patch/patch-2.6.1.tar.bz2
 wget -c http://www.cpan.org/src/5.0/perl-5.14.2.tar.bz2
+wget -c http://www.cpan.org/src/5.0/perl-5.16.0.tar.bz2
 wget -c http://ftp.gnu.org/gnu/sed/sed-4.2.1.tar.bz2
 wget -c http://pkg-shadow.alioth.debian.org/releases/shadow-4.1.5.tar.bz2
 wget -c http://download.savannah.gnu.org/releases/sysvinit/sysvinit-2.88dsf.tar.bz2
