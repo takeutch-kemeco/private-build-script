@@ -1,6 +1,5 @@
 #/bin/bash
 
-#SRC=$LFS/sources
 SRC=$(pwd)
 
 LFS=/mnt/lfs
@@ -20,8 +19,8 @@ __inituser()
 
 	passwd lfs
 
-	chown -v lfs $LFS/tools
-	chown -v lfs $LFS/sources
+	chown -v lfs $LFS/tools -R
+	chown -v lfs $SRC -R
 }
 
 __initdir

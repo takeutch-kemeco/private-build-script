@@ -1,68 +1,15 @@
 #/bin/bash
 
-#SRC=$LFS/sources
 SRC=$(pwd)
 
-MAKEFLAGS=
-#MAKEFLAGS='-j2'
+MAKEFLAGS="-j2"
 
-#CFLAGS='-O4 -march=native -mtune=native -msse3'
-CFLAGS=
+CFLAGS="-O2 -march=native -mtune=native -msse3"
 CXXFLAGS=$CFLAGS
 
 export SRC MAKEFLAGS CFLAGS CXXFLAGS
 
-CURBUILDAPP=
-
-__echo-g()
-{
-	COLGREEN=$'\e[1;32;1m'
-	echo "$COLGREEN"$@
-
-	COLDEF=$'\e[0m'
-	echo "$COLDEF" 
-}
-
-__err()
-{
-	COLRED=$'\e[0;31;1m'
-	echo "$COLRED"
-	echo "cur build app : " $CURBUILDAPP
-	echo $@
-
-	COLDEF=$'\e[0m'
-	echo "$COLDEF" 
-
-	exit
-}
-
-__mes()
-{
-	__echo-g "------------------------------"
-	__echo-g $1	
-	__echo-g "------------------------------"
-	__echo-g $2
-}
-
-__wait()
-{
-	__echo-g "<<< Prease enter key >>>"
-#	read
-}
-
-__cd()
-{
-	CURBUILDAPP=$1
-	__mes $1 "Are you sure you want to build?"
-
-	cd $1
-	if [ $? -ne 0 ]
-	then
-		__err "not directory error!!"
-	fi
-
-	__wait
-}
+. __common-func.sh
 
 __dcd()
 {
@@ -199,7 +146,7 @@ __glibc()
 	__cdbt
 
 	case `uname -m` in
-		i?86) echo "CFLAGS += -O2 -march=i486 -mtune=native" > configparms ;;
+		i?86) echo "CFLAGS += -O2 -march=native -mtune=native -msse3" > configparms ;;
 	esac
 
 	../glibc-2.14.1/configure 	\
@@ -508,7 +455,7 @@ __patch()
 
 __perl()
 {
-	__dcd perl-5.14.2
+	__dcd $SRC/perl-5.14.2
 
 	patch -Np1 -i ../perl-5.14.2-libc-1.patch
 
@@ -607,6 +554,6 @@ __tar
 __texinfo
 __xz
 
-###__strip
+__strip
 __backup
 

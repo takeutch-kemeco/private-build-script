@@ -1,29 +1,5 @@
 #/tools/bin/bash
 
-#SRC=$LFS/sources
-SRC=$(pwd)
-
-set +h
-umask 022
-HOME=/root
-TERM="$TERM"
-PS1='\u:\w\$ '
-PATH=/bin:/usr/bin:/sbin:/usr/sbin:/tools/bin
-
-LFS=/mnt/lfs
-LC_ALL=POSIX
-LFS_TGT=i686-lfs-linux-gnu
-
-MAKEFLAGS='-j4'
-
-#CFLAGS='-O4 -march=native -mtune=native -msse3'
-CFLAGS=
-CXXFLAGS=$CFLAGS
-
-export SRC HOME TERM PS1 LFS LC_ALL LFS_TGT PATH MAKEFLAGS CFLAGS CXXFLAGS
-
-CURBUILDAPP=
-
 __init-dir()
 {
 	mkdir -pv /{bin,boot,etc/{opt,sysconfig},home,lib,mnt,opt,run}

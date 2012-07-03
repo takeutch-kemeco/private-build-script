@@ -1,24 +1,10 @@
 #/bin/bash
 
-#SRC=$LFS/sources
 SRC=$(pwd)
 
-set +h
-umask 022
 LFS=/mnt/lfs
-LC_ALL=POSIX
-LFS_TGT=i686-lfs-linux-gnu
-PATH=/tools/bin:/bin:/usr/bin
 
-MAKEFLAGS='-j4'
-
-#CFLAGS='-O4 -march=native -mtune=native -msse3'
-CFLAGS=
-CXXFLAGS=$CFLAGS
-
-export SRC LFS LC_ALL LFS_TGT PATH MAKEFLAGS CFLAGS CXXFLAGS
-
-CURBUILDAPP=
+export SRC LFS
 
 __mount()
 {
@@ -43,7 +29,7 @@ __mount()
 
 __chroot()
 {
-	chroot "$LFS" \
+	chroot "$LFS" 			\
 		/tools/bin/env -i 	\
 		HOME=/root 		\
     		TERM="$TERM"		\

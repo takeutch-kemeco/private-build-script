@@ -1,6 +1,5 @@
 #/bin/bash
 
-#SRC=$LFS/sources
 SRC=$(pwd)
 
 LFS=/mnt/lfs
