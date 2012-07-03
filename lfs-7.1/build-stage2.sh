@@ -50,7 +50,7 @@ __man-pages()
 
 __glibc()
 {
-	__dcd $SRC/glibc-2.14.1
+	__dcd $SRC/glibc-2.15
 
 	DL=$(readelf -l /bin/sh | sed -n 's@.*interpret.*/tools\(.*\)]$@\1@p')
 	sed -i "s|libs -o|libs -L/usr/lib -Wl,-dynamic-linker=$DL -o|" scripts/test-installation.pl
@@ -60,30 +60,26 @@ __glibc()
 
 	sed -i 's|@BASH@|/bin/bash|' elf/ldd.bash.in
 
-	patch -Np1 -i ../glibc-2.14.1-fixes-1.patch
-	patch -Np1 -i ../glibc-2.14.1-sort-1.patch
+	patch -Np1 -i ../glibc-2.15-fixes-1.patch
 
-	patch -Np1 -i ../glibc-2.14.1-gcc_fix-1.patch
-
-	sed -i '195,213 s/PRIVATE_FUTEX/FUTEX_CLOCK_REALTIME/' \
-	nptl/sysdeps/unix/sysv/linux/x86_64/pthread_rwlock_timed{rd,wr}lock.S
+	patch -Np1 -i ../glibc-2.15-gcc_fix-1.patch
 
 	__cdbt
 
 	case `uname -m` in
-		i?86) echo "CFLAGS += -O4 -march=native -mtune=native -msse3 -pipe" > configparms ;;
+		i?86) echo "CFLAGS += -O4 -march=native -mtune=native -O3 -msse3 -pipe" > configparms ;;
 	esac
 
-	../glibc-2.14.1/configure	\
-		--prefix=/usr 		\
-		--disable-profile 	\
-		--enable-add-ons 	\
-		--enable-kernel=2.6.25 	\
-		--libexecdir=/usr/lib/glibc
+	../glibc-2.15/configure  	\
+ 		--prefix=/usr          	\
+    		--disable-profile      	\
+    		--enable-add-ons       	\
+    		--enable-kernel=3.1 	\
+    		--libexecdir=/usr/lib/glibc
 
 	__mk
 
-	cp -v ../glibc-2.14.1/iconvdata/gconv-modules iconvdata
+	cp -v ../glibc-2.15/iconvdata/gconv-modules iconvdata
 	### not use __mk() !!
 	make -k check 2>&1 | tee glibc-check-log
 	grep Error glibc-check-log
@@ -92,9 +88,9 @@ __glibc()
 
 	__mk install
 
-	cp -v ../glibc-2.14.1/sunrpc/rpc/*.h /usr/include/rpc
-	cp -v ../glibc-2.14.1/sunrpc/rpcsvc/*.h /usr/include/rpcsvc
-	cp -v ../glibc-2.14.1/nis/rpcsvc/*.h /usr/include/rpcsvc
+	cp -v ../glibc-2.15/sunrpc/rpc/*.h /usr/include/rpc
+	cp -v ../glibc-2.15/sunrpc/rpcsvc/*.h /usr/include/rpcsvc
+	cp -v ../glibc-2.15/nis/rpcsvc/*.h /usr/include/rpcsvc
 
 	mkdir -pv /usr/lib/locale
 	localedef -i cs_CZ -f UTF-8 cs_CZ.UTF-8
@@ -112,9 +108,9 @@ __glibc()
 	localedef -i fr_FR -f UTF-8 fr_FR.UTF-8
 	localedef -i it_IT -f ISO-8859-1 it_IT
 	localedef -i ja_JP -f EUC-JP ja_JP
-	localedef -i ja_JP -f UTF-8 ja_JP.UTF-8
 	localedef -i tr_TR -f UTF-8 tr_TR.UTF-8
 	localedef -i zh_CN -f GB18030 zh_CN.GB18030
+	localedef -i ja_JP -f UTF-8 ja_JP.UTF-8
 
 ###	__mk localedata/install-locales
 }
@@ -239,8 +235,7 @@ __binutils()
 	rm -fv etc/standards.info
 	sed -i.bak '/^INFO/s/standards.info //' etc/Makefile.in
 
-	sed -i "/exception_defines.h/d" ld/testsuite/ld-elf/new.cc
-	sed -i "s/-fvtable-gc //" ld/testsuite/ld-selective/selective.exp
+	patch -Np1 -i ../binutils-2.22-build_fix-1.patch
 
 	__cdbt
 
@@ -273,7 +268,7 @@ __m4()
 
 __gmp()
 {
-	__dcd $SRC/gmp-5.0.4
+	__dcd $SRC/gmp-5.0.5
 
 	ABI=32 ./configure --prefix=/usr \
 		--enable-cxx \
@@ -288,8 +283,8 @@ __gmp()
 
 	__mk install
 
-	mkdir -v /usr/share/doc/gmp-5.0.4
-	cp -v doc/{isa_abi_headache,configuration} doc/*.html /usr/share/doc/gmp-5.0.4
+	mkdir -v /usr/share/doc/gmp-5.0.5
+	cp -v doc/{isa_abi_headache,configuration} doc/*.html /usr/share/doc/gmp-5.0.5
 }
 
 __mpfr()
@@ -355,28 +350,26 @@ __tcl()
 
 __gcc()
 {
-	__dcd $SRC/gcc-4.6.2
+	__dcd $SRC/gcc-4.7.1
 
 	sed -i 's/install_to_$(INSTALL_DEST) //' libiberty/Makefile.in
 
 	case `uname -m` in
- 		i?86) sed -i 's/^T_CFLAGS =$/& -fomit-frame-pointer/' gcc/Makefile.in ;;
+		i?86) sed -i 's/^T_CFLAGS =$/& -fomit-frame-pointer/' gcc/Makefile.in ;;
 	esac
-
-	sed -i 's@\./fixinc\.sh@-c true@' gcc/Makefile.in
 
 	__cdbt
 
-	../gcc-4.6.2/configure --prefix=/usr \
-		--libexecdir=/usr/lib	\
-		--enable-shared 	\
-    		--enable-threads=posix	\
-		--enable-__cxa_atexit 	\
-    		--enable-clocale=gnu	\
-		--enable-languages=c	\
-    		--disable-multilib 	\
-		--disable-bootstrap 	\
-		--with-system-zlib
+	../gcc-4.7.1/configure --prefix=/usr            \
+	                       --libexecdir=/usr/lib    \
+	                       --enable-shared          \
+	                       --enable-threads=posix   \
+	                       --enable-__cxa_atexit    \
+	                       --enable-clocale=gnu     \
+	                       --enable-languages=c,c++ \
+	                       --disable-multilib       \
+	                       --disable-bootstrap      \
+	                       --with-system-zlib
 
 	__mk
 
@@ -386,7 +379,7 @@ __gcc()
 	### not use __mk() !!
 	make -k check
 
-	../gcc-4.6.2/contrib/test_summary | grep -A7 Summ
+	../gcc-4.7.1/contrib/test_summary | grep -A7 Summ
 
 	###inst
 	__mk install
@@ -415,14 +408,14 @@ __gcc()
 	__mes "do you have this message appear in the above?" \
         	"[Requesting program interpreter: /lib/ld-linux.so.2]"
 	__echo-g ""
-	__echo-g "/usr/lib/gcc/i686-pc-linux-gnu/4.6.2/../../../crt1.o succeeded"
-	__echo-g "/usr/lib/gcc/i686-pc-linux-gnu/4.6.2/../../../crti.o succeeded"
-	__echo-g "/usr/lib/gcc/i686-pc-linux-gnu/4.6.2/../../../crtn.o succeeded"
+	__echo-g "/usr/lib/gcc/i686-pc-linux-gnu/4.7.1/../../../crt1.o succeeded"
+	__echo-g "/usr/lib/gcc/i686-pc-linux-gnu/4.7.1/../../../crti.o succeeded"
+	__echo-g "/usr/lib/gcc/i686-pc-linux-gnu/4.7.1/../../../crtn.o succeeded"
 	__echo-g ""
 	__echo-g "#include <...> search starts here:"
 	__echo-g " /usr/local/include"
-	__echo-g " /usr/lib/gcc/i686-pc-linux-gnu/4.6.2/include"
-	__echo-g " /usr/lib/gcc/i686-pc-linux-gnu/4.6.2/include-fixed"
+	__echo-g " /usr/lib/gcc/i686-pc-linux-gnu/4.7.1/include"
+	__echo-g " /usr/lib/gcc/i686-pc-linux-gnu/4.7.1/include-fixed"
 	__echo-g " /usr/include"
 	__echo-g ""
 	__echo-g 'SEARCH_DIR("/usr/i686-pc-linux-gnu/lib")'

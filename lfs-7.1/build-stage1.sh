@@ -11,34 +11,6 @@ export SRC MAKEFLAGS CFLAGS CXXFLAGS
 
 . __common-func.sh
 
-__dcd()
-{
-	__mes $1 "Are you sure you want to decode?"
-	__wait
-
-	cd $SRC
-
-	BN=$(ls $1*.tar.*)
-	__echo-g $BN
-
-	case $BN in
-		*.gz)  gzip  -dc $BN | tar xvf - ;;
-		*.bz2) bzip2 -dc $BN | tar xvf - ;;
-		*.xz)  xz    -dc $BN | tar xvf - ;;
-	esac
-
-	__cd $1
-}
-
-__cdbt()
-{
-	BLDTMP=$SRC/__bldtmp
-
-	rm $BLDTMP -rf
-	mkdir -v $BLDTMP
-	cd $BLDTMP	
-}
-
 __mk()
 {
 	__echo-g "\n\n\n" $CURBUILDAPP "[ make" $@ "]"
@@ -64,12 +36,15 @@ __binutils-1()
 {
 	__dcd $SRC/binutils-2.22
 
-	__cdbt
+	patch -Np1 -i ../binutils-2.22-build_fix-1.patch
 
-	../binutils-2.22/configure 	\
-		--target=$LFS_TGT 	\
-		--prefix=/tools 	\
-		--disable-nls 		\
+	__cdbt
+	../binutils-2.22/configure         \
+		--prefix=/tools            \
+		--with-sysroot=$LFS        \
+		--with-lib-path=/tools/lib \
+		--target=$LFS_TGT          \
+		--disable-nls              \
 		--disable-werror
 
 	__mk
@@ -81,41 +56,55 @@ __gcc-slcp()
 {
 	tar -jxf ../mpfr-3.1.0.tar.bz2
 	mv -v mpfr-3.1.0 mpfr
-	tar -Jxf ../gmp-5.0.4.tar.xz
-	mv -v gmp-5.0.4 gmp
+	tar -Jxf ../gmp-5.0.5.tar.xz
+	mv -v gmp-5.0.5 gmp
 	tar -zxf ../mpc-0.9.tar.gz
 	mv -v mpc-0.9 mpc
 }
 
 __gcc-1()
 {
-	__dcd $SRC/gcc-4.6.2
+	__dcd $SRC/gcc-4.7.1
 
 	__gcc-slcp
 
-	patch -Np1 -i ../gcc-4.6.2-cross_compile-1.patch
+	for file in $(find gcc/config -name linux64.h -o -name linux.h -o -name sysv4.h)
+	do
+		cp -uv $file{,.orig}
+		sed -e 's@/lib\(64\)\?\(32\)\?/ld@/tools&@g' \
+			-e 's@/usr@/tools@g' $file.orig > $file
+
+echo '
+#undef STANDARD_STARTFILE_PREFIX_1
+#undef STANDARD_STARTFILE_PREFIX_2
+#define STANDARD_STARTFILE_PREFIX_1 "/tools/lib/"
+#define STANDARD_STARTFILE_PREFIX_2 ""' >> $file
+
+		touch $file.orig
+	done
 
 	__cdbt
 
-	../gcc-4.6.2/configure 		\
-		--target=$LFS_TGT 	\
-		--prefix=/tools 	\
-		--disable-nls 		\
-		--disable-shared 	\
-		--disable-multilib 	\
-		--disable-decimal-float \
-		--disable-threads 	\
-		--disable-libmudflap 	\
-		--disable-libssp 	\
-		--disable-libgomp 	\
-		--disable-libquadmath 	\
-		--disable-target-libiberty \
-		--disable-target-zlib 	\
-		--enable-languages=c 	\
-		--without-ppl 		\
-		--without-cloog 	\
-		--with-mpfr-include=$(pwd)/../gcc-4.6.2/mpfr/src \
-		--with-mpfr-lib=$(pwd)/mpfr/src/.libs
+	../gcc-4.7.1/configure         \
+	    --target=$LFS_TGT          \
+	    --prefix=/tools            \
+	    --with-sysroot=$LFS        \
+	    --with-newlib              \
+	    --without-headers          \
+	    --with-local-prefix=/tools \
+	    --with-native-system-header-dir=/tools/include \
+	    --disable-nls              \
+	    --disable-shared           \
+	    --disable-multilib         \
+	    --disable-decimal-float    \
+	    --disable-threads          \
+	    --disable-libmudflap       \
+	    --disable-libssp           \
+	    --disable-libgomp          \
+	    --disable-libquadmath      \
+	    --enable-languages=c       \
+	    --with-mpfr-include=$(pwd)/../gcc-4.7.1/mpfr/src \
+	    --with-mpfr-lib=$(pwd)/mpfr/src/.libs
 
 	__mk
 
@@ -137,27 +126,31 @@ __linux-header()
 
 __glibc()
 {
-	__dcd $SRC/glibc-2.14.1
+	__dcd $SRC/glibc-2.15
 
-	patch -Np1 -i ../glibc-2.14.1-gcc_fix-1.patch
+	sed -i 's#$ac_includes_default#\n\n#' sysdeps/i386/configure
 
-	patch -Np1 -i ../glibc-2.14.1-cpuid-1.patch
+	sed -i 's#/var/db#/tools/var/db#' Makeconfig
 
-	__cdbt
+	patch -Np1 -i ../glibc-2.15-gcc_fix-1.patch
 
 	case `uname -m` in
 		i?86) echo "CFLAGS += -O4 -march=native -mtune=native -msse3" > configparms ;;
 	esac
 
-	../glibc-2.14.1/configure 	\
-		--prefix=/tools 	\
-		--host=$LFS_TGT 	\
-		--build=$(../glibc-2.14.1/scripts/config.guess) \
-		--disable-profile --enable-add-ons \
-		--enable-kernel=2.6.25	\
-		--with-headers=/tools/include \
-		libc_cv_forced_unwind=yes \
-		libc_cv_c_cleanup=yes
+	__cdbt
+
+	../glibc-2.15/configure		\
+	      --prefix=/tools		\
+	      --host=$LFS_TGT		\
+	      --build=$(../glibc-2.15/scripts/config.guess) \
+	      --disable-profile		\
+	      --enable-add-ons		\
+	      --enable-kernel=3.1	\
+	      --with-headers=/tools/include \
+	      libc_cv_forced_unwind=yes	\
+	      libc_cv_ctors_header=yes	\
+	      libc_cv_c_cleanup=yes
 
 	__mk
 
@@ -168,13 +161,6 @@ __configure()
 {
 	__mes "tools specs configure" ""
 	__wait
-
-	SPECS=`dirname $($LFS_TGT-gcc -print-libgcc-file-name)`/specs
-	$LFS_TGT-gcc -dumpspecs | sed \
-		-e 's@/lib\(64\)\?/ld@/tools&@g' \
-		-e "/^\*cpp:$/{n;s,$, -isystem /tools/include,}" > $SPECS
-	echo "New specs file is: $SPECS"
-	unset SPECS
 
 	###test
 	echo 'main(){}' > dummy.c
@@ -192,14 +178,16 @@ __binutils-2()
 {
 	__dcd $SRC/binutils-2.22
 
+	patch -Np1 -i ../binutils-2.22-build_fix-1.patch
+
 	__cdbt
 
-	CC="$LFS_TGT-gcc -B/tools/lib/"	\
-	AR=$LFS_TGT-ar 			\
-	RANLIB=$LFS_TGT-ranlib 		\
-	../binutils-2.22/configure	\
-		--prefix=/tools 	\
-		--disable-nls 		\
+	CC=$LFS_TGT-gcc            	\
+	AR=$LFS_TGT-ar             	\
+	RANLIB=$LFS_TGT-ranlib     	\
+	../binutils-2.22/configure 	\
+		--prefix=/tools        	\
+		--disable-nls          	\
 		--with-lib-path=/tools/lib
 
 	__mk
@@ -213,12 +201,10 @@ __binutils-2()
 
 __gcc-2()
 {
-	__dcd $SRC/gcc-4.6.2
+	__dcd $SRC/gcc-4.7.1
 
-	patch -Np1 -i ../gcc-4.6.2-startfiles_fix-1.patch
-
-	cp -v gcc/Makefile.in{,.orig}
-	sed 's@\./fixinc\.sh@-c true@' gcc/Makefile.in.orig > gcc/Makefile.in
+	cat gcc/limitx.h gcc/glimits.h gcc/limity.h > \
+		`dirname $($LFS_TGT-gcc -print-libgcc-file-name)`/include-fixed/limits.h
 
 	cp -v gcc/Makefile.in{,.tmp}
 	sed 's/^T_CFLAGS =$/& -fomit-frame-pointer/' gcc/Makefile.in.tmp > gcc/Makefile.in
@@ -226,12 +212,13 @@ __gcc-2()
 	for file in $(find gcc/config -name linux64.h -o -name linux.h -o -name sysv4.h)
 	do
 		cp -uv $file{,.orig}
-		sed -e 's@/lib\(64\)\?\(32\)\?/ld@/tools&@g' -e 's@/usr@/tools@g' $file.orig > $file
+		sed -e 's@/lib\(64\)\?\(32\)\?/ld@/tools&@g' \
+			-e 's@/usr@/tools@g' $file.orig > $file
 
-		echo '
-#undef STANDARD_INCLUDE_DIR
-#define STANDARD_INCLUDE_DIR 0
-#define STANDARD_STARTFILE_PREFIX_1 ""
+echo '
+#undef STANDARD_STARTFILE_PREFIX_1
+#undef STANDARD_STARTFILE_PREFIX_2
+#define STANDARD_STARTFILE_PREFIX_1 "/tools/lib/"
 #define STANDARD_STARTFILE_PREFIX_2 ""' >> $file
 
 		touch $file.orig
@@ -241,24 +228,24 @@ __gcc-2()
 
 	__cdbt
 
-	CC="$LFS_TGT-gcc -B/tools/lib/" \
-	AR=$LFS_TGT-ar RANLIB=$LFS_TGT-ranlib \
-    	../gcc-4.6.2/configure		\
-		--prefix=/tools 	\
-    		--with-local-prefix=/tools \
-		--enable-clocale=gnu 	\
-    		--enable-shared 	\
-		--enable-threads=posix 	\
-    		--enable-__cxa_atexit 	\
-		--enable-languages=c,c++ \
-    		--disable-libstdcxx-pch \
-		--disable-multilib 	\
-    		--disable-bootstrap 	\
-		--disable-libgomp 	\
-    		--without-ppl 		\
-		--without-cloog 	\
-    		--with-mpfr-include=$(pwd)/../gcc-4.6.2/mpfr/src \
-    		--with-mpfr-lib=$(pwd)/mpfr/src/.libs
+	CC=$LFS_TGT-gcc \
+	AR=$LFS_TGT-ar                  \
+	RANLIB=$LFS_TGT-ranlib          \
+	../gcc-4.7.1/configure          \
+	    --prefix=/tools             \
+	    --with-local-prefix=/tools  \
+	    --with-native-system-header-dir=/tools/include \
+	    --enable-clocale=gnu        \
+	    --enable-shared             \
+	    --enable-threads=posix      \
+	    --enable-__cxa_atexit       \
+	    --enable-languages=c,c++    \
+	    --disable-libstdcxx-pch     \
+	    --disable-multilib          \
+	    --disable-bootstrap         \
+	    --disable-libgomp           \
+	    --with-mpfr-include=$(pwd)/../gcc-4.7.1/mpfr/src \
+	    --with-mpfr-lib=$(pwd)/mpfr/src/.libs
 
 	__mk
 
@@ -520,6 +507,7 @@ __backup()
 #	xz tools.tar
 }
 
+#rem(){
 __binutils-1
 __gcc-1
 

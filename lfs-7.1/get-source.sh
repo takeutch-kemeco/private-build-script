@@ -34,8 +34,8 @@ wget -c http://ftp.gnu.org/gnu/binutils/binutils-2.22.tar.bz2
 wget -c http://ftp.gnu.org/gnu/bison/bison-2.5.tar.bz2
 wget -c http://prdownloads.sourceforge.net/flex/flex-2.5.35.tar.bz2
 wget -c http://ftp.gnu.org/gnu/gawk/gawk-4.0.0.tar.bz2
-wget -c http://ftp.gnu.org/gnu/gcc/gcc-4.6.2/gcc-4.6.2.tar.bz2
-wget -c http://ftp.gnu.org/gnu/glibc/glibc-2.14.1.tar.bz2
+wget -c http://ftp.gnu.org/gnu/gcc/gcc-4.7.1/gcc-4.7.1.tar.bz2
+wget -c http://ftp.gnu.org/gnu/glibc/glibc-2.15.tar.xz
 wget -c http://anduin.linuxfromscratch.org/sources/LFS/lfs-packages/conglomeration//iana-etc/iana-etc-2.30.tar.bz2
 wget -c http://www.linuxfromscratch.org/lfs/downloads/7.1/lfs-bootscripts-20120229.tar.bz2
 wget -c http://ftp.gnu.org/gnu/m4/m4-1.4.16.tar.bz2
@@ -55,7 +55,7 @@ wget -c http://tukaani.org/xz/xz-5.0.3.tar.bz2
 wget -c http://www.zlib.net/zlib-1.2.7.tar.bz2
 wget -c http://ftp.gnu.org/gnu/automake/automake-1.11.3.tar.xz
 wget -c http://ftp.gnu.org/gnu/coreutils/coreutils-8.15.tar.xz
-wget -c http://ftp.gnu.org/gnu/gmp/gmp-5.0.4.tar.xz
+wget -c http://ftp.gnu.org/gnu/gmp/gmp-5.0.5.tar.xz
 wget -c http://ftp.gnu.org/gnu/grep/grep-2.10.tar.xz
 wget -c http://www.kernel.org/pub/linux/utils/net/iproute2/iproute2-3.2.0.tar.xz
 wget -c http://packages.profusion.mobi/kmod/kmod-5.tar.xz
