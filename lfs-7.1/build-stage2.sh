@@ -71,7 +71,7 @@ __glibc()
 	__cdbt
 
 	case `uname -m` in
-		i?86) echo "CFLAGS += -O2 -march=i486 -mtune=native -O3 -pipe" > configparms ;;
+		i?86) echo "CFLAGS += -O4 -march=native -mtune=native -msse3 -pipe" > configparms ;;
 	esac
 
 	../glibc-2.14.1/configure	\

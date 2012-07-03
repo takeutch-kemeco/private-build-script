@@ -4,7 +4,7 @@ SRC=$(pwd)
 
 MAKEFLAGS="-j2"
 
-CFLAGS="-O2 -march=native -mtune=native -msse3"
+CFLAGS="-O4 -march=native -mtune=native -msse3"
 CXXFLAGS=$CFLAGS
 
 export SRC MAKEFLAGS CFLAGS CXXFLAGS
@@ -146,7 +146,7 @@ __glibc()
 	__cdbt
 
 	case `uname -m` in
-		i?86) echo "CFLAGS += -O2 -march=native -mtune=native -msse3" > configparms ;;
+		i?86) echo "CFLAGS += -O4 -march=native -mtune=native -msse3" > configparms ;;
 	esac
 
 	../glibc-2.14.1/configure 	\

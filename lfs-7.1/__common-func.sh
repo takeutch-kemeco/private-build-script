@@ -39,7 +39,7 @@ __err()
 __mes()
 {
 	__echo-g "------------------------------"
-	__echo-g $1	
+	__echo-g $1
 	__echo-g "------------------------------"
 	__echo-g $2
 }
@@ -93,7 +93,7 @@ __cdbt()
 
 	rm $BLDTMP -rf
 	mkdir -v $BLDTMP
-	cd $BLDTMP	
+	cd $BLDTMP
 }
 
 __mk()
