@@ -535,3 +535,5 @@ __xz
 __strip
 __backup
 
+__mes "build-stage1 compleate"
+

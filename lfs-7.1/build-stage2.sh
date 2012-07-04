@@ -1289,16 +1289,6 @@ __dhcpcd()
 
 	sed -i "s;/var/lib;/run;g" dhcpcd-hooks/50-dhcpcd-compat
 	install -v -m 644 dhcpcd-hooks/50-dhcpcd-compat /lib/dhcpcd/dhcpcd-hooks/
-
-	__mk install-service-dhcpcd
-
-cat > /etc/sysconfig/ifconfig.wlan0 << "EOF"
-ONBOOT="yes"
-IFACE="wlan0"
-SERVICE="dhcpcd"
-DHCP_START="-b -q"
-DHCP_STOP="-k"
-EOF
 }
 
 __wireless-tools()
@@ -1310,7 +1300,6 @@ __wireless-tools()
 	__mk PREFIX=/usr INSTALL_MAN=/usr/share/man install
 }
 
-rem(){
 __init
 
 __linux-header
@@ -1332,7 +1321,6 @@ __gcc
 
 __sed
 __bzip2
-}
 __ncurses-2
 __util-linux
 __psmisc
@@ -1356,7 +1344,7 @@ __diffutils
 __gawk
 __findutils
 __flex
-__gettext
+###__gettext
 __groff
 __xz
 __grub
@@ -1381,4 +1369,6 @@ __vim
 
 __dhcpcd
 __wireless-tools
+
+__mes "build-stage2 compleate" ""
 
