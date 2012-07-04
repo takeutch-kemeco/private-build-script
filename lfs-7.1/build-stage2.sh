@@ -144,8 +144,9 @@ EOF
 
 cat > /etc/ld.so.conf << "EOF"
 # Begin /etc/ld.so.conf
-/opt/lib
-/usr/local/lib
+
+#/opt/lib
+#/usr/local/lib
 /usr/lib
 /lib
 
@@ -416,13 +417,11 @@ __gcc()
 	__echo-g "/usr/lib/gcc/i686-pc-linux-gnu/4.7.1/../../../crtn.o succeeded"
 	__echo-g ""
 	__echo-g "#include <...> search starts here:"
-	__echo-g " /usr/local/include"
 	__echo-g " /usr/lib/gcc/i686-pc-linux-gnu/4.7.1/include"
 	__echo-g " /usr/lib/gcc/i686-pc-linux-gnu/4.7.1/include-fixed"
 	__echo-g " /usr/include"
 	__echo-g ""
 	__echo-g 'SEARCH_DIR("/usr/i686-pc-linux-gnu/lib")'
-	__echo-g 'SEARCH_DIR("/usr/local/lib")'
 	__echo-g 'SEARCH_DIR("/lib")'
 	__echo-g 'SEARCH_DIR("/usr/lib");'
 	__echo-g ""
