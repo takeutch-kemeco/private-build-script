@@ -1289,7 +1289,7 @@ IFACE="wlan0"
 SERVICE="dhcpcd"
 DHCP_START="-b -q"
 DHCP_STOP="-k"
-EOF	
+EOF
 }
 
 __wireless-tools()
