@@ -11,17 +11,6 @@ export SRC MAKEFLAGS CFLAGS CXXFLAGS
 
 . __common-func.sh
 
-__mk()
-{
-	__echo-g "\n\n\n" $CURBUILDAPP "[ make" $@ "]"
-
-	make $@
-	if [ $? -ne 0 ]
-	then
-		__err "make error!!"
-	fi
-}
-
 __common()
 {
 	__dcd $1
@@ -39,6 +28,7 @@ __binutils-1()
 	patch -Np1 -i ../binutils-2.22-build_fix-1.patch
 
 	__cdbt
+
 	../binutils-2.22/configure         \
 		--prefix=/tools            \
 		--with-sysroot=$LFS        \

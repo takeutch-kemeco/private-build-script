@@ -1,4 +1,4 @@
-#/tools/bin/bash
+#/bin/bash
 
 SRC=$(pwd)
 
@@ -8,16 +8,6 @@ CXXFLAGS=$CFLAGS
 export SRC CFLAGS CXXFLAGS
 
 . __common-func.sh
-
-__init()
-{
-	touch /var/log/{btmp,lastlog,wtmp}
-	chgrp -v utmp /var/log/lastlog
-	chmod -v 664  /var/log/lastlog
-	chmod -v 600  /var/log/btmp
-
-#	cp /tools/lib/* /lib/ -rf
-}
 
 __common()
 {
@@ -51,10 +41,6 @@ __man-pages()
 __glibc()
 {
 	__dcd $SRC/glibc-2.15
-
-	DL=$(readelf -l /bin/sh | sed -n 's@.*interpret.*/tools\(.*\)]$@\1@p')
-	sed -i "s|libs -o|libs -L/usr/lib -Wl,-dynamic-linker=$DL -o|" scripts/test-installation.pl
-	unset DL
 
 	sed -i -e 's/"db1"/& \&\& $name ne "nss_test1"/' scripts/test-installation.pl
 
@@ -157,58 +143,6 @@ EOF
 	mkdir /etc/ld.so.conf.d
 }
 
-__chain-config()
-{
-	__mes "chain configure" ""
-	__wait
-
-	mv -v /tools/bin/{ld,ld-old}
-	mv -v /tools/$(gcc -dumpmachine)/bin/{ld,ld-old}
-	mv -v /tools/bin/{ld-new,ld}
-	ln -sv /tools/bin/ld /tools/$(gcc -dumpmachine)/bin/ld
-
-	gcc -dumpspecs | sed -e 's@/tools@@g' \
-		-e '/\*startfile_prefix_spec:/{n;s@.*@/usr/lib/ @}' \
-		-e '/\*cpp:/{n;s@$@ -isystem /usr/include@}' > \
-		`dirname $(gcc --print-libgcc-file-name)`/specs
-
-	###test
-	echo 'main(){}' > dummy.c
-	cc dummy.c -v -Wl,--verbose &> dummy.log
-	readelf -l a.out | grep ': /lib'
-
-        grep -o '/usr/lib.*/crt[1in].*succeeded' dummy.log
-
-	grep -B1 '^ /usr/include' dummy.log
-
-	grep 'SEARCH.*/usr/lib' dummy.log |sed 's|; |\n|g'
-
-	grep "/lib.*/libc.so.6 " dummy.log
-
-	grep found dummy.log
-
-	rm -v dummy.c a.out dummy.log
-
-        __mes "do you have this message appear in the above?" \
-                "[Requesting program interpreter: /lib/ld-linux.so.2]"
-	__echo-g ""
-	__echo-g "/usr/lib/crt1.o succeeded"
-	__echo-g "/usr/lib/crti.o succeeded"
-	__echo-g "/usr/lib/crtn.o succeeded"
-	__echo-g ""
-	__echo-g "#include <...> search starts here:"
-	__echo-g " /usr/include"
-	__echo-g ""
-	__echo-g 'SEARCH_DIR("/tools/i686-pc-linux-gnu/lib")'
-	__echo-g 'SEARCH_DIR("/usr/lib")'
-	__echo-g 'SEARCH_DIR("/lib");'
-	__echo-g ""
-	__echo-g "attempt to open /lib/libc.so.6 succeeded"
-	__echo-g ""
-	__echo-g "found ld-linux.so.2 at /lib/ld-linux.so.2"
-       __wait
-}
-
 __zlib()
 {
 	__common $SRC/zlib-1.2.7
@@ -256,8 +190,6 @@ __m4()
 {
 	__dcd $SRC/m4-1.4.16
 
-	./configure --prefix=/usr
-
 	__mk
 
 	echo "exit 0" > tests/test-update-copyright.sh
@@ -272,9 +204,8 @@ __gmp()
 {
 	__dcd $SRC/gmp-5.0.5
 
-	ABI=32				\
-	./configure --prefix=/usr	\
-		--enable-cxx		\
+	ABI=32 ./configure --prefix=/usr \
+		--enable-cxx \
 		--enable-mpbsd
 
 	__mk
@@ -522,8 +453,6 @@ __e2fsprogs()
 	mkdir -v build
 	cd build
 
-	PKG_CONFIG=/tools/bin/true	\
-	LDFLAGS="-lblkid -luuid"	\
 	../configure --prefix=/usr \
 		--with-root-prefix="" 	\
 		--enable-elf-shlibs	\
@@ -594,8 +523,6 @@ __coreutils()
 __m4()
 {
 	__dcd $SRC/m4-1.4.16
-
-	./configure --prefix=/usr
 
 	__mk
 
@@ -1026,9 +953,7 @@ __libpipeline()
 {
 	__dcd $SRC/libpipeline-1.2.0
 
-	./configure CHECK_CFLAGS=-I/tools/include \
-		CHECK_LIBS="-L/tools/lib -lcheck" \
-		--prefix=/usr
+	./configure --prefix=/usr
 
 	__mk
 
@@ -1046,9 +971,6 @@ __man-db()
 {
 	__dcd $SRC/man-db-2.6.1
 
-	PKG_CONFIG=/tools/bin/true	\
-	libpipeline_CFLAGS=''		\
-	libpipeline_LIBS='-lpipeline'	\
 	./configure --prefix=/usr	\
 		--libexecdir=/usr/lib	\
 		--docdir=/usr/share/doc/man-db-2.6.1 \
@@ -1265,49 +1187,10 @@ set background=dark
 EOF
 }
 
-__dhcpcd()
-{
-	__dcd dhcpcd-5.5.6
-
-	./configure --libexecdir=/lib/dhcpcd \
-        	    --dbdir=/run	     \
-		    --sysconfdir=/etc
-
-	__mk
-
-	__mk install
-
-
-	sed -i "s;/var/lib;/run;g" dhcpcd-hooks/50-dhcpcd-compat
-	install -v -m 644 dhcpcd-hooks/50-dhcpcd-compat /lib/dhcpcd/dhcpcd-hooks/
-
-	__mk install-service-dhcpcd
-
-cat > /etc/sysconfig/ifconfig.wlan0 << "EOF"
-ONBOOT="yes"
-IFACE="wlan0"
-SERVICE="dhcpcd"
-DHCP_START="-b -q"
-DHCP_STOP="-k"
-EOF	
-}
-
-__wireless-tools()
-{
-	__dcd wireless_tools.29
-
-	__mk
-
-	__mk PREFIX=/usr INSTALL_MAN=/usr/share/man install
-}
-
-__init
-
 __linux-header
 __man-pages
 __glibc
 __glibc-config
-__chain-config
 
 __zlib
 __file
@@ -1345,7 +1228,7 @@ __diffutils
 __gawk
 __findutils
 __flex
-__gettext
+###__gettext
 __groff
 __xz
 __grub
@@ -1367,7 +1250,4 @@ __texinfo
 __udev
 __ncurses-2
 __vim
-
-__dhcpcd
-__wireless-tools
 

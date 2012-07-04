@@ -9,6 +9,8 @@ export SRC LFS
 __mount()
 {
 	mkdir -v $LFS/{dev,proc,sys}
+	mkdir -v $LFS/dev/shm
+	mkdir -v $LFS/dev/pts
 
 	mknod -m 600 $LFS/dev/console c 5 1
 	mknod -m 666 $LFS/dev/null c 1 3

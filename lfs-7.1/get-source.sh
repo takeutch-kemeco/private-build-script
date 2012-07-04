@@ -62,3 +62,6 @@ wget -c http://packages.profusion.mobi/kmod/kmod-5.tar.xz
 wget -c http://www.kernel.org/pub/linux/kernel/v3.x/linux-3.2.6.tar.xz
 wget -c http://www.kernel.org/pub/linux/utils/kernel/hotplug/udev-181.tar.xz
 
+wget -c http://roy.marples.name/downloads/dhcpcd/dhcpcd-5.5.6.tar.bz2
+wget -c http://www.hpl.hp.com/personal/Jean_Tourrilhes/Linux/wireless_tools.29.tar.gz
+
