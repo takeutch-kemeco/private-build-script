@@ -1300,6 +1300,7 @@ __wireless-tools()
 	__mk PREFIX=/usr INSTALL_MAN=/usr/share/man install
 }
 
+#rem(){
 __init
 
 __linux-header

@@ -15,6 +15,7 @@ __initdir()
 	ln -sv $LFS/tools /
 
 	mkdir -v $LFS_SRC
+	mkdir -v $LFS_SRC/firmware
 }
 
 __copydata()
@@ -22,6 +23,10 @@ __copydata()
 	cp -v $SRC/*.tar.{gz,bz2,xz} $LFS_SRC
 	cp -v $SRC/*.patch $LFS_SRC
 	cp -v $SRC/*.sh $LFS_SRC
+	cp -v $SRC/*.config $LFS_SRC
+
+	cp -v /lib/firmware $LFS_SRC/ -rf
+	cp -v /usr/lib/firmware $LFS_SRC/ -rf
 }
 
 __inituser()
