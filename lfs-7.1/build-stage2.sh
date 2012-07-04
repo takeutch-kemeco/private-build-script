@@ -488,6 +488,16 @@ __ncurses-2()
 
 	mkdir -v /usr/share/doc/ncurses-5.9
 	cp -v -R doc/* /usr/share/doc/ncurses-5.9
+
+	ln -sf /usr/lib/libncurses* /lib/
+
+	for lib in ncurses form panel menu
+	do
+		rm -vf /usr/lib/lib${lib}.so
+		echo "INPUT(-l${lib}w)" >/usr/lib/lib${lib}.so
+		ln -sfv lib${lib}w.a /usr/lib/lib${lib}.a
+	done
+	ln -sfv libncurses++w.a /usr/lib/libncurses++.a
 }
 
 __util-linux()
@@ -1300,6 +1310,7 @@ __wireless-tools()
 	__mk PREFIX=/usr INSTALL_MAN=/usr/share/man install
 }
 
+rem(){
 __init
 
 __linux-header
@@ -1321,6 +1332,7 @@ __gcc
 
 __sed
 __bzip2
+}
 __ncurses-2
 __util-linux
 __psmisc
