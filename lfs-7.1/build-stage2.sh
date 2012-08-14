@@ -1262,7 +1262,7 @@ __wireless-tools()
 	__mk PREFIX=/usr INSTALL_MAN=/usr/share/man install
 }
 
-rem(){
+#rem(){
 __init
 
 __linux-header
@@ -1325,7 +1325,6 @@ __sysklogd
 __sysvinit
 __tar
 __texinfo
-}
 __udev
 __vim
 

@@ -528,7 +528,7 @@ __backup()
 #	xz tools.tar
 }
 
-rem(){
+#rem(){
 __binutils-1
 __gcc-1
 
@@ -560,7 +560,6 @@ __patch
 __perl
 __sed
 __tar
-}
 __texinfo
 __xz
 
