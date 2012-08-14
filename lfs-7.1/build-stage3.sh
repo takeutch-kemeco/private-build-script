@@ -6,7 +6,7 @@ SRC=$(pwd)
 
 __lfs-bootscripts()
 {
-	__dcd lfs-bootscripts-20120229
+	__dcd lfs-bootscripts-20120725
 
 	__mk install
 }
@@ -206,7 +206,7 @@ EOF
 
 __linux-kernel()
 {
-	__dcd $SRC/linux-3.2.6
+	__dcd $SRC/linux-3.5
 
 	cp ../linux-3.2.6.config .config
 

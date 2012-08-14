@@ -31,7 +31,7 @@ __common()
 
 __linux-header()
 {
-	__dcd $SRC/linux-3.2.6
+	__dcd $SRC/linux-3.5
 
 	__mk mrproper
 
@@ -50,19 +50,13 @@ __man-pages()
 
 __glibc()
 {
-	__dcd $SRC/glibc-2.15
+	__dcd $SRC/glibc-2.16.0
 
-	DL=$(readelf -l /bin/sh | sed -n 's@.*interpret.*/tools\(.*\)]$@\1@p')
-	sed -i "s|libs -o|libs -L/usr/lib -Wl,-dynamic-linker=$DL -o|" scripts/test-installation.pl
-	unset DL
+	sed -i 's#<rpc/types.h>#"rpc/types.h"#' sunrpc/rpc_clntout.c
 
-	sed -i -e 's/"db1"/& \&\& $name ne "nss_test1"/' scripts/test-installation.pl
+	sed -i '/test-installation.pl/d' Makefile
 
 	sed -i 's|@BASH@|/bin/bash|' elf/ldd.bash.in
-
-	patch -Np1 -i ../glibc-2.15-fixes-1.patch
-
-	patch -Np1 -i ../glibc-2.15-gcc_fix-1.patch
 
 	__cdbt
 
@@ -70,7 +64,7 @@ __glibc()
 		i?86) echo "CFLAGS += -O4 -march=native -mtune=native -O3 -msse3 -pipe" > configparms ;;
 	esac
 
-	../glibc-2.15/configure  	\
+	../glibc-2.16.0/configure  	\
  		--prefix=/usr          	\
     		--disable-profile      	\
     		--enable-add-ons       	\
@@ -79,8 +73,7 @@ __glibc()
 
 	__mk
 
-	cp -v ../glibc-2.15/iconvdata/gconv-modules iconvdata
-	### not use __mk() !!
+	cp -v ../glibc-2.16.0/iconvdata/gconv-modules iconvdata
 	make -k check 2>&1 | tee glibc-check-log
 	grep Error glibc-check-log
 
@@ -88,9 +81,9 @@ __glibc()
 
 	__mk install
 
-	cp -v ../glibc-2.15/sunrpc/rpc/*.h /usr/include/rpc
-	cp -v ../glibc-2.15/sunrpc/rpcsvc/*.h /usr/include/rpcsvc
-	cp -v ../glibc-2.15/nis/rpcsvc/*.h /usr/include/rpcsvc
+	cp -v ../glibc-2.16.0/sunrpc/rpc/*.h /usr/include/rpc
+	cp -v ../glibc-2.16.0/sunrpc/rpcsvc/*.h /usr/include/rpcsvc
+	cp -v ../glibc-2.16.0/nis/rpcsvc/*.h /usr/include/rpcsvc
 
 	mkdir -pv /usr/lib/locale
 	localedef -i cs_CZ -f UTF-8 cs_CZ.UTF-8
@@ -108,9 +101,9 @@ __glibc()
 	localedef -i fr_FR -f UTF-8 fr_FR.UTF-8
 	localedef -i it_IT -f ISO-8859-1 it_IT
 	localedef -i ja_JP -f EUC-JP ja_JP
+	localedef -i ja_JP -f UTF-8 ja_JP.UTF-8
 	localedef -i tr_TR -f UTF-8 tr_TR.UTF-8
 	localedef -i zh_CN -f GB18030 zh_CN.GB18030
-	localedef -i ja_JP -f UTF-8 ja_JP.UTF-8
 
 ###	__mk localedata/install-locales
 }
@@ -215,12 +208,12 @@ __zlib()
 	__common $SRC/zlib-1.2.7
 
 	mv -v /usr/lib/libz.so.* /lib
-	ln -sfv ../../lib/libz.so.1.2.6 /usr/lib/libz.so
+	ln -sfv ../../lib/libz.so.1.2.7 /usr/lib/libz.so
 }
 
 __file()
 {
-	__common $SRC/file-5.10
+	__common $SRC/file-5.11
 }
 
 __binutils()
@@ -253,22 +246,6 @@ __binutils()
 	cp -v ../binutils-2.22/include/libiberty.h /usr/include
 }
 
-__m4()
-{
-	__dcd $SRC/m4-1.4.16
-
-	./configure --prefix=/usr
-
-	__mk
-
-	echo "exit 0" > tests/test-update-copyright.sh
-
-	sed -i -e '41s/ENOENT/& || errno == EINVAL/' tests/test-readlink.h
-	__mk check
-
-	__mk install
-}
-
 __gmp()
 {
 	__dcd $SRC/gmp-5.0.5
@@ -293,13 +270,11 @@ __gmp()
 
 __mpfr()
 {
-	__dcd $SRC/mpfr-3.1.0
-
-	patch -Np1 -i ../mpfr-3.1.0-fixes-1.patch
+	__dcd $SRC/mpfr-3.1.1
 
 	./configure --prefix=/usr 	\
 		--enable-thread-safe 	\
-		--docdir=/usr/share/doc/mpfr-3.1.0
+		--docdir=/usr/share/doc/mpfr-3.1.1
 
 	__mk
 
@@ -313,43 +288,7 @@ __mpfr()
 
 __mpc()
 {
-	__common $SRC/mpc-0.9
-}
-
-__ncurses()
-{
-	__dcd $SRC/ncurses-5.9
-
-	./configure --prefix=/usr 	\
-		--with-shared 		\
-		--without-debug 	\
-		--enable-widec
-
-	__mk sources libs
-
-	__mk install
-
-	mkdir -v /usr/share/doc/ncurses-5.9
-	cp -v -R doc/* /usr/share/doc/ncurses-5.9
-}
-
-__tcl()
-{
-	__dcd $SRC/tcl8.5.11
-
-	cd unix
-	./configure --prefix=/usr
-
-	__mk
-
-#	TZ=UTC __mk test
-
-	### not use __mk() !!
-	make install
-
-	__mk install-private-headers
-
-	ln -sv tclsh8.5 /usr/bin/tclsh
+	__common $SRC/mpc-1.0
 }
 
 __gcc()
@@ -473,7 +412,22 @@ __bzip2()
 	ln -sv bzip2 /bin/bzcat
 }
 
-__ncurses-2()
+__pkg-config()
+{
+	__dcd $SRC/pkg-config-0.27
+
+	./configure --prefix=/usr	\
+		--with-internal-glib	\
+		--docdir=/usr/share/doc/pkg-config-0.27
+
+	__mk
+
+	__mk check
+
+	__mk install
+}
+
+__ncurses()
 {
 	__dcd $SRC/ncurses-5.9
 
@@ -486,30 +440,36 @@ __ncurses-2()
 
 	__mk install
 
-	mkdir -v /usr/share/doc/ncurses-5.9
-	cp -v -R doc/* /usr/share/doc/ncurses-5.9
+	mv -v /usr/lib/libncursesw.so.5* /lib
 
-	ln -sf /usr/lib/libncurses* /lib/
+	ln -sfv ../../lib/libncursesw.so.5 /usr/lib/libncursesw.so
 
 	for lib in ncurses form panel menu
 	do
-		rm -vf /usr/lib/lib${lib}.so
-		echo "INPUT(-l${lib}w)" >/usr/lib/lib${lib}.so
+    		rm -vf /usr/lib/lib${lib}.so
+    		echo "INPUT(-l${lib}w)" >/usr/lib/lib${lib}.so
 		ln -sfv lib${lib}w.a /usr/lib/lib${lib}.a
 	done
 	ln -sfv libncurses++w.a /usr/lib/libncurses++.a
+
+	rm -vf /usr/lib/libcursesw.so
+	echo "INPUT(-lncursesw)" >/usr/lib/libcursesw.so
+	ln -sfv libncurses.so /usr/lib/libcurses.so
+	ln -sfv libncursesw.a /usr/lib/libcursesw.a
+	ln -sfv libncurses.a /usr/lib/libcurses.a
+
+	mkdir -v       /usr/share/doc/ncurses-5.9
+	cp -v -R doc/* /usr/share/doc/ncurses-5.9
 }
 
 __util-linux()
 {
-	__dcd $SRC/util-linux-2.20.1
+	__dcd $SRC/util-linux-2.21.2
 
 	sed -e 's@etc/adjtime@var/lib/hwclock/adjtime@g' -i $(grep -rl '/etc/adjtime' .)
 	mkdir -pv /var/lib/hwclock
 
-	./configure --enable-arch 	\
-		--enable-partx 		\
-		--enable-write
+	./configure
 
 	__mk
 
@@ -518,7 +478,7 @@ __util-linux()
 
 __psmisc()
 {
-	__common $SRC/psmisc-22.15
+	__common $SRC/psmisc-22.19
 
 	mv -v /usr/bin/fuser /bin
 	mv -v /usr/bin/killall /bin
@@ -526,14 +486,12 @@ __psmisc()
 
 __e2fsprogs()
 {
-	__dcd $SRC/e2fsprogs-1.42
+	__dcd $SRC/e2fsprogs-1.42.5
 
 	mkdir -v build
 	cd build
 
-	PKG_CONFIG=/tools/bin/true	\
-	LDFLAGS="-lblkid -luuid"	\
-	../configure --prefix=/usr \
+	../configure --prefix=/usr 	\
 		--with-root-prefix="" 	\
 		--enable-elf-shlibs	\
 		--disable-libblkid	\
@@ -562,32 +520,30 @@ __e2fsprogs()
 
 __coreutils()
 {
-	__dcd $SRC/coreutils-8.15
+	__dcd $SRC/coreutils-8.17
 
-	case `uname -m` in
-		i?86 | x86_64) patch -Np1 -i ../coreutils-8.15-uname-1.patch ;;
-	esac
+	sed -i -e 's/! isatty/isatty/' \
+	       -e '45i\              || errno == ENOENT' gnulib-tests/test-getlogin.c
 
-	patch -Np1 -i ../coreutils-8.15-i18n-1.patch
+	patch -Np1 -i ../coreutils-8.17-i18n-1.patch
 
-	./configure --prefix=/usr	\
-        	--libexecdir=/usr/lib	\
-		--enable-no-install-program=kill,uptime
+	FORCE_UNSAFE_CONFIGURE=1 ./configure \
+            	--prefix=/usr         	\
+            	--libexecdir=/usr/lib 	\
+            	--enable-no-install-program=kill,uptime
 
 	__mk
 
-	###test
-	__mk NON_ROOT_USERNAME=nobody check-root
+	make NON_ROOT_USERNAME=nobody check-root
 
 	echo "dummy:x:1000:nobody" >> /etc/group
 
 	chown -Rv nobody .
 
-	su-tools nobody -s /bin/bash -c "make RUN_EXPENSIVE_TESTS=yes check"
+	su nobody -s /bin/bash -c "make RUN_EXPENSIVE_TESTS=yes -k check || true"	
 
 	sed -i '/dummy/d' /etc/group
 
-	###inst
 	__mk install
 
 	mv -v /usr/bin/{cat,chgrp,chmod,chown,cp,date,dd,df,echo} /bin
@@ -600,9 +556,16 @@ __coreutils()
 	mv -v /usr/bin/{head,sleep,nice} /bin
 }
 
+__iana-etc()
+{
+	__common $SRC/iana-etc-2.30
+}
+
 __m4()
 {
 	__dcd $SRC/m4-1.4.16
+
+	sed -i -e '/gets is a/d' lib/stdio.in.h
 
 	./configure --prefix=/usr
 
@@ -617,7 +580,7 @@ __m4()
 
 __bison()
 {
-	__dcd $SRC/bison-2.5
+	__dcd $SRC/bison-2.6.2
 
 	./configure --prefix=/usr
 
@@ -647,9 +610,7 @@ __procps()
 
 __grep()
 {
-	__dcd $SRC/grep-2.10
-
-	sed -i 's/cp/#&/' tests/unibyte-bracket-expr
+	__dcd $SRC/grep-2.13
 
 	./configure --prefix=/usr	\
 		--bindir=/bin
@@ -691,7 +652,7 @@ __bash()
 {
 	__dcd $SRC/bash-4.2
 
-	patch -Np1 -i ../bash-4.2-fixes-4.patch
+	patch -Np1 -i ../bash-4.2-fixes-8.patch
 
 	./configure --prefix=/usr	\
 		--bindir=/bin		\
@@ -735,6 +696,8 @@ __inetutils()
 {
 	__dcd $SRC/inetutils-1.9.1
 
+	sed -i -e '/gets is a/d' lib/stdio.in.h
+
 	./configure --prefix=/usr	\
 		--libexecdir=/usr/sbin	\
 		--localstatedir=/var	\
@@ -757,18 +720,6 @@ __inetutils()
 	mv -v /usr/bin/traceroute /sbin
 }
 
-__less()
-{
-	__dcd $SRC/less-444
-
-	./configure --prefix=/usr	\
-		--sysconfdir=/etc
-
-	__mk
-
-	__mk install
-}
-
 __perl()
 {
 	__dcd $SRC/perl-5.16.0
@@ -787,25 +738,29 @@ __perl()
 		-Dpager="/usr/bin/less -isR"  	\
 		-Duseshrplib
 
-	__mk
+	sed -i '/test-installation.pl/d' Makefile
+
+	make
 
 	### not use __mk() !!
-	make test
+#	make test
 
 	__mk install
 }
 
 __autoconf()
 {
-	__common $SRC/autoconf-2.68
+	__common $SRC/autoconf-2.69
 }
 
 __automake()
 {
-	__dcd $SRC/automake-1.11.3
+	__dcd $SRC/automake-1.12.2
+
+	sed -i -e '48i$sleep' t/aclocal7.sh
 
 	./configure --prefix=/usr	\
-		--docdir=/usr/share/doc/automake-1.11.3
+		--docdir=/usr/share/doc/automake-1.12.2
 
 	__mk
 
@@ -816,12 +771,22 @@ __automake()
 
 __diffutils()
 {
-	__common $SRC/diffutils-3.2
+	__dcd $SRC/diffutils-3.2
+
+	sed -i -e '/gets is a/d' lib/stdio.in.h
+
+	./configure --prefix=/usr
+
+	__mk
+
+#	__mk check
+
+	__mk install
 }
 
 __gawk()
 {
-	__dcd $SRC/gawk-4.0.0
+	__dcd $SRC/gawk-4.0.1
 
 	./configure --prefix=/usr	\
 		--libexecdir=/usr/lib
@@ -832,8 +797,8 @@ __gawk()
 
 	__mk install
 
-	mkdir -v /usr/share/doc/gawk-4.0.0
-	cp -v doc/{awkforai.txt,*.{eps,pdf,jpg}} /usr/share/doc/gawk-4.0.0
+	mkdir -v /usr/share/doc/gawk-4.0.1
+	cp -v doc/{awkforai.txt,*.{eps,pdf,jpg}} /usr/share/doc/gawk-4.0.1
 }
 
 __findutils()
@@ -857,7 +822,9 @@ __flex()
 
 	patch -Np1 -i ../flex-2.5.35-gcc44-1.patch
 
-	./configure --prefix=/usr
+	./configure --prefix=/usr 	\
+		--mandir=/usr/share/man	\
+		--infodir=/usr/share/info
 
 	__mk
 
@@ -882,10 +849,11 @@ EOF
 	cp -v doc/flex.pdf /usr/share/doc/flex-2.5.35
 }
 
-### error
 __gettext()
 {
 	__dcd $SRC/gettext-0.18.1.1
+
+	sed -i -e '/gets is a/d' gettext-*/*/stdio.in.h
 
 	./configure --prefix=/usr	\
         	--docdir=/usr/share/doc/gettext-0.18.1.1
@@ -913,11 +881,11 @@ __groff()
 
 __xz()
 {
-	__dcd $SRC/xz-5.0.3
+	__dcd $SRC/xz-5.0.4
 
 	./configure --prefix=/usr	\
 		--libdir=/lib		\
-		--docdir=/usr/share/doc/xz-5.0.3
+		--docdir=/usr/share/doc/xz-5.0.4
 
 	__mk
 
@@ -928,13 +896,26 @@ __xz()
 
 __grub()
 {
-	__dcd $SRC/grub-1.99
+	__dcd $SRC/grub-2.00
+
+	sed -i -e '/gets is a/d' grub-core/gnulib/stdio.in.h
 
 	./configure --prefix=/usr	\
         	--sysconfdir=/etc      	\
              	--disable-grub-emu-usb 	\
-             	--disable-efiemu       	\
-             	--disable-werror
+             	--disable-efiemu
+
+	__mk
+
+	__mk install
+}
+
+__less()
+{
+	__dcd $SRC/less-444
+
+	./configure --prefix=/usr	\
+		--sysconfdir=/etc
 
 	__mk
 
@@ -943,7 +924,7 @@ __grub()
 
 __gzip()
 {
-	__dcd $SRC/gzip-1.4
+	__dcd $SRC/gzip-1.5
 
 	./configure --prefix=/usr	\
 		--bindir=/bin
@@ -960,7 +941,7 @@ __gzip()
 
 __iproute()
 {
-	__dcd $SRC/iproute2-3.2.0
+	__dcd $SRC/iproute2-3.5.0
 
 	sed -i '/^TARGETS/s@arpd@@g' misc/Makefile
 	sed -i /ARPD/d Makefile
@@ -970,14 +951,22 @@ __iproute()
 
 	__mk DESTDIR=
 
-	__mk DESTDIR= MANDIR=/usr/share/man DOCDIR=/usr/share/doc/iproute2-3.2.0 install
+	__mk DESTDIR= MANDIR=/usr/share/man DOCDIR=/usr/share/doc/iproute2-3.5.0 install
 }
 
 __kbd()
 {
-	__dcd $SRC/kbd-1.15.2
+	__dcd $SRC/kbd-1.15.3
 
-	patch -Np1 -i ../kbd-1.15.2-backspace-1.patch
+	patch -Np1 -i ../kbd-1.15.3-upstream_fixes-1.patch
+	
+	patch -Np1 -i ../kbd-1.15.3-backspace-1.patch
+
+	sed -i '/guardado\ el/s/\(^.*en\ %\)\(.*\)/\14\$\2/' po/es.po
+
+	sed -i 's/\(RESIZECONS_PROGS=\)yes/\1no/' configure &&
+	sed -i 's/resizecons.8 //' man/man8/Makefile.in &&
+	touch -d '2011-05-07 08:30' configure.ac
 
 	./configure --prefix=/usr	\
 		--datadir=/lib/kbd
@@ -988,24 +977,22 @@ __kbd()
 
 	mv -v /usr/bin/{kbd_mode,loadkeys,openvt,setfont} /bin
 
-	mkdir -v /usr/share/doc/kbd-1.15.2
-	cp -R -v doc/* /usr/share/doc/kbd-1.15.2
+	mkdir -v /usr/share/doc/kbd-1.15.3
+	cp -R -v doc/* /usr/share/doc/kbd-1.15.3
 }
 
-__kmod-5()
+__kmod()
 {
-	__dcd $SRC/kmod-5
+	__dcd $SRC/kmod-9
 
-	liblzma_CFLAGS="-I/usr/include"	\
-	liblzma_LIBS="-L/lib -llzma"	\
-	zlib_CFLAGS="-I/usr/include"	\
-	zlib_LIBS="-L/lib -lz"		\
+	patch -Np1 -i ../kmod-9-testsuite-1.patch
+
 	./configure --prefix=/usr	\
-		--bindir=/bin		\
-		--libdir=/lib		\
-		--sysconfdir=/etc	\
-		--with-xz		\
-		--with-zlib
+            	--bindir=/bin       	\
+            	--libdir=/lib       	\
+            	--sysconfdir=/etc   	\
+            	--with-xz           	\
+	    	--with-zlib
 
 	__mk
 
@@ -1019,25 +1006,13 @@ __kmod-5()
 	ln -sv kmod /bin/lsmod
 }
 
-__less-2()
-{
-	__dcd $SRC/less-444
-
-	./configure --prefix=/usr	\
-		--sysconfdir=/etc
-
-	__mk
-
-	__mk install
-}
-
 __libpipeline()
 {
-	__dcd $SRC/libpipeline-1.2.0
+	__dcd $SRC/libpipeline-1.2.1
 
-	./configure CHECK_CFLAGS=-I/tools/include \
-		CHECK_LIBS="-L/tools/lib -lcheck" \
-		--prefix=/usr
+	sed -i -e '/gets is a/d' gnulib/lib/stdio.in.h
+
+	PKG_CONFIG_PATH=/tools/lib/pkgconfig ./configure --prefix=/usr
 
 	__mk
 
@@ -1053,19 +1028,18 @@ __make()
 
 __man-db()
 {
-	__dcd $SRC/man-db-2.6.1
+	__dcd $SRC/man-db-2.6.2
 
-	PKG_CONFIG=/tools/bin/true	\
-	libpipeline_CFLAGS=''		\
-	libpipeline_LIBS='-lpipeline'	\
+	sed -i -e '/gets is a/d' gnulib/lib/stdio.in.h
+
 	./configure --prefix=/usr	\
-		--libexecdir=/usr/lib	\
-		--docdir=/usr/share/doc/man-db-2.6.1 \
-		--sysconfdir=/etc	\
-		--disable-setuid	\
-		--with-browser=/usr/bin/lynx \
-    		--with-vgrind=/usr/bin/vgrind \
-		--with-grap=/usr/bin/grap
+            	--libexecdir=/usr/lib	\
+            	--docdir=/usr/share/doc/man-db-2.6.2 \
+            	--sysconfdir=/etc	\
+            	--disable-setuid	\
+            	--with-browser=/usr/bin/lynx \
+           	--with-vgrind=/usr/bin/vgrind \
+           	--with-grap=/usr/bin/grap
 
 	__mk
 
@@ -1091,9 +1065,7 @@ __patch()
 
 __shadow()
 {
-	__dcd $SRC/shadow-4.1.5
-
-	patch -Np1 -i ../shadow-4.1.5-nscd-1.patch
+	__dcd $SRC/shadow-4.1.5.1
 
 	sed -i 's/groups$(EXEEXT) //' src/Makefile.in
 	find man -name Makefile.in -exec sed -i 's/groups\.1 / /' {} \;
@@ -1168,6 +1140,8 @@ __tar()
 {
 	__dcd $SRC/tar-1.26
 
+	sed -i -e '/gets is a/d' gnu/stdio.in.h
+
 	FORCE_UNSAFE_CONFIGURE=1	\
 	./configure --prefix=/usr 	\
 		--bindir=/bin		\
@@ -1183,50 +1157,38 @@ __tar()
 
 __texinfo()
 {
-	__common $SRC/texinfo-4.13
+	gzip -dc $SRC/texinfo-4.13a.tar.gz | tar xvf -
+
+	cd $SRC/texinfo-4.13
+
+	./configure --prefix=/usr
+
+	__mk
+
+#	__mk check
+
+	__mk install
 
 	__mk TEXMF=/usr/share/texmf install-tex
+
+	cd /usr/share/info
+	rm -v dir
+	for f in *
+	do install-info $f dir 2>/dev/null
+	done
 }
 
 __udev()
 {
-	__dcd $SRC/udev-181
+	__dcd systemd-188
 
-	tar -xvf ../udev-config-20100128.tar.bz2
+	tar -xvf ../udev-lfs-188.tar.bz2	
 
-	install -dv /lib/{firmware,udev/devices/pts}
-	mknod -m0666 /lib/udev/devices/null c 1 3
+	__mk -f udev-lfs-188/Makefile.lfs
 
-	BLKID_CFLAGS="-I/usr/include/blkid" \
-	BLKID_LIBS="-L/lib -lblkid"	\
-	KMOD_CFLAGS="-I/usr/include"	\
-	KMOD_LIBS="-L/lib -lkmod"	\
-	./configure --prefix=/usr	\
-		--with-rootprefix=''	\
-		--bindir=/sbin		\
-		--sysconfdir=/etc	\
-		--libexecdir=/lib	\
-		--enable-rule_generator	\
-		--disable-introspection	\
-		--disable-keymap	\
-		--disable-gudev		\
-		--with-usb-ids-path=no	\
-		--with-pci-ids-path=no	\
-		--with-systemdsystemunitdir=no
+	__mk -f udev-lfs-188/Makefile.lfs install
 
-	__mk
-
-	### not use __mk() !!
-	make check
-
-	__mk install
-
-	rmdir -v /usr/share/doc/udev
-
-	cd udev-config-20100128
-	__mk install
-
-	__mk install-doc
+	bash udev-lfs-188/init-net-rules.sh
 }
 
 __vim()
@@ -1300,7 +1262,7 @@ __wireless-tools()
 	__mk PREFIX=/usr INSTALL_MAN=/usr/share/man install
 }
 
-#rem(){
+rem(){
 __init
 
 __linux-header
@@ -1316,17 +1278,17 @@ __m4
 __gmp
 __mpfr
 __mpc
-__ncurses
-__tcl
 __gcc
 
 __sed
 __bzip2
-__ncurses-2
+__pkg-config
+__ncurses
 __util-linux
 __psmisc
 __e2fsprogs
 __coreutils
+__iana-etc
 __m4
 __bison
 __procps
@@ -1337,8 +1299,7 @@ __bash
 __libtool
 __gdbm
 __inetutils
-__less
-__perl
+###__perl
 __autoconf
 __automake
 __diffutils
@@ -1348,12 +1309,12 @@ __flex
 ###__gettext
 __groff
 __xz
-__grub
+###__grub
+__less
 __gzip
 __iproute
 __kbd
-__kmod-5
-__less
+__kmod
 __libpipeline
 __make
 __man-db
@@ -1364,8 +1325,8 @@ __sysklogd
 __sysvinit
 __tar
 __texinfo
+}
 __udev
-__ncurses-2
 __vim
 
 __dhcpcd

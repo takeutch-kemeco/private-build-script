@@ -11,6 +11,8 @@ export SRC LFS
 
 __initdir()
 {
+	mkdir -v $LFS
+
 	mkdir -v $LFS/tools
 	ln -sv $LFS/tools /
 

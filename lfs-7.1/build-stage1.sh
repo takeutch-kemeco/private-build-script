@@ -44,12 +44,12 @@ __binutils-1()
 
 __gcc-slcp()
 {
-	tar -jxf ../mpfr-3.1.0.tar.bz2
-	mv -v mpfr-3.1.0 mpfr
+	tar -Jxf ../mpfr-3.1.1.tar.xz
+	mv -v mpfr-3.1.1 mpfr
 	tar -Jxf ../gmp-5.0.5.tar.xz
 	mv -v gmp-5.0.5 gmp
-	tar -zxf ../mpc-0.9.tar.gz
-	mv -v mpc-0.9 mpc
+	tar -zxf ../mpc-1.0.tar.gz
+	mv -v mpc-1.0 mpc
 }
 
 __gcc-1()
@@ -72,6 +72,8 @@ echo '
 
 		touch $file.orig
 	done
+
+	sed -i '/k prot/agcc_cv_libc_provides_ssp=yes' gcc/configure
 
 	__cdbt
 
@@ -105,7 +107,7 @@ echo '
 
 __linux-header()
 {
-	__dcd $SRC/linux-3.2.6
+	__dcd $SRC/linux-3.5
 
 	__mk mrproper
 
@@ -116,24 +118,20 @@ __linux-header()
 
 __glibc()
 {
-	__dcd $SRC/glibc-2.15
+	__dcd $SRC/glibc-2.16.0
 
-	sed -i 's#$ac_includes_default#\n\n#' sysdeps/i386/configure
-
-	sed -i 's#/var/db#/tools/var/db#' Makeconfig
-
-	patch -Np1 -i ../glibc-2.15-gcc_fix-1.patch
+	__cdbt
 
 	case `uname -m` in
 		i?86) echo "CFLAGS += -O4 -march=native -mtune=native -msse3" > configparms ;;
 	esac
 
-	__cdbt
+	sed -i 's/ -lgcc_s//' ../glibc-2.16.0/Makeconfig
 
-	../glibc-2.15/configure		\
+	../glibc-2.16.0/configure	\
 	      --prefix=/tools		\
 	      --host=$LFS_TGT		\
-	      --build=$(../glibc-2.15/scripts/config.guess) \
+	      --build=$(../glibc-2.16.0/scripts/config.guess) \
 	      --disable-profile		\
 	      --enable-add-ons		\
 	      --enable-kernel=3.1	\
@@ -257,7 +255,7 @@ echo '
 
 __tcl()
 {
-	__dcd $SRC/tcl8.5.11
+	__dcd $SRC/tcl8.5.12
 
 	cd unix
 	./configure --prefix=/tools
@@ -323,7 +321,7 @@ __bash()
 {
 	__dcd $SRC/bash-4.2
 
-	patch -Np1 -i ../bash-4.2-fixes-4.patch	
+	patch -Np1 -i ../bash-4.2-fixes-8.patch	
 
 	./configure --prefix=/tools 	\
 		--without-bash-malloc
@@ -348,7 +346,7 @@ __bzip2()
 
 __coreutils()
 {
-	__dcd $SRC/coreutils-8.15
+	__dcd $SRC/coreutils-8.17
 
 	./configure --prefix=/tools 	\
 		--enable-install-program=hostname
@@ -364,12 +362,22 @@ __coreutils()
 
 __diffutils()
 {
-	__common $SRC/diffutils-3.2
+	__dcd $SRC/diffutils-3.2
+
+	sed -i -e '/gets is a/d' lib/stdio.in.h
+
+	./configure --prefix=/tools
+
+#	__mk check
+
+	__mk
+
+	__mk install
 }
 
 __file()
 {
-	__common $SRC/file-5.10
+	__common $SRC/file-5.11
 }
 
 __findutils()
@@ -379,15 +387,17 @@ __findutils()
 
 __gawk()
 {
-	__common $SRC/gawk-4.0.0
+	__common $SRC/gawk-4.0.1
 }
 
 __gettext()
 {
 	__dcd $SRC/gettext-0.18.1.1
 
+	sed -i -e '/gets is a/d' gettext-*/*/stdio.in.h
+
 	cd gettext-tools
-	./configure --prefix=/tools 	\
+	EMACS="no" ./configure --prefix=/tools 	\
 		--disable-shared
 
 	__mk -C gnulib-lib
@@ -398,10 +408,9 @@ __gettext()
 
 __grep()
 {
-	__dcd $SRC/grep-2.10
+	__dcd $SRC/grep-2.13
 
-	./configure --prefix=/tools 	\
-		--disable-perl-regexp
+	./configure --prefix=/tools
 
 	__mk
 
@@ -412,12 +421,22 @@ __grep()
 
 __gzip()
 {
-	__common $SRC/gzip-1.4
+	__common $SRC/gzip-1.5
 }
 
 __m4()
 {
-	__common $SRC/m4-1.4.16
+	__dcd $SRC/m4-1.4.16
+
+	sed -i -e '/gets is a/d' lib/stdio.in.h
+
+	./configure --prefix=/tools
+
+	__mk
+
+	__mk check
+
+	__mk install
 }
 
 __make()
@@ -432,17 +451,17 @@ __patch()
 
 __perl()
 {
-	__dcd $SRC/perl-5.14.2
+	__dcd $SRC/perl-5.16.0
 
-	patch -Np1 -i ../perl-5.14.2-libc-1.patch
+	patch -Np1 -i ../perl-5.16.0-libc-2.patch
 
 	sh Configure -des -Dprefix=/tools
 
 	__mk
 
 	cp -v perl cpan/podlators/pod2man /tools/bin
-	mkdir -pv /tools/lib/perl5/5.14.2
-	cp -Rv lib/* /tools/lib/perl5/5.14.2
+	mkdir -pv /tools/lib/perl5/5.16.0
+	cp -Rv lib/* /tools/lib/perl5/5.16.0
 }
 
 __sed()
@@ -453,6 +472,8 @@ __sed()
 __tar()
 {
         __dcd $SRC/tar-1.26
+
+	sed -i -e '/gets is a/d' gnu/stdio.in.h
 
         ./configure --prefix=/tools \
 		FORCE_UNSAFE_CONFIGURE=1
@@ -466,12 +487,22 @@ __tar()
 
 __texinfo()
 {
-	__common $SRC/texinfo-4.13
+	gzip -dc $SRC/texinfo-4.13a.tar.gz | tar xvf -
+
+	cd $SRC/texinfo-4.13
+
+	./configure --prefix=/tools
+
+	__mk
+
+#	__mk check
+
+	__mk install
 }
 
 __xz()
 {
-	__common $SRC/xz-5.0.3
+	__common $SRC/xz-5.0.4
 }
 
 __strip()
@@ -497,7 +528,7 @@ __backup()
 #	xz tools.tar
 }
 
-#rem(){
+rem(){
 __binutils-1
 __gcc-1
 
@@ -529,10 +560,11 @@ __patch
 __perl
 __sed
 __tar
+}
 __texinfo
 __xz
 
-__strip
+#__strip
 __backup
 
 __mes "build-stage1 compleate"
