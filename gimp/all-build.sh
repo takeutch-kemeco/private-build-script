@@ -1,17 +1,28 @@
 #!/bin/bash
 
 BASE_DIR=$(pwd)
-PREFIX=/usr/local
+PREFIX=/usr
 
-for PACKAGE in $(ls)
-do
-	cd $BASE_DIR/$PACKAGE
-	make distclean
+. ../common-func/__common-func.sh
+
+__common()
+{
+	__cd $BASE_DIR/$1
+#	make distclean
 	./autogen.sh
 	./configure --prefix=$PREFIX --disable-python
-	make clean
-	make
-	make install
+#	__mk clean
+	__mk
+	__mk install
 	ldconfig
-done
+}
 
+#__common vala
+#__common gupnp
+#__common gupnp-av
+#__common gupnp-dlna
+#__common gupnp-vala
+#__common gssdp
+__common babl
+__common gegl
+__common gimp
