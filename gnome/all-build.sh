@@ -642,6 +642,136 @@ __gnome-desktop()
 	__common $BASE_DIR/gnome-desktop
 }
 
+__libogg()
+{
+	__common $BASE_DIR/libogg
+}
+
+__libvorbis()
+{
+	__common $BASE_DIR/libvorbis
+}
+
+__libcanberra()
+{
+	__cd $BASE_DIR/libcanberra
+
+	./autogen.sh
+	./configure --prefix=$PREFIX	\
+            	--sysconfdir=/etc	\
+            	--disable-oss
+
+	__mk
+	__mk install
+	ldconfig
+}
+
+__iso-codes()
+{
+	__common $BASE_DIR/iso-codes
+}
+
+__libxklavier()
+{
+	__common $BASE_DIR/libxklavier
+}
+
+__libgnomekbd()
+{
+	__common $BASE_DIR/libgnomekbd
+}
+
+__libwacom()
+{
+	__common $BASE_DIR/libwacom
+}
+
+__json-c()
+{
+	__common $BASE_DIR/json-c
+}
+
+__alsa-lib()
+{
+	__common $BASE_DIR/alsa-lib
+}
+
+__flac()
+{
+	__cd $BASE_DIR/flac
+
+	sed -i 's/#include <stdio.h>/&\n#include <string.h>/' examples/cpp/encode/file/main.cpp
+
+	./autogen.sh
+	./configure --prefix=$PREFIX	\
+		--disable-thorough-tests
+
+	__mk
+	__mk install
+	ldconfig
+}
+
+__libsndfile()
+{
+	__common $BASE_DIR/libsndfile
+}
+
+__check()
+{
+	__common $BASE_DIR/check
+}
+
+__pulseaudio()
+{
+	__cd $BASE_DIR/pulseaudio
+
+	groupadd -g 58 pulse
+	groupadd -g 59 pulse-access
+	useradd -c "Pulseaudio User" -d /var/run/pulse -g pulse -s /bin/false -u 58 pulse
+	usermod -a -G audio pulse
+
+	find . -name "Makefile.in" | xargs sed -i "s|(libdir)/@PACKAGE@|(libdir)/pulse|"
+	./autogen.sh --prefix=$PREFIX	\
+            	--sysconfdir=/etc 	\
+            	--localstatedir=/var 	\
+            	--libexecdir=/usr/lib 	\
+            	--with-module-dir=/usr/lib/pulse/modules
+
+	__mk
+	__mk install
+	ldconfig
+}
+
+__upower()
+{
+	__cd $BASE_DIR/upower
+
+	./autogen.sh --prefix=$PREFIX	\
+            	--sysconfdir=/etc 	\
+            	--localstatedir=/var 	\
+            	--libexecdir=/usr/lib/upower \
+            	--disable-static
+
+	__mk
+	__mk install
+	ldconfig
+}
+
+__gnome-settings-daemon()
+{
+	__cd $BASE_DIR/gnome-settings-daemon
+
+	./autogen.sh --prefix=$PREFIX	\
+            	--sysconfdir=/etc 	\
+            	--libexecdir=/usr/lib/gnome-settings-daemon \
+            	--disable-packagekit 	\
+            	--disable-static
+
+	__mk
+	__mk install
+	ldconfig
+}
+
 
 
 __rem() {
@@ -696,9 +826,22 @@ __yelp-xsl
 __yelp
 __yelp-tools
 __gnome-desktop
+__libogg
+__libvorbis
+__libcanberra
+__iso-codes
+__libxklavier
+__libgnomekbd
+__libwacom
+__json-c
+__alsa-lib
+__flac
+__libsndfile
+__check
+__pulseaudio
+__upower
 }
-
-
+__gnome-settings-daemon
 
 
 
