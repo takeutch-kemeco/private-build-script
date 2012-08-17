@@ -765,7 +765,9 @@ __gnome-settings-daemon()
             	--sysconfdir=/etc 	\
             	--libexecdir=/usr/lib/gnome-settings-daemon \
             	--disable-packagekit 	\
-            	--disable-static
+            	--disable-static	\
+		--disable-ibus		\
+		--disable-cups
 
 	__mk
 	__mk install
