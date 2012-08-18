@@ -179,8 +179,8 @@ cat > /etc/dbus-1/session-local.conf << "EOF"
 </busconfig>
 EOF
 
-	__cd $BASE_DIR/blfs-bootscripts
-	make install-dbus
+	cd $BASE_DIR/blfs-bootscripts
+	__mk install-dbus
 }
 
 __libgpg-error()
@@ -223,6 +223,7 @@ __librest()
 
 	./autogen.sh --prefix=$PREFIX	\
 		--with-ca-certificates=/etc/ssl/ca-bundle.crt
+#		--without-ca-certificates
 
 	__mk
 	__mk install
@@ -246,8 +247,9 @@ __glib-networking()
 
 	./autogen.sh --prefix=$PREFIX 	\
             	--libexecdir=/usr/lib/glib-networking \
-            	--with-ca-certificates=/etc/ssl/ca-bundle.crt \
-            	--disable-static
+            	--disable-static \
+            	--without-ca-certificates
+#            	--with-ca-certificates=/etc/ssl/ca-bundle.crt
 
 	__mk
 	__mk install
@@ -405,7 +407,8 @@ __gnome-online-accounts()
 {
 	__cd $BASE_DIR/gnome-online-accounts
 
-	./autogen.sh --prefix=$PREFIX	\
+	./autogen.sh
+	./configure --prefix=$PREFIX	\
 		--libexecdir=/usr/lib/gnome-online-accounts \
            	--disable-static
 
@@ -434,7 +437,8 @@ __colord()
 {
 	__cd $BASE_DIR/colord
 
-	./autogen.sh --prefix=$PREFIX	\
+	./autogen.sh
+	./configure --prefix=$PREFIX	\
             	--sysconfdir=/etc 	\
             	--localstatedir=/var 	\
             	--libexecdir=/usr/lib/colord \
@@ -488,6 +492,7 @@ __udev()
 {
 	__cd $BASE_DIR/udev
 
+	./autogen.sh
 	./configure --prefix=$PREFIX	\
             	--sysconfdir=/etc	\
             	--sbindir=/sbin		\
@@ -761,7 +766,8 @@ __gnome-settings-daemon()
 {
 	__cd $BASE_DIR/gnome-settings-daemon
 
-	./autogen.sh --prefix=$PREFIX	\
+	./autogen.sh
+	./configure --prefix=$PREFIX	\
             	--sysconfdir=/etc 	\
             	--libexecdir=/usr/lib/gnome-settings-daemon \
             	--disable-packagekit 	\
@@ -774,9 +780,666 @@ __gnome-settings-daemon()
 	ldconfig
 }
 
+__libgtop()
+{
+	__common $BASE_DIR/libgtop
+}
+
+__shared-mime-info()
+{
+	__common $BASE_DIR/shared-mime-info
+}
+
+__atk()
+{
+	__common $BASE_DIR/atk
+}
+
+__cogl()
+{
+	__common $BASE_DIR/cogl
+}
+
+__clutter()
+{
+	__common $BASE_DIR/clutter
+}
+
+__clutter-gtk()
+{
+	__common $BASE_DIR/clutter-gtk
+}
+
+__libpwquality()
+{
+	__common $BASE_DIR/libpwquality
+}
+
+__gnome-control-center()
+{
+	__cd $BASE_DIR/gnome-control-center
+
+	./autogen.sh
+	./configure --prefix=$PREFIX	\
+            	--sysconfdir=/etc 	\
+            	--disable-static	\
+		--enable-compile-warnings=no \
+		--disable-ibus		\
+		--disable-cups
+
+	__mk
+	__mk install
+	ldconfig
+}
+
+__gvfs()
+{
+	__cd $BASE_DIR/gvfs
+
+	./autogen.sh
+	./configure --prefix=$PREFIX	\
+            	--sysconfdir=/etc	\
+            	--libexecdir=/usr/lib/gvfs \
+		--disable-gphoto2
+
+	__mk
+	__mk install
+	ldconfig
+}
+
+__gnome-icon-theme()
+{
+	__common $BASE_DIR/gnome-icon-theme
+}
+
+__gnome-icon-theme-extras()
+{
+	__common $BASE_DIR/gnome-icon-theme-extras
+}
+
+__gnome-icon-theme-symbolic()
+{
+	__common $BASE_DIR/gnome-icon-theme-symbolic
+}
+
+__libtasn1()
+{
+	__common $BASE_DIR/libtasn1	
+}
+
+__p11-kit()
+{
+	__cd $BASE_DIR/p11-kit
+
+	./autogen.sh
+	./configure --prefix=$PREFIX	\
+		--sysconfdir=/etc
+
+	__mk
+	__mk install
+	ldconfig
+}
+
+__gcr()
+{
+	__cd $BASE_DIR/gcr
+
+	./autogen.sh --prefix=$PREFIX	\
+            	--sysconfdir=/etc	\
+            	--libexecdir=/usr/lib/gnome-keyring
+
+	__mk
+	__mk install
+	ldconfig
+}
+
+__gnome-keyring()
+{
+	__common $BASE_DIR/gnome-keyring
+
+	./autogen.sh
+	./configure --prefix=$PREFIX	\
+            	--sysconfdir=/etc 	\
+            	--with-pam-dir=/lib/security \
+            	--with-root-certs=/etc/ssl/certs \
+            	--without-ca-certificates
+#            	--with-ca-certificates=/etc/ssl/ca-bundle.crt
+
+	__mk
+	__mk install
+	ldconfig
+}
+
+__libwnck()
+{
+	__common $BASE_DIR/libwnck
+}
+
+__libcroco()
+{
+	__common $BASE_DIR/libcroco
+}
+
+__librsvg()
+{
+	__common $BASE_DIR/librsvg
+}
+
+__libgweather()
+{
+	__cd $BASE_DIR/libgweather
+
+	./autogen.sh
+	./configure --prefix=$PREFIX	\
+            	--sysconfdir=/etc 	\
+            	--enable-locations-compression
+
+	__mk
+	__mk install
+	ldconfig
+}
+
+__gnome-panel()
+{
+	__cd $BASE_DIR/gnome-panel
+
+	./autogen.sh
+	./configure --prefix=$PREFIX	\
+            	--sysconfdir=/etc 	\
+            	--libexecdir=/usr/lib/gnome-applets \
+		--disable-scrollkeeper
+
+	__mk
+	__mk install
+	ldconfig
+}
+
+__gnome-session()
+{
+	__cd $BASE_DIR/gnome-session
+
+	./autogen.sh
+	./configure --prefix=$PREFIX	\
+		--libexecdir=/usr/lib/gnome-session
+
+	__mk
+	__mk install
+	ldconfig
+}
+
+__db()
+{
+	__cd $BASE_DIR/db/build_unix
+
+	../dist/configure --prefix=$PREFIX \
+        	--enable-compat185	\
+        	--enable-dbm       	\
+      		--disable-static   	\
+         	--enable-cxx
+
+	__mk
+	__mk install
+	ldconfig
+}
+
+__curl()
+{
+	__cd $BASE_DIR/curl
+
+	./configure --prefix=$PREFIX	\
+		--disable-static	\
+		--with-ca-path=/etc/ssl/certs
+
+	__mk
+	__mk install
+	ldconfig
+}
+
+__openssl()
+{
+	__cd $BASE_DIR/openssl
+
+	./config --prefix=/usr --openssldir=/etc/ssl shared
+
+	make
+	make MANDIR=/usr/share/man install
+	ldconfig
+}
+
+__liboauth()
+{
+	__common $BASE_DIR/liboauth
+}
+
+__libgdata()
+{
+	__common $BASE_DIR/libgdata
+}
+
+__libical()
+{
+	__common $BASE_DIR/libical
+}
+
+__nss()
+{
+	__cd $BASE_DIR/nss
+
+	patch -Np1 -i ../nss-3.13.5-standalone-1.patch
+	cd mozilla/security/nss
+	make nss_build_all BUILD_OPT=1	\
+  		NSPR_INCLUDE_DIR=/usr/include/nspr \
+  		USE_SYSTEM_ZLIB=1	\
+  		ZLIB_LIBS=-lz		\
+  		$([ $(uname -m) = x86_64 ] && echo USE_64=1) \
+  		$([ -f /usr/include/sqlite3.h ] && echo NSS_USE_SYSTEM_SQLITE=1)
+
+	cd ../../dist
+	install -v -m755 Linux*/lib/*.so /usr/lib
+	install -v -m644 Linux*/lib/{*.chk,libcrmf.a} /usr/lib
+	install -v -m755 -d /usr/include/nss
+	cp -v -RL {public,private}/nss/* /usr/include/nss
+	chmod 644 /usr/include/nss/*
+	install -v -m755 Linux*/bin/{certutil,nss-config,pk12util} /usr/bin
+	install -v -m644 Linux*/lib/pkgconfig/nss.pc /usr/lib/pkgconfig
+
+	ldconfig
+}
+
+__evolution-data-server()
+{
+	__cd $BASE_DIR/evolution-data-server
+
+	./autogen.sh
+	./configure --prefix=$PREFIX	\
+            	--libexecdir=/usr/lib/evolution-data-server \
+            	--enable-vala-bindings
+
+	__mk
+	__mk install
+	ldconfig
+}
+
+__libgee()
+{
+	__common $BASE_DIR/libgee
+}
+
+__telepathy-glib()
+{
+	__cd $BASE_DIR/telepathy-glib
+
+	./autogen.sh
+	./configure --prefix=$PREFIX	\
+           	--libexecdir=/usr/lib/telepathy \
+            	--enable-vala-bindings	\
+            	--disable-static
+
+	__mk
+	__mk install
+	ldconfig
+}
+
+__folks()
+{
+	__cd $BASE_DIR/folks
+
+	./autogen.sh
+	./configure --prefix=$PREFIX	\
+            	--enable-vala
+
+	__mk
+	__mk install
+	ldconfig
+}
+
+__gjs()
+{
+	__common $BASE_DIR/gjs
+}
+
+__zenity()
+{
+	__common $BASE_DIR/zenity
+}
+
+__mutter()
+{
+	__cd $BASE_DIR/mutter
+
+	./autogen.sh
+	./configure --prefix=$PREFIX	\
+		 --enable-compile-warnings=no
+
+	__mk
+	__mk install
+	ldconfig
+}
+
+__iptables()
+{
+	__cd $BASE_DIR/iptables
+
+	./autogen.sh
+	./configure --prefix=$PREFIX	\
+            	--exec-prefix=    	\
+            	--bindir=/sbin    	\
+            	--with-xtlibdir=/lib/xtables \
+            	--with-pkgconfigdir=/usr/lib/pkgconfig
+
+	__mk
+	__mk install
+	ln -sfv xtables-multi /sbin/iptables-xml
+	ldconfig
+
+	cd $BASE_DIR/blfs-bootscripts
+	__mk install-iptables
+}
+
+__libnl()
+{
+	__cd $BASE_DIR/libnl
+
+	./autogen.sh
+	./configure --prefix=$PREFIX	\
+            	--sysconfdir=/etc 	\
+            	--disable-static
+
+	__mk
+	__mk install
+	ldconfig
+}
+
+__wireless-tools()
+{
+	__cd $BASE_DIR/wireless_tools
+
+	__mk
+	__mk PREFIX=$PREFIX INSTALL_MAN=/usr/share/man install
+	ldconfig
+}
+
+__dhcpcd()
+{
+	__cd $BASE_DIR/dhcpcd
+
+	./autogen.sh
+	./configure --libexecdir=/lib/dhcpcd \
+            	--dbdir=/run 		\
+            	--sysconfdir=/etc
+
+	__mk
+	__mk install
+	sed -i "s;/var/lib;/run;g" dhcpcd-hooks/50-dhcpcd-compat
+	install -v -m 644 dhcpcd-hooks/50-dhcpcd-compat /lib/dhcpcd/dhcpcd-hooks/
+	ldconfig
+
+	cd $BASE_DIR/blfs-bootscripts
+	__mk install-service-dhcpcd
+
+cat > /etc/sysconfig/ifconfig.wlan0 << "EOF"
+ONBOOT="no"
+IFACE="wlan0"
+SERVICE="dhcpcd"
+DHCP_START="-b -q"
+DHCP_STOP="-k"
+EOF
+}
+
+__NetworkManager()
+{
+	__cd $BASE_DIR/NetworkManager
+
+	./autogen.sh
+	./configure --prefix=$PREFIX	\
+            	--sysconfdir=/etc 	\
+            	--localstatedir=/var 	\
+            	--libexecdir=/usr/lib/NetworkManager \
+            	--without-systemdsystemunitdir \
+            	--disable-ppp		\
+		--with-distro=lfs
+
+	__mk
+	__mk install
+	ldconfig
+
+cat >> /etc/NetworkManager/NetworkManager.conf << "EOF"
+[main]
+plugins=keyfile
+EOF
+
+	cd $BASE_DIR/blfs-bootscripts
+	__mk install-networkmanager
+}
+
+__telepathy-logger()
+{
+	__cd $BASE_DIR/telepathy-logger
+
+	./autogen.sh
+	./configure --prefix=$PREFIX	\
+            	--libexecdir=/usr/lib/telepathy \
+            	--disable-static
+
+	__mk
+	__mk install
+	ldconfig
+}
+
+__startup-notification()
+{
+	__common $BASE_DIR/startup-notification
+}
+
+__gnome-shell()
+{
+	__cd $BASE_DIR/gnome-shell
+
+	./autogen.sh
+	./configure --prefix=$PREFIX	\
+            	--sysconfdir=/etc 	\
+            	--libexecdir=/usr/lib/gnome-shell \
+		--enable-compile-warnings=no \
+            	--without-ca-certificates
+#            	--with-ca-certificates=/etc/ssl/ca-bundle.crt
+
+	__mk
+	__mk install
+	ldconfig
+}
+
+__gnome-themes-standard()
+{
+	__common $BASE_DIR/gnome-themes-standard
+}
+
+__gnome-doc-utils()
+{
+	__common $BASE_DIR/gnome-doc-utils
+}
+
+__gnome-user-docs()
+{
+	__common $BASE_DIR/gnome-user-docs
+}
+
+__metacity()
+{
+	__common $BASE_DIR/metacity
+}
+
+__nautilus()
+{
+	__cd $BASE_DIR/nautilus
+
+	./autogen.sh
+	./configure --prefix=$PREFIX	\
+            	--sysconfdir=/etc	\
+            	--libexecdir=/usr/lib/nautilus \
+            	--disable-nst-extension	\
+            	--disable-packagekit	\
+		--enable-exif=no	\
+		--enable-more-warnings=no
+
+	__mk
+	__mk install
+	ldconfig
+}
+
+__libpeas()
+{
+	__cd $BASE_DIR/libpeas
+
+	./autogen.sh
+	./configure --prefix=$PREFIX \
+            	--enable-vala
+
+	__mk
+	__mk install
+	ldconfig
+}
+
+__eog()
+{
+	__common $BASE_DIR/eog
+}
+
+__dconf()
+{
+	__cd $BASE_DIR/dconf
+
+	./autogen.sh
+	./configure --prefix=$PREFIX	\
+            	--sysconfdir=/etc 	\
+            	--libexecdir=/usr/lib/dconf
+
+	__mk
+	__mk install
+	ldconfig
+}
+
+__gnome-terminal()
+{
+	__cd $BASE_DIR/gnome-terminal
+
+	./autogen.sh
+	./configure --prefix=$PREFIX	\
+            	--sysconfdir=/etc	\
+		--enable-compile-warnings=no \
+		--disable-scrollkeeper
+
+	__mk
+	__mk install
+	ldconfig
+}
+
+__shared-mime-info()
+{
+	__common $BASE_DIR/shared-mime-info
+}
+
+__gst-plugins-good()
+{
+	__cd $BASE_DIR/gst-plugins-good
+
+	./autogen.sh
+	./configure --prefix=$PREFIX	\
+            	--sysconfdir=/etc 	\
+            	--with-gtk=3.0
+
+	__mk
+	__mk install
+}
+
+__mx()
+{
+	__common $BASE_DIR/mx
+}
+
+__clutter-gst()
+{
+	__common $BASE_DIR/clutter-gst
+}
+
+__gmime()
+{
+	__cd $BASE_DIR/gmime
+
+	./autogen.sh
+	./configure --prefix=$PREFIX	\
+		--disable-static
+
+	__mk
+
+	pushd docs/tutorial
+	docbook2html --nochunks gmime-tut.sgml
+	docbook2pdf             gmime-tut.sgml
+	docbook2ps              gmime-tut.sgml
+	docbook2txt             gmime-tut.sgml
+	popd
+
+	__mk install
+	ldconfig
+}
+
+__totem-pl-parser()
+{
+	__cd $BASE_DIR/totem-pl-parser
+}
+
+__totem()
+{
+	__cd $BASE_DIR/totem
+
+	./autogen.sh
+	./configure --prefix=$PREFIX	\
+		--libexecdir=/usr/lib/totem \
+        	--disable-static	\
+		--disable-scrollkeeper
+
+	__mk
+	__mk install
+	ldconfig
+}
+
+__mpg123()
+{
+	__common $BASE_DIR/mpg123
+}
+
+__ffmpeg()
+{
+	__cd $BASE_DIR/ffmpeg
+
+	./autogen.sh
+	./configure --prefix=$PREFIX	\
+      		--enable-shared 	\
+		--disable-static
+
+	__mk
+	__mk install
+	ldconfig
+}
+
+__gst-ffmpeg()
+{
+	__common $BASE_DIR/gst-ffmpeg
+}
 
 
-__rem() {
+
+#__librest
+#__glib-networking
+#__gnome-keyring
+#__gnome-shell
+
+#__dhcpcd
+#__NetworkManager
+#exit
+
+
+
+#__rem() {
 __gobject-introspection
 __nspr
 __zip
@@ -842,24 +1505,72 @@ __libsndfile
 __check
 __pulseaudio
 __upower
-}
 __gnome-settings-daemon
+__libgtop
+__shared-mime-info
+__atk
+__cogl
+__clutter
+__clutter-gtk
+__gnome-control-center
+__gvfs
+__gnome-icon-theme
+__gnome-icon-theme-extras
+__gnome-icon-theme-symbolic
+__libtasn1
+__p11-kit
+__gcr
+__gnome-keyring
+__libwnck
+__libcroco
+__librsvg
+__libgweather
+__gnome-panel
+__gnome-session
+__db
+__curl
+__openssl
+__liboauth
+__libgdata
+__libical
+__nss
+__evolution-data-server
+__libgee
+__telepathy-glib
+###__folks
+__gjs
+__zenity
+__mutter
+__iptables
+__libnl
+__wireless-tools
+__dhcpcd
+__NetworkManager
+__telepathy-logger
+__startup-notification
+#__gnome-shell
+__gnome-themes-standard
+__gnome-doc-utils
+__gnome-user-docs
+__metacity
+__nautilus
+__libpeas
+__eog
+__dconf
 
+###__gnome-terminal
 
+__shared-mime-info
+__gst-plugins-good
+__mx
+__clutter-gst
+__gmime
+__totem-pl-parser
+__totem
 
+__mpg123
+__ffmpeg
+__gst-ffmpeg
 
-
-
-
-exit
-
-### memo ###
-
-### gnome-themes
-./configure --prefix=/usr --enable-all-themes --enable-test-themes --enable-placeholders
-
-### glib-networking
-./configure --prefix=/usr \
-            --with-ca-certificates=/etc/ssl/ca-bundle.crt
 
 
