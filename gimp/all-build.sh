@@ -17,7 +17,7 @@ __common()
 	ldconfig
 }
 
-#__common vala
+__common vala
 #__common gupnp
 #__common gupnp-av
 #__common gupnp-dlna

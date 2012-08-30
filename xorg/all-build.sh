@@ -11,33 +11,32 @@ XORG_CONFIG="--prefix=$XORG_PREFIX \
 export XORG_PREFIX XORG_ETC XORG_CONFIG
 
 MAKE_CLEAN=
-#MAKE_CLEAN="make clean"
+#MAKE_CLEAN="__mk clean"
 
 DIST_CLEAN=
-#DIST_CLEAN="make distclean"
+#DIST_CLEAN="__mk distclean"
+
+. ../common-func/__common-func.sh
 
 __cd()
 {
-	echo "------------------------------"
-	echo $1
-	echo "------------------------------"
-
+	__mes $1
 	cd $1
 	$DIST_CLEAN
 }
 
-util_macros()
+__util_macros()
 {
 	__cd $BASE_DIR/macros
 
 	./autogen.sh $XORG_CONFIG
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
-proto()
+__proto()
 {
 	__cd $BASE_DIR/proto
 
@@ -49,92 +48,92 @@ proto()
 		then
 			./autogen.sh $XORG_CONFIG
 			$MAKE_CLEAN
-			make
-			make install
+			__mk
+			__mk install
 			ldconfig
 		fi
 	done
 }
 
-makedepend()
+__makedepend()
 {
 	__cd $BASE_DIR/makedepend
 
 	./autogen.sh $XORG_CONFIG
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
-fontutil()
+__fontutil()
 {
 	__cd $BASE_DIR/fontutil
 
 	./autogen.sh $XORG_CONFIG
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
-libXau()
+__libXau()
 {
 	__cd $BASE_DIR/libXau
 	
 	./autogen.sh $XORG_CONFIG
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
-libXdmcp()
+__libXdmcp()
 {
 	__cd $BASE_DIR/libXdmcp
 	
 	./autogen.sh $XORG_CONFIG
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
-libpthread-stubs()
+__libpthread-stubs()
 {
 	__cd $BASE_DIR/pthread-stubs
 	
 	./autogen.sh $XORG_CONFIG
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
-xcb-proto()
+__xcb-proto()
 {
 	__cd $BASE_DIR/xcb/proto
 	
 	./autogen.sh
 	./configure $XORG_CONFIG
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
-libxcb()
+__libxcb()
 {
 	__cd $BASE_DIR/xcb/libxcb
 	
 	./autogen.sh $XORG_CONFIG --enable-xinput --enable-xkb --with-xkb-rules-symlink=xorg
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
-libs()
+__libs()
 {
 	__cd $BASE_DIR/libs
 
@@ -146,19 +145,19 @@ libs()
 		then
 			./autogen.sh $XORG_CONFIG
 			$MAKE_CLEAN
-			make
-			make install
+			__mk
+			__mk install
 			ldconfig
 		fi
 	done
 }
 
-xcb-util-common-m4()
+__xcb-util-common-m4()
 {
 	__cd $BASE_DIR/xcb/util-common-m4
 }
 
-xcb-util()
+__xcb-util()
 {
 	__cd $BASE_DIR/xcb/util
 
@@ -167,12 +166,12 @@ xcb-util()
 	
 	./autogen.sh $XORG_CONFIG
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
-xcb-util-image()
+__xcb-util-image()
 {
 	__cd $BASE_DIR/xcb/util-image
 
@@ -181,12 +180,12 @@ xcb-util-image()
 	
 	./autogen.sh $XORG_CONFIG
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
-xcb-util-keysyms()
+__xcb-util-keysyms()
 {
 	__cd $BASE_DIR/xcb/util-keysyms
 
@@ -195,12 +194,12 @@ xcb-util-keysyms()
 	
 	./autogen.sh $XORG_CONFIG
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
-xcb-util-renderutil()
+__xcb-util-renderutil()
 {
 	__cd $BASE_DIR/xcb/util-renderutil
 
@@ -209,12 +208,12 @@ xcb-util-renderutil()
 	
 	./autogen.sh $XORG_CONFIG
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
-xcb-util-wm()
+__xcb-util-wm()
 {
 	__cd $BASE_DIR/xcb/util-wm
 
@@ -223,102 +222,155 @@ xcb-util-wm()
 	
 	./autogen.sh $XORG_CONFIG
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
-mesa-drm()
+__mesa-drm()
 {
 	__cd $BASE_DIR/mesa/drm
 	
 	./autogen.sh $XORG_CONFIG --disable-radeon --disable-nouveau --enable-udev
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
-mesa()
+__mesa()
 {
 	__cd $BASE_DIR/mesa/mesa
 
 	./autogen.sh $XORG_CONFIG \
-		--enable-xorg \
-		--with-dri-drivers=i965 \
-		--with-x \
-		--with-gallium-drivers=i915 \
-		--enable-gallium-egl \
+		--enable-texture-float
 		--enable-gles1 \
 		--enable-gles2 \
-		--enable-glx \
+		--enable-xa \
 		--enable-shared-glapi \
-		--enable-dri
+		--enable-shared-dricore \
+		--enable-glx-tls \
+		--with-gallium-drivers=i915 \
+		--with-dri-drivers=i965 \
+
+#		--enable-xorg \
+#		--with-x \
+#		--enable-gallium-egl \
+#		--enable-glx \
+#		--enable-dri
 
 	$MAKE_CLEAN
-	make
-	make install
-	ln -s -v ${XORG_PREFIX}/include/GL  /usr/include
-	ln -s -v ${XORG_PREFIX}/include/EGL /usr/include
-	ln -s -v ${XORG_PREFIX}/include/KHR /usr/include
+	__mk
+	__mk install
+
+	for GLHEADER in EGL GL GLES GLES2 KHR xa_composite.h xa_context.h xa_tracker.h
+	do
+		ln -sfv ${XORG_PREFIX}/include/${GLHEADER} /usr/include/${GLHEADER}
+	done
+
 	ldconfig
 }
 
-apps()
+__data()
 {
-	__cd $BASE_DIR/apps
+	__cd $BASE_DIR/data
 
-	__APPS_BASE_DIR__=$BASE_DIR/apps
+	__SUB_BASE_DIR__=$BASE_DIR/data
 	for package in $(ls)
 	do
-		__cd $__APPS_BASE_DIR__/$package
+		__cd $__SUB_BASE_DIR__/$package
 		if [ $? -eq 0 ]
 		then
 			./autogen.sh $XORG_CONFIG \
 				--with-xinitdir=$XORG_ETC/X11/app-defaults
 			$MAKE_CLEAN
-			make
-			make install
+			__mk
+			__mk install
 			ldconfig
 		fi
 	done
 }
 
-xhost()
+
+__apps()
+{
+	__cd $BASE_DIR/apps
+
+	__SUB_BASE_DIR__=$BASE_DIR/apps
+	for package in $(ls)
+	do
+		__cd $__SUB_BASE_DIR__/$package
+		if [ $? -eq 0 ]
+		then
+			./autogen.sh $XORG_CONFIG \
+				--with-xinitdir=$XORG_ETC/X11/app-defaults
+			$MAKE_CLEAN
+			__mk
+			__mk install
+			ldconfig
+		fi
+	done
+}
+
+__xhost()
 {
 	__cd $BASE_DIR/apps/xhost
 
 	./autogen.sh $XORG_CONFIG \
 		--with-xinitdir=$XORG_ETC/X11/app-defaults
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
-xcursor-themes()
+__xcursor-themes()
 {
-	echo
+	__SUB_BASE_DIR__=$BASE_DIR/xcursor-themes
+	SRC=$__SUB_BASE_DIR__
+	__dcd xcursor-themes-1.0.3
+	./configure $XORG_CONFIG
+	$MAKE_CLEAN
+	__mk
+	__mk install
+	ldconfig
 }
 
-fonts()
+__fonts()
 {
-	echo
+	__cd $BASE_DIR/fonts
+
+	__SUB_BASE_DIR__=$BASE_DIR/fonts
+	SRC=$__SUB_BASE_DIR__
+	for __package in $(ls)
+	do
+		package=$(echo $__package | sed -e "s/\.tar\..*$//g")
+		__dcd $__SUB_BASE_DIR__/$package
+
+		if [ $? -eq 0 ]
+		then
+			./configure $XORG_CONFIG
+			$MAKE_CLEAN
+			__mk
+			__mk install
+			ldconfig
+		fi
+	done
 }
 
-xkeyboard-config()
+__xkeyboard-config()
 {
 	__cd $BASE_DIR/xkeyboard-config
 	
 	./autogen.sh $XORG_CONFIG \
 		--with-xkb-rules-symlink=xorg
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
-xserver()
+__xserver()
 {
 	__cd $BASE_DIR/xserver
 	
@@ -327,12 +379,12 @@ xserver()
 		--with-xkb-output=/var/lib/xkb \
 		--enable-install-setuid
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
-driver()
+__driver()
 {
 	echo "/usr/lib/xorg/modules/drivers"  \
 		> /etc/ld.so.conf.d/xorg_modules_drivers.conf
@@ -347,14 +399,25 @@ driver()
 		then
 			./autogen.sh $XORG_CONFIG
 			$MAKE_CLEAN
-			make
-			make install
+			__mk
+			__mk install
 			ldconfig
 		fi
 	done
 }
 
-xterm()
+__twm()
+{
+	__cd $BASE_DIR/twm
+
+	sed -i -e '/^rcdir =/s,^\(rcdir = \).*,\1/etc/X11/app-defaults,' src/Makefile.in
+	./autogen.sh $XORG_CONFIG
+	__mk
+	__mk install
+	ldconfig
+}
+
+__xterm()
 {
 	__cd $BASE_DIR/xterm
 
@@ -363,9 +426,9 @@ xterm()
 	TERMINFO=$XORG_PREFIX/lib/terminfo ./configure $XORG_CONFIG \
 		--enable-luit --enable-wide-chars \
 		--with-app-defaults=/etc/X11/app-defaults &&
-	make
-	make install
-	make install-ti
+	__mk
+	__mk install
+	__mk install-ti
 
 cat >> $XORG_ETC/X11/app-defaults/XTerm << "EOF"
 
@@ -400,41 +463,43 @@ EOF
 
 __test__()
 {
-mesa
 	exit
 }
-__test__
+#__test__
 
-util_macros
-proto
-makedepend
-fontutil
-libXau
-libXdmcp
-libpthread-stubs
+#__rem(){
+__util_macros
+__proto
+__makedepend
+__fontutil
+__libXau
+__libXdmcp
+__libpthread-stubs
 
-xcb-proto
-libxcb
+__xcb-proto
+__libxcb
 
-libs
+__libs
 
-xcb-util-common-m4
-xcb-util
-xcb-util-image
-xcb-util-keysyms
-xcb-util-renderutil
-xcb-util-wm
+__xcb-util-common-m4
+__xcb-util
+__xcb-util-image
+__xcb-util-keysyms
+__xcb-util-renderutil
+__xcb-util-wm
 
-mesa-drm
-mesa
+__mesa-drm
+__mesa
 
-apps
-xcursor-themes
-fonts
-xkeyboard-config
-xserver
-driver
-xterm
+__data
+__apps
+__xcursor-themes
+__fonts
+__xkeyboard-config
+__xserver
+__driver
+__twm
+__xterm
 
 cp $BASE_DIR/50-wacom.conf $XORG_ETC/X11/xorg.conf.d/
 

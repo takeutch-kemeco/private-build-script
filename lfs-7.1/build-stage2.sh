@@ -61,7 +61,7 @@ __glibc()
 	__cdbt
 
 	case `uname -m` in
-		i?86) echo "CFLAGS += -O4 -march=native -mtune=native -O3 -msse3 -pipe" > configparms ;;
+		i?86) echo "CFLAGS += -O4 -march=native -mtune=native -msse3 -pipe" > configparms ;;
 	esac
 
 	../glibc-2.16.0/configure  	\
@@ -701,7 +701,6 @@ __inetutils()
 	./configure --prefix=/usr	\
 		--libexecdir=/usr/sbin	\
 		--localstatedir=/var	\
-		--disable-ifconfig	\
 		--disable-logger	\
 		--disable-syslogd	\
 		--disable-whois		\
@@ -1261,6 +1260,11 @@ __wireless-tools()
 
 	__mk PREFIX=/usr INSTALL_MAN=/usr/share/man install
 }
+
+#__inetutils
+#__dhcpcd
+#__wireless-tools
+#exit
 
 #rem(){
 __init

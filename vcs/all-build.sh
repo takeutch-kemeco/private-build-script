@@ -4,27 +4,19 @@ BASE_DIR=$(pwd)
 PREFIX=/usr
 
 MAKE_CLEAN=
-#MAKE_CLEAN="make clean"
+#MAKE_CLEAN="__mk clean"
 
 #DIST_CLEAN=
-DIST_CLEAN="make clean"
+DIST_CLEAN="__mk clean"
 
-__cd()
-{
-	echo "------------------------------"
-	echo $1
-	echo "------------------------------"
-
-	cd $1
-	$DIST_CLEAN
-}
+. ../common-func/__common-func.sh
 
 __git()
 {
 	__cd $BASE_DIR/git
 	$MAKE_CLEAN
-	make prefix=$PREFIX
-	make prefix=$PREFIX install
+	__mk prefix=$PREFIX
+	__mk prefix=$PREFIX install
 	ldconfig
 }
 
@@ -33,8 +25,8 @@ __gitg()
 	__cd $BASE_DIR/gitg
 	./autogen.sh --prefix=$PREFIX --enable-glade-catalog=auto
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
@@ -50,8 +42,8 @@ __apr1()
 	./configure --prefix=$PREFIX \
 		--with-installbuilddir=$PREFIX/lib/apr-1
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
@@ -61,8 +53,8 @@ __apr1-util()
 	./configure --prefix=$PREFIX \
 		--with-apr=$PREFIX/bin/apr-1-config
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
@@ -72,8 +64,8 @@ __apr2()
 	./buildconf
 	./configure --prefix=$PREFIX
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
@@ -84,8 +76,8 @@ __serf()
 	./configure --prefix=$PREFIX \
 		--with-apr=$PREFIX/bin/apr-2-config
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
@@ -96,8 +88,8 @@ __sqlite3()
 		--enable-threadsafe \
 		--enable-dynamic-extensions
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
@@ -108,8 +100,8 @@ __svn()
 	./autogen.sh
 	./configure --prefix=$PREFIX --with-serf=$PREFIX
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
@@ -119,8 +111,8 @@ __gdbm()
 	./bootstrup
 	./configure --prefix=$PREFIX
 	$MAKE_CLEAN
-	make
-	make BINOWN=root BINGRP=root install
+	__mk
+	__mk BINOWN=root BINGRP=root install
 	ldconfig
 }
 
@@ -134,8 +126,8 @@ __cvs()
 	__cd $BASE_DIR/ccvs
 	./configure --prefix=$PREFIX
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
@@ -153,6 +145,7 @@ __test__()
 }
 #__test__
 
+#__rem(){
 __git
 __gitg
 
@@ -161,11 +154,11 @@ __hg
 __apr1
 __apr1-util
 __apr2
-__serf
+###__serf
 
 __sqlite3
 
-__gdbm
+###__gdbm
 
 __diffutils
 __cvs

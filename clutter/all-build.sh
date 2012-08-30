@@ -1,43 +1,108 @@
 #!/bin/bash
 
 PREFIX=/usr
-__BASE_DIR__=$(pwd)
-#__MAKE_CLEAN__=
-__MAKE_CLEAN__="make clean"
+BASE_DIR=$(pwd)
 
-__ERROR_LOG__=$__BASE_DIR__/error.log
-echo > $__ERROR_LOG__
+. ../common-func/__common-func.sh
 
-for __PACKAGE__ in $(ls)
-do
-	cd $__BASE_DIR__/$__PACKAGE__
+__common()
+{
+	__cd $1
 
-	if [ $? -eq 0 ]
-	then
-		./autogen.sh --prefix=$PREFIX --enable-gtk-doc --enable-xinput --with-x
+	make distclean
 
-		$__MAKE_CLEAN__
-		make
-		if [ $? -eq 0 ]
-		then
-			make install
-			ldconfig
-		else
-			echo $__PACKAGE__ >> $__ERROR_LOG__
-		fi
-	fi
+	./autogen.sh
+	./configure --prefix=$PREFIX	\
+		--enable-gtk-doc	\
+		--enable-xinput		\
+		--with-x
 
-	cd $__BASE_DIR__
-done
+	__mk clean
+	__mk
+	__mk install
+	ldconfig
+}
+
+__clutter()
+{
+	__common $BASE_DIR/clutter
+}
+
+__clutter-box2d()
+{
+	__common $BASE_DIR/clutter-box2d
+}
+
+__clutter-bullet()
+{
+	__common $BASE_DIR/clutter-bullet
+}
+
+__clutter-gst()
+{
+	__common $BASE_DIR/clutter-gst
+}
+
+__clutter-gstreamermm()
+{
+	__common $BASE_DIR/clutter-gstreamermm
+}
+
+__clutter-gtk()
+{
+	__common $BASE_DIR/clutter-gtk
+}
+
+__cluttermm()
+{
+	__common $BASE_DIR/cluttermm
+}
+
+__cogl()
+{
+	__common $BASE_DIR/cogl
+}
+
+__mx()
+{
+	__common $BASE_DIR/mx
+}
+
+__pyclutter()
+{
+	__common $BASE_DIR/pyclutter
+}
+
+__toys()
+{
+	__common $BASE_DIR/toys
+}
+
+__bullet()
+{
+	__cd $BASE_DIR/bullet
+
+	cmake -DCMAKE_INSTALL_PREFIX=$PREFIX . -G "Unix Makefiles"
+
+	__mk
+	__mk install
+	ldconfig
+#のあとに、/usr/local/以下へとインストールされたincludeやpkgconfig等を/usr/以下へ手動で移動する
+}
 
 
 
-exit
+#__rem(){
+__mx
+__cogl
+__clutter
+__clutter-box2d
+__clutter-gtk
+__cluttermm
+#__clutter-gst
+#__clutter-gstreamermm
 
-### memo ####
-### bullet
-cmake -DCMAKE_INSTALL_PREFIX=/usr . -G "Unix Makefiles"
-make
-make install
-のあとに、/usr/local/以下へとインストールされたincludeやpkgconfig等を/usr/以下へ手動で移動する
+#__pyclutter
+#__bullet
+#__clutter-bullet
 

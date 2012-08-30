@@ -31,6 +31,9 @@ git clone git://anongit.freedesktop.org/xorg/proto/xf86driproto
 git clone git://anongit.freedesktop.org/xorg/proto/xf86vidmodeproto
 git clone git://anongit.freedesktop.org/xorg/proto/xineramaproto
 git clone git://anongit.freedesktop.org/xorg/proto/xproto
+git clone git://anongit.freedesktop.org/xorg/proto/evieproto
+git clone git://anongit.freedesktop.org/xorg/proto/fontcacheproto
+git clone git://anongit.freedesktop.org/xorg/proto/xf86miscproto
 cd $__BASE_DIR__
 
 git clone git://anongit.freedesktop.org/xorg/font/util fontutil
@@ -103,6 +106,14 @@ git clone git://anongit.freedesktop.org/mesa/mesa
 git clone git://anongit.freedesktop.org/git/mesa/drm
 cd $__BASE_DIR__
 
+mkdir -p data
+cd data
+git clone git://anongit.freedesktop.org/xorg/data/bitmaps
+git clone git://anongit.freedesktop.org/xorg/data/cursors
+git clone git://anongit.freedesktop.org/xorg/doc/xorg-docs
+git clone git://anongit.freedesktop.org/xorg/doc/xorg-sgml-doctools
+cd $__BASE_DIR__
+
 mkdir -p apps
 cd apps
 git clone git://anongit.freedesktop.org/git/xorg/app/bdftopcf
@@ -167,55 +178,104 @@ git clone git://anongit.freedesktop.org/xorg/driver/xf86-input-joystick
 git clone git://anongit.freedesktop.org/xorg/driver/xf86-input-vmmouse
 git clone git://anongit.freedesktop.org/xorg/driver/xf86-input-void
 git clone git://linuxwacom.git.sourceforge.net/gitroot/linuxwacom/xf86-input-wacom
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-apm
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-ark
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-ast
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-ati
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-chips
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-cirrus
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-apm
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-ark
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-ast
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-ati
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-chips
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-cirrus
 git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-dummy
 git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-fbdev
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-geode
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-glide
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-glint
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-i128
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-i740
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-geode
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-glide
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-glint
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-i128
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-i740
 git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-intel
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-mach64
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-mga
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-neomagic
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-newport
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-nv
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-openchrome
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-r128
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-rendition
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-s3
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-s3virge
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-savage
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-siliconmotion
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-sis
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-sisusb
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-sunbw2
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-suncg14
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-suncg3
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-suncg6
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-sunffb
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-sunleo
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-suntcx
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-tdfx
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-tga
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-trident
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-tseng
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-v4l
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-mach64
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-mga
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-neomagic
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-newport
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-nv
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-openchrome
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-r128
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-rendition
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-s3
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-s3virge
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-savage
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-siliconmotion
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-sis
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-sisusb
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-sunbw2
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-suncg14
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-suncg3
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-suncg6
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-sunffb
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-sunleo
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-suntcx
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-tdfx
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-tga
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-trident
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-tseng
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-v4l
 git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-vesa
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-vmware
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-voodoo
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-wsfb
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-xgi
-git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-xgixp
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-vmware
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-voodoo
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-wsfb
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-xgi
+#git clone git://anongit.freedesktop.org/xorg/driver/xf86-video-xgixp
 cd $__BASE_DIR__
 
-wget -c ftp://invisible-island.net/xterm/xterm-276.tgz
-gzip -dc xterm-276.tgz | tar xvf -
-mv xterm-276 xterm
+git clone git://anongit.freedesktop.org/xorg/app/twm
+
+wget -c ftp://invisible-island.net/xterm/xterm-279.tgz
+gzip -dc xterm-279.tgz | tar xvf -
+mv xterm-279 xterm
+
+mkdir -p fonts
+cd $__BASE_DIR__/fonts
+URL=http://xorg.freedesktop.org/releases/individual/font
+wget -c $URL/font-util-1.3.0.tar.bz2
+wget -c $URL/encodings-1.0.4.tar.bz2
+wget -c $URL/font-adobe-100dpi-1.0.3.tar.bz2
+wget -c $URL/font-adobe-75dpi-1.0.3.tar.bz2
+wget -c $URL/font-adobe-utopia-100dpi-1.0.4.tar.bz2
+wget -c $URL/font-adobe-utopia-75dpi-1.0.4.tar.bz2
+wget -c $URL/font-adobe-utopia-type1-1.0.4.tar.bz2
+wget -c $URL/font-alias-1.0.3.tar.bz2
+wget -c $URL/font-arabic-misc-1.0.3.tar.bz2
+wget -c $URL/font-bh-100dpi-1.0.3.tar.bz2
+wget -c $URL/font-bh-75dpi-1.0.3.tar.bz2
+wget -c $URL/font-bh-lucidatypewriter-100dpi-1.0.3.tar.bz2
+wget -c $URL/font-bh-lucidatypewriter-75dpi-1.0.3.tar.bz2
+wget -c $URL/font-bh-ttf-1.0.3.tar.bz2
+wget -c $URL/font-bh-type1-1.0.3.tar.bz2
+wget -c $URL/font-bitstream-100dpi-1.0.3.tar.bz2
+wget -c $URL/font-bitstream-75dpi-1.0.3.tar.bz2
+wget -c $URL/font-bitstream-type1-1.0.3.tar.bz2
+wget -c $URL/font-cronyx-cyrillic-1.0.3.tar.bz2
+wget -c $URL/font-cursor-misc-1.0.3.tar.bz2
+wget -c $URL/font-daewoo-misc-1.0.3.tar.bz2
+wget -c $URL/font-dec-misc-1.0.3.tar.bz2
+wget -c $URL/font-ibm-type1-1.0.3.tar.bz2
+wget -c $URL/font-isas-misc-1.0.3.tar.bz2
+wget -c $URL/font-jis-misc-1.0.3.tar.bz2
+wget -c $URL/font-micro-misc-1.0.3.tar.bz2
+wget -c $URL/font-misc-cyrillic-1.0.3.tar.bz2
+wget -c $URL/font-misc-ethiopic-1.0.3.tar.bz2
+wget -c $URL/font-misc-meltho-1.0.3.tar.bz2
+wget -c $URL/font-misc-misc-1.1.2.tar.bz2
+wget -c $URL/font-mutt-misc-1.0.3.tar.bz2
+wget -c $URL/font-schumacher-misc-1.1.2.tar.bz2
+wget -c $URL/font-screen-cyrillic-1.0.4.tar.bz2
+wget -c $URL/font-sony-misc-1.0.3.tar.bz2
+wget -c $URL/font-sun-misc-1.0.3.tar.bz2
+wget -c $URL/font-winitzki-cyrillic-1.0.3.tar.bz2
+wget -c $URL/font-xfree86-type1-1.0.4.tar.bz2
+cd $__BASE_DIR__
+
+mkdir -p xcursor-themes
+cd $__BASE_DIR__/xcursor-themes
+wget -c http://xorg.freedesktop.org/releases/individual/data/xcursor-themes-1.0.3.tar.bz2
+cd $__BASE_DIR__
 

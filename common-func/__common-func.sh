@@ -70,6 +70,7 @@ __decord()
 	__wait
 
 	cd $SRC
+	echo aaaaaaaaaaaaaaaaaaaa $SRC
 
 	BN=$(ls $1*.tar.*)
 	__echo-g $BN
@@ -105,5 +106,10 @@ __mk()
 	then
 		__err "make error!!"
 	fi
+}
+
+__lsdir()
+{
+	ls -F | grep / | sed -e "s/\/$//g"
 }
 

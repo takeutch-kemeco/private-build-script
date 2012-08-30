@@ -1333,11 +1333,6 @@ __gnome-terminal()
 	ldconfig
 }
 
-__shared-mime-info()
-{
-	__common $BASE_DIR/shared-mime-info
-}
-
 __gst-plugins-good()
 {
 	__cd $BASE_DIR/gst-plugins-good
@@ -1426,6 +1421,11 @@ __gst-ffmpeg()
 	__common $BASE_DIR/gst-ffmpeg
 }
 
+__gtksourceview()
+{
+	__common $BASE_DIR/gtksourceview
+}
+
 
 
 #__librest
@@ -1435,6 +1435,17 @@ __gst-ffmpeg()
 
 #__dhcpcd
 #__NetworkManager
+
+#__mutter
+#__gnome-shell
+
+#__libgcrypt
+#__cups
+#__folks
+
+#__gnome-terminal
+
+#__nautilus
 #exit
 
 
@@ -1452,7 +1463,7 @@ __expat
 __doxygen
 __dbus
 __libgpg-error
-###__libgcrypt
+__libgcrypt
 __libgnome-keyring
 __libnotify
 __certificate
@@ -1483,7 +1494,7 @@ __libusb
 __usbutils
 __udev
 __colord
-###__cups
+__cups
 __unzip
 __docbook-xml
 __itstool
@@ -1548,19 +1559,19 @@ __dhcpcd
 __NetworkManager
 __telepathy-logger
 __startup-notification
-#__gnome-shell
+__gnome-shell
 __gnome-themes-standard
 __gnome-doc-utils
 __gnome-user-docs
 __metacity
 __nautilus
+
 __libpeas
 __eog
 __dconf
 
-###__gnome-terminal
+__gnome-terminal
 
-__shared-mime-info
 __gst-plugins-good
 __mx
 __clutter-gst
@@ -1572,5 +1583,6 @@ __mpg123
 __ffmpeg
 __gst-ffmpeg
 
+__gtksourceview
 
 

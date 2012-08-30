@@ -33,5 +33,34 @@ __perl()
 	ldconfig
 }
 
+__common()
+{
+	__dcd $1
+	perl Makefile.PL
+	__mk
+#	__mk test
+	__mk install
+}
+
+__xmlparser()
+{
+	__common $SRC/XML-Parser-2.41
+}
+
+__xmlsimple()
+{
+	__common $SRC/XML-Simple-2.18
+}
+
+__uri()
+{
+	__common $SRC/URI-1.60
+}
+
+#__rem(){
 __perl
+
+__xmlparser
+__xmlsimple
+__uri
 

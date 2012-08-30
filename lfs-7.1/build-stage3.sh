@@ -225,7 +225,7 @@ __linux-kernel()
 #rem(){
 __lfs-bootscripts
 __sysconf
-__linux-kernel
+#__linux-kernel
 ###__grub-config
 
 __mes "build-stage3 compleate"

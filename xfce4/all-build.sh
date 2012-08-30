@@ -1,342 +1,322 @@
 #!/bin/bash
 
-__BASE_DIR__=$(pwd)
+BASE_DIR=$(pwd)
 PREFIX=/usr
 __X11_LIB__=/usr/X11/lib
 
-__MAKE_CLEAN__=
-#__MAKE_CLEAN__="make clean"
+MAKE_CLEAN=
+#MAKE_CLEAN="__mk clean"
 
-vte()
+. ../common-func/__common-func.sh
+
+__vte()
 {
-	cd $__BASE_DIR__/vte
+	__cd $BASE_DIR/vte
 
-	./autogen.sh --prefix=$PREFIX \
+	./autogen.sh --prefix=$PREFIX 	\
 		--enable-maintainer-mode \
-		--enable-debug=no \
-		--enable-vala=yes \
+		--enable-debug=no 	\
+		--enable-vala=yes 	\
 		--enable-introspection=yes
-	$__MAKE_CLEAN__
-	make
-	make install
-	ldconfig
 
-	cd $__BASE_DIR__
+	$MAKE_CLEAN
+	__mk
+	__mk install
+	ldconfig
 }
 
-libxfce4util()
+__libxfce4util()
 {
-	cd $__BASE_DIR__/libxfce4util
+	__cd $BASE_DIR/libxfce4util
 
-	./autogen.sh --prefix=$PREFIX \
+	./autogen.sh --prefix=$PREFIX 	\
 		--enable-maintainer-mode \
 		--enable-debug=no
-	$__MAKE_CLEAN__
-	make
-	make install
-	ldconfig
 
-	cd $__BASE_DIR__
+	$MAKE_CLEAN
+	__mk
+	__mk install
+	ldconfig
 }
 
-xfconf()
+__xfconf()
 {
-	cd $__BASE_DIR__/xfconf
+	__cd $BASE_DIR/xfconf
 
-	./autogen.sh --prefix=$PREFIX \
+	./autogen.sh --prefix=$PREFIX 	\
 		--enable-maintainer-mode \
 		--enable-debug=no
-	$__MAKE_CLEAN__
-	make
-	make install
-	ldconfig
 
-	cd $__BASE_DIR__
+	$MAKE_CLEAN
+	__mk
+	__mk install
+	ldconfig
 }
 
-libxfce4ui()
+__libxfce4ui()
 {
-	cd $__BASE_DIR__/libxfce4ui
+	__cd $BASE_DIR/libxfce4ui
 
-	./autogen.sh --prefix=$PREFIX \
+	./autogen.sh --prefix=$PREFIX 	\
 		--enable-maintainer-mode \
-		--enable-debug=no \
+		--enable-debug=no 	\
 		--sysconfdir=/etc
-	$__MAKE_CLEAN__
-	make
-	make install
-	ldconfig
 
-	cd $__BASE_DIR__
+	$MAKE_CLEAN
+	__mk
+	__mk install
+	ldconfig
 }
 
-exo()
+__exo()
 {
-	cd $__BASE_DIR__/exo
+	__cd $BASE_DIR/exo
 
-	./autogen.sh --prefix=$PREFIX \
+	./autogen.sh --prefix=$PREFIX 	\
 		--enable-maintainer-mode \
-		--enable-debug=no \
-		--sysconfdir=/etc \
-		--docdir=/usr/share/doc/exo-0.8.0
-	$__MAKE_CLEAN__
-	make
-	make install
-	ldconfig
+		--enable-debug=no 	\
+		--sysconfdir=/etc 	\
+		--do__cdir=/usr/share/doc/exo
 
-	cd $__BASE_DIR__
+	$MAKE_CLEAN
+	__mk
+	__mk install
+	ldconfig
 }
 
-garcon()
+__garcon()
 {
-	cd $__BASE_DIR__/garcon
+	__cd $BASE_DIR/garcon
 
-	./autogen.sh --prefix=$PREFIX \
+	./autogen.sh --prefix=$PREFIX 	\
 		--enable-maintainer-mode \
-		--enable-debug=no \
+		--enable-debug=no 	\
 		--sysconfdir=/etc
-	$__MAKE_CLEAN__
-	make
-	make install
-	ldconfig
 
-	cd $__BASE_DIR__
+	$MAKE_CLEAN
+	__mk
+	__mk install
+	ldconfig
 }
 
-gtk-xfce-engine()
+__gtk-xfce-engine()
 {
-       cd $__BASE_DIR__/gtk-xfce-engine
+       __cd $BASE_DIR/gtk-xfce-engine
 
-        ./autogen.sh --prefix=$PREFIX \
+        ./autogen.sh --prefix=$PREFIX 	\
                 --enable-maintainer-mode \
                 --enable-debug=no
-        $__MAKE_CLEAN__
-        make
-        make install
-        ldconfig
 
-        cd $__BASE_DIR__
+        $MAKE_CLEAN
+        __mk
+        __mk install
+        ldconfig
 }
 
-libwnck()
+__libwnck()
 {
-       cd $__BASE_DIR__/libwnck
+       __cd $BASE_DIR/libwnck
 
-        ./autogen.sh --prefix=$PREFIX \
+        ./autogen.sh --prefix=$PREFIX 	\
                 --enable-maintainer-mode \
-                --enable-debug=no \
+                --enable-debug=no 	\
 		--program-suffix=-1
-        $__MAKE_CLEAN__
-	make GETTEXT_PACKAGE=libwnck-1
-        make install
+
+        $MAKE_CLEAN
+	__mk GETTEXT_PACKAGE=libwnck-1
+        __mk install
         ldconfig
-
-        cd $__BASE_DIR__
-
 }
 
-libglade()
+__libglade()
 {
-        cd $__BASE_DIR__/libglade
+        __cd $BASE_DIR/libglade
 
-        ./autogen.sh --prefix=$PREFIX \
+        ./autogen.sh --prefix=$PREFIX 	\
                 --enable-maintainer-mode \
                 --enable-debug=no
-        $__MAKE_CLEAN__
-        make
-        make install
+
+        $MAKE_CLEAN
+        __mk
+        __mk install
         ldconfig
-
-        cd $__BASE_DIR__
 }
 
-libxfcegui4()
+__libxfcegui4()
 {
-	cd $__BASE_DIR__/libxfcegui4
+	__cd $BASE_DIR/libxfcegui4
 
-	./autogen.sh --prefix=$PREFIX \
+	./autogen.sh --prefix=$PREFIX 	\
 		--enable-maintainer-mode \
 		--enable-debug=no
-	$__MAKE_CLEAN__
-	make
-	make install
-	ldconfig
 
-	cd $__BASE_DIR__
+	$MAKE_CLEAN
+	__mk
+	__mk install
+	ldconfig
 }
 
-thunar()
+__thunar()
 {
-	cd $__BASE_DIR__/thunar
+	__cd $BASE_DIR/thunar
 
-	./autogen.sh --prefix=$PREFIX \
+	./autogen.sh --prefix=$PREFIX 	\
 		--enable-maintainer-mode \
-		--enable-debug=no \
+		--enable-debug=no 	\
 		--sysconfdir=/etc
-	$__MAKE_CLEAN__
-	make
-	make install
-	ldconfig
 
-	cd $__BASE_DIR__
+	$MAKE_CLEAN
+	__mk
+	__mk install
+	ldconfig
 }
 
-thunar-volman()
+__thunar-volman()
 {
-	cd $__BASE_DIR__/thunar-volman
+	__cd $BASE_DIR/thunar-volman
 
-	./autogen.sh --prefix=$PREFIX \
+	./autogen.sh --prefix=$PREFIX 	\
 		--enable-maintainer-mode \
 		--enable-debug=no
-	$__MAKE_CLEAN__
-	make
-	make install
-	ldconfig
 
-	cd $__BASE_DIR__
+	$MAKE_CLEAN
+	__mk
+	__mk install
+	ldconfig
 }
 
-tumbler()
+__tumbler()
 {
-	cd $__BASE_DIR__/tumbler
+	__cd $BASE_DIR/tumbler
 
-	./autogen.sh --prefix=$PREFIX \
+	./autogen.sh --prefix=$PREFIX 	\
 		--enable-maintainer-mode \
 		--enable-debug=no
-	$__MAKE_CLEAN__
-	make
-	make install
-	ldconfig
 
-	cd $__BASE_DIR__
+	$MAKE_CLEAN
+	__mk
+	__mk install
+	ldconfig
 }
 
-xfce4-appfinder()
+__xfce4-appfinder()
 {
-        cd $__BASE_DIR__/xfce4-appfinder
+        __cd $BASE_DIR/xfce4-appfinder
 
-        ./autogen.sh --prefix=$PREFIX \
+        ./autogen.sh --prefix=$PREFIX 	\
                 --enable-maintainer-mode \
                 --enable-debug=no
-        $__MAKE_CLEAN__
-        make
-        make install
+
+        $MAKE_CLEAN
+        __mk
+        __mk install
         ldconfig
-
-        cd $__BASE_DIR__
 }
 
-xfce4-panel()
+__xfce4-panel()
 {
-	cd $__BASE_DIR__/xfce4-panel
+	__cd $BASE_DIR/xfce4-panel
 
-	./autogen.sh --prefix=$PREFIX \
+	./autogen.sh --prefix=$PREFIX 	\
 		--enable-maintainer-mode \
-		--enable-debug=no \
-		--sysconfdir=/etc \
-		--docdir=/usr/share/doc/xfce4-panel-4.10.0
-	$__MAKE_CLEAN__
-	make
-	make install
+		--enable-debug=no 	\
+		--sysconfdir=/etc 	\
+		--do__cdir=/usr/share/doc/xfce4-panel
+
+	$MAKE_CLEAN
+	__mk
+	__mk install
 	ldconfig
-
-	cd $__BASE_DIR__
 }
 
-xfce4-power-manager()
+__xfce4-power-manager()
 {
-	cd $__BASE_DIR__/xfce4-power-manager
+	__cd $BASE_DIR/xfce4-power-manager
 
-	./autogen.sh --prefix=$PREFIX \
+	./autogen.sh --prefix=$PREFIX 	\
 		--enable-maintainer-mode \
-		--enable-debug=no \
+		--enable-debug=no 	\
 		--sysconfdir=/etc
-	$__MAKE_CLEAN__
-	make
-	make install
-	ldconfig
 
-	cd $__BASE_DIR__
+	$MAKE_CLEAN
+	__mk
+	__mk install
+	ldconfig
 }
 
-xfce4-session()
+__xfce4-session()
 {
-	cd $__BASE_DIR__/xfce4-session
+	__cd $BASE_DIR/xfce4-session
 
-	./autogen.sh --prefix=$PREFIX \
+	./autogen.sh --prefix=$PREFIX 	\
 		--enable-maintainer-mode \
-		--enable-debug=no \
-		--sysconfdir=/etc \
-		--docdir=/usr/share/doc/xfce4-session-4.10.0
-	$__MAKE_CLEAN__
-	make
-	make install
-	ldconfig
+		--enable-debug=no 	\
+		--sysconfdir=/etc 	\
+		--do__cdir=/usr/share/doc/xfce4-session
 
-	cd $__BASE_DIR__
+	$MAKE_CLEAN
+	__mk
+	__mk install
+	ldconfig
 }
 
-xfce4-settings()
+__xfce4-settings()
 {
-	cd $__BASE_DIR__/xfce4-settings
+	__cd $BASE_DIR/xfce4-settings
 
-	./autogen.sh --prefix=$PREFIX \
+	./autogen.sh --prefix=$PREFIX 	\
 		--enable-maintainer-mode \
-		--enable-debug=no \
+		--enable-debug=no 	\
 		--sysconfdir=/etc
-	$__MAKE_CLEAN__
-	make
-	make install
-	ldconfig
 
-	cd $__BASE_DIR__
+	$MAKE_CLEAN
+	__mk
+	__mk install
+	ldconfig
 }
 
-xfdesktop()
+__xfdesktop()
 {
-	cd $__BASE_DIR__/xfdesktop
+	__cd $BASE_DIR/xfdesktop
 
-	./autogen.sh --prefix=$PREFIX \
+	./autogen.sh --prefix=$PREFIX 	\
 		--enable-maintainer-mode \
 		--enable-debug=no
-	$__MAKE_CLEAN__
-	make
-	make install
-	ldconfig
 
-	cd $__BASE_DIR__
+	$MAKE_CLEAN
+	__mk
+	__mk install
+	ldconfig
 }
 
-xfwm4()
+__xfwm4()
 {
-	cd $__BASE_DIR__/xfwm4
+	__cd $BASE_DIR/xfwm4
 
-	./autogen.sh --prefix=$PREFIX \
+	./autogen.sh --prefix=$PREFIX 	\
 		--enable-maintainer-mode \
 		--enable-debug=no
-	$__MAKE_CLEAN__
-	make
-	make install
-	ldconfig
 
-	cd $__BASE_DIR__
+	$MAKE_CLEAN
+	__mk
+	__mk install
+	ldconfig
 }
 
 # 4.10のterminalは出来が悪いので4.8のターミナルを使う
-terminal()
+__terminal()
 {
-	cd $__BASE_DIR__/terminal
+	__cd $BASE_DIR/terminal
 
-	./autogen.sh --prefix=$PREFIX \
+	./autogen.sh --prefix=$PREFIX 	\
 		--enable-maintainer-mode \
-		--enable-debug=no \
-		--docdir=/usr/share/doc/terminal-0.4.8
-	$__MAKE_CLEAN__
-	make
-	make install
-	ldconfig
+		--enable-debug=no 	\
+		--do__cdir=/usr/share/doc/terminal
 
-	cd $__BASE_DIR__
+	$MAKE_CLEAN
+	__mk
+	__mk install
+	ldconfig
 }
 
 __test__()
@@ -345,25 +325,26 @@ __test__()
 }
 #__test__
 
-vte
-libxfce4util
-xfconf
-libxfce4ui
-exo
-garcon
-gtk-xfce-engine
-libwnck
-libglade
-libxfcegui4
-thunar
-thunar-volman
-tumbler
-xfce4-appfinder
-xfce4-panel
-xfce4-power-manager
-xfce4-session
-xfce4-settings
-xfdesktop
-xfwm4
-terminal
+#__rem(){
+__vte
+__libxfce4util
+__xfconf
+__libxfce4ui
+__exo
+__garcon
+__gtk-xfce-engine
+###__libwnck
+__libglade
+__libxfcegui4
+__thunar
+__thunar-volman
+__tumbler
+__xfce4-appfinder
+__xfce4-panel
+__xfce4-power-manager
+__xfce4-session
+__xfce4-settings
+__xfdesktop
+__xfwm4
+###__terminal
 

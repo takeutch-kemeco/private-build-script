@@ -2,7 +2,9 @@
 
 BASE_DIR=$(pwd)
 
-for n in $(ls)
+. ../common-func/__common-func.sh
+
+for n in $(__lsdir)
 do
 	cd $BASE_DIR/$n
 	if [ $? -eq 0 ]

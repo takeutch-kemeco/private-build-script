@@ -4,21 +4,13 @@ BASE_DIR=$(pwd)
 PREFIX=/usr
 XORG_PREFIX=/usr
 
-#MAKE_CLEAN=
-MAKE_CLEAN="make clean"
+MAKE_CLEAN=
+#MAKE_CLEAN="__mk clean"
 
-#DIST_CLEAN=
-DIST_CLEAN="make distclean"
+DIST_CLEAN=
+#DIST_CLEAN="__mk distclean"
 
-__cd()
-{
-	echo "------------------------------"
-	echo $1
-	echo "------------------------------"
-
-	cd $1
-	$DIST_CLEAN
-}
+. ../common-func/__common-func.sh
 
 __libffi()
 {
@@ -26,8 +18,8 @@ __libffi()
 
 	./configure --prefix=$PREFIX
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	cp -f $BASE_DIR/libffi/i686-pc-linux-gnu/include/ffi.h $PREFIX/include/
 	cp -f $BASE_DIR/libffi/i686-pc-linux-gnu/include/ffitarget.h $PREFIX/include/
 	ldconfig
@@ -39,8 +31,8 @@ __pth()
 
 	./configure --prefix=$PREFIX
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
@@ -54,8 +46,8 @@ __glib()
 	./configure --prefix=$PREFIX --sysconfdir=/etc --with-pcre=system
 
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
@@ -63,10 +55,12 @@ __gobject-introspection()
 {
 	__cd $BASE_DIR/gobject-introspection
 
-	./autogen.sh --prefix=$PREFIX
+	./autogen.sh --prefix=$PREFIX	\
+		--disable-tests
+
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
@@ -76,8 +70,8 @@ __libsigcpp()
 
 	./autogen.sh --prefix=$PREFIX
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
@@ -87,8 +81,8 @@ __mm-common()
 
 	./autogen.sh --prefix=$PREFIX
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
@@ -98,8 +92,8 @@ __glibmm()
 
 	./autogen.sh --prefix=$PREFIX
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
@@ -110,8 +104,8 @@ __freetype2()
 	./autogen.sh
 	./configure --prefix=$PREFIX
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
@@ -121,8 +115,8 @@ __expat()
 
 	./configure --prefix=$PREFIX
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
@@ -132,58 +126,8 @@ __libxml2()
 
 	./autogen.sh --prefix=$PREFIX
 	$MAKE_CLEAN
-	make
-	make install
-	ldconfig
-}
-
-__dbus()
-{
-	__cd $BASE_DIR/dbus
-
-	groupadd -g 27 messagebus
-	useradd -c "D-BUS Message Daemon User" \
-		-d /dev/null \
-		-u 27 \
-		-g messagebus \
-		-s /bin/false messagebus
-
-	./autogen.sh --prefix=$PREFIX \
-	./configure --prefix=$PREFIX \
-		--sysconfdir=/etc \
-		--localstatedir=/var \
-		--enable-maintainer-mode \
-		--enable-embedded-tests=no \
-		--enable-modular-tests=no \
-		--enable-tests=no \
-		--enable-installed-tests=no \
-		--enable-stats \
-		--with-dbus-user=messagebus \
-		--enable-dnotify \
-		--enable-x11-autolaunch \
-		--with-x \
-		--disable-Werror
-
-#		--libexecdir=$PREFIX/lib/dbus-1.0 \
-
-	$MAKE_CLEAN
-	make
-	make install
-	ldconfig
-
-	dbus-uuidgen --ensure
-	make install-dbus
-	ldconfig
-}
-
-__dbus-glib()
-{
-	__cd $BASE_DIR/dbus-glib
-	./autogen.sh --prefix=$PREFIX \
-		--enable-maintainer-mode
-	$MAKE_INSTALL
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
@@ -196,19 +140,8 @@ __fontconfig()
 		--without-add-fonts \
 		--docdir=/usr/share/doc/fontconfig
 	$MAKE_CLEAN
-	make
-	make install
-	ldconfig
-}
-
-__freeglut()
-{
-	__cd $BASE_DIR/freeglut
-
-	./configure  --prefix=$XORG_PREFIX
-	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
@@ -219,8 +152,8 @@ __libpng()
 	./autogen.sh
 	./configure --prefix=$PREFIX
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
@@ -230,8 +163,8 @@ __libjpeg8()
 
 	./configure --prefix=$PREFIX
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
@@ -241,8 +174,8 @@ __libtiff()
 
 	./configure --prefix=$PREFIX
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
@@ -250,14 +183,18 @@ __cairo()
 {
 	__cd $BASE_DIR/cairo
 
-	./autogen.sh --prefix=$PREFIX \
-		--enable-tee \
-		--enable-gl \
-		--enable-xcb \
-		--enable-gtk-doc
+	./autogen.sh --prefix=$PREFIX 	\
+		--enable-tee 		\
+		--enable-gl 		\
+		--enable-xcb 		\
+		--enable-gtk-doc	\
+		--enable-xcb-drm	\
+		--enable-glsv2		\
+		--enable-xml
+
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
@@ -267,8 +204,8 @@ __cairomm()
 
 	./autogen.sh --prefix=$PREFIX
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
@@ -279,8 +216,8 @@ __pango()
 	./autogen.sh --prefix=$PREFIX \
 		--sysconfdir=/etc
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
@@ -290,8 +227,8 @@ __pangomm()
 
 	./autogen.sh --prefix=$PREFIX
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
@@ -301,8 +238,8 @@ __atk()
 
 	./autogen.sh --prefix=$PREFIX
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
@@ -312,8 +249,8 @@ __atkmm()
 
 	./autogen.sh --prefix=$PREFIX
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
@@ -323,8 +260,8 @@ __gdk-pixbuf()
 
 	./autogen.sh --prefix=$PREFIX
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
@@ -337,8 +274,8 @@ __gtk2()
 		--with-gdktarget=x11 \
 		--with-x
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
@@ -348,8 +285,8 @@ __gtk3()
 
 	./autogen.sh --prefix=$PREFIX
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
@@ -359,8 +296,8 @@ __gtkmm()
 
 	./autogen.sh --prefix=$PREFIX
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
@@ -369,8 +306,8 @@ __libsigc++2()
 	__cd $BASE_DIR/libsigc++2
 
 	./autogen.sh --prefix=$PREFIX
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
@@ -379,18 +316,18 @@ __libxml2()
 	__cd $BASE_DIR/libxml2
 
 	./autogen.sh --prefix=$PREFIX
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
 __test__()
 {
-
 	exit
 }
 #__test__
 
+#__rem(){
 __libffi
 __libsigc++2
 __libxml2
@@ -406,11 +343,7 @@ __freetype2
 __expat
 __libxml2
 
-__dbus
-__dbus-glib
-
 __fontconfig
-__freeglut
 
 __libpng
 __libjpeg8

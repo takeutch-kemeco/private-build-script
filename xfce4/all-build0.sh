@@ -4,31 +4,26 @@ PREFIX=/usr
 BASE_DIR=$(pwd)
 
 #MAKE_CLEAN=
-MAKE_CLEAN="make clean"
+MAKE_CLEAN="__mk clean"
 
-__cd()
-{
-	echo "------------------------------"
-	echo $1
-	echo "------------------------------"
+. ../common-func/__common-func.sh
 
-	cd $1
-	$DIST_CLEAN
-}
-
-for PACKAGE in $(ls -F | grep / | sed -e "s/$\///")
+for PACKAGE in $(__lsdir)
 do
+	__mes $BASE_DIR/$PACKAGE
 	__cd $BASE_DIR/$PACKAGE
 
 	if [ $? -eq 0 ]
 	then
-		./autogen.sh --prefix=$PREFIX \
+		./autogen.sh --prefix=$PREFIX 	\
 			--enable-maintainer-mode \
-			--enable-debug=no \
-			--enable-vala=yes --enable-introspection=yes
+			--enable-debug=no 	\
+			--enable-vala=yes 	\
+			--enable-introspection=yes
+
 		$MAKE_CLEAN
-		make
-		make install
+		__mk
+		__mk install
 		ldconfig
 	fi
 done
