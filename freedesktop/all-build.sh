@@ -1,6 +1,6 @@
 #!/bin/bash
 
-__BASE_DIR__=$(pwd)
+BASE_DIR=$(pwd)
 PREFIX=/usr
 
 #MAKE_CLEAN=
@@ -8,8 +8,20 @@ MAKE_CLEAN="__mk clean"
 
 . ../common-func/__common-func.sh
 
+__common()
+{
+	__cd $1
+
+	./autogen.sh
+	./configure --prefix=$PREFIX
+
+	__mk
+	__mk install
+	ldconfig
+}
+
 __pciutils() {
-	cd $__BASE_DIR__/pciutils
+	cd $BASE_DIR/pciutils
 	$MAKE_CLEAN
 	__mk PREFIX=$PREFIX ZLIB=no
 	__mk PREFIX=$PREFIX install
@@ -18,7 +30,7 @@ __pciutils() {
 }
 
 __usbutils() {
-	cd $__BASE_DIR__/usbutils-005
+	cd $BASE_DIR/usbutils-005
 	./autogen.sh --prefix=$PREFIX --enable-maintainer-mode
 	$MAKE_CLEAN
 	__mk
@@ -28,7 +40,7 @@ __usbutils() {
 
 __consolekit()
 {
-	cd $__BASE_DIR__/ConsoleKit
+	cd $BASE_DIR/ConsoleKit
 	./autogen.sh --prefix=$PREFIX
 	$MAKE_CLEAN
 	__mk
@@ -38,7 +50,7 @@ __consolekit()
 
 __colord()
 {
-	cd $__BASE_DIR__/colord
+	cd $BASE_DIR/colord
 	./autogen.sh --prefix=$PREFIX --enable-gtk --enable-sane --enable-gtk-doc
 	$MAKE_CLEAN
 	__mk CPPFLAGS="-Wall"
@@ -47,7 +59,7 @@ __colord()
 }
 
 __expat() {
-	cd $__BASE_DIR__/expat
+	cd $BASE_DIR/expat
 	./configure --prefix=$PREFIX
 	$MAKE_CLEAN
 	__mk
@@ -56,7 +68,7 @@ __expat() {
 }
 
 __libva() {
-	cd $__BASE_DIR__/libva
+	cd $BASE_DIR/libva
 	./autogen.sh --prefix=$PREFIX
 	$MAKE_CLEAN
 	__mk
@@ -66,17 +78,26 @@ __libva() {
 
 __intel-driver()
 {
-	cd $__BASE_DIR__/intel-driver
+	cd $BASE_DIR/intel-driver
+
 	./autogen.sh --prefix=$PREFIX
+
 	$MAKE_CLEAN
 	__mk
 	__mk install
+
+	grep "/usr/lib/dri" /etc/ld.so.conf
+	if [ $? -ne 0 ]
+	then
+		echo "/usr/lib/dri" >> /etc/ld.so.conf
+	fi
+
 	ldconfig
 }
 
 __polkit()
 {
-	cd $__BASE_DIR__/polkit
+	cd $BASE_DIR/polkit
 
 	groupadd -fg 28 polkitd
 	useradd -c "PolicyKit Daemon Owner" \
@@ -110,13 +131,13 @@ EOF
 
 __pyxdg()
 {
-	cd $__BASE_DIR__/pyxdg
+	cd $BASE_DIR/pyxdg
 	python setup.py install
 }
 
 __shared-mime-info()
 {
-	cd $__BASE_DIR__/shared-mime-info
+	cd $BASE_DIR/shared-mime-info
 	./autogen.sh --prefix=$PREFIX
 	$MAKE_CLEAN
 	__mk
@@ -126,7 +147,7 @@ __shared-mime-info()
 
 __telepathy-glib()
 {
-	cd $__BASE_DIR__/telepathy-glib
+	cd $BASE_DIR/telepathy-glib
 	./autogen.sh --prefix=$PREFIX --enable-gtk-doc --disable-fatal-warnings
 	$MAKE_CLEAN
 	__mk
@@ -136,7 +157,7 @@ __telepathy-glib()
 
 __telepathy-logger()
 {
-	cd $__BASE_DIR__/telepathy-logger
+	cd $BASE_DIR/telepathy-logger
 	./autogen.sh --prefix=$PREFIX --enable-gtk-doc --disable-fatal-warnings --enable-debug
 	$MAKE_CLEAN
 	__mk
@@ -146,7 +167,7 @@ __telepathy-logger()
 
 __udev()
 {
-	cd $__BASE_DIR__/udev
+	cd $BASE_DIR/udev
 	./configure --prefix=$PREFIX
 	$MAKE_CLEAN
 	__mk
@@ -157,7 +178,7 @@ __udev()
 
 __upower()
 {
-	cd $__BASE_DIR__/upower
+	cd $BASE_DIR/upower
 	./autogen.sh --prefix=$PREFIX
 	$MAKE_CLEAN
 	__mk
@@ -168,7 +189,7 @@ __upower()
 
 __xdg-utils()
 {
-	cd $__BASE_DIR__/xdg-utils
+	cd $BASE_DIR/xdg-utils
 	./configure --prefix=$PREFIX
 	$MAKE_CLEAN
 	__mk
@@ -177,7 +198,7 @@ __xdg-utils()
 }
 
 __desktop-file-utils() {
-	cd $__BASE_DIR__/desktop-file-utils
+	cd $BASE_DIR/desktop-file-utils
 	./autogen.sh --prefix=$PREFIX
 	$MAKE_CLEAN
 	__mk
@@ -194,7 +215,7 @@ __desktop-file-utils() {
 }
 
 __liboil() {
-	cd $__BASE_DIR__/liboil
+	cd $BASE_DIR/liboil
 	./autogen.sh
 	./configure --prefix=/usr
 	$MAKE_CLEAN
@@ -203,11 +224,22 @@ __liboil() {
 	ldconfig
 }
 
+__default-icon-theme()
+{
+	__common $BASE_DIR/default-icon-theme
+}
+
+__tango-icon-theme()
+{
+	__common $BASE_DIR/tango-icon-theme
+}
+
 __test__() {
 	exit
 }
 #__test__
 
+#__rem(){
 __desktop-file-utils
 __pciutils
 __usbutils
@@ -225,4 +257,6 @@ __telepathy-logger
 __upower
 __xdg-utils
 __liboil
+__default-icon-theme
+__tango-icon-theme
 

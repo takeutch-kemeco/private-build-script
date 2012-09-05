@@ -309,7 +309,7 @@ __gcc()
 	                       --enable-threads=posix   \
 	                       --enable-__cxa_atexit    \
 	                       --enable-clocale=gnu     \
-	                       --enable-languages=c,c++ \
+	                       --enable-languages=c,c++,fortran \
 	                       --disable-multilib       \
 	                       --disable-bootstrap      \
 	                       --with-system-zlib

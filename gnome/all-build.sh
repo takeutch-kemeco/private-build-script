@@ -248,8 +248,9 @@ __glib-networking()
 	./autogen.sh --prefix=$PREFIX 	\
             	--libexecdir=/usr/lib/glib-networking \
             	--disable-static \
-            	--without-ca-certificates
-#            	--with-ca-certificates=/etc/ssl/ca-bundle.crt
+            	--with-ca-certificates=/etc/ssl/ca-bundle.crt
+
+#            	--without-ca-certificates
 
 	__mk
 	__mk install
@@ -328,16 +329,22 @@ __libpng()
 
 __cairo()
 {
-	__cd $BASE_DIR/cairo
+        __cd $BASE_DIR/cairo
 
-	./autogen.sh --prefix=$PREFIX	\
-		--disable-static	\
-		--enable-tee		\
-		--enable-xcb
+        ./autogen.sh --prefix=$PREFIX   \
+                --enable-tee            \
+                --enable-gl             \
+                --enable-xcb            \
+                --enable-gtk-doc        \
+                --enable-xcb-drm        \
+                --enable-glsv2          \
+		--enable-xlib-xcb	\
+		--enable-xml
 
-	__mk
-	__mk install
-	ldconfig
+        $MAKE_CLEAN
+        __mk
+        __mk install
+        ldconfig
 }
 
 __pango()
@@ -744,6 +751,19 @@ __pulseaudio()
 
 	__mk
 	__mk install
+
+        grep "/usr/lib/pulseaudio" /etc/ld.so.conf
+        if [ $? -ne 0 ]
+        then
+                echo "/usr/lib/pulseaudio" >> /etc/ld.so.conf
+        fi
+
+        grep "/usr/lib/pulse/modules" /etc/ld.so.conf
+        if [ $? -ne 0 ]
+        then
+                echo "/usr/lib/pulse/modules" >> /etc/ld.so.conf
+        fi
+
 	ldconfig
 }
 
@@ -1250,7 +1270,17 @@ __gnome-shell()
 
 __gnome-themes-standard()
 {
-	__common $BASE_DIR/gnome-themes-standard
+	__cd $BASE_DIR/gnome-themes-standard
+
+	./autogen.sh
+	./configure --prefix=$PREFIX	\
+		--enable-all-themes	\
+		--enable-test-themes	\
+		--enable-placeholders
+
+	__mk
+	__mk install
+	ldconfig
 }
 
 __gnome-doc-utils()
@@ -1446,6 +1476,9 @@ __gtksourceview()
 #__gnome-terminal
 
 #__nautilus
+
+#__gnome-themes-standard
+#__glib-networking
 #exit
 
 

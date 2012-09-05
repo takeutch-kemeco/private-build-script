@@ -67,6 +67,7 @@ git clone git://anongit.freedesktop.org/xorg/lib/libX11
 git clone git://anongit.freedesktop.org/xorg/lib/libXext
 git clone git://anongit.freedesktop.org/xorg/lib/libXevie
 git clone git://anongit.freedesktop.org/xorg/lib/libXfontcache
+git clone git://anongit.freedesktop.org/xorg/lib/libXft
 git clone git://anongit.freedesktop.org/xorg/lib/libFS
 git clone git://anongit.freedesktop.org/xorg/lib/libICE
 git clone git://anongit.freedesktop.org/xorg/lib/libSM

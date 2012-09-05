@@ -102,6 +102,9 @@ __freetype2()
 	__cd $BASE_DIR/freetype2
 
 	./autogen.sh
+
+	sed -i -r 's:.*(#.*SUBPIXEL.*) .*:\1:' include/freetype/config/ftoption.h
+
 	./configure --prefix=$PREFIX
 	$MAKE_CLEAN
 	__mk
@@ -320,6 +323,8 @@ __libxml2()
 	__mk install
 	ldconfig
 }
+
+
 
 __test__()
 {
