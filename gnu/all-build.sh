@@ -1,36 +1,36 @@
 #!/bin/bash
 
-__BASE_DIR__=$(pwd)
+BASE_DIR=$(pwd)
 PREFIX=/usr
 
 MAKE_CLEAN=
 #MAKE_CLEAN="make clean"
 
-__libunistring() {
-	cd $__BASE_DIR__/libunistring
-	./configure --prefix=$PREFIX
-	$MAKE_CLEAN
-	make
-	make install
-	ldconfig
-}
-__guile()
+. ../common-func/__common-func.sh
+
+__common()
 {
-	cd $__BASE_DIR__/guile
-	./autogen.sh --prefix=$PREFIX
+	__cd $1
+
+	./autogen.sh
+	./configure --prefix=$PREFIX
+
 	$MAKE_CLEAN
-	make
-	make install
+	__mk
+	__mk install
 	ldconfig
 }
 
+__libunistring() {
+	__common $BASE_DIR/libunistring
+}
+__guile()
+{
+	__common $BASE_DIR/guile
+}
+
 __gnutls() {
-	cd $__BASE_DIR__/gnutls
-	./configure --prefix=$PREFIX
-	$MAKE_CLEAN
-	make
-	make install
-	ldconfig
+	__common $BASE_DIR/gnutls
 }
 
 ### memo ###
@@ -38,33 +38,20 @@ __gnutls() {
 # (tex環境が万全でない場合)
 # だが、エラーが出てもマニュアルもビルドに失敗してるだけなので、make install は通る。気にしなくていい。
 __gperf() {
-	cd $__BASE_DIR__/gperf
-	./configure --prefix=$PREFIX
-	$MAKE_CLEAN
-	make
-	make install
-	ldconfig
+	__common $BASE_DIR/gperf
 }
 
 __ed() {
-	cd $__BASE_DIR__/ed
-	./configure --prefix=$PREFIX
-	$MAKE_CLEAN
-	make
-	make install
-	ldconfig
+	__common $BASE_DIR/ed
 }
 
 __attr() {
-	cd $__BASE_DIR__/attr
-	./configure --prefix=$PREFIX
-	$MAKE_CLEAN
-	make
+	__common $BASE_DIR/attr
 
-	make install install-dev
+	__mk install install-dev
 
 ### 自分でリンクを張る必要があるが、安全にやる方法が思いつかない（別OS上からやるしかない）
-#	cp -f $__BASE_DIR__/attr/libattr/.libs/libattr.so $PREFIX/lib/libattr.so.1.1.1
+#	cp -f $BASE_DIR/attr/libattr/.libs/libattr.so $PREFIX/lib/libattr.so.1.1.1
 #	ln -sf $PREFIX/lib/libattr.so.1.1.1 $PREFIX/lib/libattr.so.1
 #	ln -sf $PREFIX/lib/libattr.so.1 $PREFIX/lib/libattr.so
 #	chmod -v 0755 $PREFIX/lib/libattr.so.*
@@ -73,12 +60,9 @@ __attr() {
 }
 
 __acl() {
-	cd $__BASE_DIR__/acl
-	./configure --prefix=$PREFIX
-	$MAKE_CLEAN
-	make
+	__common $BASE_DIR/acl
 
-	make install install-dev install-lib
+	__mk install install-dev install-lib
 	chmod -v 0755 $PREFIX/lib/libacl.so.*
 	rm $PREFIX/lib/libacl.so
 	ln -s libacl.so.1 $PREFIX/lib/libacl.so
@@ -88,27 +72,22 @@ __acl() {
 }
 
 __indent() {
-	cd $__BASE_DIR__/indent
-	./configure --prefix=/usr
-	$MAKE_CLEAN
-	make
-	make install
-	ldconfig
+	__common $BASE_DIR/indent
 }
 
 __test__()
 {
-
 	exit
 }
 #__test__
 
+#__rem(){
 __libunistring
 __guile
 __gnutls
 __ed
 __gperf
 __acl
-#__attr
+__attr
 __indent
 

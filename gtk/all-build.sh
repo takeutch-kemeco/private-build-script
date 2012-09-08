@@ -12,14 +12,22 @@ DIST_CLEAN=
 
 . ../common-func/__common-func.sh
 
-__libffi()
+__common()
 {
-	__cd $BASE_DIR/libffi
+	__cd $1
 
+	./autogen.sh
 	./configure --prefix=$PREFIX
-	$MAKE_CLEAN
+
 	__mk
 	__mk install
+	ldconfig
+}
+
+__libffi()
+{
+	__common $BASE_DIR/libffi
+
 	cp -f $BASE_DIR/libffi/i686-pc-linux-gnu/include/ffi.h $PREFIX/include/
 	cp -f $BASE_DIR/libffi/i686-pc-linux-gnu/include/ffitarget.h $PREFIX/include/
 	ldconfig
@@ -27,13 +35,7 @@ __libffi()
 
 __pth()
 {
-	__cd $BASE_DIR/pth-2.0.7
-
-	./configure --prefix=$PREFIX
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
+	__common $BASE_DIR/pth
 }
 
 __glib()
@@ -43,7 +45,9 @@ __glib()
 	./autogen.sh
 	PCRE_LIBS=-lpcre PCRE_CFLAGS=" " \
 	LIBFFI_LIBS=-lffi LIBFFI_CFLAGS=" " \
-	./configure --prefix=$PREFIX --sysconfdir=/etc --with-pcre=system
+	./configure --prefix=$PREFIX	\
+		--sysconfdir=/etc 	\
+		--with-pcre=system
 
 	$MAKE_CLEAN
 	__mk
@@ -55,7 +59,8 @@ __gobject-introspection()
 {
 	__cd $BASE_DIR/gobject-introspection
 
-	./autogen.sh --prefix=$PREFIX	\
+	./autogen.sh
+	./configure  --prefix=$PREFIX	\
 		--disable-tests
 
 	$MAKE_CLEAN
@@ -66,35 +71,17 @@ __gobject-introspection()
 
 __libsigcpp()
 {
-	__cd $BASE_DIR/libsigc++2
-
-	./autogen.sh --prefix=$PREFIX
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
+	__common $BASE_DIR/libsigc++2
 }
 
 __mm-common()
 {
-	__cd $BASE_DIR/mm-common
-
-	./autogen.sh --prefix=$PREFIX
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
+	__common $BASE_DIR/mm-common
 }
 
 __glibmm()
 {
-	__cd $BASE_DIR/glibmm
-
-	./autogen.sh --prefix=$PREFIX
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
+	__common $BASE_DIR/glibmm
 }
 
 __freetype2()
@@ -106,6 +93,7 @@ __freetype2()
 	sed -i -r 's:.*(#.*SUBPIXEL.*) .*:\1:' include/freetype/config/ftoption.h
 
 	./configure --prefix=$PREFIX
+
 	$MAKE_CLEAN
 	__mk
 	__mk install
@@ -114,34 +102,30 @@ __freetype2()
 
 __expat()
 {
-	__cd $BASE_DIR/expat
+	cmake .
+	aclocal --force
+	libtoolize
+	autoheader
+	automake -acf
+	autoconf
 
-	./configure --prefix=$PREFIX
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
+	__common $BASE_DIR/expat
 }
 
 __libxml2()
 {
-	__cd $BASE_DIR/libxml2
-
-	./autogen.sh --prefix=$PREFIX
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
+	__common $BASE_DIR/libxml2
 }
 
 __fontconfig()
 {
 	__cd $BASE_DIR/fontconfig
 
-	./autogen.sh --prefix=$PREFIX \
-		--disable-docs \
-		--without-add-fonts \
+	./autogen.sh --prefix=$PREFIX 	\
+		--disable-docs 		\
+		--without-add-fonts 	\
 		--docdir=/usr/share/doc/fontconfig
+
 	$MAKE_CLEAN
 	__mk
 	__mk install
@@ -150,36 +134,17 @@ __fontconfig()
 
 __libpng()
 {
-	__cd $BASE_DIR/libpng
-
-	./autogen.sh
-	./configure --prefix=$PREFIX
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
+	__common $BASE_DIR/libpng
 }
 
 __libjpeg8()
 {
-	__cd $BASE_DIR/jpeg-8d
-
-	./configure --prefix=$PREFIX
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
+	__common $BASE_DIR/jpeg-8d
 }
 
 __libtiff()
 {
-	__cd $BASE_DIR/tiff-4.0.0
-
-	./configure --prefix=$PREFIX
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
+	__common $BASE_DIR/tiff
 }
 
 __cairo()
@@ -203,82 +168,63 @@ __cairo()
 
 __cairomm()
 {
-	__cd $BASE_DIR/cairomm
-
-	./autogen.sh --prefix=$PREFIX
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
+	__common $BASE_DIR/cairomm
 }
 
 __pango()
 {
-	__cd $BASE_DIR/pango
-
-	./autogen.sh --prefix=$PREFIX \
-		--sysconfdir=/etc
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
+	__common $BASE_DIR/pango
 }
 
 __pangomm()
 {
-	__cd $BASE_DIR/pangomm
-
-	./autogen.sh --prefix=$PREFIX
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
+	__common $BASE_DIR/pangomm
 }
 
 __atk()
 {
-	__cd $BASE_DIR/atk
-
-	./autogen.sh --prefix=$PREFIX
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
+	__common $BASE_DIR/atk
 }
 
 __atkmm()
 {
-	__cd $BASE_DIR/atkmm
-
-	./autogen.sh --prefix=$PREFIX
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
+	__common $BASE_DIR/atkmm
 }
 
 __gdk-pixbuf()
 {
-	__cd $BASE_DIR/gdk-pixbuf
-
-	./autogen.sh --prefix=$PREFIX
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
+	__common $BASE_DIR/gdk-pixbuf
 }
 
 __gtk2()
 {
 	__cd $BASE_DIR/gtk+-2.24
 
-	./configure --prefix=$PREFIX \
-		--with-xinput=yes \
-		--with-gdktarget=x11 \
+	./configure --prefix=$PREFIX 	\
+		--sysconfdir=/etc	\
+		--with-xinput=yes 	\
+		--with-gdktarget=x11 	\
 		--with-x
+
 	$MAKE_CLEAN
 	__mk
 	__mk install
+
+	ls /etc/gtk-2.0/gtk.immodules
+	if [ $? -ne 0 ]
+	then
+		gtk-query-immodules-2.0 > /etc/gtk-2.0/gtk.immodules
+	fi
+
+	ls /etc/gtk-2.0/gtkrc
+	if [ $? -ne 0 ]
+	then
+cat > /etc/gtk-2.0/gtkrc << "EOF"
+include "/usr/share/themes/Clearlooks/gtk-2.0/gtkrc"
+gtk-icon-theme-name = "Mist"
+EOF
+	fi
+
 	ldconfig
 }
 
@@ -286,7 +232,12 @@ __gtk3()
 {
 	__cd $BASE_DIR/gtk+
 
-	./autogen.sh --prefix=$PREFIX
+	./autogen.sh
+	./configure --prefix=$PREFIX	\
+		--sysconfdir=/etc	\
+		--enable-x11-backend	\
+		--enable-broadway-backend
+
 	$MAKE_CLEAN
 	__mk
 	__mk install
@@ -295,33 +246,22 @@ __gtk3()
 
 __gtkmm()
 {
-	__cd $BASE_DIR/gtkmm
+	__common $BASE_DIR/gtkmm
+}
 
-	./autogen.sh --prefix=$PREFIX
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
+__gtkmm2()
+{
+	__common $BASE_DIR/gtkmm-2.24
 }
 
 __libsigc++2()
 {
-	__cd $BASE_DIR/libsigc++2
-
-	./autogen.sh --prefix=$PREFIX
-	__mk
-	__mk install
-	ldconfig
+	__common $BASE_DIR/libsigc++2
 }
 
 __libxml2()
 {
-	__cd $BASE_DIR/libxml2
-
-	./autogen.sh --prefix=$PREFIX
-	__mk
-	__mk install
-	ldconfig
+	__common $BASE_DIR/libxml2
 }
 
 
@@ -362,6 +302,7 @@ __atk
 __atkmm
 __gdk-pixbuf
 __gtk2
+__gtkmm2
 __gtk3
 __gtkmm
 

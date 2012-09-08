@@ -869,7 +869,14 @@ __gvfs()
 
 __gnome-icon-theme()
 {
-	__common $BASE_DIR/gnome-icon-theme
+	__cd $BASE_DIR/gnome-icon-theme
+	
+	./autogen.sh
+	./configure  --prefix=/usr --enable-all-themes --enable-test-themes --enable-placeholders
+
+	__mk
+	__mk install
+	ldconfig
 }
 
 __gnome-icon-theme-extras()

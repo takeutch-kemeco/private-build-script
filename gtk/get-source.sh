@@ -65,6 +65,10 @@ git clone git://git.gnome.org/gtk+
 
 git clone git://git.gnome.org/gtkmm
 
+wget -c ftp://ftp.gnome.org/pub/gnome/sources/gtkmm/2.24/gtkmm-2.24.2.tar.xz
+xz -dc gtkmm-2.24.2.tar.xz | tar xvf -
+ln -s gtkmm-2.24.2 gtkmm-2.24
+
 git clone git://git.gnome.org/gobject-introspection
 
 git clone git://git.gnome.org/mm-common
