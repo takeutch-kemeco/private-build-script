@@ -649,6 +649,11 @@ __yelp-tools()
 	__common $BASE_DIR/yelp-tools
 }
 
+__gsettings-desktop-schemas()
+{
+	__common $BASE_DIR/gsettings-desktop-schemas
+}
+
 __gnome-desktop()
 {
 	__common $BASE_DIR/gnome-desktop
@@ -1463,33 +1468,6 @@ __gtksourceview()
 	__common $BASE_DIR/gtksourceview
 }
 
-
-
-#__librest
-#__glib-networking
-#__gnome-keyring
-#__gnome-shell
-
-#__dhcpcd
-#__NetworkManager
-
-#__mutter
-#__gnome-shell
-
-#__libgcrypt
-#__cups
-#__folks
-
-#__gnome-terminal
-
-#__nautilus
-
-#__gnome-themes-standard
-#__glib-networking
-#exit
-
-
-
 #__rem() {
 __gobject-introspection
 __nspr
@@ -1541,6 +1519,7 @@ __itstool
 __yelp-xsl
 __yelp
 __yelp-tools
+__gsettings-desktop-schemas
 __gnome-desktop
 __libogg
 __libvorbis

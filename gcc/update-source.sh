@@ -2,21 +2,39 @@
 
 BASE_DIR=$(pwd)
 
-cd $BASE_DIR/zlib
-git pull
+. ../common-func/__common-func.sh
 
-cd $BASE_DIR/mpfr
-svn update
+for n in $(__lsdir)
+do
+	cd $BASE_DIR/$n
+	if [ $? -eq 0 ]
+	then
+		echo $n
+		
+		ls .git
+		if [ $? -eq 0 ]
+		then
+			git pull
+		fi
 
-cd $BASE_DIR/gmp
-hg pull
-hg update
+		ls .svn
+		if [ $? -eq 0 ]
+		then
+			svn update
+		fi
 
-cd $BASE_DIR/mpc
-svn update
+		ls .hg
+		if [ $? -eq 0 ]
+		then
+			hg pull
+			hg update
+		fi
 
-cd $BASE_DIR/gcc
-svn update
+		ls CVS
+		if [ $? -eq 0 ]
+		then
+			cvs update
+		fi
+	fi
+done
 
-cd $BASE_DIR/gdb
-svn update

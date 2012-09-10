@@ -1,134 +1,130 @@
 #!/bin/bash
 
 BASE_DIR=$(pwd)
+SRC=$BASE_DIR
+
 PREFIX=/usr
+
 #DIST_CLEAN=
 DIST_CLEAN="make distclean"
 #MAKE_CLEAN=
 MAKE_CLEAN="make clean"
-#CFLAGS=""
 
-__cd()
-{
-	echo "------------------------------"
-	echo $1
-	echo "------------------------------"
+. ../common-func/__common-func.sh
 
-	cd $1
-	$DIST_CLEAN
-}
-
-build-zlib()
-{
-	__cd $BASE_DIR/zlib
-
-	CFLAGS='-mstackrealign -fPIC -O4' ./configure --prefix=$PREFIX
-	$MAKE_CLEAN
-	make
-	make install
-
-	mv -v $PREFIX/lib/libz.so.* /lib
-	ln -sfv /lib/libz.so.1 $PREFIX/lib/libz.so
-	ldconfig
-}
-
-build-mpfr()
+__mpfr()
 {
 	__cd $BASE_DIR/mpfr
 
-	aclocal
-	libtoolize
-	automake -a -c -f
-	autoconf
-	./configure --prefix=$PREFIX --enable-thread-safe
+	$DIST_CLEAN
 	$MAKE_CLEAN
-	make
-	make install
+
+	aclocal --force
+	libtoolize --force
+	automake -acf
+	autoconf
+	
+	./configure --prefix=$PREFIX	\
+		--enable-thread-safe	\
+		--docdir=/usr/share/doc/mpfr
+
+	__mk
+	__mk install
+
+	__mk html
+	__mk install-html
+
 	ldconfig
 }
 
-build-gmp()
+__gmp()
 {
 	__cd $BASE_DIR/gmp
 
-	./.bootstrap
-	./configure --prefix=$PREFIX --enable-cxx --enable-maintainer-mode ABI="32"
+	$DIST_CLEAN
 	$MAKE_CLEAN
-	make
-	make install
+
+	./.bootstrap
+	ABI="32" ./configure --prefix=$PREFIX \
+		--enable-cxx		\
+		--enable-mpbsd		\
+		--enable-maintainer-mode
+
+	__mk
+	__mk install
+
+	mkdir -v /usr/share/doc/gmp
+	cp -v doc/{isa_abi_headache,configuration} doc/*.html /usr/share/doc/gmp
+
 	ldconfig 
 }
 
-build-mpc()
+__mpc()
 {
 	__cd $BASE_DIR/mpc
 
-	aclocal --install -I m4
+	$DIST_CLEAN
+	$MAKE_CLEAN
+
+	aclocal --force -I m4
 	libtoolize --force
 	autoheader
 	automake -acf
 	autoconf
 
 	./configure --prefix=$PREFIX
-	$MAKE_CLEAN
-	make
+
+	__mk
 	make install
 	ldconfig
 }
 
-build-gcc()
+__gcc()
 {
-	rm -rf $BASE_DIR/build-gcc
-	mkdir -p $BASE_DIR/build-gcc
+	__cdbt
 
-	__cd $BASE_DIR/build-gcc
+	../gcc/autogen.sh
+	../gcc/configure --prefix=$PREFIX \
+		--libexecdir=/usr/lib	\
+	        --enable-shared    	\
+	        --enable-threads=posix	\
+	        --enable-__cxa_atexit 	\
+	        --enable-clocale=gnu  	\
+	        --enable-languages=c,c++,fortran \
+	        --disable-multilib    	\
+	        --disable-bootstrap   	\
+	        --with-system-zlib
 
-	$BASE_DIR/gcc/configure \
-		--prefix=$PREFIX \
-		--libexecdir=$PREFIX/lib \
-		--enable-shared \
-		--enable-threads=posix \
-		--enable-__cxa_atexit \
-		--enable-clocale=gnu \
-		--enable-languages=c,c++ \
-		--disable-multilib \
-		--disable-bootstrap \
-		--with-system-zlib
-#		--enable-lto
-
-	make
-	make install
-
-	# ???
-#	rm $PREFIX/lib/libstdc++.so.*-gdb.py
-
+	__mk
+	__mk install
 	ldconfig
-	cd $BASE_DIR
 }
 
-build-gdb()
+__gdb()
 {
 	__cd $BASE_DIR/gdb
 
-	./configure --prefix=$PREFIX --disable-werror
+	$DIST_CLEAN
 	$MAKE_CLEAN
-	make
-	make install
+
+	./autogen.sh
+	./configure --prefix=$PREFIX	\
+		--disable-werror
+
+	__mk
+	__mk install
 	ldconfig
-	cd $BASE_DIR
 }
 
-test()
+__test()
 {
-build-gcc
 	exit
 }
-test
+#__test
 
-build-zlib
-build-gmp
-build-mpfr
-build-mpc
-build-gcc
-build-gdb
+__gmp
+__mpfr
+__mpc
+__gcc
+#__gdb
 
