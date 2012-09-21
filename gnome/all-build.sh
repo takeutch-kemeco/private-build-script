@@ -27,9 +27,6 @@ __nspr()
 {
 	__cd $BASE_DIR/nspr/mozilla/nsprpub
 
-	sed -ri 's#^(RELEASE_BINS =).*#\1#' pr/src/misc/Makefile.in
-	sed -i 's#$(LIBRARY) ##' config/rules.mk
-
 	./configure --prefix=$PREFIX	\
 		--with-mozilla		\
 		--with-pthreads     	\
@@ -1057,7 +1054,6 @@ __nss()
 {
 	__cd $BASE_DIR/nss
 
-	patch -Np1 -i ../nss-3.13.5-standalone-1.patch
 	cd mozilla/security/nss
 	make nss_build_all BUILD_OPT=1	\
   		NSPR_INCLUDE_DIR=/usr/include/nspr \
@@ -1321,7 +1317,10 @@ __nautilus()
             	--disable-nst-extension	\
             	--disable-packagekit	\
 		--enable-exif=no	\
-		--enable-more-warnings=no
+		--enable-more-warnings=no \
+		--enable-libexif=no 	\
+		--enable-xmp=no		\
+		--enable-tracker=no
 
 	__mk
 	__mk install

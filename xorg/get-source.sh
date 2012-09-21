@@ -99,6 +99,7 @@ git clone git://anongit.freedesktop.org/xorg/lib/libdmx
 git clone git://anongit.freedesktop.org/xorg/lib/libpciaccess
 git clone git://anongit.freedesktop.org/xorg/lib/libxkbfile
 git clone git://anongit.freedesktop.org/xorg/lib/libxkbui
+git clone git://anongit.freedesktop.org/xorg/lib/libxkbcommon
 cd $__BASE_DIR__
 
 mkdir -p mesa

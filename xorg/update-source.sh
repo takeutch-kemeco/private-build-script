@@ -1,280 +1,192 @@
 #!/bin/bash
 
-__BASE_DIR__=$(pwd)
+BASE_DIR=$(pwd)
 
-util_macros()
+. ../common-func/__common-func.sh
+
+__common()
 {
-	cd macros
-
+	__cd $1
 	git pull
-
-	cd $__BASE_DIR__
 }
 
-proto()
+__util_macros()
 {
-	cd proto
+	__common $BASE_DIR/macros
+}
 
-	__PROTO_BASE_DIR__=$__BASE_DIR__/proto
-	for package in $(ls)
+__proto()
+{
+	PROTO_BASE_DIR=$BASE_DIR/proto
+	__cd $PROTO_BASE_DIR
+
+	for package in $(__lsdir)
 	do
-		cd $__PROTO_BASE_DIR__/$package
-		if [ $? -eq 0 ]
-		then
-			git pull
-		fi
+		__common $PROTO_BASE_DIR/$package
 	done
-
-	cd $__BASE_DIR__
 }
 
-fontutil()
+__fontutil()
 {
-	cd fontutil
-
-	git pull
-
-	cd $__BASE_DIR__
+	__common $BASE_DIR/fontutil
 }
 
-makedepend()
+__makedepend()
 {
-	cd makedepend
-
-	git pull
-
-	cd $__BASE_DIR__
+	__common $BASE_DIR/makedepend
 }
 
-libXau()
+__libXau()
 {
-	cd libXau
-
-	git pull
-
-	cd $__BASE_DIR__
+	__common $BASE_DIR/libXau
 }
 
-libXdmcp()
+__libXdmcp()
 {
-	cd libXdmcp
-
-	git pull
-
-	cd $__BASE_DIR__
+	__common $BASE_DIR/ libXdmcp
 }
 
-pthread-stubs()
+__pthread-stubs()
 {
-	cd pthread-stubs
-
-	git pull
-
-	cd $__BASE_DIR__
+	__common $BASE_DIR/pthread-stubs
 }
 
-xcb-proto()
+__xcb-proto()
 {
-	cd xcb/proto
-
-	git pull
-
-	cd $__BASE_DIR__
+	__common $BASE_DIR/xcb/proto
 }
 
-libxcb()
+__libxcb()
 {
-	cd xcb/libxcb
-	
-	git pull
-
-	cd $__BASE_DIR__
+	__common $BASE_DIR/xcb/libxcb
 }
 
-libs()
+__libs()
 {
-	cd libs
+	LIBS_BASE_DIR=$BASE_DIR/libs
+	__cd $LIBS_BASE_DIR
 
-	__LIBS_BASE_DIR__=$__BASE_DIR__/libs
-	for package in $(ls)
+	for package in $(__lsdir)
 	do
-		cd $__LIBS_BASE_DIR__/$package
-		if [ $? -eq 0 ]
-		then
-			git pull
-		fi
+		__common $LIBS_BASE_DIR/$package
 	done
-
-	cd $__BASE_DIR__
 }
 
-xcb-util-common-m4()
+__xcb-util-common-m4()
 {
-	cd xcb/util-common-m4
-	
-	git pull
-
-	cd $__BASE_DIR__
+	__common $BASE_DIR/xcb/util-common-m4
 }
 
-xcb-util()
+__xcb-util()
 {
-	cd xcb/util
-	
-	git pull
-
-	cd $__BASE_DIR__
+	__common $BASE_DIR/xcb/util
 }
 
-xcb-util-image()
+__xcb-util-image()
 {
-	cd xcb/util-image
-	
-	git pull
-
-	cd $__BASE_DIR__
+	__common $BASE_DIR/xcb/util-image
 }
 
-xcb-util-keysyms()
+__xcb-util-keysyms()
 {
-	cd xcb/util-keysyms
-	
-	git pull
-
-	cd $__BASE_DIR__
+	__common $BASE_DIR/xcb/util-keysyms
 }
 
-xcb-util-renderutil()
+__xcb-util-renderutil()
 {
-	cd xcb/util-renderutil
-	
-	git pull
-
-	cd $__BASE_DIR__
+	__common $BASE_DIR/xcb/util-renderutil
 }
 
-xcb-util-wm()
+__xcb-util-wm()
 {
-	cd xcb/util-wm
-	
-	git pull
-
-	cd $__BASE_DIR__
+	__common $BASE_DIR/xcb/util-wm
 }
 
-mesa()
+__mesa()
 {
-	cd mesa/mesa
-	
-	git pull
-
-	cd $__BASE_DIR__
+	__common $BASE_DIR/mesa/mesa
 }
 
-mesa-drm()
+__mesa-drm()
 {
-	cd mesa/drm
-	
-	git pull
-
-	cd $__BASE_DIR__
+	__common $BASE_DIR/mesa/drm
 }
 
-apps()
+__apps()
 {
-	cd apps
+	APPS_BASE_DIR=$BASE_DIR/apps
+	__cd $APPS_BASE_DIR
 
-	__APPS_BASE_DIR__=$__BASE_DIR__/apps
-	for package in $(ls)
+	for package in $(__lsdir)
 	do
-		cd $__APPS_BASE_DIR__/$package
-		if [ $? -eq 0 ]
-		then
-			git pull
-		fi
+		__common $APPS_BASE_DIR/$package
 	done
-
-	cd $__BASE_DIR__
 }
 
-xcursor-themes()
+__xcursor-themes()
 {
 	echo
 }
 
-fonts()
+__fonts()
 {
 	echo
 }
 
-xkeyboard-config()
+__xkeyboard-config()
 {
-	cd xkeyboard-config
-	
-	git pull
-
-	cd $__BASE_DIR__
+	__common $BASE_DIR/xkeyboard-config
 }
 
-xserver()
+__xserver()
 {
-	cd xserver
-	
-	git pull
-
-	cd $__BASE_DIR__
+	__common $BASE_DIR/xserver
 }
 
-driver()
+__driver()
 {
-	cd driver
+	DRIVER_BASE_DIR=$BASE_DIR/driver
+	cd $DRIVER_BASE_DIR
 
-	__DRIVER_BASE_DIR__=$__BASE_DIR__/driver
-	for package in $(ls)
+	for package in $(__lsdir)
 	do
-		cd $__DRIVER_BASE_DIR__/$package
-		if [ $? -eq 0 ]
-		then
-			git pull
-		fi
+		__common $DRIVER_BASE_DIR/$package
 	done
-
-	cd $__BASE_DIR__
 }
 
-xterm()
+__xterm()
 {
         #NULL
         echo
 }
 
-util_macros
-proto
-fontutil
-makedepend
-libXau
-libXdmcp
-pthread-stubs
+__util_macros
+__proto
+__fontutil
+__makedepend
+__libXau
+__libXdmcp
+__pthread-stubs
 
-xcb-proto
-libxcb
+__xcb-proto
+__libxcb
 
-libs
+__libs
 
-xcb-util
-xcb-util-image
-xcb-util-keysyms
-xcb-util-renderutil
-xcb-util-wm
+__xcb-util
+__xcb-util-image
+__xcb-util-keysyms
+__xcb-util-renderutil
+__xcb-util-wm
 
-mesa
-mesa-drm
+__mesa
+__mesa-drm
 
-apps
-xcursor-themes
-fonts
-xkeyboard-config
-xserver
-driver
-xterm
+__apps
+__xcursor-themes
+__fonts
+__xkeyboard-config
+__xserver
+__driver
+__xterm
 

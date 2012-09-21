@@ -18,13 +18,6 @@ DIST_CLEAN=
 
 . ../common-func/__common-func.sh
 
-__cd()
-{
-	__mes $1
-	cd $1
-	$DIST_CLEAN
-}
-
 __util_macros()
 {
 	__cd $BASE_DIR/macros
@@ -41,7 +34,7 @@ __proto()
 	__cd $BASE_DIR/proto
 
 	__PROTO_BASE_DIR__=$BASE_DIR/proto
-	for package in $(ls)
+	for package in $(__lsdir)
 	do
 		__cd $__PROTO_BASE_DIR__/$package
 		if [ $? -eq 0 ]
@@ -133,21 +126,37 @@ __libxcb()
 	ldconfig
 }
 
+__libxkbcommon()
+{
+	__cd $BASE_DIR/libs/libxkbcommon
+
+	./autogen.sh $XORG_CONFIG --with-xkb-config-root=/usr/share/X11/xkb
+	$MAKE_CLEAN
+	__mk
+	__mk install
+	ldconfig
+}
+
 __libs()
 {
 	__cd $BASE_DIR/libs
 
 	__LIBS_BASE_DIR__=$BASE_DIR/libs
-	for package in $(ls)
+	for package in $(__lsdir)
 	do
-		__cd $__LIBS_BASE_DIR__/$package
-		if [ $? -eq 0 ]
+		if [ $package = "libxkbcommon" ]
 		then
-			./autogen.sh $XORG_CONFIG
-			$MAKE_CLEAN
-			__mk
-			__mk install
-			ldconfig
+			__libxkbcommon
+		else
+			__cd $__LIBS_BASE_DIR__/$package
+			if [ $? -eq 0 ]
+			then
+				./autogen.sh $XORG_CONFIG
+				$MAKE_CLEAN
+				__mk
+				__mk install
+				ldconfig
+			fi
 		fi
 	done
 }
@@ -243,7 +252,7 @@ __mesa()
 	__cd $BASE_DIR/mesa/mesa
 
 	./autogen.sh $XORG_CONFIG \
-		--enable-texture-float
+		--enable-texture-float \
 		--enable-gles1 \
 		--enable-gles2 \
 		--enable-xa \
@@ -251,7 +260,7 @@ __mesa()
 		--enable-shared-dricore \
 		--enable-glx-tls \
 		--with-gallium-drivers=i915 \
-		--with-dri-drivers=i965 \
+		--with-dri-drivers=i965
 
 #		--enable-xorg \
 #		--with-x \
@@ -276,7 +285,7 @@ __data()
 	__cd $BASE_DIR/data
 
 	__SUB_BASE_DIR__=$BASE_DIR/data
-	for package in $(ls)
+	for package in $(__lsdir)
 	do
 		__cd $__SUB_BASE_DIR__/$package
 		if [ $? -eq 0 ]
@@ -297,7 +306,7 @@ __apps()
 	__cd $BASE_DIR/apps
 
 	__SUB_BASE_DIR__=$BASE_DIR/apps
-	for package in $(ls)
+	for package in $(__lsdir)
 	do
 		__cd $__SUB_BASE_DIR__/$package
 		if [ $? -eq 0 ]
@@ -342,7 +351,7 @@ __fonts()
 
 	__SUB_BASE_DIR__=$BASE_DIR/fonts
 	SRC=$__SUB_BASE_DIR__
-	for __package in $(ls)
+	for __package in $(__lsdir)
 	do
 		package=$(echo $__package | sed -e "s/\.tar\..*$//g")
 		__dcd $__SUB_BASE_DIR__/$package
@@ -392,7 +401,7 @@ __driver()
 	__cd $BASE_DIR/driver
 
 	__DRIVER_BASE_DIR__=$BASE_DIR/driver
-	for package in $(ls)
+	for package in $(__lsdir)
 	do
 		__cd $__DRIVER_BASE_DIR__/$package
 		if [ $? -eq 0 ]
@@ -467,7 +476,7 @@ __test__()
 }
 #__test__
 
-#__rem(){
+__rem(){
 __util_macros
 __proto
 __makedepend
@@ -489,6 +498,7 @@ __xcb-util-renderutil
 __xcb-util-wm
 
 __mesa-drm
+}
 __mesa
 
 __data

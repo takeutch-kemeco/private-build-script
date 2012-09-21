@@ -126,5 +126,5 @@ __gmp
 __mpfr
 __mpc
 __gcc
-#__gdb
+__gdb
 
