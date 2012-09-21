@@ -476,7 +476,7 @@ __test__()
 }
 #__test__
 
-__rem(){
+#__rem(){
 __util_macros
 __proto
 __makedepend
@@ -498,7 +498,6 @@ __xcb-util-renderutil
 __xcb-util-wm
 
 __mesa-drm
-}
 __mesa
 
 __data
