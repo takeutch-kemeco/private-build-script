@@ -9,165 +9,260 @@ MAKE_CLEAN="make clean"
 #DIST_CLEAN=
 DIST_CLEAN="make distclean"
 
-__libav()
-{
-	cd $BASE_DIR/libav
-
-	$DIST_CLEAN
-	./configure --prefix=/usr --enable-shared --enable-gpl
-	$MAKE_CLEAN
-	make
-	make install
-	ldconfig
-
-	cd $BASE_DIR
-}
+. ../common-func/__common-func.sh
 
 __common()
 {
-	cd $BASE_DIR/common
-	$DIST_CLEAN
+	__cd $1
 
-	cd $BASE_DIR
+	$DIST_CLEAN
+	./autogen.sh
+	./configure --prefix=$PREFIX
+
+	$MAKE_CLEAN
+	__mk
+	__mk install
+	ldconfig
+}
+
+__gst-clean()
+{
+	echo
+}
+
+#__gst-clean()
+{
+	ls .git
+	if [ $? -eq 0 ]
+	then
+		rm * -rf
+		git clone . b
+		mv b/* .
+		rm b -rf
+	fi
+}
+
+__ogg()
+{
+	__common $BASE_DIR/ogg
+}
+
+__vorbis()
+{
+	__common $BASE_DIR/vorbis
+}
+
+__theora()
+{
+	__common $BASE_DIR/theora
+}
+
+__theora-tools()
+{
+	__common $BASE_DIR/theora-tools
+}
+
+__xvidcore()
+{
+	__common $BASE_DIR/xvidcore/build/generic
+}
+
+__x264()
+{
+	__common $BASE_DIR/x264
+}
+
+__soundtouch()
+{
+	__common $BASE_DIR/soundtouch/trunk
+}
+
+__libvpx()
+{
+	mkdir -p $BASE_DIR/libvpx-build
+
+	__cd $BASE_DIR/libvpx-build
+
+	$DIST_CLEAN
+	../libvpx/autogen.sh
+	../libvpx/configure --prefix=$PREFIX \
+		--enable-shared
+
+	$MAKE_CLEAN
+	__mk
+	__mk install
+	ldconfig
+}
+
+__flac()
+{
+	__common $BASE_DIR/flac
+}
+
+__faad2()
+{
+	__common $BASE_DIR/faad2
+}
+
+__faac()
+{
+	__common $BASE_DIR/faac
+}
+
+__libav()
+{
+	__cd $BASE_DIR/libav
+
+	$DIST_CLEAN
+	./autogen.sh
+	./configure --prefix=/usr --enable-shared --enable-gpl
+	$MAKE_CLEAN
+	__mk
+	__mk install
+	ldconfig
 }
 
 __gstreamer-core()
 {
-	cd $BASE_DIR/gstreamer
+	__cd $BASE_DIR/gstreamer
+
+	__gst-clean
 
 	$DIST_CLEAN
-	./autogen.sh --prefix=$PREFIX \
+	./autogen.sh
+	./configure --prefix=$PREFIX \
 		--enable-maintainer-mode \
 		--disable-gst-debug \
 		--disable-debug \
 		--disable-fatal-warnings \
 		--enable-shared
+
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $BASE_DIR
 }
 
 __gst-plugins-base()
 {
-	cd $BASE_DIR/gst-plugins-base
+	__cd $BASE_DIR/gst-plugins-base
+
+	__gst-clean
 
 	$DIST_CLEAN
-	./autogen.sh --prefix=$PREFIX \
+	./autogen.sh
+	./confiugre --prefix=$PREFIX \
 		--enable-maintainer-mode \
 		--disable-debug \
 		--disable-fatal-warnings \
 		--disable-directfb \
 		--disable-wayland \
 		--enable-shared
+
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $BASE_DIR
 }
 
 __gst-plugins-good()
 {
-	cd $BASE_DIR/gst-plugins-good
+	__cd $BASE_DIR/gst-plugins-good
+
+	__gst-clean
 
 	$DIST_CLEAN
-	./autogen.sh --prefix=$PREFIX \
+	./autogen.sh
+	./configure --prefix=$PREFIX \
 		--sysconfdir=/etc/gnome \
 		--enable-maintainer-mode \
 		--disable-debug \
 		--disable-debugutils \
 		--disable-fatal-warnings \
 		--enable-shared
+
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $BASE_DIR
 }
 
 __gst-plugins-ugly()
 {
-	cd $BASE_DIR/gst-plugins-ugly
+	__cd $BASE_DIR/gst-plugins-ugly
+
+	__gst-clean
 
 	$DIST_CLEAN
-	./autogen.sh --prefix=$PREFIX \
+	./autogen.sh
+	./configure --prefix=$PREFIX \
 		--enable-maintainer-mode \
 		--disable-debug \
 		--disable-fatal-warnings \
 		--enable-shared
+
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $BASE_DIR
 }
 
 __gst-plugins-bad()
 {
-	cd $BASE_DIR/gst-plugins-bad
+	__cd $BASE_DIR/gst-plugins-bad
+
+	__gst-clean
 
 	$DIST_CLEAN
-	./autogen.sh --prefix=$PREFIX \
+	./autogen.sh
+	./configure --prefix=$PREFIX \
 		--enable-maintainer-mode \
 		--disable-debug \
 		--disable-fatal-warnings \
 		--enable-shared
+
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $BASE_DIR
 }
 
 __gst-ffmpeg()
 {
-	cd $BASE_DIR/gst-ffmpeg
+	__cd $BASE_DIR/gst-ffmpeg
+
+	__gst-clean
 
 	$DIST_CLEAN
-	./autogen.sh --prefix=$PREFIX \
+	./autogen.sh
+	./configure --prefix=$PREFIX \
 		--enable-maintainer-mode \
 		--disable-fatal-warnings \
 		--enable-shared
+
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $BASE_DIR
 }
 
 __lame()
 {
-	cd $BASE_DIR/lame
+	__cd $BASE_DIR/lame
 	
 	$DIST_CLEAN
+	./autogen.sh
 	./configure --prefix=$PREFIX \
 		--enable-mp3rtp \
 		--enable-shared
+
 	$MAKE_CLEAN
 	make
 	make install
 	ldconfig
-
-	cd $BASE_DIR
 }
-
-test()
-{
-
-	exit
-}
-#test
 
 __gst() {
-	__common
 	__gstreamer-core
 	__gst-plugins-base
 	__gst-plugins-good
@@ -176,12 +271,20 @@ __gst() {
 	__gst-ffmpeg
 }
 
-__full() {
-	__lame
-	__libav
-	__gst
-}
+#__rem(){
+__ogg
+__vorbis
+__theora
+__theora-tools
+__xvidcore
+__x264
+__soundtouch
+__libvpx
+__flac
+__faad2
+__faac
+__lame
+__libav
 
-#__gst
-__full
+__gst
 

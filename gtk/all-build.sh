@@ -109,7 +109,14 @@ __expat()
 	automake -acf
 	autoconf
 
-	__common $BASE_DIR/expat
+	__cd $BASE_DIR/expat
+
+	./configure --prefix=$PREFIX	\
+		--enable-shared
+
+	__mk
+	__mk install
+	ldconfig
 }
 
 __libxml2()
@@ -263,8 +270,6 @@ __libxml2()
 {
 	__common $BASE_DIR/libxml2
 }
-
-
 
 __test__()
 {

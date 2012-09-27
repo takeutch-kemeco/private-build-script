@@ -5,17 +5,20 @@ PREFIX=/usr
 
 MAKE_CLEAN="make clean"
 
+. ../common-func/__common-func.sh
+
 qemu()
 {
-	cd $BASE_DIR/qemu
-	./configure --prefix=/usr \
-		--disable-werror
-	$MAKE_CLEAN
-	make
-	make install
-	ldconfig
+	__cd $BASE_DIR/qemu
+	./configure --prefix=/usr 	\
+		--disable-werror	\
+		--disable-kvm		\
+		--disable-xen
 
-	cd $BASE_DIR
+	$MAKE_CLEAN
+	__mk
+	__mk install
+	ldconfig
 }
 
 __test__(){

@@ -99,10 +99,10 @@ __clutter
 __clutter-box2d
 __clutter-gtk
 __cluttermm
-#__clutter-gst
-#__clutter-gstreamermm
+__clutter-gst
+__clutter-gstreamermm
 
-#__pyclutter
+__pyclutter
 #__bullet
 #__clutter-bullet
 

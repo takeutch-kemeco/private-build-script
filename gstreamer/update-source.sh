@@ -2,39 +2,39 @@
 
 BASE_DIR=$(pwd)
 
-cd $BASE_DIR/common
-$(pwd)
-git pull
+. ../common-func/__common-func.sh
 
-cd $BASE_DIR/gst-ffmpeg
-$(pwd)
-git pull
+for n in $(__lsdir)
+do
+	cd $BASE_DIR/$n
+	if [ $? -eq 0 ]
+	then
+		echo $n
+		
+		ls .git
+		if [ $? -eq 0 ]
+		then
+			git pull
+		fi
 
-cd $BASE_DIR/libav
-$(pwd)
-git pull
+		ls .svn
+		if [ $? -eq 0 ]
+		then
+			svn update
+		fi
 
-cd $BASE_DIR/gst-plugins-bad
-$(pwd)
-git pull
+		ls .hg
+		if [ $? -eq 0 ]
+		then
+			hg pull
+			hg update
+		fi
 
-cd $BASE_DIR/gst-plugins-base
-$(pwd)
-git pull
-
-cd $BASE_DIR/gst-plugins-good
-$(pwd)
-git pull
-
-cd $BASE_DIR/gst-plugins-ugly
-$(pwd)
-git pull
-
-cd $BASE_DIR/gstreamer
-$(pwd)
-git pull
-
-cd $BASE_DIR/lame
-$(pwd)
-cvs update
+		ls CVS
+		if [ $? -eq 0 ]
+		then
+			cvs update
+		fi
+	fi
+done
 
