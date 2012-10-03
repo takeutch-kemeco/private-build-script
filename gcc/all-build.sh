@@ -5,10 +5,10 @@ SRC=$BASE_DIR
 
 PREFIX=/usr
 
-#DIST_CLEAN=
-DIST_CLEAN="make distclean"
-#MAKE_CLEAN=
-MAKE_CLEAN="make clean"
+DIST_CLEAN=
+#DIST_CLEAN="make distclean"
+MAKE_CLEAN=
+#MAKE_CLEAN="make clean"
 
 . ../common-func/__common-func.sh
 
@@ -116,12 +116,10 @@ __gdb()
 	ldconfig
 }
 
-__test()
-{
-	exit
-}
-#__test
+__gcc
+exit
 
+#__rem(){
 __gmp
 __mpfr
 __mpc

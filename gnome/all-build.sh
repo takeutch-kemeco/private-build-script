@@ -4,15 +4,18 @@ BASE_DIR=$(pwd)
 PREFIX=/usr
 
 MAKE_CLEAN=
-#MAKE_CLEAN="__mk clean"
+#MAKE_CLEAN="make distclean && make clean"
 
 . ../common-func/__common-func.sh
 
 __common()
 {
 	__cd $1
+
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=$PREFIX
+	
 	__mk
 	__mk install
 	ldconfig
@@ -27,6 +30,7 @@ __nspr()
 {
 	__cd $BASE_DIR/nspr/mozilla/nsprpub
 
+	$MAKE_CLEAN
 	./configure --prefix=$PREFIX	\
 		--with-mozilla		\
 		--with-pthreads     	\
@@ -51,6 +55,7 @@ __js()
 
        sed -i 's#s \($(SHLIB_\(ABI\|EXACT\)_VER)\)#s $(notdir \1)#' Makefile.in
 
+	$MAKE_CLEAN
        ./configure --prefix=$PREFIX	\
 		--enable-threadsafe	\
         	--with-system-nspr
@@ -67,6 +72,7 @@ __polkit()
 	groupadd -fg 27 polkitd
 	useradd -c "PolicyKit Daemon Owner" -d /etc/polkit-1 -u 27 -g polkitd -s /bin/false polkitd
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=$PREFIX 	\
             	--sysconfdir=/etc 	\
@@ -95,6 +101,7 @@ __gconf()
 {
 	__cd $BASE_DIR/gconf
 
+	$MAKE_CLEAN
 	./autogen.sh --prefix=$PREFIX 	\
             	--sysconfdir=/etc 	\
             	--libexecdir=/usr/lib/GConf \
@@ -116,6 +123,7 @@ __gnome-menus()
 {
 	__cd $BASE_DIR/gnome-menus
 
+	$MAKE_CLEAN
 	./autogen.sh --prefix=$PREFIX	\
 		--sysconfdir=/etc 	\
             	--disable-static
@@ -125,15 +133,11 @@ __gnome-menus()
 	ldconfig
 }
 
-__expat()
-{
-	__common $BASE_DIR/expat
-}
-
 __doxygen()
 {
 	__cd $BASE_DIR/doxygen
 
+	$MAKE_CLEAN
 	./configure --prefix /usr \
             	--docdir /usr/share/doc/doxygen-1.8.1.2
 
@@ -149,13 +153,12 @@ __dbus()
 	useradd -c "D-Bus Message Daemon User" -d /var/run/dbus \
 		-u 18 -g messagebus -s /bin/false messagebus
 
+	$MAKE_CLEAN
 	./autogen.sh --prefix=$PREFIX 	\
             	--sysconfdir=/etc 	\
             	--localstatedir=/var 	\
             	--libexecdir=/usr/lib/dbus-1.0 \
             	--with-console-auth-dir=/run/console/ \
-            	--without-systemdsystemunitdir \
-            	--disable-systemd 	\
             	--disable-static	\
 		--disable-Werror
 
@@ -190,6 +193,7 @@ __libgcrypt()
 {
 	__cd $BASE_DIR/libgcrypt
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=$PREFIX	\
 		--enable-maintainer-mode
@@ -218,9 +222,9 @@ __librest()
 {
 	__cd $BASE_DIR/librest
 
+	$MAKE_CLEAN
 	./autogen.sh --prefix=$PREFIX	\
 		--with-ca-certificates=/etc/ssl/ca-bundle.crt
-#		--without-ca-certificates
 
 	__mk
 	__mk install
@@ -242,6 +246,7 @@ __glib-networking()
 {
 	__cd $BASE_DIR/glib-networking
 
+	$MAKE_CLEAN
 	./autogen.sh --prefix=$PREFIX 	\
             	--libexecdir=/usr/lib/glib-networking \
             	--disable-static \
@@ -293,6 +298,7 @@ __geoclue()
 	sed -i "s@geoclue/libgeoclue.la@& -lgthread-2.0@g" \
        		providers/skyhook/Makefile.in
 
+	$MAKE_CLEAN
 	./configure --prefix=$PREFIX	\
 		--libexecdir=/usr/lib/geoclue
 
@@ -310,6 +316,7 @@ __sqlite3()
 {
 	__cd $BASE_DIR/sqlite3
 
+	$MAKE_CLEAN
 	./configure --prefix=$PREFIX	\
 		--disable-static 	\
   		CFLAGS="-g -O2 -DSQLITE_SECURE_DELETE=1 -DSQLITE_ENABLE_UNLOCK_NOTIFY=1"
@@ -328,6 +335,7 @@ __cairo()
 {
         __cd $BASE_DIR/cairo
 
+	$MAKE_CLEAN
         ./autogen.sh --prefix=$PREFIX   \
                 --enable-tee            \
                 --enable-gl             \
@@ -338,7 +346,6 @@ __cairo()
 		--enable-xlib-xcb	\
 		--enable-xml
 
-        $MAKE_CLEAN
         __mk
         __mk install
         ldconfig
@@ -348,36 +355,9 @@ __pango()
 {
 	__cd $BASE_DIR/pango
 
+	$MAKE_CLEAN
 	./autogen.sh --prefix=$PREFIX	\
 		--sysconfdir=/etc
-
-	__mk
-	__mk install
-	ldconfig
-}
-
-___gstreamer()
-{
-	__cd $BASE_DIR/gstreamer
-
-	sed -i 's/\(.*gtkdoc-rebase --relative.* \)\(;.*\)/\1|| true\2/' docs/{gst,libs}/Makefile.in
-
-	./autogen.sh --prefix=$PREFIX	\
-            	--libexecdir=/usr/lib	\
-            	--disable-static
-
-	__mk
-	__mk install
-	ldconfig
-}
-
-__gst-plugins-base()
-{
-	__cd $BASE_DIR/gst-plugins-base
-
-	sed -i 's/\(.*gtkdoc-rebase --relative.* \)\(;.*\)/\1|| true\2/' docs/libs/Makefile.in
-
-	./autogen.sh --prefix=$PREFIX
 
 	__mk
 	__mk install
@@ -388,14 +368,13 @@ __webkit()
 {
 	__cd $BASE_DIR/webkit
 
-	sed -i 's#=GST#=$GST#' configure
-
 	sed -i '/generate-gtkdoc --rebase/s:^:# :' GNUmakefile.in
 
-	patch -Np1 -i ../webkitgtk-1.8.2-bison-1.patch
-	./configure --prefix=/usr	\
-            	--libexecdir=/usr/lib/WebKit \
-            	--enable-introspection
+	$MAKE_CLEAN
+	./configure --prefix=$PREFIX	\
+            --libexecdir=/usr/lib/WebKitGTK \
+            --with-gstreamer=1.0 	\
+            --enable-introspection
 
 	__mk
 	__mk install
@@ -411,6 +390,7 @@ __gnome-online-accounts()
 {
 	__cd $BASE_DIR/gnome-online-accounts
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=$PREFIX	\
 		--libexecdir=/usr/lib/gnome-online-accounts \
@@ -430,6 +410,7 @@ __lcms2()
 	automake -acf
 	autoconf
 
+	$MAKE_CLEAN
 	./configure --prefix=$PREFIX
 
 	__mk
@@ -441,6 +422,7 @@ __colord()
 {
 	__cd $BASE_DIR/colord
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=$PREFIX	\
             	--sysconfdir=/etc 	\
@@ -482,6 +464,7 @@ __usbutils()
 {
 	__cd $BASE_DIR/usbutils
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=$PREFIX	\
             	--datadir=/usr/share/misc \
@@ -492,23 +475,33 @@ __usbutils()
 	ldconfig
 }
 
-__udev()
+__systemd()
 {
-	__cd $BASE_DIR/udev
+	__cd $BASE_DIR/systemd
 
+	$MAKE_CLEAN
 	./autogen.sh
-	./configure --prefix=$PREFIX	\
-            	--sysconfdir=/etc	\
+	./configure CFLAGS=-g -O0 -Wp,-U_FORTIFY_SOURCE \
+		--sysconfdir=/etc	\
             	--sbindir=/sbin		\
-            	--with-rootlibdir=/lib	\
+		--localstatedir=/var	\
+		--libdir=/usr/lib	\
             	--libexecdir=/lib	\
-            	--with-systemdsystemunitdir=no \
-            	--disable-introspection	\
-            	--docdir=/usr/share/doc/udev
+		--enable-gtk-doc	\
+		--with-rootprefix=	\
+		--with-rootlibdir=/lib	\
+		--disable-acl		\
+		--disable-selinux	\
+            	--docdir=/usr/share/doc/systemd
 
 	__mk
 	__mk install
 	ldconfig
+}
+
+__systemd-ui()
+{
+	__common $BASE_DIR/systemd-ui
 }
 
 __cups()
@@ -670,6 +663,7 @@ __libcanberra()
 {
 	__cd $BASE_DIR/libcanberra
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=$PREFIX	\
             	--sysconfdir=/etc	\
@@ -716,6 +710,7 @@ __flac()
 
 	sed -i 's/#include <stdio.h>/&\n#include <string.h>/' examples/cpp/encode/file/main.cpp
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=$PREFIX	\
 		--disable-thorough-tests
@@ -744,6 +739,7 @@ __pulseaudio()
 	useradd -c "Pulseaudio User" -d /var/run/pulse -g pulse -s /bin/false -u 58 pulse
 	usermod -a -G audio pulse
 
+	$MAKE_CLEAN
 	find . -name "Makefile.in" | xargs sed -i "s|(libdir)/@PACKAGE@|(libdir)/pulse|"
 	./autogen.sh --prefix=$PREFIX	\
             	--sysconfdir=/etc 	\
@@ -773,6 +769,7 @@ __upower()
 {
 	__cd $BASE_DIR/upower
 
+	$MAKE_CLEAN
 	./autogen.sh --prefix=$PREFIX	\
             	--sysconfdir=/etc 	\
             	--localstatedir=/var 	\
@@ -788,6 +785,7 @@ __gnome-settings-daemon()
 {
 	__cd $BASE_DIR/gnome-settings-daemon
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=$PREFIX	\
             	--sysconfdir=/etc 	\
@@ -841,6 +839,7 @@ __gnome-control-center()
 {
 	__cd $BASE_DIR/gnome-control-center
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=$PREFIX	\
             	--sysconfdir=/etc 	\
@@ -858,6 +857,7 @@ __gvfs()
 {
 	__cd $BASE_DIR/gvfs
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=$PREFIX	\
             	--sysconfdir=/etc	\
@@ -873,6 +873,7 @@ __gnome-icon-theme()
 {
 	__cd $BASE_DIR/gnome-icon-theme
 	
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure  --prefix=/usr --enable-all-themes --enable-test-themes --enable-placeholders
 
@@ -900,6 +901,7 @@ __p11-kit()
 {
 	__cd $BASE_DIR/p11-kit
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=$PREFIX	\
 		--sysconfdir=/etc
@@ -913,6 +915,7 @@ __gcr()
 {
 	__cd $BASE_DIR/gcr
 
+	$MAKE_CLEAN
 	./autogen.sh --prefix=$PREFIX	\
             	--sysconfdir=/etc	\
             	--libexecdir=/usr/lib/gnome-keyring
@@ -926,13 +929,13 @@ __gnome-keyring()
 {
 	__common $BASE_DIR/gnome-keyring
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=$PREFIX	\
             	--sysconfdir=/etc 	\
             	--with-pam-dir=/lib/security \
             	--with-root-certs=/etc/ssl/certs \
-            	--without-ca-certificates
-#            	--with-ca-certificates=/etc/ssl/ca-bundle.crt
+            	--with-ca-certificates=/etc/ssl/ca-bundle.crt
 
 	__mk
 	__mk install
@@ -958,6 +961,7 @@ __libgweather()
 {
 	__cd $BASE_DIR/libgweather
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=$PREFIX	\
             	--sysconfdir=/etc 	\
@@ -972,6 +976,7 @@ __gnome-panel()
 {
 	__cd $BASE_DIR/gnome-panel
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=$PREFIX	\
             	--sysconfdir=/etc 	\
@@ -987,6 +992,7 @@ __gnome-session()
 {
 	__cd $BASE_DIR/gnome-session
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=$PREFIX	\
 		--libexecdir=/usr/lib/gnome-session
@@ -1000,6 +1006,7 @@ __db()
 {
 	__cd $BASE_DIR/db/build_unix
 
+	$MAKE_CLEAN
 	../dist/configure --prefix=$PREFIX \
         	--enable-compat185	\
         	--enable-dbm       	\
@@ -1015,6 +1022,7 @@ __curl()
 {
 	__cd $BASE_DIR/curl
 
+	$MAKE_CLEAN
 	./configure --prefix=$PREFIX	\
 		--disable-static	\
 		--with-ca-path=/etc/ssl/certs
@@ -1028,6 +1036,7 @@ __openssl()
 {
 	__cd $BASE_DIR/openssl
 
+	$MAKE_CLEAN
 	./config --prefix=/usr --openssldir=/etc/ssl shared
 
 	make
@@ -1055,6 +1064,8 @@ __nss()
 	__cd $BASE_DIR/nss
 
 	cd mozilla/security/nss
+
+	$MAKE_CLEAN
 	make nss_build_all BUILD_OPT=1	\
   		NSPR_INCLUDE_DIR=/usr/include/nspr \
   		USE_SYSTEM_ZLIB=1	\
@@ -1078,6 +1089,7 @@ __evolution-data-server()
 {
 	__cd $BASE_DIR/evolution-data-server
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=$PREFIX	\
             	--libexecdir=/usr/lib/evolution-data-server \
@@ -1097,6 +1109,7 @@ __telepathy-glib()
 {
 	__cd $BASE_DIR/telepathy-glib
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=$PREFIX	\
            	--libexecdir=/usr/lib/telepathy \
@@ -1112,6 +1125,7 @@ __folks()
 {
 	__cd $BASE_DIR/folks
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=$PREFIX	\
             	--enable-vala
@@ -1135,6 +1149,7 @@ __mutter()
 {
 	__cd $BASE_DIR/mutter
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=$PREFIX	\
 		 --enable-compile-warnings=no
@@ -1148,6 +1163,7 @@ __iptables()
 {
 	__cd $BASE_DIR/iptables
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=$PREFIX	\
             	--exec-prefix=    	\
@@ -1168,6 +1184,7 @@ __libnl()
 {
 	__cd $BASE_DIR/libnl
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=$PREFIX	\
             	--sysconfdir=/etc 	\
@@ -1191,6 +1208,7 @@ __dhcpcd()
 {
 	__cd $BASE_DIR/dhcpcd
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --libexecdir=/lib/dhcpcd \
             	--dbdir=/run 		\
@@ -1218,12 +1236,12 @@ __NetworkManager()
 {
 	__cd $BASE_DIR/NetworkManager
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=$PREFIX	\
             	--sysconfdir=/etc 	\
             	--localstatedir=/var 	\
             	--libexecdir=/usr/lib/NetworkManager \
-            	--without-systemdsystemunitdir \
             	--disable-ppp		\
 		--with-distro=lfs
 
@@ -1244,6 +1262,7 @@ __telepathy-logger()
 {
 	__cd $BASE_DIR/telepathy-logger
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=$PREFIX	\
             	--libexecdir=/usr/lib/telepathy \
@@ -1263,6 +1282,7 @@ __gnome-shell()
 {
 	__cd $BASE_DIR/gnome-shell
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=$PREFIX	\
             	--sysconfdir=/etc 	\
@@ -1280,6 +1300,7 @@ __gnome-themes-standard()
 {
 	__cd $BASE_DIR/gnome-themes-standard
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=$PREFIX	\
 		--enable-all-themes	\
@@ -1310,6 +1331,7 @@ __nautilus()
 {
 	__cd $BASE_DIR/nautilus
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=$PREFIX	\
             	--sysconfdir=/etc	\
@@ -1331,6 +1353,7 @@ __libpeas()
 {
 	__cd $BASE_DIR/libpeas
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=$PREFIX \
             	--enable-vala
@@ -1349,6 +1372,7 @@ __dconf()
 {
 	__cd $BASE_DIR/dconf
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=$PREFIX	\
             	--sysconfdir=/etc 	\
@@ -1363,6 +1387,7 @@ __gnome-terminal()
 {
 	__cd $BASE_DIR/gnome-terminal
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=$PREFIX	\
             	--sysconfdir=/etc	\
@@ -1374,33 +1399,11 @@ __gnome-terminal()
 	ldconfig
 }
 
-__gst-plugins-good()
-{
-	__cd $BASE_DIR/gst-plugins-good
-
-	./autogen.sh
-	./configure --prefix=$PREFIX	\
-            	--sysconfdir=/etc 	\
-            	--with-gtk=3.0
-
-	__mk
-	__mk install
-}
-
-__mx()
-{
-	__common $BASE_DIR/mx
-}
-
-__clutter-gst()
-{
-	__common $BASE_DIR/clutter-gst
-}
-
 __gmime()
 {
 	__cd $BASE_DIR/gmime
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=$PREFIX	\
 		--disable-static
@@ -1427,6 +1430,7 @@ __totem()
 {
 	__cd $BASE_DIR/totem
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=$PREFIX	\
 		--libexecdir=/usr/lib/totem \
@@ -1443,25 +1447,6 @@ __mpg123()
 	__common $BASE_DIR/mpg123
 }
 
-__ffmpeg()
-{
-	__cd $BASE_DIR/ffmpeg
-
-	./autogen.sh
-	./configure --prefix=$PREFIX	\
-      		--enable-shared 	\
-		--disable-static
-
-	__mk
-	__mk install
-	ldconfig
-}
-
-__gst-ffmpeg()
-{
-	__common $BASE_DIR/gst-ffmpeg
-}
-
 __gtksourceview()
 {
 	__common $BASE_DIR/gtksourceview
@@ -1476,7 +1461,6 @@ __polkit
 __gconf
 __gnome-backgrounds
 __gnome-menus
-__expat
 __doxygen
 __dbus
 __libgpg-error
@@ -1500,8 +1484,6 @@ __sqlite3
 __libpng
 __cairo
 __pango
-__gstreamer
-__gst-plugins-base
 __webkit
 __libsecret
 __gnome-online-accounts
@@ -1509,7 +1491,8 @@ __lcms2
 __pciutils
 __libusb
 __usbutils
-__udev
+__systemd
+__systemd-ui
 __colord
 __cups
 __unzip
@@ -1590,16 +1573,11 @@ __dconf
 
 __gnome-terminal
 
-__gst-plugins-good
-__mx
-__clutter-gst
 __gmime
 __totem-pl-parser
 __totem
 
 __mpg123
-__ffmpeg
-__gst-ffmpeg
 
 __gtksourceview
 

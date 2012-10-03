@@ -5,10 +5,7 @@ PREFIX=/usr
 XORG_PREFIX=/usr
 
 MAKE_CLEAN=
-#MAKE_CLEAN="__mk clean"
-
-DIST_CLEAN=
-#DIST_CLEAN="__mk distclean"
+#MAKE_CLEAN="make distclean && make clean"
 
 . ../common-func/__common-func.sh
 
@@ -16,6 +13,7 @@ __common()
 {
 	__cd $1
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=$PREFIX
 
@@ -42,6 +40,7 @@ __glib()
 {
 	__cd $BASE_DIR/glib
 
+	$MAKE_CLEAN
 	./autogen.sh
 	PCRE_LIBS=-lpcre PCRE_CFLAGS=" " \
 	LIBFFI_LIBS=-lffi LIBFFI_CFLAGS=" " \
@@ -49,7 +48,6 @@ __glib()
 		--sysconfdir=/etc 	\
 		--with-pcre=system
 
-	$MAKE_CLEAN
 	__mk
 	__mk install
 	ldconfig
@@ -59,11 +57,11 @@ __gobject-introspection()
 {
 	__cd $BASE_DIR/gobject-introspection
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure  --prefix=$PREFIX	\
 		--disable-tests
 
-	$MAKE_CLEAN
 	__mk
 	__mk install
 	ldconfig
@@ -88,13 +86,13 @@ __freetype2()
 {
 	__cd $BASE_DIR/freetype2
 
+	$MAKE_CLEAN
 	./autogen.sh
 
 	sed -i -r 's:.*(#.*SUBPIXEL.*) .*:\1:' include/freetype/config/ftoption.h
 
 	./configure --prefix=$PREFIX
 
-	$MAKE_CLEAN
 	__mk
 	__mk install
 	ldconfig
@@ -111,6 +109,7 @@ __expat()
 
 	__cd $BASE_DIR/expat
 
+	$MAKE_CLEAN
 	./configure --prefix=$PREFIX	\
 		--enable-shared
 
@@ -128,12 +127,12 @@ __fontconfig()
 {
 	__cd $BASE_DIR/fontconfig
 
+	$MAKE_CLEAN
 	./autogen.sh --prefix=$PREFIX 	\
 		--disable-docs 		\
 		--without-add-fonts 	\
 		--docdir=/usr/share/doc/fontconfig
 
-	$MAKE_CLEAN
 	__mk
 	__mk install
 	ldconfig
@@ -158,6 +157,7 @@ __cairo()
 {
 	__cd $BASE_DIR/cairo
 
+	$MAKE_CLEAN
 	./autogen.sh --prefix=$PREFIX 	\
 		--enable-tee 		\
 		--enable-gl 		\
@@ -167,7 +167,6 @@ __cairo()
 		--enable-glsv2		\
 		--enable-xml
 
-	$MAKE_CLEAN
 	__mk
 	__mk install
 	ldconfig
@@ -207,13 +206,13 @@ __gtk2()
 {
 	__cd $BASE_DIR/gtk+-2.24
 
+	$MAKE_CLEAN
 	./configure --prefix=$PREFIX 	\
 		--sysconfdir=/etc	\
 		--with-xinput=yes 	\
 		--with-gdktarget=x11 	\
 		--with-x
 
-	$MAKE_CLEAN
 	__mk
 	__mk install
 
@@ -239,13 +238,13 @@ __gtk3()
 {
 	__cd $BASE_DIR/gtk+
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=$PREFIX	\
 		--sysconfdir=/etc	\
 		--enable-x11-backend	\
 		--enable-broadway-backend
 
-	$MAKE_CLEAN
 	__mk
 	__mk install
 	ldconfig
@@ -270,12 +269,6 @@ __libxml2()
 {
 	__common $BASE_DIR/libxml2
 }
-
-__test__()
-{
-	exit
-}
-#__test__
 
 #__rem(){
 __libffi

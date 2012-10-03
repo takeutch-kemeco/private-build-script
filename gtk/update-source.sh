@@ -6,11 +6,9 @@ BASE_DIR=$(pwd)
 
 for n in $(__lsdir)
 do
-	cd $BASE_DIR/$n
+	__cd $BASE_DIR/$n
 	if [ $? -eq 0 ]
 	then
-		echo $n
-		
 		ls .git
 		if [ $? -eq 0 ]
 		then
