@@ -114,6 +114,49 @@ __gconf()
 	ldconfig
 }
 
+__at-spi()
+{
+	__cd $BASE_DIR/at-spi
+
+	./autogen.sh
+	./configure --prefix=$PREFIX	\
+            	--sysconfdir=/etc 	\
+            	--libexecdir=/usr/lib/at-spi
+
+	__mk
+	__mk install
+	ldconfig
+}
+
+__at-spi2-core()
+{
+	__cd $BASE_DIR/at-spi2-core
+
+	./autogen.sh
+	./configure --prefix=$PREFIX	\
+            	--sysconfdir=/etc 	\
+            	--libexecdir=/usr/lib/at-spi2-core
+
+	__mk
+	__mk install
+	ldconfig
+}
+
+__at-spi2-atk()
+{
+	__common $BASE_DIR/at-spi2-atk
+}
+
+__gnome-common()
+{
+	__common $BASE_DIR/gnome-common
+}
+
+__libglade()
+{
+	__common $BASE_DIR/libglade
+}
+
 __gnome-backgrounds()
 {
 	__common $BASE_DIR/gnome-backgrounds
@@ -481,7 +524,7 @@ __systemd()
 
 	$MAKE_CLEAN
 	./autogen.sh
-	./configure CFLAGS=-g -O0 -Wp,-U_FORTIFY_SOURCE \
+	./configure CFLAGS='-g -O0 -Wp,-U_FORTIFY_SOURCE' \
 		--sysconfdir=/etc	\
             	--sbindir=/sbin		\
 		--localstatedir=/var	\
@@ -747,8 +790,8 @@ __pulseaudio()
             	--libexecdir=/usr/lib 	\
             	--with-module-dir=/usr/lib/pulse/modules
 
-	__mk
-	__mk install
+	__mk -j1
+	__mk -j1 install
 
         grep "/usr/lib/pulseaudio" /etc/ld.so.conf
         if [ $? -ne 0 ]
@@ -1459,10 +1502,13 @@ __zip
 __js
 __polkit
 __gconf
+__gnome-common
 __gnome-backgrounds
 __gnome-menus
 __doxygen
 __dbus
+__at-spi
+__at-spi2-core
 __libgpg-error
 __libgcrypt
 __libgnome-keyring
@@ -1472,6 +1518,7 @@ __nettle
 __gnutls
 __glib-networking
 __libxml
+__libglade
 __libsoup
 __librest
 __json-glib
@@ -1521,6 +1568,7 @@ __gnome-settings-daemon
 __libgtop
 __shared-mime-info
 __atk
+__at-spi2-atk
 __cogl
 __clutter
 __clutter-gtk
@@ -1580,5 +1628,4 @@ __totem
 __mpg123
 
 __gtksourceview
-
 

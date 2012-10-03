@@ -118,11 +118,6 @@ __expat()
 	ldconfig
 }
 
-__libxml2()
-{
-	__common $BASE_DIR/libxml2
-}
-
 __fontconfig()
 {
 	__cd $BASE_DIR/fontconfig
@@ -153,43 +148,14 @@ __libtiff()
 	__common $BASE_DIR/tiff
 }
 
-__cairo()
-{
-	__cd $BASE_DIR/cairo
-
-	$MAKE_CLEAN
-	./autogen.sh --prefix=$PREFIX 	\
-		--enable-tee 		\
-		--enable-gl 		\
-		--enable-xcb 		\
-		--enable-gtk-doc	\
-		--enable-xcb-drm	\
-		--enable-glsv2		\
-		--enable-xml
-
-	__mk
-	__mk install
-	ldconfig
-}
-
 __cairomm()
 {
 	__common $BASE_DIR/cairomm
 }
 
-__pango()
-{
-	__common $BASE_DIR/pango
-}
-
 __pangomm()
 {
 	__common $BASE_DIR/pangomm
-}
-
-__atk()
-{
-	__common $BASE_DIR/atk
 }
 
 __atkmm()
@@ -265,15 +231,9 @@ __libsigc++2()
 	__common $BASE_DIR/libsigc++2
 }
 
-__libxml2()
-{
-	__common $BASE_DIR/libxml2
-}
-
 #__rem(){
 __libffi
 __libsigc++2
-__libxml2
 __tk
 __pth
 __glib
@@ -284,7 +244,6 @@ __glibmm
 
 __freetype2
 __expat
-__libxml2
 
 __fontconfig
 
@@ -292,11 +251,8 @@ __libpng
 __libjpeg8
 __libtiff
 
-__cairo
 __cairomm
-__pango
 __pangomm
-__atk
 __atkmm
 __gdk-pixbuf
 __gtk2

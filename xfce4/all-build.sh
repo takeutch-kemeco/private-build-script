@@ -9,6 +9,18 @@ MAKE_CLEAN=
 
 . ../common-func/__common-func.sh
 
+__xfce4-dev-tools()
+{
+	__cd $BASE_DIR/xfce4-dev-tools
+
+	./autogen.sh --prefix=$PREFIX
+
+	$MAKE_CLEAN
+	__mk
+	__mk install
+	ldconfig
+}
+
 __vte()
 {
 	__cd $BASE_DIR/vte
@@ -303,7 +315,6 @@ __xfwm4()
 	ldconfig
 }
 
-# 4.10のterminalは出来が悪いので4.8のターミナルを使う
 __terminal()
 {
 	__cd $BASE_DIR/terminal
@@ -319,13 +330,8 @@ __terminal()
 	ldconfig
 }
 
-__test__()
-{
-	exit
-}
-#__test__
-
 #__rem(){
+__xfce4-dev-tools
 __vte
 __libxfce4util
 __xfconf
@@ -333,7 +339,6 @@ __libxfce4ui
 __exo
 __garcon
 __gtk-xfce-engine
-###__libwnck
 __libglade
 __libxfcegui4
 __thunar
@@ -346,5 +351,5 @@ __xfce4-session
 __xfce4-settings
 __xfdesktop
 __xfwm4
-###__terminal
+__terminal
 
