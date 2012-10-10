@@ -3,11 +3,11 @@
 BASE_DIR=$(pwd)
 PREFIX=/usr
 
-#MAKE_CLEAN=
-MAKE_CLEAN="make clean"
+MAKE_CLEAN=
+#MAKE_CLEAN="make clean"
 
-#DIST_CLEAN=
-DIST_CLEAN="make distclean"
+DIST_CLEAN=
+#DIST_CLEAN="make distclean"
 
 . ../common-func/__common-func.sh
 
@@ -30,7 +30,7 @@ __gst-clean()
 	echo
 }
 
-#__gst-clean()
+__gst-clean()
 {
 	ls .git
 	if [ $? -eq 0 ]
@@ -262,6 +262,36 @@ __lame()
 	ldconfig
 }
 
+__ffmpeg()
+{
+	__cd $BASE_DIR/ffmpeg
+
+	$DIST_CLEAN
+	./autogen.sh
+	./configure --prefix=$PREFIX	 \
+        	    --disable-debug      \
+	            --enable-shared      \
+	            --enable-gpl         \
+	            --enable-x11grab     \
+	            --enable-version3    \
+	            --enable-nonfree     \
+	            --enable-libfaac     \
+	            --enable-libfreetype \
+	            --enable-libmp3lame  \
+	            --enable-libopenjpeg \
+	            --enable-libspeex    \
+	            --enable-libtheora   \
+	            --enable-libvorbis   \
+	            --enable-libvpx      \
+	            --enable-libxvid     \
+	            --enable-libpulse    \
+	            --enable-openssl
+
+	__mk
+	__mk install
+	ldconfig
+}
+
 __gst() {
 	__gstreamer-core
 	__gst-plugins-base
@@ -284,7 +314,8 @@ __flac
 __faad2
 __faac
 __lame
-__libav
+###__libav
+__ffmpeg
 
 __gst
 

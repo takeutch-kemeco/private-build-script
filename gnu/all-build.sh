@@ -21,12 +21,24 @@ __common()
 	ldconfig
 }
 
+__patch()
+{
+	__cd $BASE_DIR/patch
+	./bootstrup
+
+	__common $BASE_DIR/patch
+}
+
 __libunistring() {
 	__common $BASE_DIR/libunistring
 }
 __guile()
 {
 	__common $BASE_DIR/guile
+}
+
+__libidn() {
+	__common $BASE_DIR/libidn
 }
 
 __gnutls() {
@@ -38,7 +50,39 @@ __gnutls() {
 # (tex環境が万全でない場合)
 # だが、エラーが出てもマニュアルもビルドに失敗してるだけなので、make install は通る。気にしなくていい。
 __gperf() {
+	__cd $BASE_DIR/gperf
+	cp configure.ac configure.ac.old
+
+echo "diff --git a/configure.ac b/configure.ac
+index 5fb4099..0315a6a 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -27,7 +27,7 @@ AC_PROG_MAKE_SET
+ AC_OBJEXT
+ AC_EXEEXT
+ 
+-AC_CONFIG_SUBDIRS([lib src tests doc])
++AC_CONFIG_SUBDIRS([lib src tests])
+ 
+ dnl This piece of sed script replaces every line containing '@subdir@'
+ dnl by several consecutive lines, each referencing one subdir.
+@@ -44,8 +44,6 @@ g
+ s/@subdir@/tests/
+ p
+ g
+-s/@subdir@/doc/
+-p
+ d
+ }
+ '" > configure.ac.patch
+
+	patch < configure.ac.patch
+
 	__common $BASE_DIR/gperf
+
+	__cd $BASE_DIR/gperf
+	rm configure.ac
+	cp configure.ac.old configure.ac
 }
 
 __ed() {
@@ -46,15 +90,22 @@ __ed() {
 }
 
 __attr() {
-	__common $BASE_DIR/attr
+	__cd $BASE_DIR/attr
 
-	__mk install install-dev
+	./autogen.sh
+	INSTALL_USER=root  \
+	INSTALL_GROUP=root \
+	./configure --prefix=/usr	\
+		--libdir=/lib		\
+		--libexecdir=/usr/lib
 
-### 自分でリンクを張る必要があるが、安全にやる方法が思いつかない（別OS上からやるしかない）
-#	cp -f $BASE_DIR/attr/libattr/.libs/libattr.so $PREFIX/lib/libattr.so.1.1.1
-#	ln -sf $PREFIX/lib/libattr.so.1.1.1 $PREFIX/lib/libattr.so.1
-#	ln -sf $PREFIX/lib/libattr.so.1 $PREFIX/lib/libattr.so
-#	chmod -v 0755 $PREFIX/lib/libattr.so.*
+	__mk
+
+	__mk install install-dev install-lib
+	chmod -v 0755 /lib/libattr.so.1.1.0
+	rm -v /lib/libattr.{a,la,so}
+	sed -i 's@/lib@/usr/lib@' /usr/lib/libattr.la
+	ln -sfv ../../lib/libattr.so.1 /usr/lib/libattr.so
 
 	ldconfig
 }
@@ -62,11 +113,22 @@ __attr() {
 __acl() {
 	__common $BASE_DIR/acl
 
+	./autogen.sh
+	INSTALL_USER=root  \
+	INSTALL_GROUP=root \
+	./configure --prefix=$PREFIX	\
+		--libdir=/lib		\
+		--libexecdir=/usr/lib
+
+	__mk
 	__mk install install-dev install-lib
-	chmod -v 0755 $PREFIX/lib/libacl.so.*
-	rm $PREFIX/lib/libacl.so
-	ln -s libacl.so.1 $PREFIX/lib/libacl.so
-	install -v -m644 doc/*.txt $PREFIX/share/doc/acl-2
+
+	make install install-dev install-lib
+	chmod -v 0755 /lib/libacl.so.1.1.0
+	rm -v /lib/libacl.{a,la,so}
+	ln -sfv ../../lib/libacl.so.1 /usr/lib/libacl.so
+	sed -i "s|libdir='/lib'|libdir='/usr/lib'|" /usr/lib/libacl.la
+	install -v -m644 doc/*.txt /usr/share/doc/acl
 
 	ldconfig
 }
@@ -75,15 +137,11 @@ __indent() {
 	__common $BASE_DIR/indent
 }
 
-__test__()
-{
-	exit
-}
-#__test__
-
 #__rem(){
+__patch
 __libunistring
 __guile
+__libidn
 __gnutls
 __ed
 __gperf

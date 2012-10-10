@@ -1261,11 +1261,6 @@ __wireless-tools()
 	__mk PREFIX=/usr INSTALL_MAN=/usr/share/man install
 }
 
-#__inetutils
-#__dhcpcd
-#__wireless-tools
-#exit
-
 #rem(){
 __init
 

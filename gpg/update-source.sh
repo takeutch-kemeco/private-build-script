@@ -1,13 +1,38 @@
 #!/bin/bash
 
-__BASE_DIR__=$(pwd)
+BASE_DIR=$(pwd)
 
-for package in $(ls)
+. ../common-func/__common-func.sh
+
+for n in $(__lsdir)
 do
-	cd $__BASE_DIR__/$package
+	__cd $BASE_DIR/$n
 	if [ $? -eq 0 ]
 	then
-		git pull
+		ls .git
+		if [ $? -eq 0 ]
+		then
+			git pull
+		fi
+
+		ls .svn
+		if [ $? -eq 0 ]
+		then
+			svn update
+		fi
+
+		ls .hg
+		if [ $? -eq 0 ]
+		then
+			hg pull
+			hg update
+		fi
+
+		ls CVS
+		if [ $? -eq 0 ]
+		then
+			cvs update
+		fi
 	fi
 done
 

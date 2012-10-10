@@ -115,26 +115,25 @@ __linux-pam()
 {
 	__cd $BASE_DIR/linux-pam
 	./autogen.sh
-	./configure --sbindir=/lib/security \
-		--docdir=/usr/share/doc/Linux-PAM \
-		--disable-nis \
-		--enable-read-both-confs
-	__mk
+	./configure --prefix=/usr	\
+		--sysconfdir=/etc 	\
+            	--docdir=/usr/share/doc/Linux-PAM-1.1.6 \
+            	--disable-nis
 
+	__mk
 	install -v -m755 -d /etc/pam.d
 
-cat > /etc/pam.d/other << "EOF"
-auth     required       pam_deny.so
-account  required       pam_deny.so
-password required       pam_deny.so
-session  required       pam_deny.so
-EOF
+echo "
+other           auth            pam_unix.so     nullok
+other           account         pam_unix.so
+other           session         pam_unix.so
+other           password        pam_unix.so     nullok
+" > /etc/pam.d/other
 
-	rm -rfv /etc/pam.d
+	__mk check
 
 	__mk install
-	chmod -v 4755 /lib/security/unix_chkpwd
-	mv -v /lib/security/pam_tally /sbin
+	chmod -v 4755 /sbin/unix_chkpwd
 	ldconfig
 }
 
@@ -163,9 +162,8 @@ __ConsoleKit()
            	--sysconfdir=/etc 	\
            	 --localstatedir=/var 	\
            	 --libexecdir=/usr/lib/ConsoleKit \
+           	 --enable-udev-acl 	\
            	 --enable-pam-module
-
-###           	 --enable-udev-acl 	\
 
 	__mk
 	__mk install
@@ -202,13 +200,7 @@ EOF
 chmod -v 755 /usr/lib/ConsoleKit/run-session.d/pam-foreground-compat.ck
 }
 
-__test__()
-{
-#__linux-pam
-	exit
-}
-#__test__
-
+#__rem(){
 __talloc
 __pcre
 __popt

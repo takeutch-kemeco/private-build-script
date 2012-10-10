@@ -1,180 +1,106 @@
 #!/bin/bash
 
-__BASE_DIR__=$(pwd)
+BASE_DIR=$(pwd)
 PREFIX=/usr
 
 MAKE_CLEAN=
 #MAKE_CLEAN="make clean"
 
-libgpg-error()
+. ../common-func/__common-func.sh
+
+__common()
 {
-	cd $__BASE_DIR__/libgpg-error
+	__cd $1
 
-	if [ $? -eq 0 ]
-	then
-		./autogen.sh
-		./configure --prefix=$PREFIX \
-			--enable-maintainer-mode
-		$MAKE_CLEAN
-		make
-		make install
-		ldconfig
-	fi
+	./autogen.sh
+	./configure --prefix=$PREFIX 	\
+		--enable-maintainer-mode
 
-	cd $__BASE_DIR__	
+	$MAKE_CLEAN
+	__mk
+	__mk install
+	ldconfig
 }
 
-libgcrypt()
+__libgpg-error()
 {
-	cd $__BASE_DIR__/libgcrypt
-
-	if [ $? -eq 0 ]
-	then
-		./autogen.sh
-		./configure --prefix=$PREFIX \
-			--enable-maintainer-mode
-		$MAKE_CLEAN
-		make
-		make install
-		ldconfig
-	fi
-
-	cd $__BASE_DIR__	
+	__common $BASE_DIR/libgpg-error
 }
 
-gmime()
+__libgcrypt()
 {
-	cd $__BASE_DIR__/gmime
-
-	if [ $? -eq 0 ]
-	then
-		./autogen.sh
-		./configure --prefix=$PREFIX \
-			--enable-maintainer-mode
-		$MAKE_CLEAN
-		make
-		make install
-		ldconfig
-	fi
-
-	cd $__BASE_DIR__	
+	__common $BASE_DIR/libgcrypt
 }
 
-libassuan()
+__gmime()
 {
-	cd $__BASE_DIR__/libassuan
-
-	if [ $? -eq 0 ]
-	then
-		./autogen.sh
-		./configure --prefix=$PREFIX \
-			--enable-maintainer-mode
-		$MAKE_CLEAN
-		make
-		make install
-		ldconfig
-	fi
-
-	cd $__BASE_DIR__	
+	__common $BASE_DIR/gmime
 }
 
-gpgme()
+__libassuan()
 {
-	cd $__BASE_DIR__/gpgme
-
-	if [ $? -eq 0 ]
-	then
-		./autogen.sh
-		./configure --prefix=$PREFIX \
-			--with-gpg=/usr/bin/gpg2 \
-			--enable-maintainer-mode
-		$MAKE_CLEAN
-		make
-		make install
-		ldconfig
-	fi
-
-	cd $__BASE_DIR__	
+	__common $BASE_DIR/libassuan
 }
 
-libksba()
+__gpgme()
 {
-	cd $__BASE_DIR__/libksba
+	__cd $BASE_DIR/gpgme
 
-	if [ $? -eq 0 ]
-	then
-		./autogen.sh
-		./configure --prefix=$PREFIX \
-			--enable-maintainer-mode
-		$MAKE_CLEAN
-		make
-		make install
-		ldconfig
-	fi
+	./autogen.sh
+	./configure --prefix=$PREFIX 	\
+		--with-gpg=/usr/bin/gpg2 \
+		--enable-maintainer-mode
 
-	cd $__BASE_DIR__	
+	$MAKE_CLEAN
+	__mk
+	__mk install
+	ldconfig
 }
 
-openldap()
+__libksba()
 {
-	cd $__BASE_DIR__/openldap
-
-	if [ $? -eq 0 ]
-	then
-		./configure --prefix=$PREFIX \
-			--sysconfdir=/etc \
-			--enable-dynamic \
-			--disable-debug \
-			--disable-slapd
-		$MAKE_CLEAN
-		make
-		make install
-		ldconfig
-	fi
-
-	cd $__BASE_DIR__	
+	__common $BASE_DIR/libksba
 }
 
-gnupg()
+__openldap()
 {
-	cd $__BASE_DIR__/gnupg
+	__cd $BASE_DIR/openldap
 
-	if [ $? -eq 0 ]
-	then
-		./autogen.sh
-		./configure --prefix=$PREFIX \
-			--disable-doc \
-			--enable-maintainer-mode
-		$MAKE_CLEAN
-		make
-		make install
-		ldconfig
-	fi
+	./autogen.sh
+	./configure --prefix=$PREFIX 	\
+		--sysconfdir=/etc 	\
+		--enable-dynamic 	\
+		--disable-debug 	\
+		--disable-slapd
 
-	cd $__BASE_DIR__	
+	$MAKE_CLEAN
+	__mk
+	__mk install
+	ldconfig
 }
 
-
-test()
+__gnupg()
 {
-#	libgpg-error
-#	libgcrypt
-#	gmime
-#	libassuan
-#	gpgme
-#	libksba
-#	openldap
-#	gnupg
-	exit
-}
-#test
+	__cd $BASE_DIR/gnupg
 
-libgpg-error
-libgcrypt
-gmime
-libassuan
-gpgme
-libksba
-openldap
-gnupg
+	./autogen.sh
+	./configure --prefix=$PREFIX 	\
+		--disable-doc 		\
+		--enable-maintainer-mode
+
+	$MAKE_CLEAN
+	__mk
+	__mk install
+	ldconfig
+}
+
+#__rem() {
+__libgpg-error
+__libgcrypt
+__gmime
+__libassuan
+__gpgme
+__libksba
+__openldap
+__gnupg
 

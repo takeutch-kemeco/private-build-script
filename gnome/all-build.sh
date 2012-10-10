@@ -203,7 +203,8 @@ __dbus()
             	--libexecdir=/usr/lib/dbus-1.0 \
             	--with-console-auth-dir=/run/console/ \
             	--disable-static	\
-		--disable-Werror
+		--disable-Werror	\
+		--enable-systemd
 
 	__mk
 	__mk install
@@ -544,7 +545,15 @@ __systemd()
 
 __systemd-ui()
 {
-	__common $BASE_DIR/systemd-ui
+	__cd $BASE_DIR/systemd-ui
+
+	$MAKE_CLEAN
+	./autogen.sh
+	./configure CFLAGS='-g -O0'
+
+	__mk
+	__mk install
+	ldconfig
 }
 
 __cups()
