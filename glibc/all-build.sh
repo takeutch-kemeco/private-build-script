@@ -14,11 +14,10 @@ ASFLAGS-config=-march=native -msse3 -mtune=native -m32 -Wa,--noexecstack
 EOF
 
 	$BASE_DIR/glibc/configure --prefix=$PREFIX \
+    		--disable-profile	\
 		--enable-kernel=3.0 	\
 		--libexecdir=$PREFIX/lib/glibc \
 		--enable-add-ons
-
-#		--with-cpu=i686
 
 	__mk
 

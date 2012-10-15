@@ -165,17 +165,6 @@ __telepathy-logger()
 	ldconfig
 }
 
-__udev()
-{
-	cd $BASE_DIR/udev
-	./configure --prefix=$PREFIX
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
-
-}
-
 __upower()
 {
 	cd $BASE_DIR/upower
@@ -234,11 +223,6 @@ __tango-icon-theme()
 	__common $BASE_DIR/tango-icon-theme
 }
 
-__test__() {
-	exit
-}
-#__test__
-
 #__rem(){
 __desktop-file-utils
 __pciutils
@@ -253,7 +237,6 @@ __pyxdg
 __shared-mime-info
 __telepathy-glib
 __telepathy-logger
-###__udev
 __upower
 __xdg-utils
 __liboil

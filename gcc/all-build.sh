@@ -116,9 +116,6 @@ __gdb()
 	ldconfig
 }
 
-__gcc
-exit
-
 #__rem(){
 __gmp
 __mpfr

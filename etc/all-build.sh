@@ -200,6 +200,47 @@ EOF
 chmod -v 755 /usr/lib/ConsoleKit/run-session.d/pam-foreground-compat.ck
 }
 
+__sudo()
+{
+	__cd $BASE_DIR/sudo
+
+	./autogen.sh
+	./configure --prefix=/usr	\
+            	--libexecdir=/usr/lib/sudo \
+            	--docdir=/usr/share/doc/sudo
+            	--with-all-insults	\
+            	--with-env-editor  	\
+            	--with-pam 	        \
+            	--without-sendmail
+
+	__mk
+	__mk install
+	ldconfig
+
+cat > /etc/pam.d/sudo << "EOF" &&
+# Begin /etc/pam.d/sudo
+
+# include the default auth settings
+auth      include     system-auth
+
+# include the default account settings
+account   include     system-account
+
+# Set default environment variables for the service user
+session   required    pam_env.so
+
+# include system session defaults
+session   include     system-session
+
+# End /etc/pam.d/sudo
+EOF
+
+	chmod 644 /etc/pam.d/sudo
+}
+
+__sudo
+exit
+
 #__rem(){
 __talloc
 __pcre
@@ -212,4 +253,5 @@ __tomoyo-tools
 __linux-pam
 __freeglut
 __ConsoleKit
+__sudo
 
