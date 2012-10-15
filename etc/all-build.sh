@@ -238,6 +238,8 @@ EOF
 	chmod 644 /etc/pam.d/sudo
 }
 
+__linux-pam
+__ConsoleKit
 __sudo
 exit
 
