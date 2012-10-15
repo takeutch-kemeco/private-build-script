@@ -412,7 +412,7 @@ __pkgconfig()
                 --docdir=/usr/share/doc/pkg-config
 
         __mk
-        __mk install
+        make install
         ldconfig
 }
 
@@ -831,8 +831,8 @@ __vim()
         ./configure --prefix=/usr	\
                 --enable-multibyte
 
-        make
-        make install
+        __mk
+        __mk install
         ldconfig
 
         ln -sv vim /usr/bin/vi
