@@ -42,7 +42,7 @@ cat >> /etc/emacs.el << "EOF"
 EOF
 }
 
-#__emacs
+__emacs
 __haskell-mode
-#__haskell-mode-config
+###__haskell-mode-config
 
