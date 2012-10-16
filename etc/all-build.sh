@@ -8,6 +8,23 @@ MAKE_CLEAN=
 
 . ../common-func/__common-func.sh
 
+__common()
+{
+	__cd $1
+
+	./autogen.sh
+	./configure --prefix=/usr
+
+	__mk
+	__mk install
+	ldconfig
+}
+
+__cmake()
+{
+	__common $BASE_DIR/cmake
+}
+
 __talloc() {
 	__cd $BASE_DIR/talloc
 	./configure --prefix=$PREFIX
@@ -111,32 +128,6 @@ __tomoyo-tools() {
 	__mk USRLIBDIR=/lib install
 }
 
-__linux-pam()
-{
-	__cd $BASE_DIR/linux-pam
-	./autogen.sh
-	./configure --prefix=/usr	\
-		--sysconfdir=/etc 	\
-            	--docdir=/usr/share/doc/Linux-PAM-1.1.6 \
-            	--disable-nis
-
-	__mk
-	install -v -m755 -d /etc/pam.d
-
-echo "
-other           auth            pam_unix.so     nullok
-other           account         pam_unix.so
-other           session         pam_unix.so
-other           password        pam_unix.so     nullok
-" > /etc/pam.d/other
-
-	__mk check
-
-	__mk install
-	chmod -v 4755 /sbin/unix_chkpwd
-	ldconfig
-}
-
 __freeglut()
 {
 	__cd $BASE_DIR/freeglut
@@ -152,52 +143,6 @@ __freeglut()
 	mkdir -p $XORG_PREFIX/share/doc/freeglut-2.8.0
 	cp doc/*.{html,png} $XORG_PREFIX/share/doc/freeglut-2.8.0
 	ldconfig
-}
-
-__ConsoleKit()
-{
-	__cd $BASE_DIR/ConsoleKit
-
-	./configure --prefix=$PREFIX	\
-           	--sysconfdir=/etc 	\
-           	 --localstatedir=/var 	\
-           	 --libexecdir=/usr/lib/ConsoleKit \
-           	 --enable-udev-acl 	\
-           	 --enable-pam-module
-
-	__mk
-	__mk install
-	ldconfig
-
-cat >> /etc/pam.d/system-session << "EOF"
-# Begin ConsoleKit addition
-
-session   optional    pam_loginuid.so
-session   optional    pam_ck_connector.so nox11
-
-# End ConsoleKit addition
-EOF
-
-cat > /usr/lib/ConsoleKit/run-session.d/pam-foreground-compat.ck << "EOF"
-#!/bin/sh
-TAGDIR=/var/run/console
-
-[ -n "$CK_SESSION_USER_UID" ] || exit 1
-[ "$CK_SESSION_IS_LOCAL" = "true" ] || exit 0
-
-TAGFILE="$TAGDIR/`getent passwd $CK_SESSION_USER_UID | cut -f 1 -d:`"
-
-if [ "$1" = "session_added" ]; then
-    mkdir -p "$TAGDIR"
-    echo "$CK_SESSION_ID" >> "$TAGFILE"
-fi
-
-if [ "$1" = "session_removed" ] && [ -e "$TAGFILE" ]; then
-    sed -i "\%^$CK_SESSION_ID\$%d" "$TAGFILE"
-    [ -s "$TAGFILE" ] || rm -f "$TAGFILE"
-fi
-EOF
-chmod -v 755 /usr/lib/ConsoleKit/run-session.d/pam-foreground-compat.ck
 }
 
 __sudo()
@@ -238,12 +183,8 @@ EOF
 	chmod 644 /etc/pam.d/sudo
 }
 
-__linux-pam
-__ConsoleKit
-__sudo
-exit
-
 #__rem(){
+__cmake
 __talloc
 __pcre
 __popt
@@ -252,8 +193,6 @@ __nettle
 __tcl
 __tk
 __tomoyo-tools
-__linux-pam
 __freeglut
-__ConsoleKit
 __sudo
 

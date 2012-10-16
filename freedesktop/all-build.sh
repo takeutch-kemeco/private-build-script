@@ -38,14 +38,14 @@ __usbutils() {
 	ldconfig
 }
 
+__gusb()
+{
+	__common $BASE_DIR/gusb
+}
+
 __consolekit()
 {
-	cd $BASE_DIR/ConsoleKit
-	./autogen.sh --prefix=$PREFIX
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
+	__common $BASE_DIR/ConsoleKit
 }
 
 __colord()
@@ -227,6 +227,7 @@ __tango-icon-theme()
 __desktop-file-utils
 __pciutils
 __usbutils
+__gusb
 __consolekit
 __colord
 __expat

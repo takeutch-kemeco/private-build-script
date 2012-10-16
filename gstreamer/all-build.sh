@@ -1,6 +1,7 @@
 #!/bin/bash
 
 BASE_DIR=$(pwd)
+SRC=$BASE_DIR
 PREFIX=/usr
 
 MAKE_CLEAN=
@@ -79,13 +80,11 @@ __soundtouch()
 
 __libvpx()
 {
-	mkdir -p $BASE_DIR/libvpx-build
-
-	__cd $BASE_DIR/libvpx-build
+	__cdbt $BASE_DIR/libvpx-build
 
 	$DIST_CLEAN
 	../libvpx/autogen.sh
-	../libvpx/configure --prefix=$PREFIX \
+	../libvpx/configure --prefix=/usr \
 		--enable-shared
 
 	$MAKE_CLEAN
@@ -278,7 +277,6 @@ __ffmpeg()
 	            --enable-libfaac     \
 	            --enable-libfreetype \
 	            --enable-libmp3lame  \
-	            --enable-libopenjpeg \
 	            --enable-libspeex    \
 	            --enable-libtheora   \
 	            --enable-libvorbis   \

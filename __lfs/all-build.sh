@@ -706,6 +706,32 @@ __man-db()
         ldconfig
 }
 
+__linux-pam()
+{
+	__cd $BASE_DIR/linux-pam
+	./autogen.sh
+	./configure --prefix=/usr	\
+		--sysconfdir=/etc 	\
+            	--docdir=/usr/share/doc/Linux-PAM-1.1.6 \
+            	--disable-nis
+
+	__mk
+	install -v -m755 -d /etc/pam.d
+
+echo "
+other           auth            pam_unix.so     nullok
+other           account         pam_unix.so
+other           session         pam_unix.so
+other           password        pam_unix.so     nullok
+" > /etc/pam.d/other
+
+	__mk check
+
+	__mk install
+	chmod -v 4755 /sbin/unix_chkpwd
+	ldconfig
+}
+
 __shadow()
 {
         __cd $BASE_DIR/shadow
@@ -983,9 +1009,20 @@ __systemd()
         ldconfig
 }
 
-__udev()
+__systemd-ui()
 {
-        __cd $BASE_DIR/systemd
+	__cd $BASE_DIR/systemd-ui
+
+	./configure
+
+	__mk
+	__mk install
+	ldconfig
+}
+
+__udev-193()
+{
+        __cd $BASE_DIR/systemd-193
 
         tar -xvf ../udev-lfs-193.tar.bz2
         make -f udev-lfs-193/Makefile.lfs
@@ -1014,6 +1051,16 @@ __vim()
         ln -sv ../vim/vim73/doc /usr/share/doc/vim
 }
 
+__lfs-bootscripts()
+{
+	__cd $BASE_DIR/lfs-bootscripts
+
+	__mk install
+}
+
+__linux-pam
+exit
+
 #__rem(){
 __man-pages
 __zlib
@@ -1026,6 +1073,7 @@ __ncurses
 __util-linux
 __psmisc
 __e2fsprogs
+__linux-pam
 __shadow
 __shadow-config
 __coreutils
@@ -1062,7 +1110,9 @@ __sysklogd
 __sysvinit
 ###__tar
 __texinfo
-__systemd
-__udev
+#####__systemd
+#####__systemd-ui
+__udev-193
 __vim
+__lfs-bootscripts
 

@@ -239,7 +239,7 @@ __pth
 __glib
 __gobject-introspection
 __libsigcpp
-__mm-common
+###__mm-common
 __glibmm
 
 __freetype2
