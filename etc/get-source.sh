@@ -49,7 +49,7 @@ gzip -dc tomoyo-tools-2.5.0-20120414.tar.gz | tar xvf -
 git clone git://git.fedorahosted.org/linux-pam.git
 
 ###freeglut
-wget -c http://downloads.sourceforge.net/freeglut/freeglut-2.8.0.tar.gz
-gzip -dc freeglut-2.8.0.tar.gz | tar xvf -
-ln -s freeglut-2.8.0 freeglut
+svn co http://freeglut.svn.sourceforge.net/svnroot/freeglut freeglut.svn
+rm freeglut
+ln -s freeglut.svn/trunk/freeglut/freeglut
 

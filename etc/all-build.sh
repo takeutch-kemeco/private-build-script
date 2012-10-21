@@ -132,17 +132,16 @@ __freeglut()
 {
 	__cd $BASE_DIR/freeglut
 
-	export LIBRARY_PATH=$XORG_PREFIX/lib
-	./configure --prefix=$XORG_PREFIX \
-		--disable-static
-
+	rm CMakeCache.txt
+	cmake -DCMAKE_INSTALL_PREFIX=/usr
+	
 	$MAKE_CLEAN
 	__mk
-
 	__mk install
-	mkdir -p $XORG_PREFIX/share/doc/freeglut-2.8.0
-	cp doc/*.{html,png} $XORG_PREFIX/share/doc/freeglut-2.8.0
 	ldconfig
+
+	mkdir -p $XORG_PREFIX/share/doc/freeglut
+	cp doc/*.{html,png} $XORG_PREFIX/share/doc/freeglut
 }
 
 __sudo()
