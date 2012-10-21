@@ -133,7 +133,7 @@ __freeglut()
 	__cd $BASE_DIR/freeglut
 
 	rm CMakeCache.txt
-	cmake -DCMAKE_INSTALL_PREFIX=/usr
+	cmake -DCMAKE_INSTALL_PREFIX=/usr .
 	
 	$MAKE_CLEAN
 	__mk
