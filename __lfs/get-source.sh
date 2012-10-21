@@ -171,11 +171,14 @@ wget -c http://ftp.gnu.org/gnu/texinfo/texinfo-4.13a.tar.gz
 gzip -dc texinfo-4.13a.tar.gz | tar xvf -
 ln -s texinfo-4.13a texinfo
 
-###git clone git://vcs.progress-linux.org/packages/udev.git
-wget -c http://www.kernel.org/pub/linux/utils/kernel/hotplug/udev-182.tar.xz
-xz -dc udev-182.tar.xz | tar xvf -
-ln -s udev-182 udev
-wget -c http://www.linuxfromscratch.org/lfs/downloads/development/udev-config-20100128.tar.bz2
+###systemd
+git clone git://anongit.freedesktop.org/systemd/systemd
+
+###systemd-ui
+git clone git://anongit.freedesktop.org/systemd/systemd-ui
+
+###dbus
+git clone git://anongit.freedesktop.org/dbus/dbus
 
 ###vim
 wget -c ftp://ftp.vim.org/pub/vim/unix/vim-7.3.tar.bz2

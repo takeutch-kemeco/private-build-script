@@ -1,0 +1,136 @@
+(setq
+	user-full-name    		"Takeutch Kemeco"
+	user-mail-address		"takeutchkemeco@gmail.com"
+  	message-send-mail-function 	'smtpmail-send-it
+  	smtpmail-default-smtp-server 	"smtp.gmail.com"
+  	mail-user-agent 		'message-user-agent
+	message-confirm-send		t
+)
+
+
+
+;; 文字の色を設定します。
+(add-to-list 'default-frame-alist '(foreground-color . "#FFFFFF"))
+
+;; 背景色を設定します。
+(add-to-list 'default-frame-alist '(background-color . "#112233"))
+
+;; カーソルの色を設定します。
+(add-to-list 'default-frame-alist '(cursor-color . "#FFFFFF"))
+
+;; マウスポインタの色を設定します。
+(add-to-list 'default-frame-alist '(mouse-color . "#FFFFFF"))
+
+;; モードラインの文字の色を設定します。
+(set-face-foreground 'modeline "#112233")
+
+;; モードラインの背景色を設定します。
+(set-face-background 'modeline "#FFFFFF")
+
+;; 選択中のリージョンの色を設定します。
+(set-face-background 'region "#123456")
+
+;; モードライン（アクティブでないバッファ）の文字色を設定します。
+(set-face-foreground 'mode-line-inactive "#112233")
+
+;; モードライン（アクティブでないバッファ）の背景色を設定します。
+(set-face-background 'mode-line-inactive "#FFFFFF")
+
+;; 使用フォント設定
+;; (set-face-attribute 'default nil :family "Courier" :height 120)
+;; (set-face-attribute 'default nil :family "Source Code Pro" :height 120)
+
+
+
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(blink-cursor-mode nil)
+ '(c-basic-offset 8)
+ '(c-default-style (quote ((c-mode . ""))))
+ '(c-objc-method-arg-unfinished-offset 8)
+ '(c-objc-method-parameter-offset 8)
+ '(c-strict-syntax-p nil)
+ '(c-syntactic-indentation nil)
+ '(c-syntactic-indentation-in-macros nil)
+ '(current-language-environment "Japanese")
+ '(frame-background-mode (quote dark))
+ '(inhibit-startup-screen t)
+ '(initial-scratch-message "")
+ '(menu-bar-mode nil)
+ '(scroll-bar-mode nil)
+ '(scroll-step 1)
+ '(send-mail-function (quote smtpmail-send-it))
+ '(set-default-coding-systems (quote utf-8))
+ '(show-paren-mode t)
+ '(tool-bar-mode nil)
+ '(transient-mark-mode t)
+ '(x-select-enable-clipboard t))
+
+;;(load-library "anthy")
+(setq default-input-method "japanese-anthy")
+
+(defun linux-c-mode ()
+  "C mode with adjusted defaults for use with the Linux kernel."
+  (interactive)
+  (c-mode)
+  (c-set-style "K&R")
+  (setq tab-width 8)
+  (setq indent-tabs-mode t)
+  (setq c-basic-offset 8))
+
+(add-hook 'shell-mode-hook '(lambda () (set-buffer-process-coding-system 'utf-8 'utf-8)))
+
+(set-default-coding-systems 'utf-8)
+
+;; custom-set-faces was added by Custom.
+;; If you edit it by hand, you could mess it up, so be careful.
+;; Your init file should contain only one such instance.
+;; If there is more than one, they won't work right.
+;;
+;;(custom-set-faces
+;;	'(default 
+;;		(
+;;			(t 
+;;				(
+;;					:inherit nil 
+;;					:stipple nil 
+;;					:background "#000000" 
+;;					:foreground "#FFFFFF" 
+;;					:inverse-video nil 
+;;					:box nil 
+;;					:strike-through nil 
+;;					:overline nil 
+;;					:underline nil 
+;;					:slant normal 
+;;					:weight normal 
+;;					:height 120 
+;;					:width normal 
+;;					:foundry "courier" 
+;;					:family "Courier"
+;;				)
+;;			)
+;;		)
+;;	)
+;;)
+
+
+
+(load "/usr/lib/emacs/haskell-mode/haskell-site-file")
+(add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
+
+(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+(add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
+(add-hook 'haskell-mode-hook 'turn-on-haskell-simple-indent)
+
+(setq haskell-program-name "/usr/bin/ghci")
+
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+

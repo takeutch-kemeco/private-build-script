@@ -559,14 +559,14 @@ __grub()
         sed -i -e '/gets is a/d' grub-core/gnulib/stdio.in.h
 
         ./autogen.sh
-        ./configure --prefix=/usr       \
+	CFLAGS="" ./configure --prefix=/usr       \
                 --sysconfdir=/etc       \
                 --disable-grub-emu-usb  \
                 --disable-efiemu        \
                 --disable-werror
 
-        __mk
-        __mk install
+        CFLAGS="" __mk
+        CFLAGS="" __mk install
         ldconfig
 }
 
@@ -930,19 +930,6 @@ EOF
 [ -f /etc/limits ] && mv -v /etc/limits{,.NOUSE}
 }
 
-__sysvinit()
-{
-        __cd $BASE_DIR/sysvinit
-
-        sed -i 's@Sending processes@& configured via /etc/inittab@g' src/init.c
-
-        sed -i -e '/utmpdump/d' -e '/mountpoint/d' src/Makefile
-
-        __mk -C src
-        __mk -C src install
-        ldconfig
-}
-
 __sysklogd()
 {
         __cd $BASE_DIR/sysklogd
@@ -998,6 +985,45 @@ __texinfo()
         ldconfig
 }
 
+__dbus()
+{
+        __cd $BASE_DIR/dbus
+
+        groupadd -g 18 messagebus
+        useradd -c "D-Bus Message Daemon User" -d /var/run/dbus \
+                -u 18 -g messagebus -s /bin/false messagebus
+
+        $MAKE_CLEAN
+        ./autogen.sh --prefix=$PREFIX   \
+                --sysconfdir=/etc       \
+                --localstatedir=/var    \
+                --libexecdir=/usr/lib/dbus-1.0 \
+                --with-console-auth-dir=/run/console/ \
+                --disable-static        \
+                --disable-Werror        \
+                --enable-systemd
+
+        __mk
+        __mk install
+
+        dbus-uuidgen --ensure
+
+cat > /etc/dbus-1/session-local.conf << "EOF"
+<!DOCTYPE busconfig PUBLIC
+ "-//freedesktop//DTD D-BUS Bus Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/dbus/1.0/busconfig.dtd">
+<busconfig>
+
+  <!-- Search for .service files in /usr/local -->
+  <servicedir>/usr/local/share/dbus-1/services</servicedir>
+
+</busconfig>
+EOF
+
+        cd $BASE_DIR/blfs-bootscripts
+        __mk install-dbus
+}
+
 __systemd()
 {
         __cd $BASE_DIR/systemd
@@ -1020,16 +1046,6 @@ __systemd-ui()
 	ldconfig
 }
 
-__udev-193()
-{
-        __cd $BASE_DIR/systemd-193
-
-        tar -xvf ../udev-lfs-193.tar.bz2
-        make -f udev-lfs-193/Makefile.lfs
-        make -f udev-lfs-193/Makefile.lfs install
-        bash udev-lfs-193/init-net-rules.sh
-}
-
 __vim()
 {
         __cd $BASE_DIR/vim
@@ -1050,16 +1066,6 @@ __vim()
 
         ln -sv ../vim/vim73/doc /usr/share/doc/vim
 }
-
-__lfs-bootscripts()
-{
-	__cd $BASE_DIR/lfs-bootscripts
-
-	__mk install
-}
-
-__linux-pam
-exit
 
 #__rem(){
 __man-pages
@@ -1107,12 +1113,10 @@ __libpipeline
 __make
 __man-db
 __sysklogd
-__sysvinit
 ###__tar
 __texinfo
-#####__systemd
-#####__systemd-ui
-__udev-193
+__dbus
+__systemd
+__systemd-ui
 __vim
-__lfs-bootscripts
 

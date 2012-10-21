@@ -188,45 +188,6 @@ __doxygen()
 	__mk install
 }
 
-__dbus()
-{
-	__cd $BASE_DIR/dbus
-
-	groupadd -g 18 messagebus
-	useradd -c "D-Bus Message Daemon User" -d /var/run/dbus \
-		-u 18 -g messagebus -s /bin/false messagebus
-
-	$MAKE_CLEAN
-	./autogen.sh --prefix=$PREFIX 	\
-            	--sysconfdir=/etc 	\
-            	--localstatedir=/var 	\
-            	--libexecdir=/usr/lib/dbus-1.0 \
-            	--with-console-auth-dir=/run/console/ \
-            	--disable-static	\
-		--disable-Werror	\
-		--enable-systemd
-
-	__mk
-	__mk install
-
-	dbus-uuidgen --ensure
-
-cat > /etc/dbus-1/session-local.conf << "EOF"
-<!DOCTYPE busconfig PUBLIC
- "-//freedesktop//DTD D-BUS Bus Configuration 1.0//EN"
- "http://www.freedesktop.org/standards/dbus/1.0/busconfig.dtd">
-<busconfig>
-
-  <!-- Search for .service files in /usr/local -->
-  <servicedir>/usr/local/share/dbus-1/services</servicedir>
-
-</busconfig>
-EOF
-
-	cd $BASE_DIR/blfs-bootscripts
-	__mk install-dbus
-}
-
 __libgpg-error()
 {
 	__common $BASE_DIR/libgpg-error
@@ -416,9 +377,10 @@ __webkit()
 
 	$MAKE_CLEAN
 	./configure --prefix=$PREFIX	\
-            --libexecdir=/usr/lib/WebKitGTK \
-            --with-gstreamer=1.0 	\
-            --enable-introspection
+            	--libexecdir=/usr/lib/WebKitGTK \
+            	--disable-glibtest	\
+		--with-gstreamer=1.0 	\
+            	--enable-introspection
 
 	__mk
 	__mk install
@@ -513,43 +475,6 @@ __usbutils()
 	./configure --prefix=$PREFIX	\
             	--datadir=/usr/share/misc \
             	--disable-zlib
-
-	__mk
-	__mk install
-	ldconfig
-}
-
-__systemd()
-{
-	__cd $BASE_DIR/systemd
-
-	$MAKE_CLEAN
-	./autogen.sh
-	./configure CFLAGS='-g -O0 -Wp,-U_FORTIFY_SOURCE' \
-		--sysconfdir=/etc	\
-            	--sbindir=/sbin		\
-		--localstatedir=/var	\
-		--libdir=/usr/lib	\
-            	--libexecdir=/lib	\
-		--enable-gtk-doc	\
-		--with-rootprefix=	\
-		--with-rootlibdir=/lib	\
-		--disable-acl		\
-		--disable-selinux	\
-            	--docdir=/usr/share/doc/systemd
-
-	__mk
-	__mk install
-	ldconfig
-}
-
-__systemd-ui()
-{
-	__cd $BASE_DIR/systemd-ui
-
-	$MAKE_CLEAN
-	./autogen.sh
-	./configure CFLAGS='-g -O0'
 
 	__mk
 	__mk install
@@ -1515,7 +1440,6 @@ __gnome-common
 __gnome-backgrounds
 __gnome-menus
 __doxygen
-__dbus
 __at-spi
 __at-spi2-core
 __libgpg-error
@@ -1547,8 +1471,6 @@ __lcms2
 __pciutils
 __libusb
 __usbutils
-__systemd
-__systemd-ui
 __colord
 __cups
 __unzip

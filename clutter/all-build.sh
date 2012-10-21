@@ -1,6 +1,5 @@
 #!/bin/bash
 
-PREFIX=/usr
 BASE_DIR=$(pwd)
 
 . ../common-func/__common-func.sh
@@ -12,7 +11,7 @@ __common()
 	make distclean
 
 	./autogen.sh
-	./configure --prefix=$PREFIX	\
+	./configure --prefix=/usr	\
 		--enable-gtk-doc	\
 		--enable-xinput		\
 		--with-x
@@ -82,7 +81,7 @@ __bullet()
 {
 	__cd $BASE_DIR/bullet
 
-	cmake -DCMAKE_INSTALL_PREFIX=$PREFIX . -G "Unix Makefiles"
+	cmake -DCMAKE_INSTALL_PREFIX=/usr . -G "Unix Makefiles"
 
 	__mk
 	__mk install
@@ -102,7 +101,7 @@ __cluttermm
 __clutter-gst
 __clutter-gstreamermm
 
-__pyclutter
-#__bullet
-#__clutter-bullet
+#__pyclutter
+__bullet
+__clutter-bullet
 
