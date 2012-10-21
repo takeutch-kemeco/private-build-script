@@ -10,11 +10,11 @@ XORG_CONFIG="--prefix=$XORG_PREFIX \
 	--localstatedir=/var"
 export XORG_PREFIX XORG_ETC XORG_CONFIG
 
-#MAKE_CLEAN=
-MAKE_CLEAN="__mk clean"
+MAKE_CLEAN=
+#MAKE_CLEAN="__mk clean"
 
-#DIST_CLEAN=
-DIST_CLEAN="__mk distclean"
+DIST_CLEAN=
+#DIST_CLEAN="__mk distclean"
 
 . ../common-func/__common-func.sh
 
@@ -251,7 +251,8 @@ __mesa()
 {
 	__cd $BASE_DIR/mesa/mesa
 
-	./autogen.sh $XORG_CONFIG	\
+	./autogen.sh
+	./configure $XORG_CONFIG	\
 		--enable-texture-float 	\
 		--enable-gles1 		\
 		--enable-gles2 		\
@@ -260,13 +261,13 @@ __mesa()
 		--enable-shared-dricore \
 		--enable-glx-tls 	\
 		--with-gallium-drivers=i915 \
-		--with-dri-drivers=i965
+		--with-dri-drivers=i965 \
+		--enable-dri 		\
+		--with-x 		\
+		--enable-gallium-egl 	\
+		--enable-glx 		\
 
-#		--enable-dri \
-#		--with-x \
 #		--enable-xorg		\
-#		--enable-gallium-egl \
-#		--enable-glx \
 
 	$MAKE_CLEAN
 	__mk
@@ -469,9 +470,6 @@ cat >> $XORG_ETC/X11/app-defaults/XTerm << "EOF"
 
 EOF
 }
-
-__mesa
-exit
 
 #__rem(){
 __util_macros
