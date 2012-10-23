@@ -23,7 +23,10 @@ __common()
 __linux-fusion()
 {
 	__cd $BASE_DIR/linux-fusion
+
 	__mk
+	__mk install
+	ldconfig
 }
 
 __direct-fb()
