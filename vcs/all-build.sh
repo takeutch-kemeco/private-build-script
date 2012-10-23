@@ -189,11 +189,12 @@ __hg
 __apr1
 __apr1-util
 __neon
-###__apr2
+__apr2
 ###__serf
+
 __sqlite3
 
-###__gdbm
+__gdbm
 
 __svn
 
