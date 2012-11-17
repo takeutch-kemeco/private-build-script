@@ -376,9 +376,8 @@ __webkit()
 	sed -i '/generate-gtkdoc --rebase/s:^:# :' GNUmakefile.in
 
 	$MAKE_CLEAN
-	./configure --prefix=$PREFIX	\
+	./configure --prefix=/usr	\
             	--libexecdir=/usr/lib/WebKitGTK \
-            	--disable-glibtest	\
 		--with-gstreamer=1.0 	\
             	--enable-introspection
 
@@ -1429,7 +1428,12 @@ __gtksourceview()
 	__common $BASE_DIR/gtksourceview
 }
 
-#__rem() {
+__gdm()
+{
+	__common $BASE_DIR/gdm
+}
+
+##__rem() {
 __gobject-introspection
 __nspr
 __zip
@@ -1503,7 +1507,7 @@ __at-spi2-atk
 __cogl
 __clutter
 __clutter-gtk
-__gnome-control-center
+###__gnome-control-center
 __gvfs
 __gnome-icon-theme
 __gnome-icon-theme-extras
@@ -1559,4 +1563,6 @@ __totem
 __mpg123
 
 __gtksourceview
+
+__gdm
 

@@ -22,6 +22,21 @@ __common()
 	ldconfig
 }
 
+__common-force-clean()
+{
+	__cd $1
+
+	make distclean
+	make clean
+
+	./autogen.sh
+	./configure --prefix=$PREFIX
+
+	__mk
+	__mk install
+	ldconfig
+}
+
 __libffi()
 {
 	__common $BASE_DIR/libffi
@@ -135,7 +150,25 @@ __fontconfig()
 
 __libpng()
 {
-	__common $BASE_DIR/libpng
+	LIBPNG_BASE_DIR=$BASE_DIR/libpng
+
+	__cd $LIBPNG_BASE_DIR
+
+	__mes "libpng checkout v14"
+	git checkout v14 -f
+	__common-force-clean $LIBPNG_BASE_DIR
+
+	__mes "libpng checkout v15"
+	git checkout v15 -f
+	__common-force-clean $LIBPNG_BASE_DIR
+
+	__mes "libpng checkout v16"
+	git checkout v16 -f
+	__common-force-clean $LIBPNG_BASE_DIR
+
+	__mes "libpng checkout master"
+	__cd $LIBPNG_BASE_DIR
+	git checkout master -f
 }
 
 __libjpeg8()
@@ -239,7 +272,7 @@ __pth
 __glib
 __gobject-introspection
 __libsigcpp
-###__mm-common
+__mm-common
 __glibmm
 
 __freetype2
@@ -256,7 +289,7 @@ __pangomm
 __atkmm
 __gdk-pixbuf
 __gtk2
-__gtkmm2
+###__gtkmm2
 __gtk3
 __gtkmm
 

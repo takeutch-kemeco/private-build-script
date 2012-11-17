@@ -13,7 +13,7 @@ __common()
 	__cd $1
 
 	./autogen.sh
-	./configure --prefix=$PREFIX
+	./configure --prefix=/usr
 
 	__mk
 	__mk install
@@ -27,6 +27,10 @@ __pciutils() {
 	__mk PREFIX=$PREFIX install
 	__mk PREFIX=$PREFIX install-lib
 	ldconfig
+}
+
+__libusb() {
+	__common $BASE_DIR/libusb
 }
 
 __usbutils() {
@@ -223,6 +227,11 @@ __tango-icon-theme()
 	__common $BASE_DIR/tango-icon-theme
 }
 
+__accountsservice()
+{
+	__common $BASE_DIR/accountsservice
+}
+
 #__rem(){
 __desktop-file-utils
 __pciutils
@@ -243,4 +252,5 @@ __xdg-utils
 __liboil
 __default-icon-theme
 __tango-icon-theme
+__accountsservice
 
