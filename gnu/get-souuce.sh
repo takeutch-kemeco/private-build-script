@@ -23,3 +23,6 @@ git clone git://git.savannah.gnu.org/libunistring.git
 
 git clone git://git.savannah.gnu.org/gnutls.git
 
+wget -c ftp://ftp.gnu.org/pub/gnu/dejagnu/dejagnu-1.5.tar.gz
+wget -c http://prdownloads.sourceforge.net/expect/expect5.45.tar.gz
+

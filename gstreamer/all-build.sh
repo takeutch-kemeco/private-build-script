@@ -18,7 +18,7 @@ __common()
 
 	$DIST_CLEAN
 	./autogen.sh
-	./configure --prefix=$PREFIX
+	./configure --prefix=/usr
 
 	$MAKE_CLEAN
 	__mk
@@ -55,7 +55,15 @@ __vorbis()
 
 __theora()
 {
-	__common $BASE_DIR/theora
+	__cd $BASE_DIR/theora
+
+	./configure --prefix=/usr	\
+		--disable-examples
+
+	$MAKE_CLEAN
+	__mk
+	__mk install
+	ldconfig
 }
 
 __theora-tools()

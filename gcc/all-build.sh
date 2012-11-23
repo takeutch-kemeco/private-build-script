@@ -5,10 +5,10 @@ SRC=$BASE_DIR
 
 PREFIX=/usr
 
-DIST_CLEAN=
-#DIST_CLEAN="make distclean"
-MAKE_CLEAN=
-#MAKE_CLEAN="make clean"
+#DIST_CLEAN=
+DIST_CLEAN="make distclean"
+#MAKE_CLEAN=
+MAKE_CLEAN="make clean"
 
 . ../common-func/__common-func.sh
 
@@ -97,6 +97,10 @@ __gcc()
 
 	__mk
 	__mk install
+#	__mk all-gcc all-target-libgcc
+#	__mk install-gcc install-target-libgcc
+
+	rm $PREFIX/lib/libstdc++.so.6.0.17-gdb.py
 	ldconfig
 }
 

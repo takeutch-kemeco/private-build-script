@@ -292,7 +292,9 @@ __data()
 		if [ $? -eq 0 ]
 		then
 			./autogen.sh $XORG_CONFIG \
-				--with-xinitdir=$XORG_ETC/X11/app-defaults
+				--with-xinitdir=$XORG_ETC/X11/app-defaults \
+				--disable-selective-werror
+
 			$MAKE_CLEAN
 			__mk
 			__mk install
@@ -315,8 +317,8 @@ __apps()
 			./autogen.sh $XORG_CONFIG \
 				--with-xinitdir=$XORG_ETC/X11/app-defaults
 			$MAKE_CLEAN
-			__mk
-			__mk install
+			make
+			make install
 			ldconfig
 		fi
 	done

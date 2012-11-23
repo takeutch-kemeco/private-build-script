@@ -85,6 +85,7 @@ __gnupg()
 
 	./autogen.sh
 	./configure --prefix=$PREFIX 	\
+		--libexecdir=/usr/lib	\
 		--disable-doc 		\
 		--enable-maintainer-mode
 

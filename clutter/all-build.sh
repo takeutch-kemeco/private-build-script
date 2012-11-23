@@ -101,7 +101,7 @@ __cluttermm
 __clutter-gst
 __clutter-gstreamermm
 
-#__pyclutter
+__pyclutter
 __bullet
 __clutter-bullet
 

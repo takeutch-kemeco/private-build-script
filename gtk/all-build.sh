@@ -15,7 +15,7 @@ __common()
 
 	$MAKE_CLEAN
 	./autogen.sh
-	./configure --prefix=$PREFIX
+	./configure --prefix=$PREFIX --enable-warnings=no
 
 	__mk
 	__mk install
@@ -94,7 +94,11 @@ __mm-common()
 
 __glibmm()
 {
+	git checkout 2.34
+
 	__common $BASE_DIR/glibmm
+
+	git checkout master
 }
 
 __freetype2()
@@ -218,7 +222,8 @@ __gtk2()
 	ls /etc/gtk-2.0/gtk.immodules
 	if [ $? -ne 0 ]
 	then
-		gtk-query-immodules-2.0 > /etc/gtk-2.0/gtk.immodules
+echo
+#		gtk-query-immodules-2.0 > /etc/gtk-2.0/gtk.immodules
 	fi
 
 	ls /etc/gtk-2.0/gtkrc

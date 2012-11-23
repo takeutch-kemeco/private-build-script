@@ -6,7 +6,7 @@ SRC=$(pwd)
 
 __perl()
 {
-	__dcd $SRC/perl-5.16.0
+	__cd $SRC/perl
 
 	echo "127.0.0.1 localhost $(hostname)" > /etc/hosts
 

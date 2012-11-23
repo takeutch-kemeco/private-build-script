@@ -100,13 +100,7 @@ __attr() {
 		--libexecdir=/usr/lib
 
 	__mk
-
 	__mk install install-dev install-lib
-	chmod -v 0755 /lib/libattr.so.1.1.0
-	rm -v /lib/libattr.{a,la,so}
-	sed -i 's@/lib@/usr/lib@' /usr/lib/libattr.la
-	ln -sfv ../../lib/libattr.so.1 /usr/lib/libattr.so
-
 	ldconfig
 }
 
@@ -137,6 +131,25 @@ __indent() {
 	__common $BASE_DIR/indent
 }
 
+__expect()
+{
+	__cd $BASE_DIR/expect
+
+	./configure --prefix=/usr	\
+            	--with-tcl=/usr/lib \
+            	--with-tclinclude=/usr/include \
+            	--enable-shared
+
+	$MAKE_CLEAN
+	__mk
+	__mk install
+	ldconfig
+}
+
+__dejagnu() {
+	__common $BASE_DIR/dejagnu
+}
+
 #__rem(){
 __patch
 __libunistring
@@ -146,6 +159,8 @@ __gnutls
 __ed
 __gperf
 __acl
-__attr
+###__attr
 __indent
+__expect
+__dejagnu
 

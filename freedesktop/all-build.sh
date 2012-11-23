@@ -162,7 +162,12 @@ __telepathy-glib()
 __telepathy-logger()
 {
 	cd $BASE_DIR/telepathy-logger
-	./autogen.sh --prefix=$PREFIX --enable-gtk-doc --disable-fatal-warnings --enable-debug
+	./autogen.sh --prefix=/usr	\
+		--enable-gtk-doc	\
+		--disable-fatal-warnings \
+		--enable-debug		\
+		--disable-Werror
+
 	$MAKE_CLEAN
 	__mk
 	__mk install

@@ -3,11 +3,11 @@
 BASE_DIR=$(pwd)
 SRC=$BASE_DIR
 
-DIST_CLEAN=
-#DIST_CLEAN="make distclean"
+#DIST_CLEAN=
+DIST_CLEAN="make distclean"
 
-MAKE_CLEAN=
-#MAKE_CLEAN="make clean"
+#MAKE_CLEAN=
+MAKE_CLEAN="make clean"
 
 . ../common-func/__common-func.sh
 
@@ -15,9 +15,12 @@ __common()
 {
         __cd $1
 
-        ./autogen.sh
-        ./configure --prefix=/usr
+	$DIST_CLEAN
 
+        ./autogen.sh
+        ./configure --prefix=/usr --disable-warnings
+
+	$MAKE_CLEAN
         __mk
         __mk install
         ldconfig
@@ -33,7 +36,7 @@ __zlib()
 {
         __cd $BASE_DIR/zlib
 
-        CFLAGS='-mstackrealign -fPIC -O4' \
+        CFLAGS='-mstackrealign -fPIC -O2' \
          ./configure --prefix=/usr
 
         $MAKE_CLEAN
@@ -55,7 +58,8 @@ __binutils()
         __cdbt
 
         $BASE_DIR/binutils/configure --prefix=/usr \
-                --enable-shared
+                --enable-shared		\
+		--enable-werror=no
 
         $MAKE_CLEAN
         __mk tooldir=/usr
@@ -958,7 +962,7 @@ __tar()
 {
         __cd $BASE_DIR/tar
 
-        sed -e "s/^_GL_WARN_ON_USE (gets,.*$//g" lib/stdio.in.h > /tmp/a
+        sed -e "s/^_GL_WARN_ON_USE (gets,.*$//g" gnu/stdio.in.h > /tmp/a
         cp -f /tmp/a gnu/stdio.in.h
 
         FORCE_UNSAFE_CONFIGURE=1        \
@@ -1020,8 +1024,8 @@ cat > /etc/dbus-1/session-local.conf << "EOF"
 </busconfig>
 EOF
 
-        cd $BASE_DIR/blfs-bootscripts
-        __mk install-dbus
+#       cd $BASE_DIR/blfs-bootscripts
+#       __mk install-dbus
 }
 
 __systemd()
@@ -1079,7 +1083,7 @@ __ncurses
 __util-linux
 __psmisc
 __e2fsprogs
-__linux-pam
+###__linux-pam
 __shadow
 __shadow-config
 __coreutils
@@ -1087,7 +1091,7 @@ __iana-etc
 __m4
 __bison
 __procps
-###__grep
+__grep
 __readline
 __bash
 __libtool
@@ -1113,7 +1117,7 @@ __libpipeline
 __make
 __man-db
 __sysklogd
-###__tar
+__tar
 __texinfo
 __dbus
 __systemd
