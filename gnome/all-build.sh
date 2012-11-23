@@ -31,13 +31,15 @@ __nspr()
         __cd $BASE_DIR/nspr/mozilla/nsprpub
 
         $MAKE_CLEAN
-        ./configure --prefix=$PREFIX    \
-                --with-mozilla          \
-                --with-pthreads         \
-                $([ $(uname -m) = x86_64 ] && echo --enable-64bit)
+	sed -ri 's#^(RELEASE_BINS =).*#\1#' pr/src/misc/Makefile.in &&
+	sed -i 's#$(LIBRARY) ##' config/rules.mk &&
+	./configure --prefix=/usr 	\
+            	--with-mozilla 		\
+            	--with-pthreads 	\
+            	$([ $(uname -m) = x86_64 ] && echo --enable-64bit)
 
-        __mk
-        __mk install
+	__mk
+	__mk install
         ldconfig
 }
 
@@ -56,7 +58,7 @@ __js()
        sed -i 's#s \($(SHLIB_\(ABI\|EXACT\)_VER)\)#s $(notdir \1)#' Makefile.in
 
         $MAKE_CLEAN
-       ./configure --prefix=$PREFIX     \
+       ./configure --prefix=/usr	\
                 --enable-threadsafe     \
                 --with-system-nspr
 
@@ -94,6 +96,34 @@ password include        system-password
 session  include        system-session
 
 # End /etc/pam.d/polkit-1
+EOF
+}
+
+__polkit-gnome()
+{
+	__cd $BASE_DIR/polkit-gnome
+
+	$MAKE_CLEAN
+	./autogen.sh
+	./coufigure --preifx=/usr	\
+		--libexecdir=/usr/lib/polkit-gnome
+
+	__mk
+	__mk install
+	ldconfig
+
+mkdir -p /etc/xdg/autostart
+cat > /etc/xdg/autostart/polkit-gnome-authentication-agent-1.desktop << "EOF"
+[Desktop Entry]
+Name=PolicyKit Authentication Agent
+Comment=PolicyKit Authentication Agent
+Exec=/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1
+Terminal=false
+Type=Application
+Categories=
+NoDisplay=true
+OnlyShowIn=GNOME;XFCE;Unity;
+AutostartCondition=GNOME3 unless-session gnome
 EOF
 }
 
@@ -992,8 +1022,9 @@ __gcr()
         __cd $BASE_DIR/gcr
 
         $MAKE_CLEAN
-        ./autogen.sh --prefix=$PREFIX   \
-                --sysconfdir=/etc       \
+        ./autogen.sh
+	./configure --prefix=/usr	\
+                --sysconfdir=/etc   	\
                 --libexecdir=/usr/lib/gnome-keyring
 
         __mk
@@ -1668,6 +1699,7 @@ __nspr
 __zip
 __js
 __polkit
+__polkit-gnome
 __gconf
 __gnome-common
 __gnome-backgrounds

@@ -993,9 +993,9 @@ __dbus()
 {
         __cd $BASE_DIR/dbus
 
-        groupadd -g 18 messagebus
+        groupadd -g 27 messagebus
         useradd -c "D-Bus Message Daemon User" -d /var/run/dbus \
-                -u 18 -g messagebus -s /bin/false messagebus
+                -u 27 -g messagebus -s /bin/false messagebus
 
         $MAKE_CLEAN
         ./autogen.sh --prefix=$PREFIX   \
