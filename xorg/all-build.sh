@@ -10,11 +10,11 @@ XORG_CONFIG="--prefix=$XORG_PREFIX \
 	--localstatedir=/var"
 export XORG_PREFIX XORG_ETC XORG_CONFIG
 
-MAKE_CLEAN=
-#MAKE_CLEAN="__mk clean"
+#MAKE_CLEAN=
+MAKE_CLEAN="__mk clean"
 
-DIST_CLEAN=
-#DIST_CLEAN="__mk distclean"
+#DIST_CLEAN=
+DIST_CLEAN="__mk distclean"
 
 . ../common-func/__common-func.sh
 
@@ -473,7 +473,7 @@ cat >> $XORG_ETC/X11/app-defaults/XTerm << "EOF"
 EOF
 }
 
-#__rem(){
+__rem(){
 __util_macros
 __proto
 __makedepend
@@ -497,6 +497,7 @@ __xcb-util-wm
 __mesa-drm
 __mesa
 
+}
 __data
 __apps
 __xcursor-themes

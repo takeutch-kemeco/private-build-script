@@ -16,6 +16,8 @@ git clone git://anongit.freedesktop.org/gstreamer/gst-plugins-ugly
 
 git clone git://anongit.freedesktop.org/gstreamer/gstreamer
 
+git clone git://git.gnome.org/gstreamermm
+
 cvs -z3 -d:pserver:anonymous@lame.cvs.sourceforge.net:/cvsroot/lame co -P lame
 
 svn co http://svn.xiph.org/trunk/ogg

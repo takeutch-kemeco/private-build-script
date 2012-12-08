@@ -4,8 +4,8 @@ BASE_DIR=$(pwd)
 PREFIX=/usr
 XORG_PREFIX=/usr
 
-MAKE_CLEAN=
-#MAKE_CLEAN="make distclean && make clean"
+#MAKE_CLEAN=
+MAKE_CLEAN="make distclean && make clean"
 
 . ../common-func/__common-func.sh
 
@@ -61,7 +61,9 @@ __glib()
 	LIBFFI_LIBS=-lffi LIBFFI_CFLAGS=" " \
 	./configure --prefix=$PREFIX	\
 		--sysconfdir=/etc 	\
-		--with-pcre=system
+		--disable-mem-pools=no	\
+
+#		--with-pcre=system
 
 	__mk
 	__mk install

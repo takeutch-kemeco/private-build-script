@@ -5,13 +5,21 @@ mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/../ff-opt
 ac_add_options --disable-tests
 
 ac_add_options --prefix=/usr
-ac_add_options --enable-optimize="-O4 -march=native -mtune=native -msse3 -m32"
+ac_add_options --enable-optimize="-O2 -march=native -mtune=native"
 ac_add_options --disable-debug
 ac_add_options --disable-tests
 ac_add_options --disable-crashreporter
 ac_add_options --disable-installer
 #ac_add_options --disable-necko-wifi
 ac_add_options --disable-warnings-as-errors
+
+ac_add_options --disable-raw
+ac_add_options --disable-ogg
+ac_add_options --disable-webm
+ac_add_options --disable-media-plugins
+ac_add_options --disable-media-navigator
+ac_add_options --disable-omx-plugin
+ac_add_options --disable-webgl
 
 #ac_add_options --with-pthreads
 #ac_add_options --with-system-libxul

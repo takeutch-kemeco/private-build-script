@@ -22,7 +22,16 @@ __common()
 
 __cmake()
 {
-	__common $BASE_DIR/cmake
+	__cd $BASE_DIR/cmake
+
+	./bootstrap --prefix=/usr	\
+            	--system-libs       	\
+            	--mandir=/share/man 	\
+            	--docdir=/share/doc/cmake
+
+	__mk
+	__mk install
+	ldconfig
 }
 
 __talloc() {
@@ -36,16 +45,19 @@ __talloc() {
 
 __pcre() {
 	__cd $BASE_DIR/pcre
-	./configure --prefix=$PREFIX \
-		--libdir=/lib \
-		--docdir=$PREFIX/share/doc/pcre-8 \
-		--enable-utf8 \
+
+	./configure --prefix=/usr	\
+		--libdir=/lib 		\
+		--docdir=/usr/share/doc/pcre-8 \
+		--enable-utf 		\
 		--enable-unicode-properties \
-		--enable-pcregrep-libz \
+		--with-pcre=system	\
+		--enable-pcregrep-libz 	\
 		--enable-pcregrep-libbz2
+
 	$MAKE_CLEAN
 	__mk
-	__mk install
+	make install
 	ldconfig
 }
 
@@ -131,6 +143,9 @@ __tomoyo-tools() {
 __freeglut()
 {
 	__cd $BASE_DIR/freeglut
+
+	./autogen.sh
+	./configure --prefix=/usr
 
 	rm CMakeCache.txt
 	cmake -DCMAKE_INSTALL_PREFIX=/usr .

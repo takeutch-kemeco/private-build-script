@@ -9,7 +9,7 @@ __glibc() {
 	__cdbt
 
 cat > configparms << "EOF"
-ASFLAGS-config=-O2 -march=core2 -Wa,--noexecstack
+ASFLAGS-config=-O2 -march=native -mtune=native -Wa,--noexecstack
 EOF
 
 	$BASE_DIR/glibc/configure --prefix=/usr \

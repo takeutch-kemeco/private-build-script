@@ -16,7 +16,7 @@ __common()
 		--enable-xinput		\
 		--with-x
 
-	__mk clean
+	make clean
 	__mk
 	__mk install
 	ldconfig
@@ -86,10 +86,7 @@ __bullet()
 	__mk
 	__mk install
 	ldconfig
-#のあとに、/usr/local/以下へとインストールされたincludeやpkgconfig等を/usr/以下へ手動で移動する
 }
-
-
 
 #__rem(){
 __mx
@@ -99,9 +96,9 @@ __clutter-box2d
 __clutter-gtk
 __cluttermm
 __clutter-gst
-__clutter-gstreamermm
+###__clutter-gstreamermm
 
-__pyclutter
+###__pyclutter
 __bullet
 __clutter-bullet
 

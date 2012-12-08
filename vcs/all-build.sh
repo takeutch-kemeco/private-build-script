@@ -3,8 +3,8 @@
 BASE_DIR=$(pwd)
 PREFIX=/usr
 
-MAKE_CLEAN=
-#MAKE_CLEAN="make clean"
+#MAKE_CLEAN=
+MAKE_CLEAN="make clean"
 
 . ../common-func/__common-func.sh
 

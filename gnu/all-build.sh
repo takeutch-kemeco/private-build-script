@@ -3,8 +3,8 @@
 BASE_DIR=$(pwd)
 PREFIX=/usr
 
-MAKE_CLEAN=
-#MAKE_CLEAN="make clean"
+#MAKE_CLEAN=
+MAKE_CLEAN="make clean"
 
 . ../common-func/__common-func.sh
 
@@ -29,19 +29,23 @@ __patch()
 	__common $BASE_DIR/patch
 }
 
-__libunistring() {
+__libunistring()
+{
 	__common $BASE_DIR/libunistring
 }
+
 __guile()
 {
 	__common $BASE_DIR/guile
 }
 
-__libidn() {
+__libidn()
+{
 	__common $BASE_DIR/libidn
 }
 
-__gnutls() {
+__gnutls()
+{
 	__common $BASE_DIR/gnutls
 }
 
@@ -85,11 +89,13 @@ index 5fb4099..0315a6a 100644
 	cp configure.ac.old configure.ac
 }
 
-__ed() {
+__ed()
+{
 	__common $BASE_DIR/ed
 }
 
-__attr() {
+__attr()
+{
 	__cd $BASE_DIR/attr
 
 	./autogen.sh
@@ -104,7 +110,8 @@ __attr() {
 	ldconfig
 }
 
-__acl() {
+__acl()
+{
 	__common $BASE_DIR/acl
 
 	./autogen.sh
@@ -127,7 +134,8 @@ __acl() {
 	ldconfig
 }
 
-__indent() {
+__indent()
+{
 	__common $BASE_DIR/indent
 }
 
@@ -146,7 +154,8 @@ __expect()
 	ldconfig
 }
 
-__dejagnu() {
+__dejagnu()
+{
 	__common $BASE_DIR/dejagnu
 }
 

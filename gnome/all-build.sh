@@ -71,8 +71,8 @@ __polkit()
 {
         __cd $BASE_DIR/polkit
 
-        groupadd -fg 27 polkitd
-        useradd -c "PolicyKit Daemon Owner" -d /etc/polkit-1 -u 27 -g polkitd -s /bin/false polkitd
+        groupadd -fg 28 polkitd
+        useradd -c "PolicyKit Daemon Owner" -d /etc/polkit-1 -u 28 -g polkitd -s /bin/false polkitd
 
         $MAKE_CLEAN
         ./autogen.sh
@@ -295,9 +295,14 @@ __glib-networking()
         ldconfig
 }
 
-__libxml()
+__libxml2()
 {
-        __common $BASE_DIR/libxml
+        __common $BASE_DIR/libxml2
+}
+
+__libxml++()
+{
+        __common $BASE_DIR/libxml++
 }
 
 __libsoup()
@@ -392,12 +397,22 @@ __pango()
         __cd $BASE_DIR/pango
 
         $MAKE_CLEAN
-        ./autogen.sh --prefix=$PREFIX   \
+        ./autogen.sh --prefix=/usr	\
                 --sysconfdir=/etc
 
         __mk
         __mk install
+
+	pango-querymodules --update-cache
         ldconfig
+
+	./configure --prefix=/usr	\
+            	--sysconfdir=/etc 	\
+            	--disable-static
+
+	__mk
+	__mk install
+	ldconfig
 }
 
 __webkit()
@@ -412,7 +427,18 @@ __webkit()
                 --with-gstreamer=1.0    \
                 --enable-introspection  \
                 --enable-webkit2=no     \
-                --enable-plugin-process=no
+                --enable-plugin-process=no \
+		--enable-geolocation=no	\
+		--enable-accelerated-compositing=no \
+		--enable-filters=no	\
+		--enable-video=no	\
+		--enable-jit=no		\
+		--enable-svg-fonts=no	\
+		--enable-svg=no		\
+		--enable-webgl=no	\
+		--enable-xhr-timeout=no	\
+		--enable-xslt=no	\
+		--enable-introspection=no
 
         __mk
         __mk install
@@ -1372,7 +1398,8 @@ __telepathy-logger()
         ./autogen.sh
         ./configure --prefix=$PREFIX    \
                 --libexecdir=/usr/lib/telepathy \
-                --disable-static
+                --disable-static	\
+		--disable-Werror
 
         __mk
         __mk install
@@ -1394,8 +1421,8 @@ __gnome-shell()
                 --sysconfdir=/etc       \
                 --libexecdir=/usr/lib/gnome-shell \
                 --enable-compile-warnings=no \
-                --without-ca-certificates
-#               --with-ca-certificates=/etc/ssl/ca-bundle.crt
+                --without-ca-certificates \
+               	--with-ca-certificates=/etc/ssl/ca-bundle.crt
 
         __mk
         __mk install
@@ -1590,8 +1617,7 @@ __gnome-terminal()
         ./autogen.sh
         ./configure --prefix=$PREFIX    \
                 --sysconfdir=/etc       \
-                --enable-compile-warnings=no \
-                --disable-scrollkeeper
+                --enable-compile-warnings=no
 
         __mk
         __mk install
@@ -1620,9 +1646,19 @@ __gmime()
         ldconfig
 }
 
+__grilo-plugins()
+{
+	__common $BASE_DIR/grilo-plugins
+}
+
+__grilo()
+{
+	__common $BASE_DIR/grilo
+}
+
 __totem-pl-parser()
 {
-        __cd $BASE_DIR/totem-pl-parser
+        __common $BASE_DIR/totem-pl-parser
 }
 
 __totem()
@@ -1633,8 +1669,8 @@ __totem()
         ./autogen.sh
         ./configure --prefix=$PREFIX    \
                 --libexecdir=/usr/lib/totem \
-                --disable-static        \
-                --disable-scrollkeeper
+                --disable-static	\
+		--enable-compile-warnings=no
 
         __mk
         __mk install
@@ -1715,7 +1751,8 @@ __certificate
 __nettle
 __gnutls
 __glib-networking
-__libxml
+__libxml2
+__libxml++
 __libglade
 __libsoup
 __librest
@@ -1729,7 +1766,7 @@ __sqlite3
 __libpng
 __cairo
 __pango
-__webkit
+##__webkit
 __libsecret
 __gnome-online-accounts
 __lcms2
@@ -1821,6 +1858,8 @@ __dconf
 __gnome-terminal
 
 __gmime
+__grilo
+__grilo-plugins
 __totem-pl-parser
 __totem
 
@@ -1830,3 +1869,4 @@ __gtksourceview
 
 __gdm
 }
+

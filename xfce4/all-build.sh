@@ -4,8 +4,8 @@ BASE_DIR=$(pwd)
 PREFIX=/usr
 __X11_LIB__=/usr/X11/lib
 
-MAKE_CLEAN=
-#MAKE_CLEAN="__mk clean"
+#MAKE_CLEAN=
+MAKE_CLEAN="make clean"
 
 . ../common-func/__common-func.sh
 

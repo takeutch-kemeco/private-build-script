@@ -2,8 +2,8 @@
 
 SRC=$(pwd)
 
-CFLAGS="-O4 -march=native -mtune=native -msse3"
-CXXFLAGS=$CFLAGS
+#CFLAGS="-O4 -march=native -mtune=native -msse3"
+#CXXFLAGS=$CFLAGS
 
 export SRC CFLAGS CXXFLAGS
 
@@ -1237,19 +1237,19 @@ EOF
 
 __dhcpcd()
 {
-	__dcd dhcpcd-5.5.6
+	__cd dhcpcd
 
 	./configure --libexecdir=/lib/dhcpcd \
         	    --dbdir=/run	     \
 		    --sysconfdir=/etc
 
 	__mk
-
 	__mk install
-
 
 	sed -i "s;/var/lib;/run;g" dhcpcd-hooks/50-dhcpcd-compat
 	install -v -m 644 dhcpcd-hooks/50-dhcpcd-compat /lib/dhcpcd/dhcpcd-hooks/
+
+	ldconfig
 }
 
 __wireless-tools()
@@ -1257,9 +1257,13 @@ __wireless-tools()
 	__dcd wireless_tools.29
 
 	__mk
-
 	__mk PREFIX=/usr INSTALL_MAN=/usr/share/man install
+	ldconfig
 }
+
+#__dhcpcd
+__wireless-tools
+exit
 
 #rem(){
 __init

@@ -4,8 +4,8 @@ PREFIX=/usr
 BASE_DIR=$(pwd)
 SRC=$BASE_DIR
 
-MAKE_CLEAN=
-$MAKE_CLEAN="__mk clean"
+#MAKE_CLEAN=
+MAKE_CLEAN="make clean"
 
 . ../common-func/__common-func.sh
 

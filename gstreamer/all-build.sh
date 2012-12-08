@@ -2,13 +2,12 @@
 
 BASE_DIR=$(pwd)
 SRC=$BASE_DIR
-PREFIX=/usr
 
-MAKE_CLEAN=
-#MAKE_CLEAN="make clean"
+#MAKE_CLEAN=
+MAKE_CLEAN="make clean"
 
-DIST_CLEAN=
-#DIST_CLEAN="make distclean"
+#DIST_CLEAN=
+DIST_CLEAN="make distclean"
 
 . ../common-func/__common-func.sh
 
@@ -122,7 +121,10 @@ __libav()
 
 	$DIST_CLEAN
 	./autogen.sh
-	./configure --prefix=/usr --enable-shared --enable-gpl
+	./configure --prefix=/usr	\
+		--enable-shared 	\
+		--enable-gpl
+
 	$MAKE_CLEAN
 	__mk
 	__mk install
@@ -137,10 +139,10 @@ __gstreamer-core()
 
 	$DIST_CLEAN
 	./autogen.sh
-	./configure --prefix=$PREFIX \
+	./configure --prefix=/usr 	\
 		--enable-maintainer-mode \
-		--disable-gst-debug \
-		--disable-debug \
+		--disable-gst-debug 	\
+		--disable-debug 	\
 		--disable-fatal-warnings \
 		--enable-shared
 
@@ -158,12 +160,11 @@ __gst-plugins-base()
 
 	$DIST_CLEAN
 	./autogen.sh
-	./confiugre --prefix=$PREFIX \
+	./configure --prefix=/usr 	\
 		--enable-maintainer-mode \
-		--disable-debug \
+		--disable-debug 	\
 		--disable-fatal-warnings \
-		--disable-directfb \
-		--disable-wayland \
+		--disable-wayland 	\
 		--enable-shared
 
 	$MAKE_CLEAN
@@ -180,11 +181,11 @@ __gst-plugins-good()
 
 	$DIST_CLEAN
 	./autogen.sh
-	./configure --prefix=$PREFIX \
+	./configure --prefix=/usr 	\
 		--sysconfdir=/etc/gnome \
 		--enable-maintainer-mode \
-		--disable-debug \
-		--disable-debugutils \
+		--disable-debug 	\
+		--disable-debugutils 	\
 		--disable-fatal-warnings \
 		--enable-shared
 
@@ -202,9 +203,9 @@ __gst-plugins-ugly()
 
 	$DIST_CLEAN
 	./autogen.sh
-	./configure --prefix=$PREFIX \
+	./configure --prefix=/usr 	\
 		--enable-maintainer-mode \
-		--disable-debug \
+		--disable-debug 	\
 		--disable-fatal-warnings \
 		--enable-shared
 
@@ -222,9 +223,9 @@ __gst-plugins-bad()
 
 	$DIST_CLEAN
 	./autogen.sh
-	./configure --prefix=$PREFIX \
+	./configure --prefix=/usr 	\
 		--enable-maintainer-mode \
-		--disable-debug \
+		--disable-debug 	\
 		--disable-fatal-warnings \
 		--enable-shared
 
@@ -242,7 +243,7 @@ __gst-ffmpeg()
 
 	$DIST_CLEAN
 	./autogen.sh
-	./configure --prefix=$PREFIX \
+	./configure --prefix=/usr 	\
 		--enable-maintainer-mode \
 		--disable-fatal-warnings \
 		--enable-shared
@@ -259,8 +260,8 @@ __lame()
 	
 	$DIST_CLEAN
 	./autogen.sh
-	./configure --prefix=$PREFIX \
-		--enable-mp3rtp \
+	./configure --prefix=/usr 	\
+		--enable-mp3rtp 	\
 		--enable-shared
 
 	$MAKE_CLEAN
@@ -275,7 +276,7 @@ __ffmpeg()
 
 	$DIST_CLEAN
 	./autogen.sh
-	./configure --prefix=$PREFIX	 \
+	./configure --prefix=/usr	 \
         	    --disable-debug      \
 	            --enable-shared      \
 	            --enable-gpl         \
@@ -293,9 +294,15 @@ __ffmpeg()
 	            --enable-libpulse    \
 	            --enable-openssl
 
+	$MAKE_CLEAN
 	__mk
 	__mk install
 	ldconfig
+}
+
+__gstreamermm()
+{
+	__common $BASE_DIR/gstreamermm
 }
 
 __gst() {
@@ -320,8 +327,9 @@ __flac
 __faad2
 __faac
 __lame
-###__libav
+__libav
 __ffmpeg
 
 __gst
+###__gstreamermm
 
