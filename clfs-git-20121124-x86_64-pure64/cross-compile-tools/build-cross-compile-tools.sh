@@ -311,7 +311,7 @@ __gcc-final()
 
 __init-env
 
-__rem(){
+#__rem(){
 __linux-headers
 __file
 __m4
@@ -323,7 +323,6 @@ __ppl
 __cloog
 __binutils
 __gcc
-}
 __eglibc
 __gcc-final
 
