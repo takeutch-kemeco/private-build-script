@@ -662,7 +662,7 @@ __bash()
 	exec /bin/bash --login +h
 }
 
-__rem(){
+#__rem(){
 __tcl
 __expect
 __dejagnu
@@ -681,7 +681,6 @@ __binutils
 __gcc
 __sed
 __ncurses
-}
 __pkg-config-lite
 __util-linux
 __e2fsprogs
