@@ -35,6 +35,7 @@ __util-linux()
 		--disable-login 		\
 		--disable-su			\
 		--config-cache			\
+		--with-systemdsystemunitdir=${CLFS}/usr/lib/systemd/system \
 
 	__mk
 	__mk install
