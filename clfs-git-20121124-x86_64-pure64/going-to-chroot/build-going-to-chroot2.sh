@@ -25,6 +25,7 @@ __change-dir()
 	for dir in /usr{,/local}; do
   		ln -sv share/{man,doc,info} $dir
 	done
+	mkdir -pv /run
 }
 
 __create-symlink()
