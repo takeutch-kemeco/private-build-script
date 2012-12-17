@@ -992,7 +992,7 @@ __xorg-apps()
 		__common xwud-1.0.4
 	}
 
-	__rem() {
+#	__rem() {
 	__bdftopcf
 	__iceauth
 	__luit
@@ -1005,7 +1005,6 @@ __xorg-apps()
 	__xauth
 	__xbacklight
 	__xcmsdb
-}
 	__xcursorgen
 	__xdpyinfo
 	__xdriinfo
