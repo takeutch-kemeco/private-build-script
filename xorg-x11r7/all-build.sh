@@ -1349,11 +1349,11 @@ Section "InputClass"
 	MatchDevicePath	"/dev/input/event*"
 	Driver		"wacom"
 
-	Option		"TopX" 0
-	Option		"BottomX" 30479
+	Option		"TopX" "0"
+	Option		"BottomX" "30479"
 
-	Option		"TopY" 2000
-	Option		"BottomY" 19144
+	Option		"TopY" "2000"
+	Option		"BottomY" "19144"
 EndSection
 
 Section "InputClass"
@@ -1384,7 +1384,7 @@ __init-env
 
 __all()
 {
-	__rem() {
+#	__rem() {
 	__util-macros
 	__xorg-proto
 	__makedepend
@@ -1421,10 +1421,7 @@ __all()
 	__xterm
 	__xclock
 	__xinit
-}
 	__xorg-config
-
-
 }
 
 $@
