@@ -3,8 +3,8 @@
 BASE_DIR=$(pwd)
 PREFIX=/usr
 
-MAKE_CLEAN=
-#MAKE_CLEAN="make clean"
+#MAKE_CLEAN=
+MAKE_CLEAN="make clean"
 
 . ../common-func/__common-func.sh
 
@@ -40,6 +40,11 @@ __gmime()
 __libassuan()
 {
 	__common $BASE_DIR/libassuan
+}
+
+__npth()
+{
+	__common $BASE_DIR/npth
 }
 
 __gpgme()
@@ -95,13 +100,19 @@ __gnupg()
 	ldconfig
 }
 
+__all()
+{
 #__rem() {
 __libgpg-error
 __libgcrypt
 __gmime
 __libassuan
+__npth
 __gpgme
 __libksba
 __openldap
 __gnupg
+}
+
+$@
 

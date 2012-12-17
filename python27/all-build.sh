@@ -2,17 +2,26 @@
 
 BASE_DIR=$(pwd)
 
+#DIST_CLEAN=
+DIST_CLEAN="make distclean"
+
+#MAKE_CLEAN=
+MAKE_CLEAN="make clean"
+
 . ../common-func/__common-func.sh
 
 __python27() {
 	__cd $BASE_DIR/python27
+	$DIST_CLEAN
 	./configure --prefix=/usr --enable-shared --with-system-ffi
+	$MAKE_CLEAN
 	__mk
 	__mk install
 	ldconfig
 }
 
 __pmk() {
+	python setup.py clean	
 	python setup.py $@
 	if [ $? -ne 0 ]
 	then
@@ -22,6 +31,7 @@ __pmk() {
 
 __pyxml() {
 	__cd $BASE_DIR/pyxml
+	$MAKE_CLEAN
 	__pmk build
 	
 	__pmk install --prefix=/usr	
@@ -37,6 +47,7 @@ __pyxml() {
 __py2cairo() {
 	__cd $BASE_DIR/py2cairo
 	./waf configure --prefix=/usr
+	$MAKE_CLEAN
 	./waf build
 	./waf install
 }
@@ -44,14 +55,18 @@ __py2cairo() {
 __pygobject2() {
 	__cd $BASE_DIR/pygobject2
 	patch -p1 < ../pygobject-2.28.6-introspection-1.patch
+	$DIST_CLEAN
 	./configure --prefix=/usr
+	$MAKE_CLEAN
 	__mk
 	__mk install
 }
 
 __pygobject3() {
 	__cd $BASE_DIR/pygobject3
+	$DIST_CLEAN
 	./configure --prefix=/usr
+	$MAKE_CLEAN
 	__mk
 	__mk install
 }
@@ -67,21 +82,27 @@ __scipy() {
 
 __pygtk() {
 	__cd $BASE_DIR/pygtk
+	$DIST_CLEAN
 	./configure --prefix=/usr
+	$MAKE_CLEAN
 	__mk
 	__mk install
 }
 
 __pygtksourceview() {
 	__cd $BASE_DIR/pygtksourceview
+	$DIST_CLEAN
 	./configure --prefix=/usr
+	$MAKE_CLEAN
 	__mk
 	__mk install
 }
 
 __pyatspi() {
 	__cd $BASE_DIR/pyatspi
+	$DIST_CLEAN
 	./configure --prefix=/usr
+	$MAKE_CLEAN
 	__mk
 	__mk install
 }
@@ -101,6 +122,8 @@ __matplotlib() {
 	__pmk install --prefix=/usr
 }
 
+__all()
+{
 #__rem(){
 __python27
 
@@ -116,4 +139,7 @@ __pygtk
 __pyatspi
 __pyxdg
 __ipython
+}
+
+$@
 

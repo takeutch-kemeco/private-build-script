@@ -270,12 +270,16 @@ __lame()
 	ldconfig
 }
 
+__speex()
+{
+	__common $BASE_DIR/speex
+}
+
 __ffmpeg()
 {
 	__cd $BASE_DIR/ffmpeg
 
 	$DIST_CLEAN
-	./autogen.sh
 	./configure --prefix=/usr	 \
         	    --disable-debug      \
 	            --enable-shared      \
@@ -314,6 +318,8 @@ __gst() {
 	__gst-ffmpeg
 }
 
+__all()
+{
 #__rem(){
 __ogg
 __vorbis
@@ -328,8 +334,12 @@ __faad2
 __faac
 __lame
 __libav
+__speex
 __ffmpeg
 
 __gst
 ###__gstreamermm
+}
+
+$@
 

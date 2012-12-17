@@ -3,6 +3,12 @@
 PREFIX=/usr
 BASE_DIR=$(pwd)
 
+#MAKE_CLEAN=
+MAKE_CLEAN="make clean"
+
+#DIST_CLEAN=
+DIST_CLEAN="make distclean"
+
 . ../common-func/__common-func.sh
 
 __sane-backends()
@@ -11,11 +17,13 @@ __sane-backends()
 
 	__cd $BASE_DIR/sane-backends
 
+	$DIST_CLEAN
 	./configure --prefix=$PREFIX	\
             	--sysconfdir=/etc	\
             	--with-group=scanner	\
             	--localstatedir=/var
 
+	$MAKE_CLEAN
 	__mk
 	__mk install
 	ldconfig
@@ -27,8 +35,10 @@ __sane-frontends()
 {
 	__cd $BASE_DIR/sane-frontends
 
+	$DIST_CLEAN
 	./configure --prefix=$PREFIX
 
+	$MAKE_CLEAN
 	__mk
 	__mk install
 	ldconfig
@@ -44,8 +54,10 @@ __xsane()
 
 	sed -i -e 's/png_ptr->jmpbuf/png_jmpbuf(png_ptr)/' src/xsane-save.c
 
+	$DIST_CLEAN
 	./configure --prefix=$PREFIX
 
+	$MAKE_CLEAN
 	__mk
 	__mkmake xsanedocdir=/usr/share/doc/xsane-0.998 install
 	ldconfig
@@ -56,8 +68,13 @@ __xsane()
 	ln -v -s /usr/bin/xsane /usr/lib/gimp/2.0/plug-ins/
 }
 
+__all()
+{
 #__rem(){
 __sane-backends
 __sane-frontends
 __xsane
+}
+
+$@
 

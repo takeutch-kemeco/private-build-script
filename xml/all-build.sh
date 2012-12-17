@@ -30,6 +30,17 @@ __libxml++()
 	__common $BASE_DIR/libxml++
 }
 
+__libxslt()
+{
+	__common $BASE_DIR/libxslt
+}
+
+__all()
+{
 __libxml2
 __libxml++
+__libxslt
+}
+
+$@
 

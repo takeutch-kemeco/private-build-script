@@ -180,6 +180,8 @@ __bzr()
 	ldconfig
 }
 
+__all()
+{
 #__rem(){
 __git
 __gitg
@@ -202,4 +204,7 @@ __diffutils
 __cvs
 
 __bzr
+}
+
+$@
 

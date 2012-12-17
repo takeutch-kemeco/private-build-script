@@ -2,21 +2,26 @@
 
 BASE_DIR=$(pwd)
 
+#DIST_CLEAN=
+DIST_CLEAN="make distclean"
+
+#MAKE_CLEAN=
+MAKE_CLEAN="make clean"
+
 . ../common-func/__common-func.sh
 
 __common()
 {
 	__cd $1
 
-	make distclean
-
+	$DIST_CLEAN
 	./autogen.sh
 	./configure --prefix=/usr	\
 		--enable-gtk-doc	\
 		--enable-xinput		\
-		--with-x
+		--with-x		\
 
-	make clean
+	$MAKE_CLEAN
 	__mk
 	__mk install
 	ldconfig
@@ -81,13 +86,17 @@ __bullet()
 {
 	__cd $BASE_DIR/bullet
 
+	$DIST_CLEAN
 	cmake -DCMAKE_INSTALL_PREFIX=/usr . -G "Unix Makefiles"
 
+	$MAKE_CLEAN
 	__mk
 	__mk install
 	ldconfig
 }
 
+__all()
+{
 #__rem(){
 __mx
 __cogl
@@ -101,4 +110,7 @@ __clutter-gst
 ###__pyclutter
 __bullet
 __clutter-bullet
+}
+
+$@
 

@@ -16,5 +16,10 @@ __common()
 	ldconfig
 }
 
+__all()
+{
 __common $BASE_DIR/ruby
+}
+
+$@
 

@@ -13,7 +13,7 @@ __common()
 	__cd $1
 
 	./autogen.sh
-	./configure --prefix=/usr
+	./configure --prefix=/usr --sysconfdir=/etc
 
 	__mk
 	__mk install
@@ -23,9 +23,9 @@ __common()
 __pciutils() {
 	cd $BASE_DIR/pciutils
 	$MAKE_CLEAN
-	__mk PREFIX=$PREFIX ZLIB=no
-	__mk PREFIX=$PREFIX install
-	__mk PREFIX=$PREFIX install-lib
+	make PREFIX=/usr ZLIB=no
+	make PREFIX=/usr install
+	make PREFIX=/usr install-lib
 	ldconfig
 }
 
@@ -237,7 +237,15 @@ __accountsservice()
 	__common $BASE_DIR/accountsservice
 }
 
+__p11-kit()
+{
+	__common $BASE_DIR/p11-kit	
+}
+
+__all()
+{
 #__rem(){
+__p11-kit
 __desktop-file-utils
 __pciutils
 __usbutils
@@ -246,7 +254,7 @@ __consolekit
 __colord
 __expat
 __libva
-__intex-driver
+__intel-driver
 __polkit
 __pyxdg
 __shared-mime-info
@@ -258,4 +266,7 @@ __liboil
 __default-icon-theme
 __tango-icon-theme
 __accountsservice
+}
+
+$@
 

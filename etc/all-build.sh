@@ -197,6 +197,8 @@ EOF
 	chmod 644 /etc/pam.d/sudo
 }
 
+__all()
+{
 #__rem(){
 __cmake
 __talloc
@@ -209,4 +211,7 @@ __tk
 __tomoyo-tools
 __freeglut
 __sudo
+}
+
+$@
 

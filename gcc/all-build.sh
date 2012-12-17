@@ -45,7 +45,7 @@ __gmp()
 	$MAKE_CLEAN
 
 	./.bootstrap
-	ABI="32" ./configure --prefix=$PREFIX \
+	ABI="64" ./configure --prefix=$PREFIX \
 		--enable-cxx		\
 		--enable-mpbsd		\
 		--enable-maintainer-mode
@@ -120,10 +120,15 @@ __gdb()
 	ldconfig
 }
 
+__all()
+{
 #__rem(){
 __gmp
 __mpfr
 __mpc
 __gcc
 __gdb
+}
+
+$@
 

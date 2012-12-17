@@ -2,8 +2,8 @@
 
 BASE_DIR=$(pwd)
 
-MAKE_CLEAN=
-#MAKE_CLEAN="make distclean && make clean"
+#MAKE_CLEAN=
+MAKE_CLEAN="make distclean && make clean"
 
 . ../common-func/__common-func.sh
 
@@ -28,6 +28,7 @@ __dbus()
 	useradd -c "D-Bus Message Daemon User" -d /var/run/dbus \
 		-u 27 -g messagebus -s /bin/false messagebus
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=/usr	\
             	--sysconfdir=/etc 	\
@@ -47,6 +48,7 @@ __dbus-glib()
 {
 	__cd $BASE_DIR/dbus-glib
 
+	$MAKE_CLEAN
 	./autogen.sh
 	./configure --prefix=/usr	\
             	--sysconfdir=/etc	\
@@ -57,7 +59,12 @@ __dbus-glib()
 	__mk install
 }
 
+__all()
+{
 #__rem(){
 __dbus
 __dbus-glib
+}
+
+$@
 

@@ -57,10 +57,15 @@ __uri()
 	__common $SRC/URI-1.60
 }
 
+__all()
+{
 #__rem(){
 __perl
 
 __xmlparser
 __xmlsimple
 __uri
+}
+
+$@
 

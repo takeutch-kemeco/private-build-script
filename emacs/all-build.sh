@@ -10,7 +10,8 @@ __emacs()
 	__cd $BASE_DIR/emacs
 
 	./autogen.sh
-	./configure --prefix=$PREFIX
+	./configure --prefix=/usr				\
+		--without-gif					\
 
 	__mk
 	__mk install

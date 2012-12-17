@@ -4,10 +4,10 @@ BASE_DIR=$(pwd)
 PREFIX=/usr
 
 #MAKE_CLEAN=
-MAKE_CLEAN="__mk clean"
+MAKE_CLEAN="make clean"
 
 #DIST_CLEAN=
-DIST_CLEAN="__mk distclean"
+DIST_CLEAN="make distclean"
 
 . ../common-func/__common-func.sh
 
@@ -20,8 +20,8 @@ __llvm()
 
 	CC=gcc \
 	CXX=g++ \
-	./configure --prefix=$PREFIX \
-        	--libdir=$PREFIX/lib/llvm \
+	./configure --prefix=/usr \
+        	--libdir=/usr/lib/llvm \
         	--sysconfdir=/etc \
         	--enable-shared \
         	--enable-libffi \

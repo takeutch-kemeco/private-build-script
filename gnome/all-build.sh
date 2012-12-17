@@ -654,6 +654,148 @@ do
 done
 }
 
+__docbook-xml-4.3()
+{
+	__cd $BASE_DIR/docbook-xml-4.3
+
+install -v -d -m755 /usr/share/xml/docbook/schema/4.3/dtd/ &&
+cp -v -af *.cat *.dtd *.mod \
+    /usr/share/xml/docbook/schema/4.3/dtd/
+
+install -dv -m755 /usr/share/doc/docbook-xml-4.3
+install -v -m644 README ChangeLog /usr/share/doc/docbook-xml-4.3/
+
+xmlcatalog --noout --create /usr/share/xml/docbook/schema/4.3/catalog.xml &&
+xmlcatalog --noout --add "public" \
+           "-//OASIS//DTD DocBook XML V4.3//EN" \
+           "./dtd/docbookx.dtd" \
+           /usr/share/xml/docbook/schema/4.3/catalog.xml &&
+xmlcatalog --noout --add "public" \
+           "-//OASIS//DTD DocBook CALS Table Model V4.3//EN" \
+           "./dtd/calstblx.dtd" \
+           /usr/share/xml/docbook/schema/4.3/catalog.xml &&
+xmlcatalog --noout --add "public" \
+           "-//OASIS//DTD XML Exchange Table Model 19990315//EN" \
+           "./dtd/soextblx.dtd" \
+           /usr/share/xml/docbook/schema/4.3/catalog.xml &&
+xmlcatalog --noout --add "public" \
+           "-//OASIS//ELEMENTS DocBook Information Pool V4.3//EN" \
+           "./dtd/dbpoolx.mod" \
+           /usr/share/xml/docbook/schema/4.3/catalog.xml &&
+xmlcatalog --noout --add "public" \
+           "-//OASIS//ELEMENTS DocBook Document Hierarchy V4.3//EN" \
+           "./dtd/dbhierx.mod" \
+           /usr/share/xml/docbook/schema/4.3/catalog.xml &&
+xmlcatalog --noout --add "public" \
+           "-//OASIS//ENTITIES DocBook Additional General Entities V4.3//EN" \
+           "./dtd/dbgenent.mod" \
+           /usr/share/xml/docbook/schema/4.3/catalog.xml &&
+xmlcatalog --noout --add "public" \
+           "-//OASIS//ENTITIES DocBook Notations V4.3//EN" \
+           "./dtd/dbnotnx.mod" \
+           /usr/share/xml/docbook/schema/4.3/catalog.xml &&
+xmlcatalog --noout --add "public" \
+           "-//OASIS//ENTITIES DocBook Character Entities V4.3//EN" \
+           "./dtd/dbcentx.mod" \
+           /usr/share/xml/docbook/schema/4.3/catalog.xml
+
+install -dv -m755 /etc/xml
+[ ! -f /etc/xml/catalog ] &&
+    xmlcatalog --noout --create /etc/xml/catalog
+
+xmlcatalog --noout --add "delegatePublic" \
+           "-//OASIS//DTD DocBook XML V4.3//EN" \
+           "file:///usr/share/xml/docbook/schema/4.3/catalog.xml" \
+           /etc/xml/catalog &&
+xmlcatalog --noout --add "delegatePublic" \
+           "-//OASIS//DTD DocBook CALS Table Model V4.3//EN" \
+           "file:///usr/share/xml/docbook/schema/4.3/catalog.xml" \
+           /etc/xml/catalog &&
+xmlcatalog --noout --add "delegatePublic" \
+           "-//OASIS//DTD XML Exchange Table Model 19990315//EN" \
+           "file:///usr/share/xml/docbook/schema/4.3/catalog.xml" \
+           /etc/xml/catalog &&
+xmlcatalog --noout --add "delegatePublic" \
+           "-//OASIS//ELEMENTS DocBook Information Pool V4.3//EN" \
+           "file:///usr/share/xml/docbook/schema/4.3/catalog.xml" \
+           /etc/xml/catalog &&
+xmlcatalog --noout --add "delegatePublic" \
+           "-//OASIS//ELEMENTS DocBook Document Hierarchy V4.3//EN" \
+           "file:///usr/share/xml/docbook/schema/4.3/catalog.xml" \
+           /etc/xml/catalog &&
+xmlcatalog --noout --add "delegatePublic" \
+           "-//OASIS//ENTITIES DocBook Additional General Entities V4.3//EN" \
+           "file:///usr/share/xml/docbook/schema/4.3/catalog.xml" \
+           /etc/xml/catalog &&
+xmlcatalog --noout --add "delegatePublic" \
+           "-//OASIS//ENTITIES DocBook Notations V4.3//EN" \
+           "file:///usr/share/xml/docbook/schema/4.3/catalog.xml" \
+           /etc/xml/catalog &&
+xmlcatalog --noout --add "delegatePublic" \
+           "-//OASIS//ENTITIES DocBook Character Entities V4.3//EN" \
+           "file:///usr/share/xml/docbook/schema/4.3/catalog.xml" \
+           /etc/xml/catalog
+}
+
+__docbook-xsl()
+{
+	__cd $BASE_DIR/docbook-xsl-1.77.1
+
+	tar -xf ../docbook-xsl-doc-1.77.1.tar.bz2 --strip-components=1
+
+install -v -m755 -d /usr/share/xml/docbook/xsl-stylesheets-1.77.1 &&
+
+cp -v -R VERSION common eclipse epub extensions fo highlighting html \
+         htmlhelp images javahelp lib manpages params profiling \
+         roundtrip slides template tests tools webhelp website \
+         xhtml xhtml-1_1 \
+    /usr/share/xml/docbook/xsl-stylesheets-1.77.1 &&
+
+ln -s VERSION /usr/share/xml/docbook/xsl-stylesheets-1.77.1/VERSION.xsl &&
+
+install -v -m644 -D README \
+                    /usr/share/doc/docbook-xsl-1.77.1/README.txt &&
+install -v -m644    RELEASE-NOTES* NEWS* \
+                    /usr/share/doc/docbook-xsl-1.77.1
+
+cp -v -R doc/* /usr/share/doc/docbook-xsl-1.77.1
+
+if [ ! -d /etc/xml ]; then install -v -m755 -d /etc/xml; fi &&
+if [ ! -f /etc/xml/catalog ]; then
+    xmlcatalog --noout --create /etc/xml/catalog
+fi &&
+
+xmlcatalog --noout --add "rewriteSystem" \
+           "http://docbook.sourceforge.net/release/xsl/1.77.1" \
+           "/usr/share/xml/docbook/xsl-stylesheets-1.77.1" \
+    /etc/xml/catalog &&
+
+xmlcatalog --noout --add "rewriteURI" \
+           "http://docbook.sourceforge.net/release/xsl/1.77.1" \
+           "/usr/share/xml/docbook/xsl-stylesheets-1.77.1" \
+    /etc/xml/catalog &&
+
+xmlcatalog --noout --add "rewriteSystem" \
+           "http://docbook.sourceforge.net/release/xsl/current" \
+           "/usr/share/xml/docbook/xsl-stylesheets-1.77.1" \
+    /etc/xml/catalog &&
+
+xmlcatalog --noout --add "rewriteURI" \
+           "http://docbook.sourceforge.net/release/xsl/current" \
+           "/usr/share/xml/docbook/xsl-stylesheets-1.77.1" \
+    /etc/xml/catalog
+
+xmlcatalog --noout --add "rewriteSystem" \
+           "http://docbook.sourceforge.net/release/xsl/<version>" \
+           "/usr/share/xml/docbook/xsl-stylesheets-<version>" \
+    /etc/xml/catalog &&
+
+xmlcatalog --noout --add "rewriteURI" \
+           "http://docbook.sourceforge.net/release/xsl/<version>" \
+           "/usr/share/xml/docbook/xsl-stylesheets-<version>" \
+    /etc/xml/catalog
+}
+
 __itstool()
 {
         __common $BASE_DIR/itstool
@@ -1727,9 +1869,11 @@ __blfs-gnome() {
         __yelp
 }
 
+__all()
+{
 __blfs-gnome
 
-__rem() {
+#__rem() {
 __gobject-introspection
 __nspr
 __zip
@@ -1777,6 +1921,7 @@ __colord
 __cups
 __unzip
 __docbook-xml
+__docbook-xsl
 __itstool
 __yelp-xsl
 __yelp
@@ -1869,4 +2014,6 @@ __gtksourceview
 
 __gdm
 }
+
+$@
 

@@ -48,7 +48,20 @@ __libffi()
 
 __pth()
 {
-	__common $BASE_DIR/pth
+	__cd $BASE_DIR/pth
+
+	sed -i 's#$(LOBJS): Makefile#$(LOBJS): pth_p.h Makefile#' Makefile.in
+		./configure --prefix=/usr           	\
+            		--disable-static        	\
+            		--mandir=/usr/share/man		\
+
+	__mk
+	__mk install
+}
+
+__gtk-doc()
+{
+	__common $BASE_DIR/gtk-doc
 }
 
 __glib()
@@ -56,14 +69,13 @@ __glib()
 	__cd $BASE_DIR/glib
 
 	$MAKE_CLEAN
-	./autogen.sh
+
 	PCRE_LIBS=-lpcre PCRE_CFLAGS=" " \
 	LIBFFI_LIBS=-lffi LIBFFI_CFLAGS=" " \
-	./configure --prefix=$PREFIX	\
+	./autogen.sh --prefix=/usr	\
 		--sysconfdir=/etc 	\
 		--disable-mem-pools=no	\
-
-#		--with-pcre=system
+		--with-pcre=system
 
 	__mk
 	__mk install
@@ -271,12 +283,16 @@ __libsigc++2()
 	__common $BASE_DIR/libsigc++2
 }
 
+__all()
+{
 #__rem(){
 __libffi
 __libsigc++2
 __tk
 __pth
-__glib
+
+__gtk-doc
+###__glib
 __gobject-introspection
 __libsigcpp
 __mm-common
@@ -299,4 +315,7 @@ __gtk2
 ###__gtkmm2
 __gtk3
 __gtkmm
+}
+
+$@
 

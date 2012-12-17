@@ -2,15 +2,23 @@
 
 BASE_DIR=$(pwd)
 
+#DIST_CLEAN=
+DIST_CLEAN="make distclean"
+
+#MAKE_CLEAN=
+MAKE_CLEAN="make clean"
+
 . ../common-func/__common-func.sh
 
 __common()
 {
 	__cd $1
 
+	$DIST_CLEAN
 	./autogen.sh
 	./configure --prefix=/usr
 
+	$MAKE_CLEAN
 	__mk
 	__mk install
 	ldconfig
@@ -32,6 +40,7 @@ __pulseaudio()
 
 	find . -name "Makefile.in" | xargs sed -i "s|(libdir)/@PACKAGE@|(libdir)/pulse|"
 
+	$DIST_CLEAN
 	./autogen.sh
 	./configure --prefix=/usr	\
             	--sysconfdir=/etc 	\
@@ -39,11 +48,17 @@ __pulseaudio()
             	--libexecdir=/usr/lib	\
             	--with-module-dir=/usr/lib/pulse/modules
 
+	$MAKE_CLEAN
 	__mk
 	__mk install
 	ldconfig
 }
 
+__all()
+{
 __libsndfile
 __pulseaudio
+}
+
+$@
 

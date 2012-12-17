@@ -2,8 +2,8 @@
 
 BASE_DIR=$(pwd)
 
-MAKE_CLEAN=
-#MAKE_CLEAN="make distclean && make clean"
+#MAKE_CLEAN=
+MAKE_CLEAN="make distclean && make clean"
 
 . ../common-func/__common-func.sh
 
@@ -89,12 +89,14 @@ __ilixi()
 	ldconfig
 }
 
+__all()
+{
 #__rem(){
 __linux-fusion
 __common $BASE_DIR/flux
-__common $BASE_DIR/LiTE
-__fusion-sound
 __direct-fb
+__fusion-sound
+__common $BASE_DIR/LiTE
 __direct-fbgl
 __common $BASE_DIR/FusionDale
 
@@ -105,4 +107,7 @@ __ilixi
 
 __common $BASE_DIR/DFBTerm
 __common $BASE_DIR/DFBSee
+}
+
+$@
 

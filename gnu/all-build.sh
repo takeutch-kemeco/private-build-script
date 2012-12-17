@@ -3,6 +3,9 @@
 BASE_DIR=$(pwd)
 PREFIX=/usr
 
+#DIST_CLEAN=
+DIST_CLEAN="make distclean"
+
 #MAKE_CLEAN=
 MAKE_CLEAN="make clean"
 
@@ -12,6 +15,7 @@ __common()
 {
 	__cd $1
 
+	$DIST_CLEAN
 	./autogen.sh
 	./configure --prefix=$PREFIX
 
@@ -98,6 +102,7 @@ __attr()
 {
 	__cd $BASE_DIR/attr
 
+	$DIST_CLEAN
 	./autogen.sh
 	INSTALL_USER=root  \
 	INSTALL_GROUP=root \
@@ -114,6 +119,7 @@ __acl()
 {
 	__common $BASE_DIR/acl
 
+	$DIST_CLEAN
 	./autogen.sh
 	INSTALL_USER=root  \
 	INSTALL_GROUP=root \
@@ -143,6 +149,7 @@ __expect()
 {
 	__cd $BASE_DIR/expect
 
+	$DIST_CLEAN
 	./configure --prefix=/usr	\
             	--with-tcl=/usr/lib \
             	--with-tclinclude=/usr/include \
@@ -159,6 +166,13 @@ __dejagnu()
 	__common $BASE_DIR/dejagnu
 }
 
+__wget()
+{
+	__common $BASE_DIR/wget
+}
+
+__all()
+{
 #__rem(){
 __patch
 __libunistring
@@ -167,9 +181,13 @@ __libidn
 __gnutls
 __ed
 __gperf
+__attr
 __acl
-###__attr
 __indent
 __expect
 __dejagnu
+__wget
+}
+
+$@
 
