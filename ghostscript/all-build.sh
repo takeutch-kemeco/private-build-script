@@ -12,7 +12,7 @@ lcms()
 {
 	__cd $BASE_DIR/Little-CMS
 	autoreconf -vfi
-	./configure --prefix=$PREFIX
+	./configure --prefix=$PREFIX --sysconfdir=/etc
 	$MAKE_CLEAN
 	__mk
 	__mk install
@@ -27,7 +27,7 @@ cat > $BASE_DIR/ghostpdl/gs/Resource/Init/cidfmap << "EOF"
 /Adobe-Japan1 << /FileType /TrueType /Path (ipag.ttf) /CSI [(Japan1) 6] >> ;
 EOF
 
-        ./autogen.sh --prefix=$PREFIX
+        ./autogen.sh --prefix=$PREFIX --sysconfdir=/etc
         $MAKE_CLEAN
         __mk
         __mk install
