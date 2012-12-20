@@ -37,6 +37,7 @@ __bld-common()
 	$MAKE_CLEAN
 	__mk
 	__mk install
+	ldconfig
 }
 
 __common()
@@ -253,6 +254,7 @@ __libpthread-stubs()
 	$MAKE_CLEAN
 	__mk
 	__mk install
+	ldconfig
 }
 
 __python27()
@@ -272,6 +274,7 @@ __python27()
 
 	__mk install
 	chmod -v 755 /usr/lib/libpython2.7.so.1.0
+	ldconfig
 
 	install -v -m755 -d /usr/share/doc/Python-2.7.3
 	cp -rfv Doc/build/html/* /usr/share/doc/python-2.7.3
@@ -302,6 +305,7 @@ __xcb-proto()
 	$MAKE_CLEAN
 	__mk
 	__mk install
+	ldconfig
 
 	install -dv -m755 /usr/share/doc/xcb-proto-1.7.1
 	install -v -m644 doc/* /usr/share/doc/xcb-proto-1.7.1
@@ -318,6 +322,7 @@ __libxml2()
 	$MAKE_CLEAN
 	__mk
 	__mk install
+	ldconfig
 }
 
 __libxslt()
@@ -344,6 +349,7 @@ __libxcb()
 	$MAKE_CLEAN
 	__mk
 	__mk install
+	ldconfig
 }
 
 __expat()
@@ -357,6 +363,7 @@ __expat()
 	$MAKE_CLEAN
 	__mk
 	__mk install
+	ldconfig
 
 	install -v -m755 -d /usr/share/doc/expat-2.1.0
 	install -v -m644 doc/*.{html,png,css} /usr/share/doc/expat-2.1.0
@@ -378,6 +385,7 @@ __freetype2()
 	$MAKE_CLEAN
 	__mk
 	__mk install
+	ldconfig
 
 	install -v -m755 -d /usr/share/doc/freetype-2.4.10
 	cp -v -R docs/*     /usr/share/doc/freetype-2.4.10
@@ -399,6 +407,7 @@ __fontconfig()
 	$MAKE_CLEAN
 	__mk
 	__mk install
+	ldconfig
 
 	install -v -m755 -d /usr/share/{man/man{3,5},doc/fontconfig-2.10.1/fontconfig-devel}
 	install -v -m644 fc-*/*.1          /usr/share/man/man1
@@ -523,6 +532,7 @@ __xorg-libs()
 		$MAKE_CLEAN
 		__mk
 		__mk install
+		ldconfig
 	}
 
 	__libXft()
@@ -566,6 +576,7 @@ __xorg-libs()
 		$MAKE_CLEAN
 		__mk
 		__mk install
+		ldconfig
 	}
 
 	__libXv()
@@ -657,6 +668,7 @@ __gperf()
 	makeinfo -o doc/gperf.txt --plaintext doc/gperf.texi
 
 	__mk install
+	ldconfig
 
 	install -m644 -v doc/gperf.{dvi,ps,pdf,txt} /usr/share/doc/gperf-3.0.4
 
@@ -685,6 +697,7 @@ __libdrm()
 	$MAKE_CLEAN
 	__mk
 	__mk install
+	ldconfig
 }
 
 __mesa-lib()
@@ -721,6 +734,7 @@ __mesa-lib()
 	__mk
 	__mk -C xdemos DEMOS_PREFIX=/usr
 	__mk install
+	ldconfig
 
 	__mk -C xdemos DEMOS_PREFIX=/usr install
 
@@ -738,6 +752,7 @@ __mesa-lib()
 		$MAKE_CLEAN
 		__mk
 		__mk install
+		ldconfig
 	}
 
 	__mesa-glu
@@ -763,6 +778,7 @@ __libpng()
 	$MAKE_CLEAN
 	__mk
 	__mk install
+	ldconfig
 
 	mkdir /usr/share/doc/libpng-1.5.13
 	cp README libpng-manual.txt /usr/share/doc/libpng-1.5.13
@@ -1093,6 +1109,7 @@ __xml-parser()
 	perl Makefile.PL
 	__mk
 	__mk install
+	ldconfig
 }
 
 __intltool()
@@ -1106,6 +1123,7 @@ __intltool()
 	$MAKE_CLEAN
 	__mk
 	__mk install
+	ldconfig
 
 	install -v -m644 -D doc/I18N-HOWTO /usr/share/doc/intltool-0.50.2/I18N-HOWTO
 }
@@ -1121,6 +1139,7 @@ __xkeyboard-config()
 	$MAKE_CLEAN
 	__mk
 	__mk install
+	ldconfig
 
 	install -dv -m755 $XORG_PREFIX/share/doc/xkeyboard-config-2.6
 	install -v -m644 docs/{README,HOWTO}* $XORG_PREFIX/share/doc/xkeyboard-config-2.6
@@ -1149,6 +1168,7 @@ __pixman()
 	$MAKE_CLEAN
 	__mk
 	__mk install
+	ldconfig
 }
 
 __xorg-server()
@@ -1164,6 +1184,7 @@ __xorg-server()
 	$MAKE_CLEAN
 	__mk
 	__mk install
+	ldconfig
 
 mkdir -pv /etc/X11/xorg.conf.d
 cat >> /etc/sysconfig/createfiles << .
@@ -1224,6 +1245,7 @@ __twm()
 	$MAKE_CLEAN
 	__mk
 	__mk install
+	ldconfig
 }
 
 __xterm()
@@ -1245,6 +1267,7 @@ __xterm()
 	__mk
 	__mk install
 	__mk install-ti
+	ldconfig
 
 cat >> /etc/X11/app-defaults/XTerm << .
 *VT100*locale: true
@@ -1272,6 +1295,7 @@ __xinit()
 	$MAKE_CLEAN
 	__mk
 	__mk install
+	ldconfig
 }
 
 __xorg-config()
