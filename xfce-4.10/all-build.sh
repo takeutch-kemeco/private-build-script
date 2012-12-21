@@ -43,6 +43,12 @@ __perl-module-common()
 	ldconfig
 }
 
+__lsb-init-functions()
+{
+	mkdir -p /lib/lsb
+	cp -f $SRC_DIR/init-functions /lib/lsb/
+}
+
 __which()
 {
 	__wget ftp://ftp.gnu.org/gnu/which/which-2.20.tar.gz
@@ -170,10 +176,6 @@ __blfs-bootscripts-dbus()
 
 	__mk install-dbus
 	ldconfig
-
-	cp -v /etc/rc.d/init.d/dbus{,.orig}
-	sed -e "s/\. \/lib\/lsb\/init-functions//g" \
-		/etc/rc.d/init.d/dbus.orig > /etc/rc.d/init.d/dbus
 }
 
 __dbus-glib()
@@ -237,6 +239,21 @@ __libtiff()
 {
 	__wget ftp://ftp.remotesensing.org/libtiff/tiff-4.0.3.tar.gz
 	__common tiff-4.0.3
+}
+
+__libexif()
+{
+	__wget http://downloads.sourceforge.net/libexif/libexif-0.6.21.tar.bz2
+	__dcd libexif-0.6.21
+
+	$DIST_CLEAN
+	__cfg --prefix=/usr					\
+              --with-doc-dir=/usr/share/doc/libexif-0.6.21
+
+	$MAKE_CLEAN
+	__mk
+	__mk install
+	ldconfig
 }
 
 __gdk-pixbuf()
@@ -382,6 +399,29 @@ __libwnck()
 	ldconfig
 }
 
+__libnotify()
+{
+	__wget ftp://ftp.gnome.org/pub/gnome/sources/libnotify/0.5/libnotify-0.5.2.tar.bz2
+	__common libnotify-0.5.2
+}
+
+__vte()
+{
+	__wget ftp://ftp.gnome.org/pub/gnome/sources/vte/0.28/vte-0.28.2.tar.xz
+	__dcd vte-0.28.2
+
+	$DIST_CLEAN
+	__cfg --prefix=/usr			\
+	      --sysconfdir=/etc			\
+	      --libexecdir=/usr/lib/vte-2.90	\
+	      --enable-introspection
+
+	$MAKE_CLEAN
+	__mk
+	__mk install
+	ldconfig
+}
+
 __libxfce4util()
 {
 	__wget $XFCE_URL/libxfce4util-4.10.0.tar.bz2
@@ -484,11 +524,28 @@ __xfwm4()
 	__common xfwm4-4.10.0
 }
 
-__init-env
+__xfce4-taskmanager()
+{
+	__wget http://archive.xfce.org/src/apps/xfce4-taskmanager/1.0/xfce4-taskmanager-1.0.0.tar.bz2
+	__common xfce4-taskmanager-1.0.0
+}
+
+__Terminal()
+{
+	__wget http://archive.xfce.org/src/apps/terminal/0.4/Terminal-0.4.8.tar.bz2
+	__common Terminal-0.4.8
+}
+
+__ristretto()
+{
+	__wget http://archive.xfce.org/src/apps/ristretto/0.6/ristretto-0.6.3.tar.bz2
+	__common ristretto-0.6.3
+}
 
 __all-required()
 {
 #	__rem() {
+	__lsb-init-functions
 	__which
 	__perl-module-uri
 	__libffi
@@ -503,6 +560,7 @@ __all-required()
 	__cairo
 	__libjpeg-8d
 	__libtiff
+	__libexif
 	__gdk-pixbuf
 	__harfbuzz
 	__pango
@@ -516,9 +574,11 @@ __all-required()
 	__gnome-icon-theme-extras
 	__gnome-icon-theme-symbolic
 	__libwnck
+	__libnotify
+	__vte
 }
 
-__all()
+__base-system()
 {
 #	__rem() {
 	__all-required
@@ -541,5 +601,22 @@ __all()
 	__xfwm4
 }
 
+__extra-apps()
+{
+#	__rem() {
+	__xfce4-taskmanager
+	__Terminal
+	__ristretto
+}
+
+__all()
+{
+#	__rem() {
+	__all-required
+	__base-system
+	__extra-apps
+}
+
+__init-env
 $@
 

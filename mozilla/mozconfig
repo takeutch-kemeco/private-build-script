@@ -1,6 +1,6 @@
 . $topsrcdir/browser/config/mozconfig
 
-mk_add_options MOZ_MAKE_FLAGS="-j4"
+mk_add_options MOZ_MAKE_FLAGS="-j2"
 mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/../ff-opt
 ac_add_options --disable-tests
 
@@ -10,7 +10,7 @@ ac_add_options --disable-debug
 ac_add_options --disable-tests
 ac_add_options --disable-crashreporter
 ac_add_options --disable-installer
-#ac_add_options --disable-necko-wifi
+ac_add_options --disable-necko-wifi
 ac_add_options --disable-warnings-as-errors
 
 ac_add_options --disable-raw
@@ -20,6 +20,8 @@ ac_add_options --disable-media-plugins
 ac_add_options --disable-media-navigator
 ac_add_options --disable-omx-plugin
 ac_add_options --disable-webgl
+ac_add_options --disable-webm
+ac_add_options --disable-dash
 
 #ac_add_options --with-pthreads
 #ac_add_options --with-system-libxul
@@ -28,5 +30,5 @@ ac_add_options --disable-webgl
 #ac_add_options --enable-system-ffi
 
 #mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/../obj-@CONFIG_GUESS@
-mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/../obj-mozilla
+#mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/../obj-mozilla
 

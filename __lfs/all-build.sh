@@ -278,6 +278,8 @@ __bison()
         sed -e "s/^_GL_WARN_ON_USE (gets,.*$//g" lib/stdio.in.h > /tmp/a
         cp -f /tmp/a lib/stdio.in.h
 
+        echo "ac_cv_prog_lex_is_flex=yes" > config.cache
+
 	$DIST_CLEAN
         ./configure --prefix=/usr
 
@@ -503,7 +505,7 @@ __gawk()
         ./bootstrup
 
 	$DIST_CLEAN
-        ./configure --prefix=/usr
+        ./configure --prefix=/usr --sysconfdir=/usr
 
 	$MAKE_CLEAN
         __mk

@@ -165,9 +165,21 @@ cat > /etc/fstab << "EOF"
 proc           /proc        proc   defaults         0     0
 sysfs          /sys         sysfs  defaults         0     0
 devpts         /dev/pts     devpts gid=4,mode=620   0     0
-shm            /dev/shm     tmpfs  defaults         0     0
+# shm          /dev/shm     tmpfs  defaults         0     0
+tmpfs          /run         tmpfs  defaults         0     0
+tmpfs          /tmp         tmpfs  defaults         0     0
+devtmpfs       /dev         devtmpfs defaults       0     0
+
 # End /etc/fstab
 EOF
+}
+
+__i18n()
+{
+	cp -v /etc/sysconfig/i18n{,.orig}
+	sed -e "s/^KEYMAP=.*/KEYMAP=\"jp106\"/g" \
+		/etc/sysconfig/i18n.orig > /etc/sysconfig/i18n
+	rm /etc/sysconfig/i18n.orig
 }
 
 __linux()
@@ -205,6 +217,7 @@ __network
 __dhcpcd
 __dhcp-config
 __fstab
+__i18n
 __linux
 ###__grub-install
 

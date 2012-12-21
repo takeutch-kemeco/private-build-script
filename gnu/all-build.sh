@@ -17,7 +17,7 @@ __common()
 
 	$DIST_CLEAN
 	./autogen.sh
-	./configure --prefix=$PREFIX
+	./configure --prefix=/usr --sysconfdir=/etc
 
 	$MAKE_CLEAN
 	__mk

@@ -1,5 +1,10 @@
 #!/bin/bash
 
+#openssh
+wget -c ftp://ftp.jaist.ac.jp/pub/OpenBSD/OpenSSH/portable/openssh-6.1p1.tar.gz
+gzip -dc openssh-6.1p1.tar.gz
+ln -s openssh-6.1p1 openssh
+
 #git
 git clone git://git.kernel.org/pub/scm/git/git.git
 git clone git://git.gnome.org/gitg

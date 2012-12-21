@@ -8,6 +8,29 @@ MAKE_CLEAN="make clean"
 
 . ../common-func/__common-func.sh
 
+__openssh()
+{
+	__cd $BASE_DIR/openssh
+
+	install -v -m700 -d /var/lib/sshd
+	chown -v root:sys /var/lib/sshd
+	groupadd -g 50 sshd
+	useradd -c 'sshd PrivSep' -d /var/lib/sshd -g sshd -s /bin/false -u 50 sshd
+
+	./configure --prefix=/usr             		\
+            	--sysconfdir=/etc/ssh     		\
+            	--datadir=/usr/share/sshd 		\
+            	--with-md5-passwords      		\
+            	--with-privsep-path=/var/lib/sshd
+
+	$MAKE_CLEAN
+	__mk
+	__mk install
+
+	install -v -m755 -d /usr/share/doc/openssh-6.1p1
+	install -v -m644 INSTALL LICENCE OVERVIEW README* /usr/share/doc/openssh-6.1p1
+}
+
 __git()
 {
 	__cd $BASE_DIR/git
@@ -183,6 +206,8 @@ __bzr()
 __all()
 {
 #__rem(){
+__openssh
+
 __git
 __gitg
 
