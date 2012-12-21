@@ -505,7 +505,7 @@ __gawk()
         ./bootstrup
 
 	$DIST_CLEAN
-        ./configure --prefix=/usr --sysconfdir=/usr
+        ./configure --prefix=/usr --sysconfdir=/etc
 
 	$MAKE_CLEAN
         __mk
