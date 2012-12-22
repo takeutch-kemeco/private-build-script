@@ -67,7 +67,7 @@ __libffi()
 	__wget http://www.linuxfromscratch.org/patches/blfs/svn/libffi-3.0.11-includedir-1.patch
 
 	__dcd libffi-3.0.11
-	patch -Np1 -i ../libffi-3.0.11-includedir-1.patch
+	patch -Np1 -i $SRC_DIR/libffi-3.0.11-includedir-1.patch
 
 	__bld-common
 }
@@ -77,7 +77,7 @@ __pcre()
 	__wget http://downloads.sourceforge.net/pcre/pcre-8.32.tar.bz2
 
 	__dcd pcre-8.32
-	patch -Np1 -i ../libffi-3.0.11-includedir-1.patch
+	patch -Np1 -i $SRC_DIR/libffi-3.0.11-includedir-1.patch
 
 	__cfg --prefix=/usr			\
       	      --docdir=/usr/share/doc/pcre-8.32	\
@@ -213,7 +213,7 @@ __cairo()
 	__wget http://www.linuxfromscratch.org/patches/blfs/svn/cairo-1.12.8-expose_snapshot-1.patch
 
 	__dcd cairo-1.12.8
-	patch -Np1 -i ../cairo-1.12.8-expose_snapshot-1.patch
+	patch -Np1 -i $SRC_DIR/cairo-1.12.8-expose_snapshot-1.patch
 
 	$DIST_CLEAN
 	__cfg --prefix=/usr	\
