@@ -5,7 +5,7 @@ mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/../ff-opt
 ac_add_options --disable-tests
 
 ac_add_options --prefix=/usr
-ac_add_options --enable-optimize="-O2 -march=native -mtune=native"
+ac_add_options --enable-optimize="-O4 -march=native -mtune=native -msse3"
 ac_add_options --disable-debug
 ac_add_options --disable-tests
 ac_add_options --disable-crashreporter
