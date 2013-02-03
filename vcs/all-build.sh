@@ -8,6 +8,21 @@ MAKE_CLEAN="make clean"
 
 . ../common-func/__common-func.sh
 
+__common()
+{
+	__cd $1
+
+	./autogen.sh
+	./configure --prefix=/usr	\
+		--sysconfdir=/etc 	\
+		--localstatedir=/var 	\
+		--libexecdir=/usr/lib
+
+	__mk
+	__mk install
+	ldconfig
+}
+
 __openssh()
 {
 	__cd $BASE_DIR/openssh
@@ -26,6 +41,7 @@ __openssh()
 	$MAKE_CLEAN
 	__mk
 	__mk install
+	ldconfig
 
 	install -v -m755 -d /usr/share/doc/openssh-6.1p1
 	install -v -m644 INSTALL LICENCE OVERVIEW README* /usr/share/doc/openssh-6.1p1
@@ -39,6 +55,25 @@ __git()
 	__mk prefix=$PREFIX
 	__mk prefix=$PREFIX install
 	ldconfig
+}
+
+__libgit2()
+{
+	__cd $BASE_DIR/libgit2
+
+	mkdir build
+	cd build
+
+	cmake .. -DCMAKE_INSTALL_PREFIX=/usr
+
+	__mk
+	__mk install
+	ldconfig
+}
+
+__libgit2-glib()
+{
+	__common $BASE_DIR/libgit2-glib
 }
 
 __gitg()
@@ -209,6 +244,8 @@ __all()
 __openssh
 
 __git
+__libgit2
+__libgit2-glib
 __gitg
 
 __hg

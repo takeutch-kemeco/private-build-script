@@ -53,3 +53,15 @@ svn co http://freeglut.svn.sourceforge.net/svnroot/freeglut freeglut.svn
 rm freeglut
 ln -s freeglut.svn/trunk/freeglut/freeglut
 
+###cmake
+wget -c http://www.cmake.org/files/v2.8/cmake-2.8.10.2.tar.gz
+gzip -dc cmake-2.8.10.2.tar.gz | tar xvf -
+rm cmake
+ln -s cmake-2.8.10.2 cmake
+
+###libarchive
+wget -c http://github.com/downloads/libarchive/libarchive/libarchive-3.0.4.tar.gz
+gzip -dc libarchive-3.0.4.tar.gz | tar xvf -
+rm libarchive
+ln -s libarchive-3.0.4 libarchive
+

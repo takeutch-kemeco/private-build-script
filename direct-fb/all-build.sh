@@ -1,20 +1,25 @@
 #!/bin/bash
 
 BASE_DIR=$(pwd)
+SRC_DIR=${BASE_DIR}/src
+
+#DIST_CLEAN=
+DIST_CLEAN="make distclean"
 
 #MAKE_CLEAN=
-MAKE_CLEAN="make distclean && make clean"
+MAKE_CLEAN="make clean"
 
-. ../common-func/__common-func.sh
+. ./__common-func.sh
 
 __common()
 {
 	__cd $1
 
-	$MAKE_CLEAN
+	$DIST_CLEAN
 	./autogen.sh
-	./configure --prefix=/usr
+	__cfg --prefix=/usr --sysconfdir=/etc --localstatedir=/var --libexecdir=/usr/lib --enable-extra-warnings=no
 
+	$MAKE_CLEAN
 	__mk
 	__mk install
 	ldconfig
@@ -22,8 +27,9 @@ __common()
 
 __linux-fusion()
 {
-	__cd $BASE_DIR/linux-fusion
+	__cd linux-fusion
 
+	$MAKE_CLEAN
 	__mk
 	__mk install
 	ldconfig
@@ -31,44 +37,29 @@ __linux-fusion()
 
 __direct-fb()
 {
-	__cd $BASE_DIR/DirectFB
+	__cd DirectFB
+
+	$DIST_CLEAN
+	./autogen.sh
+	__cfg --prefix=/usr			\
+	      --sysconfdir=/etc			\
+	      --localstatedir=/var		\
+	      --libexecdir=/usr/lib		\
+  	      --enable-x11 			\
+  	      --enable-egl=no 			\
+  	      --enable-sdl 			\
+  	      --enable-mesa 			\
+  	      --enable-jpeg 			\
+  	      --enable-zlib 			\
+  	      --enable-png 			\
+  	      --enable-gstreamer=no 		\
+  	      --with-smooth-scaling 		\
+	      --enable-one			\
+	      --enable-voodoo			\
+  	      --with-gfxdrivers=i810,i830 	\
+	      --enable-fbdev
 
 	$MAKE_CLEAN
-	./autogen.sh
-	./configure --prefix=/usr	\
-  		--enable-x11 		\
-  		--enable-egl=no 	\
-  		--enable-sdl 		\
-  		--enable-mesa 		\
-  		--enable-jpeg 		\
-  		--enable-zlib 		\
-  		--enable-png 		\
-  		--enable-gstreamer 	\
-  		--with-smooth-scaling 	\
-		--enable-one		\
-		--enable-voodoo		\
-  		--with-gfxdrivers=i810,i830 \
-		--enable-fbdev 		\
-
-	__mk
-	__mk install
-	ldconfig
-}
-
-__direct-fbgl()
-{
-	__common $BASE_DIR/DirectFBGL
-}
-
-__fusion-sound()
-{
-	__cd $BASE_DIR/FusionSound
-
-	$MAKE_CLEAN
-	./autogen.sh
-	./configure --prefix=/usr	\
-		--with-ffmpeg=no
-
 	__mk
 	__mk install
 	ldconfig
@@ -76,14 +67,18 @@ __fusion-sound()
 
 __ilixi()
 {
-	__cd $BASE_DIR/ilixi
+	__cd ilixi
+
+	$DIST_CLEAN
+	./autogen.sh
+	__cfg --prefix=/usr		\
+	      --sysconfdir=/etc		\
+	      --localstatedir=/var	\
+	      --libexecdir=/usr/lib	\
+	      --enable-dale		\
+	      --enable-sound
 
 	$MAKE_CLEAN
-	./autogen.sh
-	./configure --prefix=/usr	\
-		--enable-dale		\
-		--enable-sound
-
 	__mk
 	__mk install
 	ldconfig
@@ -91,23 +86,22 @@ __ilixi()
 
 __all()
 {
-#__rem(){
-__linux-fusion
-__common $BASE_DIR/flux
-__direct-fb
-__fusion-sound
-__common $BASE_DIR/LiTE
-__direct-fbgl
-__common $BASE_DIR/FusionDale
+#	__rem(){
+	__linux-fusion
+	__common flux
+	__direct-fb
+	__common FusionSound
+	__common LiTE
+	__common DirectFBGL
+	__common FusionDale
 
-__common $BASE_DIR/DirectFB-examples
-__common $BASE_DIR/SaWMan
+	__common DirectFB-examples
+	__common SaWMan
 
-__ilixi
+	__ilixi
 
-__common $BASE_DIR/DFBTerm
-__common $BASE_DIR/DFBSee
+	__common DFBTerm
+	__common DFBSee
 }
 
 $@
-

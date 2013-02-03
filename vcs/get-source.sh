@@ -2,12 +2,14 @@
 
 #openssh
 wget -c ftp://ftp.jaist.ac.jp/pub/OpenBSD/OpenSSH/portable/openssh-6.1p1.tar.gz
-gzip -dc openssh-6.1p1.tar.gz
+gzip -dc openssh-6.1p1.tar.gz | tar xvf -
 ln -s openssh-6.1p1 openssh
 
 #git
 git clone git://git.kernel.org/pub/scm/git/git.git
 git clone git://git.gnome.org/gitg
+git clone git://github.com/libgit2/libgit2.git
+git clone git://git.gnome.org/libgit2-glib
 
 #hg
 hg clone http://selenic.com/hg

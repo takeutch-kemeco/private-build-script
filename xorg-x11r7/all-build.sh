@@ -702,12 +702,12 @@ __libdrm()
 
 __mesa-lib()
 {
-	__wget ftp://ftp.freedesktop.org/pub/mesa/9.0.1/MesaLib-9.0.1.tar.bz2
-	__wget http://www.linuxfromscratch.org/patches/blfs/svn/MesaLib-9.0.1-add_xdemos-4.patch
-	__decord MesaLib-9.0.1
-	__cd Mesa-9.0.1
+	__wget ftp://ftp.freedesktop.org/pub/mesa/9.0.2/MesaLib-9.0.2.tar.bz2
+	__wget http://www.linuxfromscratch.org/patches/blfs/svn/MesaLib-9.0.2-add_xdemos-5.patch
+	__decord MesaLib-9.0.2
+	__cd Mesa-9.0.2
 
-	patch -Np1 -i $SRC_DIR/MesaLib-9.0.1-add_xdemos-4.patch
+	patch -Np1 -i $SRC_DIR/MesaLib-9.0.2-add_xdemos-5.patch
 
 	$DIST_CLEAN
 	aclocal --force -I m4
@@ -720,11 +720,11 @@ __mesa-lib()
             	--enable-gles1                 	\
             	--enable-gles2                 	\
             	--enable-openvg                	\
+		--enable-osmesa			\
             	--enable-xa                    	\
             	--enable-gbm                   	\
             	--enable-gallium-egl           	\
             	--enable-gallium-gbm           	\
-		--enable-glx			\
             	--enable-glx-tls               	\
             	--with-egl-platforms="drm,x11" 	\
             	--with-gallium-drivers="i915"	\
@@ -738,8 +738,8 @@ __mesa-lib()
 
 	__mk -C xdemos DEMOS_PREFIX=/usr install
 
-	install -v -dm755 /usr/share/doc/MesaLib-9.0.1
-	cp -rfv docs/* /usr/share/doc/MesaLib-9.0.1
+	install -v -dm755 /usr/share/doc/MesaLib-9.0.2
+	cp -rfv docs/* /usr/share/doc/MesaLib-9.0.2
 
 	__mesa-glu()
 	{

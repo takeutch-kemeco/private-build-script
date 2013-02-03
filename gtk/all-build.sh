@@ -228,6 +228,7 @@ __gtk2()
 		--sysconfdir=/etc	\
 		--with-xinput=yes 	\
 		--with-gdktarget=x11 	\
+		--disable-glibtest	\
 		--with-x
 
 	__mk

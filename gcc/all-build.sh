@@ -84,14 +84,18 @@ __gcc()
 	__cdbt
 
 	../gcc/autogen.sh
-	../gcc/configure --prefix=$PREFIX \
+	../gcc/configure --prefix=/usr 	\
 		--libexecdir=/usr/lib	\
 	        --enable-shared    	\
 	        --enable-threads=posix	\
 	        --enable-__cxa_atexit 	\
+		--enable-c99		\
+		--enable-long-long	\
 	        --enable-clocale=gnu  	\
 	        --enable-languages=c,c++,fortran \
 	        --disable-multilib    	\
+		--disable-libstdcxx-pch	\
+		--enable-cloog-backend=isl \
 	        --disable-bootstrap   	\
 	        --with-system-zlib
 

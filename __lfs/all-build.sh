@@ -1167,9 +1167,39 @@ __vim()
         ln -sv ../vim/vim73/doc /usr/share/doc/vim
 }
 
+__iptables()
+{
+	__cd $BASE_DIR/iptables
+
+	$DIST_CLEAN
+	LDFLAGS="-L$PWD/libiptc/.libs"			\
+	./configure --prefix=/usr                       \
+        	--exec-prefix=                         	\
+            	--bindir=/usr/bin                      	\
+            	--with-xtlibdir=/lib/xtables           	\
+            	--with-pkgconfigdir=/usr/lib/pkgconfig 	\
+            	--enable-libipq                        	\
+            	--enable-devel
+
+	$MAKE_CLEAN
+	__mk
+	__mk install
+
+	ln -sfv ../../sbin/xtables-multi /usr/bin/iptables-xml
+#	for file in libip4tc libip6tc libipq libiptc libxtables
+#	do
+# 		ln -sfv ../../lib/`readlink /lib/${file}.so` /usr/lib/${file}.so
+#		rm -v /lib/${file}.so
+#		mv -v /lib/${file}.la /usr/lib
+#  		sed -i "s@libdir='@&/usr@g" /usr/lib/${file}.la
+#	done
+
+	ldconfig
+}
+
 __all()
 {
-__rem(){
+#__rem(){
 __man-pages
 __zlib
 __file
@@ -1217,12 +1247,12 @@ __man-db
 __sysklogd
 __tar
 __texinfo
-}
 __dbus
 ###__udev
 __systemd
 __systemd-ui
 __vim
+__iptables
 }
 
 $@

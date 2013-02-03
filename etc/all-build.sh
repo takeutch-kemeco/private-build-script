@@ -20,14 +20,19 @@ __common()
 	ldconfig
 }
 
+__libarchive()
+{
+	__common $BASE_DIR/libarchive
+}
+
 __cmake()
 {
 	__cd $BASE_DIR/cmake
 
-	./bootstrap --prefix=/usr	\
-            	--system-libs       	\
+	./bootstrap --prefix=/usr       \
+        	--system-libs       	\
             	--mandir=/share/man 	\
-            	--docdir=/share/doc/cmake
+            	--docdir=/share/doc/cmake-2.8.10.2
 
 	__mk
 	__mk install
@@ -200,6 +205,7 @@ EOF
 __all()
 {
 #__rem(){
+__livarchive
 __cmake
 __talloc
 __pcre

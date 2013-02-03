@@ -97,8 +97,8 @@ __all()
 {
 #	__rem() {
 	__scim
-	__scim-anthy
 	__anthy
+	__scim-anthy
 }
 
 $@

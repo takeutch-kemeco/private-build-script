@@ -385,7 +385,17 @@ __cairo()
                 --enable-xcb-drm        \
                 --enable-glsv2          \
                 --enable-xlib-xcb       \
-                --enable-xml
+                --enable-xml		\
+		--enable-directfb=auto	\
+		--enable-ft		\
+		--enable-fc
+
+#		--enable-gl=no		\
+#		--enable-glesv2=no	\
+#		--enable-cogl=no	\
+#		--enable-egl=no		\
+#		--enable-glx=no		\
+#		--enable-drm=no
 
         __mk
         __mk install
