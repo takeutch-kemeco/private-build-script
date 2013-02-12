@@ -16,13 +16,19 @@ __init-env()
 	echo
 }
 
-__geany()
+__eudev()
 {
-	__cd geany
+	__cd eudev.git
+	git pull
 
 	$DIST_CLEAN
 	./autogen.sh
-	__cfg --prefix=/usr --sysconfdir=/etc --localstatedir=/var --libexecdir=/usr/lib
+	__cfg --prefix=/usr		\
+	      --exec-prefix=		\
+	      --sysconfdir=/etc		\
+	      --enable-libkmod		\
+	      --with-rootprefix=	\
+	      --with-rootlibdir=/lib
 
 	$MAKE_CLEAN
 	__mk
@@ -32,8 +38,8 @@ __geany()
 
 __all()
 {
-# __rem() {
-	__geany
+#	__rem() {
+	__eudev
 }
 
 __init-env
