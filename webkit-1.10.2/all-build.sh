@@ -179,6 +179,11 @@ __icu()
 
 	__cd icu/source
 
+	cp configure.in{,.orig}
+	sed -e "s/clang++//g" configure.in.orig | sed -e "s/clang//" > configure.in
+	rm configure
+	autoconf
+
 	__cfg --prefix=/usr
 
 	__mk
