@@ -1,321 +1,433 @@
 #!/bin/bash
 
 BASE_DIR=$(pwd)
-PREFIX=/usr
-XORG_PREFIX=/usr
+SRC_DIR=${BASE_DIR}/src
+
+#DIST_CLEAN
+DIST_CLEAN="make distclean"
 
 #MAKE_CLEAN=
-MAKE_CLEAN="make distclean && make clean"
+MAKE_CLEAN="make clean"
 
-. ../common-func/__common-func.sh
+. ./__common-func.sh
+
+__git-clean()
+{
+	git clone . b
+	cp b/* . -rf
+	rm b -rf
+	git checkout master
+	git pull
+}
+
+__bld-common()
+{
+	__git-clean
+
+	$DIST_CLEAN
+	./autogen.sh
+	__cfg --prefix=/usr		\
+              --sysconfdir=/etc		\
+	      $@
+
+	$MAKE_CLEAN
+	__mk
+	__mk install
+	ldconfig
+}
 
 __common()
 {
 	__cd $1
-
-	$MAKE_CLEAN
-	./autogen.sh
-	./configure --prefix=$PREFIX --enable-warnings=no
-
-	__mk
-	__mk install
-	ldconfig
-}
-
-__common-force-clean()
-{
-	__cd $1
-
-	make distclean
-	make clean
-
-	./autogen.sh
-	./configure --prefix=$PREFIX
-
-	__mk
-	__mk install
-	ldconfig
+	__bld-common
 }
 
 __libffi()
 {
-	__common $BASE_DIR/libffi
+	__common libffi
 
-	cp -f $BASE_DIR/libffi/i686-pc-linux-gnu/include/ffi.h $PREFIX/include/
-	cp -f $BASE_DIR/libffi/i686-pc-linux-gnu/include/ffitarget.h $PREFIX/include/
+	cp -f $BASE_DIR/libffi/`gcc -dumpmachine`/include/ffi.h /usr/include/
+	cp -f $BASE_DIR/libffi/`gcc -dumpmachine`/include/ffitarget.h /usr/include/
+
 	ldconfig
 }
 
-__pth()
+__pkg-config()
 {
-	__cd $BASE_DIR/pth
+	__cd pkg-config
+	rm -f /usr/bin/`gcc -dumpmachine`-pkg-config
+	__bld-common --docdir=/usr/share/doc/pkg-config-0.28 \
+                     --with-internal-glib
+}
 
-	sed -i 's#$(LOBJS): Makefile#$(LOBJS): pth_p.h Makefile#' Makefile.in
-		./configure --prefix=/usr           	\
-            		--disable-static        	\
-            		--mandir=/usr/share/man		\
+__pcre()
+{
+	__cd pcre
 
+	svn cleanup
+	svn update
+
+	$DIST_CLEAN
+	./autogen.sh
+	__cfg --prefix=/usr                     \
+              --docdir=/usr/share/doc/pcre      \
+              --enable-utf                      \
+              --enable-unicode-properties       \
+              --enable-pcregrep-libz            \
+              --enable-pcregrep-libbz2          \
+              --disable-static
+
+	$MAKE_CLEAN
 	__mk
 	__mk install
+	ldconfig
+
+	cp -f /usr/lib/libpcre.la      /lib/
+	cp -f /usr/lib/libpcrecpp.la   /lib/
+	cp -f /usr/lib/libpcreposix.la /lib/
+
+	ln -sf /usr/lib/libpcre.so      /lib/libpcre.so
+	ln -sf /usr/lib/libpcrecpp.so   /lib/libpcrecpp.so
+	ln -sf /usr/lib/libpcreposix.so /lib/libpcreposix.so
+	ldconfig
 }
 
 __gtk-doc()
 {
-	__common $BASE_DIR/gtk-doc
+	__common gtk-doc
 }
 
 __glib()
 {
-	__cd $BASE_DIR/glib
-
-	$MAKE_CLEAN
-
-	PCRE_LIBS=-lpcre PCRE_CFLAGS=" " \
-	LIBFFI_LIBS=-lffi LIBFFI_CFLAGS=" " \
-	./autogen.sh --prefix=/usr	\
-		--sysconfdir=/etc 	\
-		--disable-mem-pools=no	\
-		--with-pcre=system
-
-	__mk
-	__mk install
-	ldconfig
+	__cd glib
+	__bld-common --with-pcre=system
 }
 
 __gobject-introspection()
 {
-	__cd $BASE_DIR/gobject-introspection
-
-	$MAKE_CLEAN
-	./autogen.sh
-	./configure  --prefix=$PREFIX	\
-		--disable-tests
-
-	__mk
-	__mk install
-	ldconfig
-}
-
-__libsigcpp()
-{
-	__common $BASE_DIR/libsigc++2
-}
-
-__mm-common()
-{
-	__common $BASE_DIR/mm-common
-}
-
-__glibmm()
-{
-	git checkout 2.34
-
-	__common $BASE_DIR/glibmm
-
-	git checkout master
-}
-
-__freetype2()
-{
-	__cd $BASE_DIR/freetype2
-
-	$MAKE_CLEAN
-	./autogen.sh
-
-	sed -i -r 's:.*(#.*SUBPIXEL.*) .*:\1:' include/freetype/config/ftoption.h
-
-	./configure --prefix=$PREFIX
-
-	__mk
-	__mk install
-	ldconfig
+	__common gobject-introspection
 }
 
 __expat()
 {
-	cmake .
-	aclocal --force
-	libtoolize
-	autoheader
-	automake -acf
-	autoconf
+	__common expat
+}
 
-	__cd $BASE_DIR/expat
+__dbus()
+{
+	__cd dbus
+	__git-clean
+
+	git checkout origin/dbus-1.6
+	git checkout -b 1.6
+	git checkout 1.6
+
+	groupadd -g 18 messagebus
+	useradd -c "D-Bus Message Daemon User" -d /var/run/dbus -u 18 -g messagebus -s /bin/false messagebus
+
+	$DIST_CLEAN
+	./autogen.sh
+	__cfg --prefix=/usr	 			\
+              --sysconfdir=/etc 			\
+              --localstatedir=/var 			\
+              --libexecdir=/usr/lib/dbus-1.0 		\
+              --with-console-auth-dir=/run/console/ 	\
+              --without-systemdsystemunitdir 		\
+              --disable-systemd 			\
+              --disable-static				\
+	      --disable-tests
 
 	$MAKE_CLEAN
-	./configure --prefix=$PREFIX	\
-		--enable-shared
+#	__mk
+#	__mk install
+	make
+	make install
+	ldconfig
 
+	dbus-uuidgen --ensure
+
+cat > /etc/dbus-1/session-local.conf << "EOF"
+<!DOCTYPE busconfig PUBLIC
+ "-//freedesktop//DTD D-BUS Bus Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/dbus/1.0/busconfig.dtd">
+<busconfig>
+
+  <!-- Search for .service files in /usr/local -->
+  <servicedir>/usr/local/share/dbus-1/services</servicedir>
+
+</busconfig>
+EOF
+}
+
+__at-spi2-core()
+{
+	__cd at-spi2-core
+	__bld-common --libexecdir=/usr/lib/at-spi2-core
+}
+
+__atk()
+{
+	__common atk
+}
+
+__intltool()
+{
+#	__wget http://launchpad.net/intltool/trunk/0.50.2/+download/intltool-0.50.2.tar.gz
+	__decord intltool-0.50.2
+	__common intltool-0.50.2
+	install -v -m644 -D doc/I18N-HOWTO /usr/share/doc/intltool-0.50.2/I18N-HOWTO
+}
+
+__at-spi2-atk()
+{
+	__cd at-spi2-atk
+	__git-clean
+	git checkout AT_SPI2_ATK_2_7_5
+	git checkout -b 2.7.5
+	git checkout 2.7.5
+
+	$DIST_CLEAN
+	./autogen.sh
+	__cfg --prefix=/usr
+
+	$MAKE_CLEAN
 	__mk
 	__mk install
 	ldconfig
 }
 
-__fontconfig()
+__nasm()
 {
-	__cd $BASE_DIR/fontconfig
+	__wget http://www.nasm.us/pub/nasm/releasebuilds/2.10.07/nasm-2.10.07.tar.xz
+	__wget http://www.nasm.us/pub/nasm/releasebuilds/2.10.07/nasm-2.10.07-xdoc.tar.xz
+#	__decord nasm-2.10.07
+	__cd nasm-2.10.07
+
+	tar -xf ${SRC_DIR}/nasm-2.10.07-xdoc.tar.xz --strip-components=1
+
+	$DIST_CLEAN
+	__cfg --prefix=/usr
 
 	$MAKE_CLEAN
-	./autogen.sh --prefix=$PREFIX 	\
-		--disable-docs 		\
-		--without-add-fonts 	\
-		--docdir=/usr/share/doc/fontconfig
-
 	__mk
 	__mk install
 	ldconfig
+
+	install -m755 -d         /usr/share/doc/nasm-2.10.07/html
+	cp -v doc/html/*.html    /usr/share/doc/nasm-2.10.07/html
+	cp -v doc/*.{txt,ps,pdf} /usr/share/doc/nasm-2.10.07
+	cp -v doc/info/*         /usr/share/info
+	install-info /usr/share/info/nasm.info /usr/share/info/dir
+}
+
+__libjpeg-turbo()
+{
+	__wget http://downloads.sourceforge.net/libjpeg-turbo/libjpeg-turbo-1.2.1.tar.gz
+	__dcd libjpeg-turbo-1.2.1
+
+	__bld-common --mandir=/usr/share/man	\
+                     --with-jpeg8
+
+	docsdir=/usr/share/doc/libjpeg-turbo-1.2.1
+	make docdir=$docsdir exampledir=$docsdir install
+	unset docsdir
 }
 
 __libpng()
 {
-	LIBPNG_BASE_DIR=$BASE_DIR/libpng
-
-	__cd $LIBPNG_BASE_DIR
-
-	__mes "libpng checkout v14"
-	git checkout v14 -f
-	__common-force-clean $LIBPNG_BASE_DIR
-
-	__mes "libpng checkout v15"
-	git checkout v15 -f
-	__common-force-clean $LIBPNG_BASE_DIR
-
-	__mes "libpng checkout v16"
-	git checkout v16 -f
-	__common-force-clean $LIBPNG_BASE_DIR
-
-	__mes "libpng checkout master"
-	__cd $LIBPNG_BASE_DIR
-	git checkout master -f
-}
-
-__libjpeg8()
-{
-	__common $BASE_DIR/jpeg-8d
+	__wget http://downloads.sourceforge.net/libpng/libpng-1.5.13.tar.xz
+	__decord libpng-1.5.13
+	__common libpng-1.5.13
 }
 
 __libtiff()
 {
-	__common $BASE_DIR/tiff
-}
-
-__cairomm()
-{
-	__common $BASE_DIR/cairomm
-}
-
-__pangomm()
-{
-	__common $BASE_DIR/pangomm
-}
-
-__atkmm()
-{
-	__common $BASE_DIR/atkmm
+	__wget ftp://ftp.remotesensing.org/libtiff/tiff-4.0.3.tar.gz
+	__decord tiff-4.0.3
+	__common tiff-4.0.3
 }
 
 __gdk-pixbuf()
 {
-	__common $BASE_DIR/gdk-pixbuf
+	__cd gdk-pixbuf
+	__bld-common --with-x11
 }
 
-__gtk2()
+__freetype2()
 {
-	__cd $BASE_DIR/gtk+-2.24
+	__cd freetype2
+	sed -i -r 's:.*(#.*SUBPIXEL.*) .*:\1:' include/freetype/config/ftoption.h
+	__bld-common
+}
 
-	$MAKE_CLEAN
-	./configure --prefix=$PREFIX 	\
-		--sysconfdir=/etc	\
-		--with-xinput=yes 	\
-		--with-gdktarget=x11 	\
-		--disable-glibtest	\
-		--with-x
+__fontconfig()
+{
+	__cd fontconfig
+	__bld-common --localstatedir=/var		\
+                     --docdir=/usr/share/doc/fontconfig	\
+                     --disable-docs			\
+                     --disable-static
+}
 
-	__mk
-	__mk install
+__pixman()
+{
+	__common pixman
+}
 
-	ls /etc/gtk-2.0/gtk.immodules
-	if [ $? -ne 0 ]
-	then
-echo
-#		gtk-query-immodules-2.0 > /etc/gtk-2.0/gtk.immodules
-	fi
+__cairo()
+{
+	__cd cairo
+	__bld-common --enable-tee   		\
+                     --enable-gl                \
+                     --enable-xcb               \
+                     --enable-gtk-doc           \
+                     --enable-xcb-drm           \
+                     --enable-glsv2             \
+                     --enable-xlib-xcb          \
+                     --enable-xml               \
+                     --enable-directfb=auto     \
+                     --enable-ft                \
+                     --enable-fc
+}
 
-	ls /etc/gtk-2.0/gtkrc
-	if [ $? -ne 0 ]
-	then
-cat > /etc/gtk-2.0/gtkrc << "EOF"
-include "/usr/share/themes/Clearlooks/gtk-2.0/gtkrc"
-gtk-icon-theme-name = "Mist"
+__ragel()
+{
+	__wget http://www.complang.org/ragel/ragel-6.8.tar.gz
+	__dcd ragel-6.8
+	__common ragel-6.8
+}
+
+__harfbuzz()
+{
+	__common harfbuzz
+}
+
+__pango()
+{
+	__common pango
+	pango-querymodules --update-cache
+}
+
+__pangox-compat()
+{
+	__common pangox-compat
+}
+
+__gtk+3()
+{
+	__cd gtk+
+	git-clean
+	git checkout 3.7.8
+	git checkout -b 3.7.8
+	git checkout 3.7.8
+
+        $DIST_CLEAN
+        ./autogen.sh
+        __cfg --prefix=/usr             \
+              --sysconfdir=/etc         \
+              $@
+
+        $MAKE_CLEAN
+        __mk
+        __mk install
+        ldconfig
+
+	gtk-query-immodules-3.0 --update-cache
+	glib-compile-schemas /usr/share/glib-2.0/schemas
+
+	mkdir -p ~/.config/gtk-3.0
+cat > ~/.config/gtk-3.0/settings.ini << "EOF"
+[Settings]
+gtk-theme-name = Adwaita
+gtk-fallback-icon-theme = gnome
 EOF
-	fi
 
-	ldconfig
+cat > /etc/gtk-3.0/settings.ini << "EOF"
+[Settings]
+gtk-theme-name = Clearwaita
+gtk-fallback-icon-theme = elementary
+EOF
 }
 
-__gtk3()
+__glib-package()
 {
-	__cd $BASE_DIR/gtk+
-
-	$MAKE_CLEAN
-	./autogen.sh
-	./configure --prefix=$PREFIX	\
-		--sysconfdir=/etc	\
-		--enable-x11-backend	\
-		--enable-broadway-backend
-
-	__mk
-	__mk install
-	ldconfig
+#__rem() {
+	__libffi
+	__pkg-config
+	__pcre
+	__gtk-doc
+	__glib
 }
 
-__gtkmm()
+__dbus-package()
 {
-	__common $BASE_DIR/gtkmm
+#__rem() {
+	__expat
+	__dbus
+	
 }
 
-__gtkmm2()
+__at-spi2-package()
 {
-	__common $BASE_DIR/gtkmm-2.24
+#__rem() {
+	__dbus-package
+	__gobject-introspection
+	__at-spi2-core
+	__atk
+	__intltool
+	__at-spi2-atk
 }
 
-__libsigc++2()
+__gdk-pixbuf-package()
 {
-	__common $BASE_DIR/libsigc++2
+#__rem() {
+	__nasm
+	__libjpeg-turbo
+	__libpng
+	__libtiff
+	__gdk-pixbuf
+
+}
+
+__fontconfig-package()
+{
+#__rem() {
+	__freetype2
+	__fontconfig
+}
+
+__cairo-package()
+{
+#__rem() {
+	__fontconfig-package
+	__pixman
+	__cairo
+}
+
+__harfbuzz-package()
+{
+#__rem() {
+	__ragel
+	__harfbuzz
+}
+
+__pango-package()
+{
+#__rem() {
+	__cairo-package
+	__harfbuzz-package
+	__pango
+	__pangox-compat
 }
 
 __all()
 {
-#__rem(){
-__libffi
-__libsigc++2
-__tk
-__pth
-
-__gtk-doc
-###__glib
-__gobject-introspection
-__libsigcpp
-__mm-common
-__glibmm
-
-__freetype2
-__expat
-
-__fontconfig
-
-__libpng
-__libjpeg8
-__libtiff
-
-__cairomm
-__pangomm
-__atkmm
-__gdk-pixbuf
-__gtk2
-###__gtkmm2
-__gtk3
-__gtkmm
+#__rem() {
+	__glib-package
+	__at-spi2-package
+	__gdk-pixbuf-package
+	__pango-package
+	__gtk+3
 }
 
 $@
