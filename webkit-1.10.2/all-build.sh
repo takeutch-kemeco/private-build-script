@@ -71,56 +71,27 @@ __gst-plugins-base()
 
 __harfbuzz()
 {
-	__wget http://www.freedesktop.org/software/harfbuzz/release/harfbuzz-0.9.9.tar.bz2
-	__common harfbuzz-0.9.9
+	echo
 }
 
 __pango()
 {
-	__wget ftp://ftp.gnome.org/pub/gnome/sources/pango/1.32/pango-1.32.5.tar.xz
-	__common pango-1.32.5
-	pango-querymodules --update-cache
+	echo
 }
 
 __pangox-compat()
 {
-	__wget ftp://ftp.gnome.org/pub/gnome/sources/pangox-compat/0.0/pangox-compat-0.0.2.tar.xz
-	__common pangox-compat-0.0.2
+	echo
 }
-
-
 
 __freetype()
 {
-	__wget ftp://mirror.ovh.net/gentoo-distfiles/distfiles/freetype-2.4.11.tar.bz2
-	__wget ftp://mirror.ovh.net/gentoo-distfiles/distfiles/freetype-doc-2.4.11.tar.bz2
-	__dcd freetype-2.4.11
-
-	tar -xf ${SRC_DIR}/freetype-doc-2.4.11.tar.bz2 --strip-components=2 -C docs
-
-	sed -i -r 's:.*(#.*SUBPIXEL.*) .*:\1:' include/freetype/config/ftoption.h
-
-	__cfg --prefix=/usr
-
-	__mk
-	__mk install
-	install -v -m755 -d /usr/share/doc/freetype-2.4.11
-	cp -v -R docs/*     /usr/share/doc/freetype-2.4.11
-	ldconfig
+	echo
 }
 
 __expat()
 {
-	__wget http://downloads.sourceforge.net/expat/expat-2.1.0.tar.gz
-	__dcd expat-2.1.0
-
-	__cfg --prefix=/usr
-
-	__mk
-	__mk install
-	install -v -m755 -d /usr/share/doc/expat-2.1.0
-	install -v -m644 doc/*.{html,png,css} /usr/share/doc/expat-2.1.0
-	ldconfig
+	echo
 }
 
 __libxml()
@@ -131,43 +102,12 @@ __libxml()
 
 __fontconfig()
 {
-	__wget http://fontconfig.org/release/fontconfig-2.10.2.tar.bz2
-	__dcd fontconfig-2.10.2
-
-	__cfg --prefix=/usr 				\
-              --sysconfdir=/etc 			\
-              --localstatedir=/var 			\
-              --docdir=/usr/share/doc/fontconfig-2.10.2	\
-              --disable-docs
-
-	__mk
-	__mk install
-
-	install -v -dm755 /usr/share/{man/man{3,5},doc/fontconfig-2.10.2/fontconfig-devel}
-	install -v -m644 fc-*/*.1          /usr/share/man/man1
-	install -v -m644 doc/*.3           /usr/share/man/man3
-	install -v -m644 doc/fonts-conf.5  /usr/share/man/man5
-	install -v -m644 doc/fontconfig-devel/* /usr/share/doc/fontconfig-2.10.2/fontconfig-devel
-	install -v -m644 doc/*.{pdf,sgml,txt,html} /usr/share/doc/fontconfig-2.10.2
-
-	ldconfig
+	echo
 }
 
 __cairo()
 {
-	__wget http://cairographics.org/releases/cairo-1.12.10.tar.xz
-	__wget http://www.linuxfromscratch.org/patches/blfs/svn/cairo-1.12.10-upstream_fix-1.patch
-	__dcd cairo-1.12.10
-
-	patch -Np1 -i ${SRC_DIR}/cairo-1.12.10-upstream_fix-1.patch
-
-	__cfg --prefix=/usr \
-              --enable-tee  \
-              --enable-xcb
-
-	__mk
-	__mk install
-	ldconfig
+	echo
 }
 
 __icu()

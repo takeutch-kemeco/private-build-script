@@ -1,4 +1,4 @@
-wget -c http://www.cpan.org/src/5.0/perl-5.16.0.tar.bz2
+wget -c http://www.cpan.org/src/5.0/perl-5.16.3.tar.gz
 
 URL=http://anduin.linuxfromscratch.org/sources/BLFS/svn/perl-modules
 
