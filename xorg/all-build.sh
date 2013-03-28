@@ -316,33 +316,55 @@ __mesa()
 
 	$DIST_CLEAN
 	./autogen.sh
-	./configure $XORG_CONFIG	\
-		--enable-texture-float 	\
-		--enable-gles1 		\
-		--enable-gles2 		\
-		--enable-xa 		\
-		--enable-shared-glapi 	\
-		--enable-shared-dricore \
-		--enable-glx-tls 	\
-		--with-gallium-drivers=i915 \
-		--with-dri-drivers=i965 \
-		--enable-dri 		\
-		--with-x 		\
-		--enable-gallium-egl 	\
-		--enable-glx 		\
-
-#		--enable-xorg		\
+	./configure				\
+		--prefix=/usr                	\
+            	--sysconfdir=/etc              	\
+            	--enable-texture-float         	\
+            	--enable-gles1                 	\
+            	--enable-gles2                 	\
+            	--enable-openvg                	\
+		--enable-osmesa			\
+            	--enable-xa                    	\
+            	--enable-gbm                   	\
+            	--enable-gallium-egl           	\
+            	--enable-gallium-gbm           	\
+            	--enable-glx-tls               	\
+            	--with-egl-platforms="drm,x11" 	\
+            	--with-gallium-drivers="i915"	\
+		--with-dri-drivers="i965"	\
 
 	$MAKE_CLEAN
 	__mk
-	__mk install
+	__mk -C xdemos DEMOS_PREFIX=/usr
 
 	for GLHEADER in EGL GL GLES GLES2 KHR xa_composite.h xa_context.h xa_tracker.h
 	do
 		ln -sfv ${XORG_PREFIX}/include/${GLHEADER} /usr/include/${GLHEADER}
 	done
 
+	__mk install
 	ldconfig
+
+	__mk -C xdemos DEMOS_PREFIX=/usr install
+
+	install -v -dm755 /usr/share/doc/MesaLib
+	cp -rfv docs/* /usr/share/doc/MesaLib
+
+	__mesa-glu()
+	{
+		__cd $BASE_DIR/mesa/glu
+
+		$DIST_CLEAN
+		./autogen.sh
+		./configure --prefix=/usr --disable-static
+
+		$MAKE_CLEAN
+		__mk
+		__mk install
+		ldconfig
+	}
+
+	__mesa-glu
 }
 
 __xcursorgen()

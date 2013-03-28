@@ -688,10 +688,13 @@ __xcb-util()
 
 __libdrm()
 {
-	__wget http://dri.freedesktop.org/libdrm/libdrm-2.4.40.tar.bz2
-	__dcd libdrm-2.4.40
+	__wget http://dri.freedesktop.org/libdrm/libdrm-2.4.42.tar.bz2
+	__dcd libdrm-2.4.42
 
 	$DIST_CLEAN
+
+	sed -e "/pthread-stubs/d" -i configure.ac
+	autoreconf -fi
 	__cfg --prefix=/usr --enable-udev
 
 	$MAKE_CLEAN
@@ -702,18 +705,15 @@ __libdrm()
 
 __mesa-lib()
 {
-	__wget ftp://ftp.freedesktop.org/pub/mesa/9.0.2/MesaLib-9.0.2.tar.bz2
-	__wget http://www.linuxfromscratch.org/patches/blfs/svn/MesaLib-9.0.2-add_xdemos-5.patch
-	__decord MesaLib-9.0.2
-	__cd Mesa-9.0.2
+	__wget ftp://ftp.freedesktop.org/pub/mesa/9.1/MesaLib-9.1.tar.bz2
+	__wget http://www.linuxfromscratch.org/patches/blfs/svn/MesaLib-9.1-add_xdemos-1.patch
+	__decord MesaLib-9.1
+	__cd Mesa-9.1
 
-	patch -Np1 -i $SRC_DIR/MesaLib-9.0.2-add_xdemos-5.patch
+	patch -Np1 -i ${SRC_DIR}/MesaLib-9.1-add_xdemos-1.patch
 
 	$DIST_CLEAN
-	aclocal --force -I m4
 	autoreconf -fi
-	automake -acf
-
 	__cfg --prefix=/usr                	\
             	--sysconfdir=/etc              	\
             	--enable-texture-float         	\
@@ -726,6 +726,7 @@ __mesa-lib()
             	--enable-gallium-egl           	\
             	--enable-gallium-gbm           	\
             	--enable-glx-tls               	\
+		--with-llvm-shared-libs		\
             	--with-egl-platforms="drm,x11" 	\
             	--with-gallium-drivers="i915"	\
 		--with-dri-drivers="i965"	\
@@ -738,8 +739,8 @@ __mesa-lib()
 
 	__mk -C xdemos DEMOS_PREFIX=/usr install
 
-	install -v -dm755 /usr/share/doc/MesaLib-9.0.2
-	cp -rfv docs/* /usr/share/doc/MesaLib-9.0.2
+	install -v -dm755 /usr/share/doc/MesaLib-9.1
+	cp -rfv docs/* /usr/share/doc/MesaLib-9.1
 
 	__mesa-glu()
 	{

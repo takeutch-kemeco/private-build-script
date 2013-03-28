@@ -106,6 +106,7 @@ mkdir -p mesa
 cd mesa
 git clone git://anongit.freedesktop.org/mesa/mesa
 git clone git://anongit.freedesktop.org/git/mesa/drm
+git clone git://anongit.freedesktop.org/mesa/glu
 cd $__BASE_DIR__
 
 mkdir -p data
