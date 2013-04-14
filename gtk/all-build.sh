@@ -122,12 +122,13 @@ __dbus()
 	git checkout -b 1.6
 	git checkout 1.6
 
-	groupadd -g 18 messagebus
-	useradd -c "D-Bus Message Daemon User" -d /var/run/dbus -u 18 -g messagebus -s /bin/false messagebus
+	groupadd -g 27 messagebus
+	useradd -c "D-Bus Message Daemon User" -d /var/run/dbus -u 27 -g messagebus -s /bin/false messagebus
 
 	$DIST_CLEAN
 	./autogen.sh
-	__cfg --prefix=/usr	 			\
+#	cmake -DCMAKE_INSTALL_PREFIX=/prefix
+	__cfg --prefix=/usr				\
               --sysconfdir=/etc 			\
               --localstatedir=/var 			\
               --libexecdir=/usr/lib/dbus-1.0 		\
@@ -135,6 +136,7 @@ __dbus()
               --without-systemdsystemunitdir 		\
               --disable-systemd 			\
               --disable-static				\
+              --disable-Werror				\
 	      --disable-tests
 
 	$MAKE_CLEAN
@@ -182,9 +184,9 @@ __at-spi2-atk()
 {
 	__cd at-spi2-atk
 	__git-clean
-	git checkout AT_SPI2_ATK_2_7_5
-	git checkout -b 2.7.5
-	git checkout 2.7.5
+#	git checkout AT_SPI2_ATK_2_7_5
+#	git checkout -b 2.7.5
+#	git checkout 2.7.5
 
 	$DIST_CLEAN
 	./autogen.sh
@@ -317,9 +319,9 @@ __gtk+3()
 {
 	__cd gtk+
 	git-clean
-	git checkout 3.7.8
-	git checkout -b 3.7.8
-	git checkout 3.7.8
+#	git checkout 3.7.8
+#	git checkout -b 3.7.8
+#	git checkout 3.7.8
 
         $DIST_CLEAN
         ./autogen.sh

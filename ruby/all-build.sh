@@ -17,7 +17,7 @@ __common()
 
 	$DIST_CLEAN
 	./autogen.sh
-	./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var
+	./configure --prefix=/usr --sysconfdir=/etc --localstatedir=/var --enable-shared
 
 	$MAKE_CLEAN
 	__mk

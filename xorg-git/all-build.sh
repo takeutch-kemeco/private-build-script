@@ -352,7 +352,7 @@ __libxcb()
 
 	$DIST_CLEAN
 	./autogen.sh
-	__cfg $XORG_CONFIG --docdir='${datadir}'/doc/libxcb
+	__cfg $XORG_CONFIG --docdir='${datadir}'/doc/libxcb --enable-xinput --enable-xkb --enable-render --enable-record
 
 	$MAKE_CLEAN
 	__mk
@@ -687,10 +687,43 @@ __gperf()
 	popd
 }
 
+__xcb-util-common-m4()
+{
+	__git-clone git://anongit.freedesktop.org/xcb/util-common-m4 xcb-util-common-m4
+	__cd xcb-util-common-m4
+	cp -f *.m4 /usr/share/aclocal/
+}
+
 __xcb-util()
 {
 	__git-clone git://anongit.freedesktop.org/xcb/util xcb-util
 	__common xcb-util
+}
+
+__xcb-util-image()
+{
+	__git-clone git://anongit.freedesktop.org/xcb/util-image xcb-util-image
+	__common xcb-util-image
+}
+
+__xcb-util-keysyms()
+{
+	__git-clone git://anongit.freedesktop.org/xcb/util-keysyms xcb-util-keysyms
+	__cd xcb-util-keysyms
+	git submodule update --init
+	__bld-common
+}
+
+__xcb-util-renderutil()
+{
+	__git-clone git://anongit.freedesktop.org/xcb/util-renderutil xcb-util-renderutil
+	__common xcb-util-renderutil
+}
+
+__xcb-util-wm()
+{
+	__git-clone git://anongit.freedesktop.org/xcb/util-wm xcb-util-wm
+	__common xcb-util-wm
 }
 
 __libdrm()
@@ -700,9 +733,11 @@ __libdrm()
 
 	$DIST_CLEAN
 
-	sed -e "/pthread-stubs/d" -i configure.ac
-	autoreconf -fi
-	__cfg --prefix=/usr --enable-udev
+	__cfg --prefix=/usr	\
+	      --enable-udev	\
+	      --disable-radeon	\
+	      --disable-nouveau	\
+	      --disable-vmwgfx
 
 	$MAKE_CLEAN
 	__mk
@@ -1436,7 +1471,12 @@ __all()
 	__fontconfig
 	__xorg-libs
 ###	__gperf
-#	__xcb-util
+	__xcb-util-common-m4
+	__xcb-util
+	__xcb-util-image
+	__xcb-util-keysyms
+	__xcb-util-renderutil
+	__xcb-util-wm
 	__libdrm
 	__mesa-lib
 	__xbitmaps
@@ -1460,4 +1500,3 @@ __all()
 }
 
 $@
-

@@ -300,8 +300,8 @@ __hicolor-icon-theme()
 
 __gtk+2()
 {
-	__wget ftp://ftp.gnome.org/pub/gnome/sources/gtk+/2.24/gtk+-2.24.13.tar.xz
-	__dcd gtk+-2.24.13
+	__wget ftp://ftp.gnome.org/pub/gnome/sources/gtk+/2.24/gtk+-2.24.17.tar.xz
+	__dcd gtk+-2.24.17
 
 	sed -i 's#l \(gtk-.*\).sgml#& -o \1#' docs/{faq,tutorial}/Makefile.in
 	sed -i 's#.*@man_#man_#' docs/reference/gtk/Makefile.in

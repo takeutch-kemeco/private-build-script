@@ -19,7 +19,7 @@ __init-env()
 __bld-common()
 {
 	$DIST_CLEAN
-	__cfg --prefix=/usr --sysconfdir=/etc
+	__cfg --prefix=/usr --sysconfdir=/etc $@
 
 	$MAKE_CLEAN
 	__mk
@@ -34,8 +34,9 @@ __common()
 
 __scim()
 {
-	__wget http://downloads.sourceforge.net/project/scim/scim/1.4.14/scim-1.4.14.tar.gz
-	__common scim-1.4.14
+#	__wget http://downloads.sourceforge.net/project/scim/scim/1.4.14/scim-1.4.14.tar.gz
+	__dcd scim-1.4.14
+	__bld-common --with-gtk-version=2
 
 	__scim-config-gtk()
 	{
@@ -81,13 +82,13 @@ __scim()
 
 __scim-anthy()
 {
-	__wget http://jaist.dl.sourceforge.jp/scim-imengine/37309/scim-anthy-1.2.7.tar.gz
+#	__wget http://jaist.dl.sourceforge.jp/scim-imengine/37309/scim-anthy-1.2.7.tar.gz
 	__common scim-anthy-1.2.7
 }
 
 __anthy()
 {
-	__wget http://jaist.dl.sourceforge.jp/anthy/37536/anthy-9100h.tar.gz
+#	__wget http://jaist.dl.sourceforge.jp/anthy/37536/anthy-9100h.tar.gz
 	__common anthy-9100h
 }
 

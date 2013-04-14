@@ -20,13 +20,17 @@ __common()
 	ldconfig
 }
 
-__common vala
-__common gssdp
-__common gupnp
-__common gupnp-av
-__common gupnp-dlna
-__common gupnp-vala
-__common babl
-__common gegl
-__common gimp
+__all() {
+	__common vala
+	__common gssdp
+	__common gupnp
+	__common gupnp-av
+	__common gupnp-dlna
+	__common gupnp-vala
+	__common babl
+	__common gegl
+	__common gimp
+}
+
+$@
 

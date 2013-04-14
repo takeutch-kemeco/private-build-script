@@ -11,7 +11,10 @@ __emacs()
 
 	./autogen.sh
 	./configure --prefix=/usr				\
-		--without-gif					\
+		    --sysconfdir=/etc				\
+	    	    --localstatedir=/var			\
+		    --libexecdir=/usr/lib			\
+		    --without-gif
 
 	__mk
 	__mk install

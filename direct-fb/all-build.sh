@@ -11,18 +11,22 @@ MAKE_CLEAN="make clean"
 
 . ./__common-func.sh
 
-__common()
+__bld-common()
 {
-	__cd $1
-
 	$DIST_CLEAN
 	./autogen.sh
-	__cfg --prefix=/usr --sysconfdir=/etc --localstatedir=/var --libexecdir=/usr/lib --enable-extra-warnings=no
+	__cfg --prefix=/usr --sysconfdir=/etc --localstatedir=/var --libexecdir=/usr/lib --enable-extra-warnings=no $@
 
 	$MAKE_CLEAN
 	__mk
 	__mk install
 	ldconfig
+}
+
+__common()
+{
+	__cd $1
+	__bld-common
 }
 
 __linux-fusion()
@@ -88,7 +92,7 @@ __all()
 {
 #	__rem(){
 	__linux-fusion
-	__common flux
+###	__flux
 	__direct-fb
 	__common FusionSound
 	__common LiTE
@@ -105,3 +109,4 @@ __all()
 }
 
 $@
+

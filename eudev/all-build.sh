@@ -28,7 +28,8 @@ __eudev()
 	      --sysconfdir=/etc		\
 	      --enable-libkmod		\
 	      --with-rootprefix=	\
-	      --with-rootlibdir=/lib
+	      --with-rootlibdir=/lib	\
+	      --enable-legacylib
 
 	$MAKE_CLEAN
 	__mk

@@ -344,7 +344,7 @@ __libxcb()
 	__dcd libxcb-1.8.1	
 
 	$DIST_CLEAN
-	__cfg $XORG_CONFIG --docdir='${datadir}'/doc/libxcb-1.8.1
+	__cfg $XORG_CONFIG --docdir='${datadir}'/doc/libxcb-1.8.1 --enable-xinput --enable-xkb --enable-render --enable-record
 
 	$MAKE_CLEAN
 	__mk
@@ -682,8 +682,32 @@ __gperf()
 
 __xcb-util()
 {
-	__wget http://xorg.freedesktop.org/releases/individual/xcb/xcb-util-0.3.9.tar.bz2
+	__wget http://xcb.freedesktop.org/dist/xcb-util-0.3.9.tar.gz
 	__common xcb-util-0.3.9
+}
+
+__xcb-util-image()
+{
+	__wget http://xcb.freedesktop.org/dist/xcb-util-image-0.3.9.tar.bz2
+	__common xcb-util-image-0.3.9
+}
+
+__xcb-util-keysyms()
+{
+	__wget http://xcb.freedesktop.org/dist/xcb-util-keysyms-0.3.9.tar.bz2
+	__common xcb-util-keysyms-0.3.9
+}
+
+__xcb-util-renderutil()
+{
+	__wget http://xcb.freedesktop.org/dist/xcb-util-renderutil-0.3.8.tar.bz2
+	__common xcb-util-renderutil-0.3.8
+}
+
+__xcb-util-wm()
+{
+	__wget http://xcb.freedesktop.org/dist/xcb-util-wm-0.3.9.tar.bz2
+	__common xcb-util-wm-0.3.9
 }
 
 __libdrm()
@@ -695,7 +719,11 @@ __libdrm()
 
 	sed -e "/pthread-stubs/d" -i configure.ac
 	autoreconf -fi
-	__cfg --prefix=/usr --enable-udev
+        __cfg --prefix=/usr     \
+              --enable-udev     \
+              --disable-radeon  \
+              --disable-nouveau \
+              --disable-vmwgfx
 
 	$MAKE_CLEAN
 	__mk
@@ -802,7 +830,8 @@ __xorg-apps()
 	__luit()
 	{
                 __wget ${APPS_URL}/luit-1.1.1.tar.bz2
-		__common luit-1.1.1
+		__dcd luit-1.1.1
+		__bld-common --disable-selective-werror
 	}
 
 	__mkfontdir()
@@ -940,7 +969,8 @@ __xorg-apps()
 	__xmodmap()
 	{
                 __wget ${APPS_URL}/xmodmap-1.0.7.tar.bz2
-		__common xmodmap-1.0.7
+		__dcd xmodmap-1.0.7
+		__bld-common --disable-selective-werror
 	}
 
 	__xpr()
@@ -1373,6 +1403,8 @@ Section "InputClass"
 	MatchDevicePath	"/dev/input/event*"
 	Driver		"wacom"
 
+	Option		"Rotate" "CCW"
+
 	Option		"TopX" "0"
 	Option		"BottomX" "30479"
 
@@ -1426,6 +1458,10 @@ __all()
 	__xorg-libs
 	__gperf
 	__xcb-util
+	__xcb-util-image
+	__xcb-util-keysyms
+	__xcb-util-renderutil
+	__xcb-util-wm
 	__libdrm
 	__mesa-lib
 	__xbitmaps

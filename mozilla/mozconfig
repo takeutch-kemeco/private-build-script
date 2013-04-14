@@ -20,7 +20,6 @@ ac_add_options --disable-media-plugins
 ac_add_options --disable-media-navigator
 ac_add_options --disable-omx-plugin
 ac_add_options --disable-webgl
-ac_add_options --disable-webm
 ac_add_options --disable-dash
 ac_add_options --disable-extentions
 
@@ -28,7 +27,7 @@ ac_add_options --with-pthreads
 #ac_add_options --with-system-libxul
 #ac_add_options --with-system-nspr
 #ac_add_options --with-system-nss
-#ac_add_options --enable-system-ffi
+ac_add_options --enable-system-ffi
 
 #mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/../obj-@CONFIG_GUESS@
 #mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/../obj-mozilla
