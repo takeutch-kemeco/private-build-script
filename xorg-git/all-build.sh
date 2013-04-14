@@ -597,6 +597,12 @@ __xorg-libs()
 		__common libXvMC
 	}
 
+	__libXxf86misc()
+	{
+                __git-clone git://anongit.freedesktop.org/xorg/lib/libXxf86misc
+		__common libXxf86misc
+	}
+
 	__libXxf86dga()
 	{
                 __git-clone git://anongit.freedesktop.org/xorg/lib/libXxf86dga
@@ -654,6 +660,7 @@ __xorg-libs()
 	__libXtst
 	__libXv
 	__libXvMC
+	__libXxf86misc
 	__libXxf86dga
 	__libXx86vm
 	__libdmx
