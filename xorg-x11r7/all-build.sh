@@ -591,6 +591,12 @@ __xorg-libs()
 		__common libXvMC-1.0.7
 	}
 
+	__libXxf86misc()
+	{
+                __wget ${LIBS_URL}/libXxf86misc-1.0.3.tar.gz
+		__common libXxf86misc-1.0.3
+	}
+
 	__libXxf86dga()
 	{
                 __wget ${LIBS_URL}/libXxf86dga-1.1.3.tar.bz2
@@ -648,6 +654,7 @@ __xorg-libs()
 	__libXtst
 	__libXv
 	__libXvMC
+	__libXxf86misc
 	__libXxf86dga
 	__libXx86vm
 	__libdmx
@@ -1204,13 +1211,20 @@ __pixman()
 
 __xorg-server()
 {
+
 	__wget ftp://ftp.x.org/pub/individual/xserver/xorg-server-1.12.4.tar.bz2
 	__dcd xorg-server-1.12.4
-
+ 
 	$DIST_CLEAN
+	./autogen.sh
 	__cfg $XORG_CONFIG 			\
            --with-xkb-output=/var/lib/xkb 	\
-           --enable-install-setuid
+           --enable-install-setuid		\
+	   --enable-config-dbus			\
+	   --enable-tcp-transport=no		\
+	   --enable-ipv6=no			\
+	   --with-default-xkb-model=pc105	\
+	   --with-default-xkb-layout=jp
 
 	$MAKE_CLEAN
 	__mk

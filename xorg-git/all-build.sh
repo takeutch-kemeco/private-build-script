@@ -32,6 +32,8 @@ __git-clone()
 
 __bld-common()
 {
+	git pull
+
 	$DIST_CLEAN
 	./autogen.sh
 	__cfg $XORG_CONFIG $@
@@ -45,7 +47,6 @@ __bld-common()
 __common()
 {
 	__cd $1
-	git pull
 	__bld-common
 }
 
@@ -1230,7 +1231,12 @@ __xorg-server()
 	./autogen.sh
 	__cfg $XORG_CONFIG 			\
            --with-xkb-output=/var/lib/xkb 	\
-           --enable-install-setuid
+           --enable-install-setuid		\
+	   --enable-config-dbus			\
+	   --enable-tcp-transport=no		\
+	   --enable-ipv6=no			\
+	   --with-default-xkb-model=pc105	\
+	   --with-default-xkb-layout=jp
 
 	$MAKE_CLEAN
 	__mk
