@@ -25,6 +25,7 @@ __init-env()
 	LIBS_URL="http://xorg.freedesktop.org/releases/individual/lib"
 	APPS_URL="http://xorg.freedesktop.org/releases/individual/app"
 	FONTS_URL="http://xorg.freedesktop.org/releases/individual/font"
+	DRIVER_URL="http://xorg.freedesktop.org/releases/individual/driver"
 
 	ln -s /usr/lib /usr/lib64
 }
@@ -80,8 +81,8 @@ __xorg-proto()
 
 	__dri2proto()
 	{
-		__wget ${PROTO_URL}/dri2proto-2.6.tar.bz2
-		__common dri2proto-2.6
+		__wget ${PROTO_URL}/dri2proto-2.8.tar.bz2
+		__common dri2proto-2.8
 	}
 
 	__fixesproto()
@@ -98,14 +99,14 @@ __xorg-proto()
 
 	__glproto()
 	{
-		__wget ${PROTO_URL}/glproto-1.4.15.tar.bz2
-		__common glproto-1.4.15
+		__wget ${PROTO_URL}/glproto-1.4.16.tar.bz2
+		__common glproto-1.4.16
 	}
 
 	__inputproto()
 	{
-		__wget ${PROTO_URL}/inputproto-2.2.tar.bz2
-		__common inputproto-2.2
+		__wget ${PROTO_URL}/inputproto-2.3.tar.bz2
+		__common inputproto-2.3
 	}
 
 	__kbproto()
@@ -116,8 +117,8 @@ __xorg-proto()
 
 	__randrproto()
 	{
-		__wget ${PROTO_URL}/randrproto-1.3.2.tar.bz2
-		__common randrproto-1.3.2
+		__wget ${PROTO_URL}/randrproto-1.4.0.tar.bz2
+		__common randrproto-1.4.0
 	}
 
 	__recordproto()
@@ -180,6 +181,12 @@ __xorg-proto()
 		__common xf86driproto-2.1.1
 	}
 
+	__xf86miscproto()
+	{
+                __wget ${PROTO_URL}/xf86miscproto-0.9.3.tar.bz2
+                __common xf86miscproto-0.9.3
+	}
+
 	__xf86vidmodeproto()
 	{
 		__wget ${PROTO_URL}/xf86vidmodeproto-2.3.1.tar.bz2
@@ -194,8 +201,8 @@ __xorg-proto()
 
 	__xproto()
 	{
-		__wget ${PROTO_URL}/xproto-7.0.23.tar.bz2
-		__common xproto-7.0.23
+		__wget ${PROTO_URL}/xproto-7.0.24.tar.bz2
+		__common xproto-7.0.24
 	}
 
 #	__rem() {
@@ -220,6 +227,7 @@ __xorg-proto()
 	__xf86bigfontproto
 	__xf86dgaproto
 	__xf86driproto
+	__xf86miscproto
 	__xf86vidmodeproto
 	__xineramaproto
 	__xproto
@@ -259,11 +267,9 @@ __libpthread-stubs()
 
 __python27()
 {
-	__wget http://www.python.org/ftp/python/2.7.3/Python-2.7.3.tar.xz
-	__wget http://docs.python.org/ftp/python/doc/2.7.3/python-2.7.3-docs-html.tar.bz2
-	__dcd Python-2.7.3
-
-	sed -i "s/ndbm_libs = \[\]/ndbm_libs = ['gdbm', 'gdbm_compat']/" setup.py
+	__wget http://www.python.org/ftp/python/2.7.4/Python-2.7.4.tar.xz
+	__wget http://docs.python.org/ftp/python/doc/2.7.4/python-2.7.4-docs-html.tar.bz2
+	__dcd Python-2.7.4
 
 	$DIST_CLEAN
 	__cfg --prefix=/usr --enable-shared
@@ -276,28 +282,28 @@ __python27()
 	chmod -v 755 /usr/lib/libpython2.7.so.1.0
 	ldconfig
 
-	install -v -m755 -d /usr/share/doc/Python-2.7.3
-	cp -rfv Doc/build/html/* /usr/share/doc/python-2.7.3
+	install -v -m755 -d /usr/share/doc/Python-2.7.4
+	cp -rfv Doc/build/html/* /usr/share/doc/python-2.7.4
 
-	install -v -m755 -d /usr/share/doc/Python-2.7.3
+	install -v -m755 -d /usr/share/doc/Python-2.7.4
 
-	tar --strip-components=1 -C /usr/share/doc/Python-2.7.3 \
-		-xvf ${SRC_DIR}/python-2.7.3-docs-html.tar.bz2
+	tar --strip-components=1 -C /usr/share/doc/Python-2.7.4 \
+		-xvf ${SRC_DIR}/python-2.7.4-docs-html.tar.bz2
 
-	find /usr/share/doc/Python-2.7.3 -type d -exec chmod 0755 {} \;
-	find /usr/share/doc/Python-2.7.3 -type f -exec chmod 0644 {} \;
+	find /usr/share/doc/Python-2.7.4 -type d -exec chmod 0755 {} \;
+	find /usr/share/doc/Python-2.7.4 -type f -exec chmod 0644 {} \;
 
-	grep "export PYTHONDOCS=/usr/share/doc/Python-2.7.3" /etc/profile
+	grep "export PYTHONDOCS=/usr/share/doc/Python-2.7.4" /etc/profile
 	if [ $? -ne 0 ]
 	then
-		echo "export PYTHONDOCS=/usr/share/doc/Python-2.7.3" >> /etc/profile
+		echo "export PYTHONDOCS=/usr/share/doc/Python-2.7.4" >> /etc/profile
 	fi
 }
 
 __xcb-proto()
 {
-	__wget http://xcb.freedesktop.org/dist/xcb-proto-1.7.1.tar.bz2
-	__dcd xcb-proto-1.7.1
+	__wget http://xcb.freedesktop.org/dist/xcb-proto-1.8.tar.bz2
+	__dcd xcb-proto-1.8
 
 	$DIST_CLEAN
 	__cfg $XORG_CONFIG
@@ -307,8 +313,8 @@ __xcb-proto()
 	__mk install
 	ldconfig
 
-	install -dv -m755 /usr/share/doc/xcb-proto-1.7.1
-	install -v -m644 doc/* /usr/share/doc/xcb-proto-1.7.1
+	install -dv -m755 /usr/share/doc/xcb-proto-1.8
+	install -v -m644 doc/* /usr/share/doc/xcb-proto-1.8
 }
 
 __libxml2()
@@ -340,11 +346,11 @@ __libxslt()
 
 __libxcb()
 {
-	__wget http://xcb.freedesktop.org/dist/libxcb-1.8.1.tar.bz2
-	__dcd libxcb-1.8.1	
+	__wget http://xcb.freedesktop.org/dist/libxcb-1.9.tar.bz2
+	__dcd libxcb-1.9
 
 	$DIST_CLEAN
-	__cfg $XORG_CONFIG --docdir='${datadir}'/doc/libxcb-1.8.1 --enable-xinput --enable-xkb --enable-render --enable-record
+	__cfg $XORG_CONFIG --docdir='${datadir}'/doc/libxcb-1.9 --enable-xinput --enable-xkb --enable-render --enable-record
 
 	$MAKE_CLEAN
 	__mk
@@ -354,7 +360,7 @@ __libxcb()
 
 __expat()
 {
-	__wget http://downloads.sourceforge.net/expat/expat-2.1.0.tar.gz
+	wget -c -P ${SRC_DIR} http://sourceforge.net/projects/expat/files/expat/2.1.0/expat-2.1.0.tar.gz
 	__dcd expat-2.1.0
 
 	$DIST_CLEAN
@@ -371,11 +377,11 @@ __expat()
 
 __freetype2()
 {
-	__wget ftp://mirror.ovh.net/gentoo-distfiles/distfiles/freetype-2.4.10.tar.bz2
-	__wget ftp://mirror.ovh.net/gentoo-distfiles/distfiles/freetype-doc-2.4.10.tar.bz2
-	__dcd freetype-2.4.10
+	__wget http://download.savannah.gnu.org/releases/freetype/freetype-2.4.11.tar.bz2
+	__wget http://download.savannah.gnu.org/releases/freetype/freetype-doc-2.4.11.tar.bz2
+	__dcd freetype-2.4.11
 
-	tar -xf ${SRC_DIR}/freetype-doc-2.4.10.tar.bz2 --strip-components=2 -C docs
+	tar -xf ${SRC_DIR}/freetype-doc-2.4.11.tar.bz2 --strip-components=2 -C docs
 
 	sed -i -r 's:.*(#.*SUBPIXEL.*) .*:\1:' include/freetype/config/ftoption.h
 
@@ -387,14 +393,14 @@ __freetype2()
 	__mk install
 	ldconfig
 
-	install -v -m755 -d /usr/share/doc/freetype-2.4.10
-	cp -v -R docs/*     /usr/share/doc/freetype-2.4.10
+	install -v -m755 -d /usr/share/doc/freetype-2.4.11
+	cp -v -R docs/*     /usr/share/doc/freetype-2.4.11
 }
 
 __fontconfig()
 {
-	__wget http://fontconfig.org/release/fontconfig-2.10.1.tar.bz2
-	__dcd fontconfig-2.10.1
+	__wget http://fontconfig.org/release/fontconfig-2.10.2.tar.bz2
+	__dcd fontconfig-2.10.2
 
 	$DIST_CLEAN
 	__cfg --prefix=/usr				\
@@ -409,12 +415,12 @@ __fontconfig()
 	__mk install
 	ldconfig
 
-	install -v -m755 -d /usr/share/{man/man{3,5},doc/fontconfig-2.10.1/fontconfig-devel}
+	install -v -m755 -d /usr/share/{man/man{3,5},doc/fontconfig-2.10.2/fontconfig-devel}
 	install -v -m644 fc-*/*.1          /usr/share/man/man1
 	install -v -m644 doc/*.3           /usr/share/man/man3
 	install -v -m644 doc/fonts-conf.5  /usr/share/man/man5
-	install -v -m644 doc/fontconfig-devel/* /usr/share/doc/fontconfig-2.10.1/fontconfig-devel
-	install -v -m644 doc/*.{pdf,sgml,txt,html} /usr/share/doc/fontconfig-2.10.1
+	install -v -m644 doc/fontconfig-devel/* /usr/share/doc/fontconfig-2.10.2/fontconfig-devel
+	install -v -m644 doc/*.{pdf,sgml,txt,html} /usr/share/doc/fontconfig-2.10.2
 }
 
 __xorg-libs()
@@ -493,8 +499,8 @@ __xorg-libs()
 
 	__libXcomposite()
 	{
-                __wget ${LIBS_URL}/libXcomposite-0.4.3.tar.bz2
-		__common libXcomposite-0.4.3
+                __wget ${LIBS_URL}/libXcomposite-0.4.4.tar.bz2
+		__common libXcomposite-0.4.4
 	}
 
 	__libXrender()
@@ -511,8 +517,8 @@ __xorg-libs()
 
 	__libXdamage()
 	{
-                __wget ${LIBS_URL}/libXdamage-1.1.3.tar.bz2
-		__common libXdamage-1.1.3
+                __wget ${LIBS_URL}/libXdamage-1.1.4.tar.bz2
+		__common libXdamage-1.1.4
 	}
 
 	__libfontenc()
@@ -543,8 +549,8 @@ __xorg-libs()
 
 	__libXi()
 	{
-                __wget ${LIBS_URL}/libXi-1.6.1.tar.bz2
-		__common libXi-1.6.1
+                __wget ${LIBS_URL}/libXi-1.7.1.tar.bz2
+		__common libXi-1.7.1
 	}
 
 	__libXinerama()
@@ -555,8 +561,8 @@ __xorg-libs()
 
 	__libXrandr()
 	{
-                __wget ${LIBS_URL}/libXrandr-1.3.2.tar.bz2
-		__common libXrandr-1.3.2
+                __wget ${LIBS_URL}/libXrandr-1.4.0.tar.bz2
+		__common libXrandr-1.4.0
 	}
 
 	__libXres()
@@ -719,8 +725,8 @@ __xcb-util-wm()
 
 __libdrm()
 {
-	__wget http://dri.freedesktop.org/libdrm/libdrm-2.4.42.tar.bz2
-	__dcd libdrm-2.4.42
+	__wget http://dri.freedesktop.org/libdrm/libdrm-2.4.43.tar.bz2
+	__dcd libdrm-2.4.43
 
 	$DIST_CLEAN
 
@@ -740,12 +746,12 @@ __libdrm()
 
 __mesa-lib()
 {
-	__wget ftp://ftp.freedesktop.org/pub/mesa/9.1/MesaLib-9.1.tar.bz2
-	__wget http://www.linuxfromscratch.org/patches/blfs/svn/MesaLib-9.1-add_xdemos-1.patch
-	__decord MesaLib-9.1
-	__cd Mesa-9.1
+	__wget ftp://ftp.freedesktop.org/pub/mesa/9.1.1/MesaLib-9.1.1.tar.bz2
+###	__wget http://www.linuxfromscratch.org/patches/blfs/svn/MesaLib-9.1-add_xdemos-1.patch
+	__decord MesaLib-9.1.1
+	__cd Mesa-9.1.1
 
-	patch -Np1 -i ${SRC_DIR}/MesaLib-9.1-add_xdemos-1.patch
+###	patch -Np1 -i ${SRC_DIR}/MesaLib-9.1-add_xdemos-1.patch
 
 	$DIST_CLEAN
 	autoreconf -fi
@@ -768,14 +774,14 @@ __mesa-lib()
 
 	$MAKE_CLEAN
 	__mk
-	__mk -C xdemos DEMOS_PREFIX=/usr
+###	__mk -C xdemos DEMOS_PREFIX=/usr
 	__mk install
 	ldconfig
 
-	__mk -C xdemos DEMOS_PREFIX=/usr install
+###	__mk -C xdemos DEMOS_PREFIX=/usr install
 
-	install -v -dm755 /usr/share/doc/MesaLib-9.1
-	cp -rfv docs/* /usr/share/doc/MesaLib-9.1
+	install -v -dm755 /usr/share/doc/MesaLib-9.1.1
+	cp -rfv docs/* /usr/share/doc/MesaLib-9.1.1
 
 	__mesa-glu()
 	{
@@ -802,11 +808,11 @@ __xbitmaps()
 
 __libpng()
 {
-	__wget http://downloads.sourceforge.net/libpng/libpng-1.5.13.tar.xz
-	__wget http://downloads.sourceforge.net/libpng-apng/libpng-1.5.13-apng.patch.gz
-	__dcd libpng-1.5.13
+	__wget http://downloads.sourceforge.net/libpng/libpng-1.5.15.tar.xz
+	__wget http://downloads.sourceforge.net/libpng-apng/libpng-1.5.15-apng.patch.gz
+	__dcd libpng-1.5.15
 
-	gzip -cd ${SRC_DIR}/libpng-1.5.13-apng.patch.gz | patch -p1
+	gzip -cd ${SRC_DIR}/libpng-1.5.15-apng.patch.gz | patch -p1
 
 	$DIST_CLEAN
 	__cfg --prefix=/usr --disable-static
@@ -816,16 +822,16 @@ __libpng()
 	__mk install
 	ldconfig
 
-	mkdir /usr/share/doc/libpng-1.5.13
-	cp README libpng-manual.txt /usr/share/doc/libpng-1.5.13
+	mkdir /usr/share/doc/libpng-1.5.15
+	cp README libpng-manual.txt /usr/share/doc/libpng-1.5.15
 }
 
 __xorg-apps()
 {
 	__bdftopcf()
 	{
-		__wget ${APPS_URL}/bdftopcf-1.0.3.tar.bz2
-		__common bdftopcf-1.0.3
+		__wget ${APPS_URL}/bdftopcf-1.0.4.tar.bz2
+		__common bdftopcf-1.0.4
 	}
 
 	__iceauth()
@@ -855,8 +861,8 @@ __xorg-apps()
 
 	__sessreg()
 	{
-                __wget ${APPS_URL}/sessreg-1.0.7.tar.bz2
-		__common sessreg-1.0.7
+                __wget ${APPS_URL}/sessreg-1.0.8.tar.bz2
+		__common sessreg-1.0.8
 	}
 
 	__setxkbmap()
@@ -885,8 +891,8 @@ __xorg-apps()
 
 	__xbacklight()
 	{
-                __wget ${APPS_URL}/xbacklight-1.1.2.tar.bz2
-		__common xbacklight-1.1.2
+                __wget ${APPS_URL}/xbacklight-1.2.0.tar.bz2
+		__common xbacklight-1.2.0
 	}
 
 	__xcmsdb()
@@ -915,8 +921,8 @@ __xorg-apps()
 
 	__xev()
 	{
-                __wget ${APPS_URL}/xev-1.2.0.tar.bz2
-		__common xev-1.2.0
+                __wget ${APPS_URL}/xev-1.2.1.tar.bz2
+		__common xev-1.2.1
 	}
 
 	__xgamma()
@@ -951,8 +957,8 @@ __xorg-apps()
 
 	__xkbutils()
 	{
-                __wget ${APPS_URL}/xkbutils-1.0.3.tar.bz2
-		__common xkbutils-1.0.3
+                __wget ${APPS_URL}/xkbutils-1.0.4.tar.bz2
+		__common xkbutils-1.0.4
 	}
 
 	__xkill()
@@ -994,8 +1000,8 @@ __xorg-apps()
 
 	__xrandr()
 	{
-                __wget ${APPS_URL}/xrandr-1.3.5.tar.bz2
-		__common xrandr-1.3.5
+                __wget ${APPS_URL}/xrandr-1.4.0.tar.bz2
+		__common xrandr-1.4.0
 	}
 
 	__xrdb()
@@ -1018,14 +1024,14 @@ __xorg-apps()
 
 	__xsetroot()
 	{
-                __wget ${APPS_URL}/xsetroot-1.1.0.tar.bz2
-		__common xsetroot-1.1.0
+                __wget ${APPS_URL}/xsetroot-1.1.1.tar.bz2
+		__common xsetroot-1.1.1
 	}
 
 	__xvinfo()
 	{
-                __wget ${APPS_URL}/xvinfo-1.1.1.tar.bz2
-		__common xvinfo-1.1.1
+                __wget ${APPS_URL}/xvinfo-1.1.2.tar.bz2
+		__common xvinfo-1.1.2
 	}
 
 	__xwd()
@@ -1152,7 +1158,7 @@ __xml-parser()
 
 __intltool()
 {
-	wget -c -B $SRC_DIR http://launchpad.net/intltool/trunk/0.50.2/+download/intltool-0.50.2.tar.gz
+	wget -c -P ${SRC_DIR} http://launchpad.net/intltool/trunk/0.50.2/+download/intltool-0.50.2.tar.gz
 	__dcd intltool-0.50.2
 
 	$DIST_CLEAN
@@ -1168,8 +1174,8 @@ __intltool()
 
 __xkeyboard-config()
 {
-	__wget ftp://ftp.x.org/pub/individual/data/xkeyboard-config/xkeyboard-config-2.6.tar.bz2
-	__dcd xkeyboard-config-2.6
+	__wget ftp://ftp.x.org/pub/individual/data/xkeyboard-config/xkeyboard-config-2.8.tar.bz2
+	__dcd xkeyboard-config-2.8
 
 	$DIST_CLEAN
 	__cfg $XORG_CONFIG --with-xkb-rules-symlink=xorg
@@ -1179,8 +1185,8 @@ __xkeyboard-config()
 	__mk install
 	ldconfig
 
-	install -dv -m755 $XORG_PREFIX/share/doc/xkeyboard-config-2.6
-	install -v -m644 docs/{README,HOWTO}* $XORG_PREFIX/share/doc/xkeyboard-config-2.6
+	install -dv -m755 $XORG_PREFIX/share/doc/xkeyboard-config-2.8
+	install -v -m644 docs/{README,HOWTO}* $XORG_PREFIX/share/doc/xkeyboard-config-2.8
 }
 
 __printproto()
@@ -1197,8 +1203,8 @@ __libxp()
 
 __pixman()
 {
-	__wget http://cairographics.org/releases/pixman-0.28.0.tar.gz
-	__dcd pixman-0.28.0
+	__wget http://cairographics.org/releases/pixman-0.28.2.tar.gz
+	__dcd pixman-0.28.2
 
 	$DIST_CLEAN
 	__cfg  --prefix=/usr --disable-static
@@ -1211,9 +1217,8 @@ __pixman()
 
 __xorg-server()
 {
-
-	__wget ftp://ftp.x.org/pub/individual/xserver/xorg-server-1.12.4.tar.bz2
-	__dcd xorg-server-1.12.4
+	__wget ftp://ftp.x.org/pub/individual/xserver/xorg-server-1.14.0.tar.bz2
+	__dcd xorg-server-1.14.0
  
 	$DIST_CLEAN
 	./autogen.sh
@@ -1242,8 +1247,8 @@ __xorg-drivers()
 {
 	__xf86-input-evdev()
 	{
-		__wget ftp://ftp.x.org/pub/individual/driver/xf86-input-evdev-2.7.3.tar.bz2
-		__common xf86-input-evdev-2.7.3
+		__wget ${DRIVER_URL}/xf86-input-evdev-2.8.0.tar.bz2
+		__common xf86-input-evdev-2.8.0
 	}
 
 	__xf86-input-wacom()
@@ -1254,19 +1259,19 @@ __xorg-drivers()
 
 	__xf86-video-fbdev()
 	{
-		__wget ftp://ftp.x.org/pub/individual/driver/xf86-video-fbdev-0.4.3.tar.bz2
+		__wget ${DRIVER_URL}/xf86-video-fbdev-0.4.3.tar.bz2
 		__common xf86-video-fbdev-0.4.3
 	}
 
 	__xf86-video-intel()
 	{
-		__wget ftp://ftp.x.org/pub/individual/driver/xf86-video-intel-2.20.13.tar.bz2
-		__common xf86-video-intel-2.20.13
+		__wget ${DRIVER_URL}/xf86-video-intel-2.21.6.tar.bz2
+		__common xf86-video-intel-2.21.6
 	}
 
 	__xf86-video-vesa()
 	{
-		__wget ftp://ftp.x.org/pub/individual/driver/xf86-video-vesa-2.3.2.tar.bz2
+		__wget ${DRIVER_URL}/xf86-video-vesa-2.3.2.tar.bz2
 		__common xf86-video-vesa-2.3.2
 	}
 
@@ -1295,11 +1300,11 @@ __twm()
 
 __xterm()
 {
-	__wget ftp://invisible-island.net/xterm/xterm-279.tgz
+	__wget ftp://invisible-island.net/xterm/xterm-291.tgz
 
 	cd ${BASE_DIR}
-	gzip -dc ${SRC_DIR}/xterm-279.tgz | tar xvf -
-	__cd xterm-279
+	gzip -dc ${SRC_DIR}/xterm-291.tgz | tar xvf -
+	__cd xterm-291
 
 	sed -i '/v0/,+1s/new:/new:kb=^?:/' termcap
 	echo -e '\tkbs=\\177,' >> terminfo
@@ -1450,8 +1455,6 @@ EndSection
 
 }
 
-__init-env
-
 __all()
 {
 #	__rem() {
@@ -1498,5 +1501,6 @@ __all()
 	__xorg-config
 }
 
+__init-env
 $@
 
