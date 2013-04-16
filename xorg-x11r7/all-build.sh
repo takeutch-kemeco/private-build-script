@@ -769,7 +769,7 @@ __mesa-lib()
             	--enable-glx-tls               	\
 		--with-llvm-shared-libs		\
             	--with-egl-platforms="drm,x11" 	\
-            	--with-gallium-drivers="i915"	\
+            	--with-gallium-drivers="svga,swrast" \
 		--with-dri-drivers="i965"	\
 
 	$MAKE_CLEAN
@@ -1251,10 +1251,22 @@ __xorg-drivers()
 		__common xf86-input-evdev-2.8.0
 	}
 
+	__xf86-input-keyboard()
+	{
+		__wget ${DRIVER_URL}/xf86-input-keyboard-1.7.0.tar.gz
+		__common xf86-input-keyboard-1.7.0
+	}
+
+	__xf86-input-mouse()
+	{
+		__wget ${DRIVER_URL}/xf86-input-mouse-1.9.0.tar.gz
+		__common xf86-input-mouse-1.9.0
+	}
+
 	__xf86-input-wacom()
 	{
-		__wget http://downloads.sourceforge.net/linuxwacom/xf86-input-wacom-0.17.0.tar.bz2
-		__common xf86-input-wacom-0.17.0
+		__wget http://downloads.sourceforge.net/linuxwacom/xf86-input-wacom-0.20.0.tar.bz2
+		__common xf86-input-wacom-0.20.0
 	}
 
 	__xf86-video-fbdev()
@@ -1265,21 +1277,23 @@ __xorg-drivers()
 
 	__xf86-video-intel()
 	{
-		__wget ${DRIVER_URL}/xf86-video-intel-2.21.6.tar.bz2
-		__common xf86-video-intel-2.21.6
+		__wget ${DRIVER_URL}/xf86-video-intel-2.21.3.tar.bz2
+		__common xf86-video-intel-2.21.3
 	}
 
-	__xf86-video-vesa()
+	__xf86-video-modesetting()
 	{
-		__wget ${DRIVER_URL}/xf86-video-vesa-2.3.2.tar.bz2
-		__common xf86-video-vesa-2.3.2
+		__wget ${DRIVER_URL}/xf86-video-modesetting-0.7.0.tar.gz
+		__common xf86-video-modesetting-0.7.0
 	}
 
 	__xf86-input-evdev
+	__xf86-input-keyboard
+	__xf86-input-mouse
 	__xf86-input-wacom
-	__xf86-video-fbdev	
+	__xf86-video-fbdev
 	__xf86-video-intel
-###	__xf86-video-vesa
+	__xf86-video-modesetting
 }
 
 __twm()
@@ -1453,6 +1467,7 @@ Section "InputClass"
 EndSection
 .
 
+	cp -f /etc/X11/app-defaults/xinitrc{.orig,}
 }
 
 __all()
