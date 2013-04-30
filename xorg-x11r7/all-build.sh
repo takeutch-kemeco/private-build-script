@@ -769,7 +769,7 @@ __mesa-lib()
             	--enable-glx-tls               	\
 		--with-llvm-shared-libs		\
             	--with-egl-platforms="drm,x11" 	\
-            	--with-gallium-drivers="svga,swrast" \
+            	--with-gallium-drivers="i915"	\
 		--with-dri-drivers="i965"	\
 
 	$MAKE_CLEAN
@@ -1236,11 +1236,23 @@ __xorg-server()
 	__mk install
 	ldconfig
 
-mkdir -pv /etc/X11/xorg.conf.d
+	mkdir -pv /etc/X11/xorg.conf.d
+
+	grep "/tmp/.ICE-unix dir 1777 root root" /etc/sysconfig/createfiles
+	if [ $? -ne 0 ]
+	then
 cat >> /etc/sysconfig/createfiles << .
 /tmp/.ICE-unix dir 1777 root root
+.
+	fi
+
+	grep "/tmp/.X11-unix dir 1777 root root" /etc/sysconfig/createfiles
+	if [ $? -ne 0 ]
+	then
+cat >> /etc/sysconfig/createfiles << .
 /tmp/.X11-unix dir 1777 root root
 .
+	fi
 }
 
 __xorg-drivers()
@@ -1388,7 +1400,10 @@ __xorg-config()
 
 	__dejavu-fonts-ttf
 
-cat > /etc/X11/xorg.conf.d/xkb-defaults.conf << .
+	ls /etc/X11/xorg.conf.d/16-xkb-defaults.conf
+	if [ $? -ne 0 ]
+	then
+cat > /etc/X11/xorg.conf.d/16-xkb-defaults.conf << .
 Section "InputClass"
 	Identifier	"XKB Defaults"
 	MatchIsKeyboard	"yes"
@@ -1397,8 +1412,12 @@ Section "InputClass"
 	Option		"XkbModel" "pc106"
 EndSection
 .
+	fi
 
-cat > /etc/X11/xorg.conf.d/videocard-0.conf << .
+	ls /etc/X11/xorg.conf.d/15-videocard-intel.conf
+	if [ $? -ne 0 ]
+	then
+cat > /etc/X11/xorg.conf.d/15-videocard-intel.conf << .
 Section "ServerLayout"
 	Identifier	"DefaultLayout"
 	Screen		0 "Screen0" 0 0
@@ -1415,6 +1434,7 @@ Section "Device"
 	Identifier	"Device0"
 	Driver		"intel"
 	Option		"DRI" "true"
+        Option          "AccelMethod" "uxa"
 EndSection
 
 Section "Screen"
@@ -1428,7 +1448,11 @@ Section "Screen"
 	EndSubSection
 EndSection
 .
+	fi
 
+	ls /etc/X11/xorg.conf.d/50-wacom.conf
+	if [ $? -ne 0 ]
+	then
 cat > /etc/X11/xorg.conf.d/50-wacom.conf << .
 Section "InputClass"
 	Identifier 	"Wacom class"
@@ -1436,7 +1460,7 @@ Section "InputClass"
 	MatchDevicePath	"/dev/input/event*"
 	Driver		"wacom"
 
-	Option		"Rotate" "CCW"
+#	Option		"Rotate" "CCW"
 
 	Option		"TopX" "0"
 	Option		"BottomX" "30479"
@@ -1466,6 +1490,7 @@ Section "InputClass"
 	Option		"Button2" "3"
 EndSection
 .
+	fi
 
 	cp -f /etc/X11/app-defaults/xinitrc{.orig,}
 }

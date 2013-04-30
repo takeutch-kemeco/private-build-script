@@ -1,7 +1,7 @@
 #!/bin/bash
 
 BASE_DIR=$(pwd)
-SRC=$BASE_DIR
+SRC_DIR=${BASE_DIR}/src
 
 #DIST_CLEAN=
 DIST_CLEAN="make distclean"
@@ -9,37 +9,51 @@ DIST_CLEAN="make distclean"
 #MAKE_CLEAN=
 MAKE_CLEAN="make clean"
 
-. ../common-func/__common-func.sh
+. ./__common-func.sh
 
-__common()
+__git-clone()
 {
-        __cd $1
+        cd ${BASE_DIR}
+        git clone $@
+}
 
-	$DIST_CLEAN
+__bld-common()
+{
+        $DIST_CLEAN
         ./autogen.sh
-        ./configure --prefix=/usr --disable-warnings
+        __cfg --prefix=/usr --sysconfdir=/etc --localstatedir=/var --libexecdir=/usr/lib $@
 
-	$MAKE_CLEAN
+        $MAKE_CLEAN
         __mk
         __mk install
         ldconfig
 }
 
+__common()
+{
+        __cd $1
+        git pull
+        __bld-common
+}
+
 __man-pages()
 {
-        __cd $BASE_DIR/man-pages
-	
-	$MAKE_CLEAN
-	make install
+        git clone git://github.com/mkerrisk/man-pages.git
+        __cd man-pages
+        git pull
+
+        $MAKE_CLEAN
+        make install
 }
 
 __zlib()
 {
-        __cd $BASE_DIR/zlib
+        __wget http://zlib.net/zlib-1.2.8.tar.gz
+        __dcd zlib-1.2.8
 
-	$DIST_CLEAN
-        CFLAGS='-mstackrealign -fPIC -O2' \
-         ./configure --prefix=/usr
+        $DIST_CLEAN
+        CFLAGS='-mstackrealign -fPIC -O4 -msse3 -march=native' \
+        ./configure --prefix=/usr
 
         $MAKE_CLEAN
         __mk
@@ -52,37 +66,51 @@ __zlib()
 
 __file()
 {
-        __common $BASE_DIR/file
+        __wget ftp://ftp.astron.com/pub/file/file-5.14.tar.gz
+        __dcd file-5.14
+
+        $DIST_CLEAN
+        __cfg --prefix=/usr
+
+        $MAKE_CLEAN
+        __mk
+        __mk install
+        ldconfig
 }
 
 __binutils()
 {
+        __wget http://ftp.gnu.org/gnu/binutils/binutils-2.23.2.tar.bz2
+        __dcd binutils-2.23.2
         __cdbt
 
-	$DIST_CLEAN
-        $BASE_DIR/binutils/configure --prefix=/usr \
-                --enable-shared		\
-		--enable-werror=no
+        $DIST_CLEAN
+        $BASE_DIR/binutils-2.23.2/configure     \
+                --prefix=/usr                   \
+                --enable-shared                 \
+                --enable-werror=no
 
         $MAKE_CLEAN
         __mk tooldir=/usr
         __mk tooldir=/usr install
 
-        cp -v $BASE_DIR/binutils/include/libiberty.h /usr/include/
+        cp -vf $BASE_DIR/binutils-2.23.2/include/libiberty.h /usr/include/
         ldconfig
 }
 
 __sed()
 {
-        __cd $BASE_DIR/sed
+        __git-clone git://git.savannah.gnu.org/sed.git
+        __cd sed
+        git pull
 
-	$DIST_CLEAN
+        $DIST_CLEAN
         ./autoboot
 
         sed -e "s/^_GL_WARN_ON_USE (gets,.*$//g" lib/stdio.in.h > /tmp/a
-        cp -f /tmp/a lib/stdio.in.h
+        cp -vf /tmp/a lib/stdio.in.h
 
-        ./configure --prefix=/usr --bindir=/bin
+        __cfg --prefix=/usr --bindir=/bin
 
         $MAKE_CLEAN
         __mk
@@ -92,9 +120,10 @@ __sed()
 
 __bzip2()
 {
-        __cd $BASE_DIR/bzip2
+        __wget http://www.bzip.org/1.0.6/bzip2-1.0.6.tar.gz
+        __dcd bzip2-1.0.6
 
-	$MAKE_CLEAN
+        $MAKE_CLEAN
         __mk -f Makefile-libbz2_so
         __mk clean
         __mk
@@ -110,17 +139,36 @@ __bzip2()
         ldconfig
 }
 
+__pkgconfig()
+{
+        __git-clone git://anongit.freedesktop.org/pkg-config
+        __cd pkg-config
+        git pull
+
+        $DIST_CLEAN
+        ./autogen.sh
+        __cfg --prefix=/usr                             \
+              --with-internal-glib                      \
+              --docdir=/usr/share/doc/pkg-config
+
+        $MAKE_CLEAN
+        __mk
+        make install
+        ldconfig
+}
+
 __ncurses()
 {
-        __cd $BASE_DIR/ncurses
+        __wget ftp://invisible-island.net/ncurses/ncurses-5.9.tar.gz
+        __dcd ncurses-5.9
 
-	$DIST_CLEAN
+        $DIST_CLEAN
         ./autogen.sh
-        ./configure --prefix=/usr       \
-                    --mandir=/usr/share/man \
-                    --with-shared       \
-                    --without-debug     \
-                    --enable-widec
+        __cfg --prefix=/usr             \
+              --mandir=/usr/share/man   \
+              --with-shared             \
+              --without-debug           \
+              --enable-widec
 
         $MAKE_CLEAN
         __mk
@@ -151,16 +199,18 @@ __ncurses()
 
 __util-linux()
 {
-        __cd $BASE_DIR/util-linux-ng
+        __git-clone git://git.kernel.org/pub/scm/utils/util-linux/util-linux.git
+        __cd util-linux
+        git pull
 
         sed -i -e 's@etc/adjtime@var/lib/hwclock/adjtime@g' $(grep -rl '/etc/adjtime' .)
         mkdir -pv /var/lib/hwclock
 
-	$DIST_CLEAN
+        $DIST_CLEAN
         ./autogen.sh
-        ./configure --disable-su        \
-               --disable-sulogin       \
-               --disable-login
+        __cfg --disable-su      \
+              --disable-sulogin \
+              --disable-login
 
         $MAKE_CLEAN
         __mk
@@ -170,9 +220,11 @@ __util-linux()
 
 __psmisc()
 {
-        __cd $BASE_DIR/psmisc
+        __git-clone git://psmisc.git.sourceforge.net/gitroot/psmisc/psmisc
+        __cd psmisc
+        git pull
 
-	$DIST_CLEAN
+        $DIST_CLEAN
         ./autogen.sh
         ./configure --prefix=/usr
 
@@ -185,18 +237,46 @@ __psmisc()
         mv -v /usr/bin/killall /bin
 }
 
+__procps-ng()
+{
+        __wget http://sourceforge.net/projects/procps-ng/files/Production/procps-ng-3.3.7.tar.xz
+        __dcd procps-ng-3.3.7
+
+        $DIST_CLEAN
+        __cfg --prefix=/usr                           \
+              --exec-prefix=                          \
+              --libdir=/usr/lib                       \
+              --docdir=/usr/share/doc/procps-ng-3.3.7 \
+              --disable-static                        \
+              --disable-skill                         \
+              --disable-kill
+
+        $MAKE_CLEAN
+        make
+        make install
+
+        mv -v /usr/lib/libprocps.so.* /lib
+        ln -sfv ../../lib/libprocps.so.1.1.1 /usr/lib/libprocps.so
+
+        ldconfig
+}
+
 __e2fsprogs()
 {
+        __git-clone git://git.kernel.org/pub/scm/fs/ext2/e2fsprogs.git
+        cd e2fsprogs
+        git pull
+
         __cdbt
 
-	$DIST_CLEAN
-        LDFLAGS=-lblkid \
-        $BASE_DIR/e2fsprogs/configure --prefix=/usr \
-                --with-root-prefix="" \
-                --enable-elf-shlibs   \
-                --disable-libblkid    \
-                --disable-libuuid     \
-                --disable-uuidd       \
+        $DIST_CLEAN
+        $BASE_DIR/e2fsprogs/configure   \
+                --prefix=/usr           \
+                --with-root-prefix=""   \
+                --enable-elf-shlibs     \
+                --disable-libblkid      \
+                --disable-libuuid       \
+                --disable-uuidd         \
                 --disable-fsck
 
         $MAKE_CLEAN
@@ -211,618 +291,51 @@ __e2fsprogs()
         ldconfig
 }
 
-__coreutils()
-{
-        __cd $BASE_DIR/coreutils
-
-       ./bootstrap
-
-        sed -e "s/^_GL_WARN_ON_USE (gets,.*$//g" lib/stdio.in.h > /tmp/a
-        cp -f /tmp/a lib/stdio.in.h
-
-	$DIST_CLEAN
-        FORCE_UNSAFE_CONFIGURE=1        \
-        ./configure --prefix=/usr       \
-                --prefix=/usr           \
-                --libexecdir=/usr/lib   \
-                --enable-no-install-program=kill,uptime
-
-        $MAKE_CLEAN
-        __mk
-        __mk install
-
-        mv -v /usr/bin/{cat,chgrp,chmod,chown,cp,date,dd,df,echo} /bin
-        mv -v /usr/bin/{false,ln,ls,mkdir,mknod,mv,pwd,rm} /bin
-        mv -v /usr/bin/{rmdir,stty,sync,true,uname} /bin
-        mv -v /usr/bin/chroot /usr/sbin
-        mv -v /usr/share/man/man1/chroot.1 /usr/share/man/man8/chroot.8
-        sed -i s/\"1\"/\"8\"/1 /usr/share/man/man8/chroot.8
-
-        mv -v /usr/bin/{head,sleep,nice} /bin
-}
-
-__iana-etc()
-{
-        __cd $BASE_DIR/iana-etc
-
-        $MAKE_CLEAN
-        __mk
-        __mk install
-        ldconfig
-}
-
-__m4()
-{
-        __cd $BASE_DIR/m4
-
-        ./bootstrap
-
-        sed -e "s/^_GL_WARN_ON_USE (gets,.*$//g" gnu/stdio.in.h > /tmp/a
-        cp -f /tmp/a gnu/stdio.in.h
-
-	$DIST_CLEAN
-        ./configure --prefix=/usr
-
-        $MAKE_CLEAN
-        __mk
-        __mk install
-        ldconfig
-}
-
-__bison()
-{
-        __cd $BASE_DIR/bison
-
-        ./bootstrap
-
-        sed -e "s/^_GL_WARN_ON_USE (gets,.*$//g" lib/stdio.in.h > /tmp/a
-        cp -f /tmp/a lib/stdio.in.h
-
-        echo "ac_cv_prog_lex_is_flex=yes" > config.cache
-
-	$DIST_CLEAN
-        ./configure --prefix=/usr
-
-        echo '#define YYENABLE_NLS 1' >> lib/config.h
-
-        $MAKE_CLEAN
-        __mk
-        __mk install
-        ldconfig
-}
-
-__procps()
-{
-        __cd $BASE_DIR/procps
-
-        patch -Np1 -i ../procps-3.2.8-fix_HZ_errors-1.patch
-
-        patch -Np1 -i ../procps-3.2.8-watch_unicode-1.patch
-
-        $MAKE_CLEAN
-        make
-        make install
-        ldconfig
-}
-
-__grep()
-{
-        __cd $BASE_DIR/grep
-
-        ./bootstrap
-
-        sed -e "s/^_GL_WARN_ON_USE (gets,.*$//g" lib/stdio.in.h > /tmp/a
-        cp -f /tmp/a gnulib-tests/stdio.in.h
-
-	$DIST_CLEAN
-        ./configure --prefix=/usr       \
-                --bindir=/bin
-
-        $MAKE_CLEAN
-        __mk
-        __mk install
-        ldconfig
-}
-
-__readline()
-{
-        __cd $BASE_DIR/readline
-
-	$DIST_CLEAN
-        ./configure --prefix=/usr       \
-                --libdir=/lib           \
-                --enable-shared=yes     \
-                --enable-static=yes
-
-        $MAKE_CLEAN
-        __mk SHLIB_LIBS=-lncurses
-        __mk install
-        ldconfig
-
-        mv -v /lib/lib{readline,history}.a /usr/lib
-
-        rm -v /lib/lib{readline,history}.so
-        ln -sfv ../../lib/libreadline.so.6 /usr/lib/libreadline.so
-        ln -sfv ../../lib/libhistory.so.6 /usr/lib/libhistory.so
-
-        mkdir   -v /usr/share/doc/readline
-        install -v -m644 doc/*.{ps,pdf,html,dvi} /usr/share/doc/readline
-}
-
-__bash()
-{
-        __cd $BASE_DIR/bash
-
-	$DIST_CLEAN
-        ./autogen.sh
-        ./configure --prefix=/usr       \
-                --bindir=/bin           \
-                --htmldir=/usr/share/doc/bash \
-                --without-bash-malloc   \
-                --with-installed-readline
-
-        $MAKE_CLEAN
-        __mk
-        __mk install
-        ldconfig
-}
-
-__libtool()
-{
-        __cd $BASE_DIR/libtool
-
-        ./bootstrap
-
-	$DIST_CLEAN
-        ./configure --prefix=/usr
-
-        $MAKE_CLEAN
-        __mk
-        __mk install
-        ldconfig
-}
-
-__gdbm()
-{
-        __cd $BASE_DIR/gdbm
-
-        ./bootstrap
-	
-	$DIST_CLEAN
-        ./configure --prefix=/usr \
-                --enable-libgdbm-compat
-
-        $MAKE_CLEAN
-        __mk
-        __mk install
-        ldconfig
-}
-
-__inetutils()
-{
-        __cd $BASE_DIR/inetutils
-
-        ./bootstrap
-
-        sed -e "s/^_GL_WARN_ON_USE (gets,.*$//g" lib/stdio.in.h > /tmp/a
-        cp -f /tmp/a lib/stdio.in.h
-
-	$DIST_CLEAN
-        ./configure --prefix=/usr       \
-                --libexecdir=/usr/sbin  \
-                --localstatedir=/var    \
-                --disable-logger        \
-                --disable-syslogd       \
-                --disable-whois         \
-                --disable-servers
-
-        $MAKE_CLEAN
-        __mk
-        __mk install
-        __mk -C doc html
-        __mk -C doc install-html docdir=/usr/share/doc/inetutils
-        ldconfig
-
-        mv -v /usr/bin/{hostname,ping,ping6} /bin
-        mv -v /usr/bin/traceroute /sbin
-}
-
-__pkgconfig()
-{
-        __cd $BASE_DIR/pkg-config
-
-	$DIST_CLEAN
-        ./autogen.sh
-        ./configure --prefix=/usr       \
-                --with-internal-glib    \
-                --docdir=/usr/share/doc/pkg-config
-
-	$MAKE_CLEAN
-        __mk
-        make install
-        ldconfig
-}
-
-__gettext()
-{
-        __cd $BASE_DIR/gettext
-
-        sed -i -e '/gets is a/d' gettext-*/*/stdio.in.h
-
-	$DIST_CLEAN
-        ./configure --prefix=/usr       \
-                --docdir=/usr/share/doc/gettext
-
-	$MAKE_CLEAN
-        __mk
-        __mk install
-        ldconfig
-}
-
-__autoconf()
-{
-        __common $BASE_DIR/autoconf
-}
-
-__autoconf-archive()
-{
-        __common $BASE_DIR/autoconf-archive
-}
-
-__automake()
-{
-        __cd $BASE_DIR/automake
-
-	$DIST_CLEAN
-        ./configure --prefix=/usr       \
-                --docdir=/usr/share/doc/automake
-
-	$MAKE_CLEAN
-        __mk
-        __mk install
-        ldconfig
-}
-
-__diffutils()
-{
-        __cd $BASE_DIR/diffutils
-
-        sed -i -e '/gets is a/d' lib/stdio.in.h
-
-	$DIST_CLEAN
-        ./configure --prefix=/usr
-
-	$MAKE_CLEAN
-        __mk
-        __mk install
-        ldconfig
-}
-
-__gawk()
-{
-        __cd $BASE_DIR/gawk
-
-        ./bootstrup
-
-	$DIST_CLEAN
-        ./configure --prefix=/usr --sysconfdir=/etc
-
-	$MAKE_CLEAN
-        __mk
-        __mk install
-        ldconfig
-
-        mkdir -v /usr/share/doc/gawk
-        cp -v doc/{awkforai.txt,*.{eps,pdf,jpg}} /usr/share/doc/gawk
-}
-
-__findutils()
-{
-        __cd $BASE_DIR/findutils
-
-	$DIST_CLEAN
-        ./configure --prefix=/usr       \
-                --libexecdir=/usr/lib/findutils \
-                --localstatedir=/var/lib/locate
-
-	$MAKE_CLEAN
-        __mk
-        __mk install
-        ldconfig
-
-        mv -v /usr/bin/find /bin
-        sed -i 's/find:=${BINDIR}/find:=\/bin/' /usr/bin/updatedb
-}
-
-__flex()
-{
-        __cd $BASE_DIR/flex
-
-	$DIST_CLEAN
-        ./configure --prefix=/usr       \
-                --mandir=/usr/share/man \
-                --infodir=/usr/share/info \
-                --docdir=/usr/share/doc/flex
-
-	$MAKE_CLEAN
-        __mk
-        __mk install
-        ln -sv libfl.a /usr/lib/libl.a
-        ldconfig
-
-cat > /usr/bin/lex << "EOF"
-#!/bin/sh
-# Begin /usr/bin/lex
-
-exec /usr/bin/flex -l "$@"
-
-# End /usr/bin/lex
-EOF
-chmod -v 755 /usr/bin/lex
-
-        mkdir -v /usr/share/doc/flex
-        cp -f doc/flex.pdf /usr/share/doc/flex
-}
-
-__groff()
-{
-        __cd $BASE_DIR/groff
-
-	$DIST_CLEAN
-        PAGE=A4 ./configure --prefix=/usr
-
-	$MAKE_CLEAN
-        __mk
-        __mk install
-        ln -sv eqn /usr/bin/geqn
-        ln -sv tbl /usr/bin/gtbl
-        ldconfig
-}
-
-__xz()
-{
-        __cd $BASE_DIR/xz
-
-	$DIST_CLEAN
-        ./autogen.sh
-        ./configure --prefix=/usr       \
-                --libdir=/lib           \
-                --docdir=/usr/share/doc/xz
-
-	$MAKE_CLEAN
-        __mk
-        __mk pkgconfigdir=/usr/lib/pkgconfig install
-        ldconfig
-}
-
-__grub()
-{
-        __cd $BASE_DIR/grub
-
-        sed -i -e '/gets is a/d' grub-core/gnulib/stdio.in.h
-
-	$DIST_CLEAN
-        ./autogen.sh
-	CFLAGS="" ./configure --prefix=/usr       \
-                --sysconfdir=/etc       \
-                --disable-grub-emu-usb  \
-                --disable-efiemu        \
-                --disable-werror
-
-	$MAKE_CLEAN
-        CFLAGS="" __mk
-        CFLAGS="" __mk install
-        ldconfig
-}
-
-__less()
-{
-        __cd $BASE_DIR/less
-
-	$DIST_CLEAN
-        ./configure --prefix=/usr       \
-                --sysconfdir=/etc
-
-	$MAKE_CLEAN
-        __mk
-        __mk install
-        ldconfig
-}
-
-__gzip()
-{
-        __cd $BASE_DIR/gzip
-
-        ./bootstrap
-
-        sed -e "s/^_GL_WARN_ON_USE (gets,.*$//g" lib/stdio.in.h > /tmp/a
-        cp -f /tmp/a lib/stdio.in.h
-
-	$DIST_CLEAN
-        ./configure --prefix=/usr       \
-                --bindir=/bin
-
-	$MAKE_CLEAN
-        __mk
-        __mk install
-        ldconfig
-
-        mv -v /bin/{gzexe,uncompress,zcmp,zdiff,zegrep} /usr/bin
-        mv -v /bin/{zfgrep,zforce,zgrep,zless,zmore,znew} /usr/bin
-}
-
-__iproute2()
-{
-        __cd $BASE_DIR/iproute2
-
-	$DIST_CLEAN
-        ./configure --prefix=/usr
-
-	$MAKE_CLEAN
-        __mk DESTDIR=
-
-        __mk DESTDIR=              \
-                MANDIR=/usr/share/man \
-                DOCDIR=/usr/share/doc/iproute2 install
-        ldconfig
-}
-
-__kbd()
-{
-        __cd $BASE_DIR/kbd
-
-        sed -i '/guardado\ el/s/\(^.*en\ %\)\(.*\)/\14\$\2/' po/es.po
-
-        sed -i 's/\(RESIZECONS_PROGS=\)yes/\1no/' configure
-        sed -i 's/resizecons.8 //' man/man8/Makefile.in
-        touch -d '2011-05-07 08:30' configure.ac
-
-	$DIST_CLEAN
-        ./configure --prefix=/usr \
-                --datadir=/lib/kbd
-
-	$MAKE_CLEAN
-        __mk
-        __mk install
-        ldconfig
-
-        mv -v /usr/bin/{kbd_mode,loadkeys,openvt,setfont} /bin
-
-        mkdir -v /usr/share/doc/kbd
-        cp -R -v doc/* /usr/share/doc/kbd
-}
-
-__kmod()
-{
-        __cd $BASE_DIR/kmod
-
-	$DIST_CLEAN
-        ./configure --prefix=/usr       \
-                --bindir=/bin           \
-                --libdir=/lib           \
-                --sysconfdir=/etc       \
-                --with-xz               \
-                --with-zlib
-
-	$MAKE_CLEAN
-        __mk
-        __mk pkgconfigdir=/usr/lib/pkgconfig install
-
-        for target in depmod insmod modinfo modprobe rmmod; do
-                ln -sv ../bin/kmod /sbin/$target
-        done
-
-        ln -sv kmod /bin/lsmod
-
-        ldconfig
-}
-
-__libpipeline()
-{
-        __cd $BASE_DIR/libpipeline
-
-        sed -e "s/^_GL_WARN_ON_USE (gets,.*$//g" lib/stdio.in.h > /tmp/a
-        cp -f /tmp/a lib/stdio.in.h
-
-	$DIST_CLEAN
-        PKG_CONFIG_PATH=/tools/lib/pkgconfig \
-        ./configure --prefix=/usr
-
-	$MAKE_CLEAN
-        __mk
-        __mk install
-        ldconfig
-}
-
-__make()
-{
-        __cd $BASE_DIR/make
-
-	$DIST_CLEAN
-        ./configure --prefix=/usr
-
-	$MAKE_CLEAN
-        __mk
-        __mk install
-        ldconfig
-}
-
-__man-db()
-{
-        __cd $BASE_DIR/man-db
-
-	$DIST_CLEAN
-        ./configure --prefix=/usr       \
-                --libexecdir=/usr/lib   \
-                --docdir=/usr/share/doc/man-db \
-                --sysconfdir=/etc       \
-                --disable-setuid        \
-                --with-browser=/usr/bin/lynx \
-                --with-vgrind=/usr/bin/vgrind \
-                --with-grap=/usr/bin/grap
-
-	$MAKE_CLEAN
-        __mk
-        __mk install
-        ldconfig
-}
-
 __linux-pam()
 {
-	__cd $BASE_DIR/linux-pam
+        __wget http://linux-pam.org/library/Linux-PAM-1.1.6.tar.bz2
+        __wget http://linux-pam.org/documentation/Linux-PAM-1.1.6-docs.tar.bz2
+        __dcd Linux-PAM-1.1.6
 
-	$DIST_CLEAN
-	./autogen.sh
-	./configure --prefix=/usr			\
-		--sysconfdir=/etc 			\
-		--libdir=/usr/lib			\
-		--sbindir=/lib/security			\
-		--enable-securedir=/lib/security	\
-		--docdir=/usr/share/doc/Linux-PAM	\
-		--enable-shared				\
-		--enable-read-both-confs		\
+        tar -xf ../Linux-PAM-1.1.6-docs.tar.bz2 --strip-components=1
 
-	$MAKE_CLEAN
-	__mk
-	install -v -m755 -d /etc/pam.d
+        __cfg --prefix=/usr                             \
+              --sysconfdir=/etc                         \
+              --docdir=/usr/share/doc/Linux-PAM-1.1.6   \
+              --disable-nis
 
-echo "
-other           auth            pam_unix.so     nullok
-other           account         pam_unix.so
-other           session         pam_unix.so
-other           password        pam_unix.so     nullok
-" > /etc/pam.d/other
+        $MAKE_CLEAN
+        __mk
+        install -v -m755 -d /etc/pam.d
 
-	__mk check
-
-	__mk install
-	chmod -v 4755 /sbin/unix_chkpwd
-	ldconfig
+        __mk install
+        chmod -v 4755 /sbin/unix_chkpwd
+        ldconfig
 }
 
 __shadow()
 {
-        __cd $BASE_DIR/shadow
+        __wget http://pkg-shadow.alioth.debian.org/releases/shadow-4.1.5.1.tar.bz2
+        __dcd shadow-4.1.5.1
 
-	sed -i 's/groups$(EXEEXT) //' src/Makefile.in
-	find man -name Makefile.in -exec sed -i 's/groups\.1 / /' {} \;
-	sed -i -e 's/ ko//' -e 's/ zh_CN zh_TW//' man/Makefile.in
+        sed -i 's/groups$(EXEEXT) //' src/Makefile.in
+        find man -name Makefile.in -exec sed -i 's/groups\.1 / /' {} \;
+        sed -i -e 's/ ko//' -e 's/ zh_CN zh_TW//' man/Makefile.in
 
-	sed -i -e 's@#ENCRYPT_METHOD DES@ENCRYPT_METHOD SHA512@' \
-	     	-e 's@/var/spool/mail@/var/mail@' etc/login.defs
+        sed -i -e 's@#ENCRYPT_METHOD DES@ENCRYPT_METHOD SHA512@' \
+                -e 's@/var/spool/mail@/var/mail@' etc/login.defs
 
-	sed -i -e 's@PATH=/sbin:/bin:/usr/sbin:/usr/bin@&:/usr/local/sbin:/usr/local/bin@' \
-       		-e 's@PATH=/bin:/usr/bin@&:/usr/local/bin@' etc/login.defs
+        sed -i -e 's@PATH=/sbin:/bin:/usr/sbin:/usr/bin@&:/usr/local/sbin:/usr/local/bin@' \
+                -e 's@PATH=/bin:/usr/bin@&:/usr/local/bin@' etc/login.defs
 
-	$DIST_CLEAN
-	./configure --prefix=/usr --sysconfdir=/etc --enable-man=no
+        __cfg --prefix=/usr --sysconfdir=/etc --enable-man=no
 
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	mv -v /usr/bin/passwd /bin
+        $MAKE_CLEAN
+        __mk
+        __mk install
+        mv -v /usr/bin/passwd /bin
 
-	sed -i 's/yes/no/' /etc/default/useradd
+        sed -i 's/yes/no/' /etc/default/useradd
 }
 
 __shadow-config()
@@ -1000,6 +513,537 @@ EOF
 [ -f /etc/limits ] && mv -v /etc/limits{,.NOUSE}
 }
 
+__coreutils()
+{
+#       __git-clone git://git.sv.gnu.org/coreutils
+#       __cd coreutils
+#       git pull
+
+#      ./bootstrap
+
+        __wget http://ftp.gnu.org/gnu/coreutils/coreutils-8.21.tar.xz
+        __dcd coreutils-8.21
+
+        sed -e "s/^_GL_WARN_ON_USE (gets,.*$//g" lib/stdio.in.h > /tmp/a
+        cp -f /tmp/a lib/stdio.in.h
+
+        $DIST_CLEAN
+        FORCE_UNSAFE_CONFIGURE=1        \
+        ./configure --prefix=/usr       \
+                --prefix=/usr           \
+                --libexecdir=/usr/lib   \
+                --enable-no-install-program=kill,uptime
+
+        $MAKE_CLEAN
+        __mk
+        __mk install
+
+        mv -v /usr/bin/{cat,chgrp,chmod,chown,cp,date,dd,df,echo} /bin
+        mv -v /usr/bin/{false,ln,ls,mkdir,mknod,mv,pwd,rm} /bin
+        mv -v /usr/bin/{rmdir,stty,sync,true,uname} /bin
+        mv -v /usr/bin/chroot /usr/sbin
+        mv -v /usr/share/man/man1/chroot.1 /usr/share/man/man8/chroot.8
+        sed -i s/\"1\"/\"8\"/1 /usr/share/man/man8/chroot.8
+
+        mv -v /usr/bin/{head,sleep,nice} /bin
+}
+
+__iana-etc()
+{
+        __cd $BASE_DIR/iana-etc
+
+        $MAKE_CLEAN
+        __mk
+        __mk install
+        ldconfig
+}
+
+__m4()
+{
+        __cd $BASE_DIR/m4
+
+        ./bootstrap
+
+        sed -e "s/^_GL_WARN_ON_USE (gets,.*$//g" gnu/stdio.in.h > /tmp/a
+        cp -f /tmp/a gnu/stdio.in.h
+
+        $DIST_CLEAN
+        ./configure --prefix=/usr
+
+        $MAKE_CLEAN
+        __mk
+        __mk install
+        ldconfig
+}
+
+__bison()
+{
+        __cd $BASE_DIR/bison
+
+        ./bootstrap
+
+        sed -e "s/^_GL_WARN_ON_USE (gets,.*$//g" lib/stdio.in.h > /tmp/a
+        cp -f /tmp/a lib/stdio.in.h
+
+        echo "ac_cv_prog_lex_is_flex=yes" > config.cache
+
+        $DIST_CLEAN
+        ./configure --prefix=/usr
+
+        echo '#define YYENABLE_NLS 1' >> lib/config.h
+
+        $MAKE_CLEAN
+        __mk
+        __mk install
+        ldconfig
+}
+
+__grep()
+{
+        __cd $BASE_DIR/grep
+
+        ./bootstrap
+
+        sed -e "s/^_GL_WARN_ON_USE (gets,.*$//g" lib/stdio.in.h > /tmp/a
+        cp -f /tmp/a gnulib-tests/stdio.in.h
+
+        $DIST_CLEAN
+        ./configure --prefix=/usr       \
+                --bindir=/bin
+
+        $MAKE_CLEAN
+        __mk
+        __mk install
+        ldconfig
+}
+
+__readline()
+{
+        __cd $BASE_DIR/readline
+
+        $DIST_CLEAN
+        ./configure --prefix=/usr       \
+                --libdir=/lib           \
+                --enable-shared=yes     \
+                --enable-static=yes
+
+        $MAKE_CLEAN
+        __mk SHLIB_LIBS=-lncurses
+        __mk install
+        ldconfig
+
+        mv -v /lib/lib{readline,history}.a /usr/lib
+
+        rm -v /lib/lib{readline,history}.so
+        ln -sfv ../../lib/libreadline.so.6 /usr/lib/libreadline.so
+        ln -sfv ../../lib/libhistory.so.6 /usr/lib/libhistory.so
+
+        mkdir   -v /usr/share/doc/readline
+        install -v -m644 doc/*.{ps,pdf,html,dvi} /usr/share/doc/readline
+}
+
+__bash()
+{
+        __cd $BASE_DIR/bash
+
+        $DIST_CLEAN
+        ./autogen.sh
+        ./configure --prefix=/usr       \
+                --bindir=/bin           \
+                --htmldir=/usr/share/doc/bash \
+                --without-bash-malloc   \
+                --with-installed-readline
+
+        $MAKE_CLEAN
+        __mk
+        __mk install
+        ldconfig
+}
+
+__libtool()
+{
+        __cd $BASE_DIR/libtool
+
+        ./bootstrap
+
+        $DIST_CLEAN
+        ./configure --prefix=/usr
+
+        $MAKE_CLEAN
+        __mk
+        __mk install
+        ldconfig
+}
+
+__gdbm()
+{
+        __cd $BASE_DIR/gdbm
+
+        ./bootstrap
+
+        $DIST_CLEAN
+        ./configure --prefix=/usr \
+                --enable-libgdbm-compat
+
+        $MAKE_CLEAN
+        __mk
+        __mk install
+        ldconfig
+}
+
+__inetutils()
+{
+        __cd $BASE_DIR/inetutils
+
+        ./bootstrap
+
+        sed -e "s/^_GL_WARN_ON_USE (gets,.*$//g" lib/stdio.in.h > /tmp/a
+        cp -f /tmp/a lib/stdio.in.h
+
+        $DIST_CLEAN
+        ./configure --prefix=/usr       \
+                --libexecdir=/usr/sbin  \
+                --localstatedir=/var    \
+                --disable-logger        \
+                --disable-syslogd       \
+                --disable-whois         \
+                --disable-servers
+
+        $MAKE_CLEAN
+        __mk
+        __mk install
+        __mk -C doc html
+        __mk -C doc install-html docdir=/usr/share/doc/inetutils
+        ldconfig
+
+        mv -v /usr/bin/{hostname,ping,ping6} /bin
+        mv -v /usr/bin/traceroute /sbin
+}
+
+__gettext()
+{
+        __cd $BASE_DIR/gettext
+
+        sed -i -e '/gets is a/d' gettext-*/*/stdio.in.h
+
+        $DIST_CLEAN
+        ./configure --prefix=/usr       \
+                --docdir=/usr/share/doc/gettext
+
+        $MAKE_CLEAN
+        __mk
+        __mk install
+        ldconfig
+}
+
+__autoconf()
+{
+        __common $BASE_DIR/autoconf
+}
+
+__autoconf-archive()
+{
+        __common $BASE_DIR/autoconf-archive
+}
+
+__automake()
+{
+        __cd $BASE_DIR/automake
+
+        $DIST_CLEAN
+        ./configure --prefix=/usr       \
+                --docdir=/usr/share/doc/automake
+
+        $MAKE_CLEAN
+        __mk
+        __mk install
+        ldconfig
+}
+
+__diffutils()
+{
+        __cd $BASE_DIR/diffutils
+
+        sed -i -e '/gets is a/d' lib/stdio.in.h
+
+        $DIST_CLEAN
+        ./configure --prefix=/usr
+
+        $MAKE_CLEAN
+        __mk
+        __mk install
+        ldconfig
+}
+
+__gawk()
+{
+        __cd $BASE_DIR/gawk
+
+        ./bootstrup
+
+        $DIST_CLEAN
+        ./configure --prefix=/usr --sysconfdir=/etc
+
+        $MAKE_CLEAN
+        __mk
+        __mk install
+        ldconfig
+
+        mkdir -v /usr/share/doc/gawk
+        cp -v doc/{awkforai.txt,*.{eps,pdf,jpg}} /usr/share/doc/gawk
+}
+
+__findutils()
+{
+        __cd $BASE_DIR/findutils
+
+        $DIST_CLEAN
+        ./configure --prefix=/usr       \
+                --libexecdir=/usr/lib/findutils \
+                --localstatedir=/var/lib/locate
+
+        $MAKE_CLEAN
+        __mk
+        __mk install
+        ldconfig
+
+        mv -v /usr/bin/find /bin
+        sed -i 's/find:=${BINDIR}/find:=\/bin/' /usr/bin/updatedb
+}
+
+__flex()
+{
+        __cd $BASE_DIR/flex
+
+        $DIST_CLEAN
+        ./configure --prefix=/usr       \
+                --mandir=/usr/share/man \
+                --infodir=/usr/share/info \
+                --docdir=/usr/share/doc/flex
+
+        $MAKE_CLEAN
+        __mk
+        __mk install
+        ln -sv libfl.a /usr/lib/libl.a
+        ldconfig
+
+cat > /usr/bin/lex << "EOF"
+#!/bin/sh
+# Begin /usr/bin/lex
+
+exec /usr/bin/flex -l "$@"
+
+# End /usr/bin/lex
+EOF
+chmod -v 755 /usr/bin/lex
+
+        mkdir -v /usr/share/doc/flex
+        cp -f doc/flex.pdf /usr/share/doc/flex
+}
+
+__groff()
+{
+        __cd $BASE_DIR/groff
+
+        $DIST_CLEAN
+        PAGE=A4 ./configure --prefix=/usr
+
+        $MAKE_CLEAN
+        __mk
+        __mk install
+        ln -sv eqn /usr/bin/geqn
+        ln -sv tbl /usr/bin/gtbl
+        ldconfig
+}
+
+__xz()
+{
+        __cd $BASE_DIR/xz
+
+        $DIST_CLEAN
+        ./autogen.sh
+        ./configure --prefix=/usr       \
+                --libdir=/lib           \
+                --docdir=/usr/share/doc/xz
+
+        $MAKE_CLEAN
+        __mk
+        __mk pkgconfigdir=/usr/lib/pkgconfig install
+        ldconfig
+}
+
+__grub()
+{
+        __cd $BASE_DIR/grub
+
+        sed -i -e '/gets is a/d' grub-core/gnulib/stdio.in.h
+
+        $DIST_CLEAN
+        ./autogen.sh
+        CFLAGS="" ./configure --prefix=/usr       \
+                --sysconfdir=/etc       \
+                --disable-grub-emu-usb  \
+                --disable-efiemu        \
+                --disable-werror
+
+        $MAKE_CLEAN
+        CFLAGS="" __mk
+        CFLAGS="" __mk install
+        ldconfig
+}
+
+__less()
+{
+        __cd $BASE_DIR/less
+
+        $DIST_CLEAN
+        ./configure --prefix=/usr       \
+                --sysconfdir=/etc
+
+        $MAKE_CLEAN
+        __mk
+        __mk install
+        ldconfig
+}
+
+__gzip()
+{
+        __cd $BASE_DIR/gzip
+
+        ./bootstrap
+
+        sed -e "s/^_GL_WARN_ON_USE (gets,.*$//g" lib/stdio.in.h > /tmp/a
+        cp -f /tmp/a lib/stdio.in.h
+
+        $DIST_CLEAN
+        ./configure --prefix=/usr       \
+                --bindir=/bin
+
+        $MAKE_CLEAN
+        __mk
+        __mk install
+        ldconfig
+
+        mv -v /bin/{gzexe,uncompress,zcmp,zdiff,zegrep} /usr/bin
+        mv -v /bin/{zfgrep,zforce,zgrep,zless,zmore,znew} /usr/bin
+}
+
+__iproute2()
+{
+        __cd $BASE_DIR/iproute2
+
+        $DIST_CLEAN
+        ./configure --prefix=/usr
+
+        $MAKE_CLEAN
+        __mk DESTDIR=
+
+        __mk DESTDIR=              \
+                MANDIR=/usr/share/man \
+                DOCDIR=/usr/share/doc/iproute2 install
+        ldconfig
+}
+
+__kbd()
+{
+        __cd $BASE_DIR/kbd
+
+        sed -i '/guardado\ el/s/\(^.*en\ %\)\(.*\)/\14\$\2/' po/es.po
+
+        sed -i 's/\(RESIZECONS_PROGS=\)yes/\1no/' configure
+        sed -i 's/resizecons.8 //' man/man8/Makefile.in
+        touch -d '2011-05-07 08:30' configure.ac
+
+        $DIST_CLEAN
+        ./configure --prefix=/usr \
+                --datadir=/lib/kbd
+
+        $MAKE_CLEAN
+        __mk
+        __mk install
+        ldconfig
+
+        mv -v /usr/bin/{kbd_mode,loadkeys,openvt,setfont} /bin
+
+        mkdir -v /usr/share/doc/kbd
+        cp -R -v doc/* /usr/share/doc/kbd
+}
+
+__kmod()
+{
+        __cd $BASE_DIR/kmod
+
+        $DIST_CLEAN
+        ./configure --prefix=/usr       \
+                --bindir=/bin           \
+                --libdir=/lib           \
+                --sysconfdir=/etc       \
+                --with-xz               \
+                --with-zlib
+
+        $MAKE_CLEAN
+        __mk
+        __mk pkgconfigdir=/usr/lib/pkgconfig install
+
+        for target in depmod insmod modinfo modprobe rmmod; do
+                ln -sv ../bin/kmod /sbin/$target
+        done
+
+        ln -sv kmod /bin/lsmod
+
+        ldconfig
+}
+
+__libpipeline()
+{
+        __cd $BASE_DIR/libpipeline
+
+        sed -e "s/^_GL_WARN_ON_USE (gets,.*$//g" lib/stdio.in.h > /tmp/a
+        cp -f /tmp/a lib/stdio.in.h
+
+        $DIST_CLEAN
+        PKG_CONFIG_PATH=/tools/lib/pkgconfig \
+        ./configure --prefix=/usr
+
+        $MAKE_CLEAN
+        __mk
+        __mk install
+        ldconfig
+}
+
+__make()
+{
+        __cd $BASE_DIR/make
+
+        $DIST_CLEAN
+        ./configure --prefix=/usr
+
+        $MAKE_CLEAN
+        __mk
+        __mk install
+        ldconfig
+}
+
+__man-db()
+{
+        __cd $BASE_DIR/man-db
+
+        $DIST_CLEAN
+        ./configure --prefix=/usr       \
+                --libexecdir=/usr/lib   \
+                --docdir=/usr/share/doc/man-db \
+                --sysconfdir=/etc       \
+                --disable-setuid        \
+                --with-browser=/usr/bin/lynx \
+                --with-vgrind=/usr/bin/vgrind \
+                --with-grap=/usr/bin/grap
+
+        $MAKE_CLEAN
+        __mk
+        __mk install
+        ldconfig
+}
+
 __sysklogd()
 {
         __cd $BASE_DIR/sysklogd
@@ -1031,7 +1075,7 @@ __tar()
         sed -e "s/^_GL_WARN_ON_USE (gets,.*$//g" gnu/stdio.in.h > /tmp/a
         cp -f /tmp/a gnu/stdio.in.h
 
-	$DIST_CLEAN
+        $DIST_CLEAN
         FORCE_UNSAFE_CONFIGURE=1        \
         ./configure --prefix=/usr       \
                 --bindir=/bin           \
@@ -1049,7 +1093,7 @@ __texinfo()
 {
         __cd $BASE_DIR/texinfo
 
-	$DIST_CLEAN
+        $DIST_CLEAN
         ./configure --prefix=/usr
 
         $MAKE_CLEAN
@@ -1067,7 +1111,7 @@ __dbus()
         useradd -c "D-Bus Message Daemon User" -d /var/run/dbus \
                 -u 27 -g messagebus -s /bin/false messagebus
 
-	$DIST_CLEAN
+        $DIST_CLEAN
         ./autogen.sh --prefix=$PREFIX   \
                 --sysconfdir=/etc       \
                 --localstatedir=/var    \
@@ -1102,27 +1146,27 @@ EOF
 
 __udev()
 {
-	__cd $BASE_DIR/systemd-196
+        __cd $BASE_DIR/systemd-196
 
-	tar -xvf ../udev-lfs-196-3.tar.bz2
+        tar -xvf ../udev-lfs-196-3.tar.bz2
 
-	sed -i -e 's/create/update/' src/udev/udevadm-hwdb.c
+        sed -i -e 's/create/update/' src/udev/udevadm-hwdb.c
 
         $MAKE_CLEAN
-	__mk -f udev-lfs-196-3/Makefile.lfs
+        __mk -f udev-lfs-196-3/Makefile.lfs
 
-	__mk -f udev-lfs-196-3/Makefile.lfs install
+        __mk -f udev-lfs-196-3/Makefile.lfs install
 
-	build/udevadm hwdb --update
+        build/udevadm hwdb --update
 
-	bash udev-lfs-196-3/init-net-rules.sh
+        bash udev-lfs-196-3/init-net-rules.sh
 }
 
 __systemd()
 {
         __cd $BASE_DIR/systemd
 
-	$DIST_CLEAN
+        $DIST_CLEAN
         ./configure
 
         $MAKE_CLEAN
@@ -1133,15 +1177,15 @@ __systemd()
 
 __systemd-ui()
 {
-	__cd $BASE_DIR/systemd-ui
+        __cd $BASE_DIR/systemd-ui
 
-	$DIST_CLEAN
-	./configure
+        $DIST_CLEAN
+        ./configure
 
         $MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
+        __mk
+        __mk install
+        ldconfig
 }
 
 __vim()
@@ -1150,8 +1194,8 @@ __vim()
 
         echo '#define SYS_VIMRC_FILE "/etc/vimrc"' >> src/feature.h
 
-	$DIST_CLEAN
-        ./configure --prefix=/usr	\
+        $DIST_CLEAN
+        ./configure --prefix=/usr       \
                 --enable-multibyte
 
         $MAKE_CLEAN
@@ -1169,32 +1213,32 @@ __vim()
 
 __iptables()
 {
-	__cd $BASE_DIR/iptables
+        __cd $BASE_DIR/iptables
 
-	$DIST_CLEAN
-	LDFLAGS="-L$PWD/libiptc/.libs"			\
-	./configure --prefix=/usr                       \
-        	--exec-prefix=                         	\
-            	--bindir=/usr/bin                      	\
-            	--with-xtlibdir=/lib/xtables           	\
-            	--with-pkgconfigdir=/usr/lib/pkgconfig 	\
-            	--enable-libipq                        	\
-            	--enable-devel
+        $DIST_CLEAN
+        LDFLAGS="-L$PWD/libiptc/.libs"                  \
+        ./configure --prefix=/usr                       \
+                --exec-prefix=                          \
+                --bindir=/usr/bin                       \
+                --with-xtlibdir=/lib/xtables            \
+                --with-pkgconfigdir=/usr/lib/pkgconfig  \
+                --enable-libipq                         \
+                --enable-devel
 
-	$MAKE_CLEAN
-	__mk
-	__mk install
+        $MAKE_CLEAN
+        __mk
+        __mk install
 
-	ln -sfv ../../sbin/xtables-multi /usr/bin/iptables-xml
-#	for file in libip4tc libip6tc libipq libiptc libxtables
-#	do
-# 		ln -sfv ../../lib/`readlink /lib/${file}.so` /usr/lib/${file}.so
-#		rm -v /lib/${file}.so
-#		mv -v /lib/${file}.la /usr/lib
-#  		sed -i "s@libdir='@&/usr@g" /usr/lib/${file}.la
-#	done
+        ln -sfv ../../sbin/xtables-multi /usr/bin/iptables-xml
+#       for file in libip4tc libip6tc libipq libiptc libxtables
+#       do
+#               ln -sfv ../../lib/`readlink /lib/${file}.so` /usr/lib/${file}.so
+#               rm -v /lib/${file}.so
+#               mv -v /lib/${file}.la /usr/lib
+#               sed -i "s@libdir='@&/usr@g" /usr/lib/${file}.la
+#       done
 
-	ldconfig
+        ldconfig
 }
 
 __all()
@@ -1210,15 +1254,15 @@ __pkgconfig
 __ncurses
 __util-linux
 __psmisc
+__procps-ng
 __e2fsprogs
-__linux-pam
-__shadow
-__shadow-config
+###__linux-pam
+###__shadow
+###__shadow-config
 __coreutils
 __iana-etc
 __m4
 __bison
-__procps
 __grep
 __readline
 __bash

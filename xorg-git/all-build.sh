@@ -32,8 +32,6 @@ __git-clone()
 
 __bld-common()
 {
-	git pull
-
 	$DIST_CLEAN
 	./autogen.sh
 	__cfg $XORG_CONFIG $@
@@ -47,6 +45,7 @@ __bld-common()
 __common()
 {
 	__cd $1
+	git pull
 	__bld-common
 }
 
@@ -251,6 +250,7 @@ __libpthread-stubs()
 {
 	__git-clone git://anongit.freedesktop.org/xcb/pthread-stubs libpthread-stubs
 	__cd libpthread-stubs
+	git pull
 
 	$DIST_CLEAN
 	./autogen.sh
@@ -264,45 +264,14 @@ __libpthread-stubs()
 
 __python27()
 {
-	__wget http://www.python.org/ftp/python/2.7.3/Python-2.7.3.tar.xz
-	__wget http://docs.python.org/ftp/python/doc/2.7.3/python-2.7.3-docs-html.tar.bz2
-	__cd Python-2.7.3
-
-	sed -i "s/ndbm_libs = \[\]/ndbm_libs = ['gdbm', 'gdbm_compat']/" setup.py
-
-	$DIST_CLEAN
-	__cfg --prefix=/usr --enable-shared
-
-	$MAKE_CLEAN
-	__mk
-	make -C Doc html
-
-	__mk install
-	chmod -v 755 /usr/lib/libpython2.7.so.1.0
-	ldconfig
-
-	install -v -m755 -d /usr/share/doc/Python-2.7.3
-	cp -rfv Doc/build/html/* /usr/share/doc/python-2.7.3
-
-	install -v -m755 -d /usr/share/doc/Python-2.7.3
-
-	tar --strip-components=1 -C /usr/share/doc/Python-2.7.3 \
-		-xvf ${SRC_DIR}/python-2.7.3-docs-html.tar.bz2
-
-	find /usr/share/doc/Python-2.7.3 -type d -exec chmod 0755 {} \;
-	find /usr/share/doc/Python-2.7.3 -type f -exec chmod 0644 {} \;
-
-	grep "export PYTHONDOCS=/usr/share/doc/Python-2.7.3" /etc/profile
-	if [ $? -ne 0 ]
-	then
-		echo "export PYTHONDOCS=/usr/share/doc/Python-2.7.3" >> /etc/profile
-	fi
+	echo
 }
 
 __xcb-proto()
 {
 	__git-clone git://anongit.freedesktop.org/xcb/proto xcb-proto
 	__cd xcb-proto
+	git pull
 
 	$DIST_CLEAN
 	./autogen.sh
@@ -321,6 +290,7 @@ __libxml2()
 {
 	__git-clone git://git.gnome.org/libxml2 
 	__cd libxml2
+	git pull
 
 	$DIST_CLEAN
 	./autogen.sh
@@ -336,6 +306,7 @@ __libxslt()
 {
 	__git-clone git://git.gnome.org/libxslt
 	__cd libxslt
+	git pull
 
 	$DIST_CLEAN
 	./autogen.sh
@@ -350,6 +321,7 @@ __libxcb()
 {
 	__git-clone git://anongit.freedesktop.org/xcb/libxcb
 	__cd libxcb
+	git pull
 
 	$DIST_CLEAN
 	./autogen.sh
@@ -363,25 +335,14 @@ __libxcb()
 
 __expat()
 {
-	__wget http://downloads.sourceforge.net/expat/expat-2.1.0.tar.gz
-	__cd expat-2.1.0
-
-	$DIST_CLEAN
-	__cfg --prefix=/usr
-
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
-
-	install -v -m755 -d /usr/share/doc/expat-2.1.0
-	install -v -m644 doc/*.{html,png,css} /usr/share/doc/expat-2.1.0
+	echo
 }
 
 __freetype2()
 {
 	__git-clone git://git.sv.nongnu.org/freetype/freetype2.git freetype2
 	__cd freetype2
+	git pull
 
 	sed -i -r 's:.*(#.*SUBPIXEL.*) .*:\1:' include/freetype/config/ftoption.h
 
@@ -399,6 +360,7 @@ __fontconfig()
 {
 	__git-clone git://anongit.freedesktop.org/fontconfig
 	__cd fontconfig
+	git pull
 
 	$DIST_CLEAN
 	./autogen.sh
@@ -530,6 +492,7 @@ __xorg-libs()
 	{
                 __git-clone git://anongit.freedesktop.org/xorg/lib/libXfont
 		__cd libXfont
+		git pull
 
 		$DIST_CLEAN
 		./autogen.sh
@@ -575,6 +538,7 @@ __xorg-libs()
 	{
                 __git-clone git://anongit.freedesktop.org/xorg/lib/libXtst
 		__cd libXtst
+		git pull
 
 		$DIST_CLEAN
 		./autogen.sh
@@ -673,6 +637,7 @@ __gperf()
 {
 	__git-clone git://git.savannah.gnu.org/gperf.git gperf
 	__cd gperf
+	git pull
 
 	$DIST_CLEAN
 	./autogen.sh
@@ -699,6 +664,8 @@ __xcb-util-common-m4()
 {
 	__git-clone git://anongit.freedesktop.org/xcb/util-common-m4 xcb-util-common-m4
 	__cd xcb-util-common-m4
+	git pull
+
 	cp -f *.m4 /usr/share/aclocal/
 }
 
@@ -718,6 +685,7 @@ __xcb-util-keysyms()
 {
 	__git-clone git://anongit.freedesktop.org/xcb/util-keysyms xcb-util-keysyms
 	__cd xcb-util-keysyms
+	git pull
 	git submodule update --init
 	__bld-common
 }
@@ -738,9 +706,10 @@ __libdrm()
 {
 	__git-clone git://anongit.freedesktop.org/mesa/drm libdrm
 	__cd libdrm
+	git pull
 
 	$DIST_CLEAN
-
+	./autogen.sh
 	__cfg --prefix=/usr	\
 	      --enable-udev	\
 	      --disable-radeon	\
@@ -757,6 +726,7 @@ __mesa-lib()
 {
 	__git-clone git://anongit.freedesktop.org/mesa/mesa mesa-lib
 	__cd mesa-lib
+	git pull
 
 	$DIST_CLEAN
 	./autogen.sh
@@ -774,8 +744,8 @@ __mesa-lib()
             	--enable-glx-tls               	\
 		--with-llvm-shared-libs		\
             	--with-egl-platforms="drm,x11" 	\
-            	--with-gallium-drivers="i915"	\
-		--with-dri-drivers="i965"	\
+                --with-gallium-drivers="i915" \
+                --with-dri-drivers="i965"
 
 	$MAKE_CLEAN
 	__mk
@@ -792,6 +762,7 @@ __mesa-lib()
 	{
 		__git-clone git://anongit.freedesktop.org/mesa/glu mesa-glu
 		__cd mesa-glu
+		git pull
 
 		$DIST_CLEAN
 		./autogen.sh
@@ -814,22 +785,7 @@ __xbitmaps()
 
 __libpng()
 {
-	__wget http://downloads.sourceforge.net/libpng/libpng-1.5.13.tar.xz
-	__wget http://downloads.sourceforge.net/libpng-apng/libpng-1.5.13-apng.patch.gz
-	__cd libpng-1.5.13
-
-	gzip -cd ${SRC_DIR}/libpng-1.5.13-apng.patch.gz | patch -p1
-
-	$DIST_CLEAN
-	__cfg --prefix=/usr --disable-static
-
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
-
-	mkdir /usr/share/doc/libpng-1.5.13
-	cp README libpng-manual.txt /usr/share/doc/libpng-1.5.13
+	echo
 }
 
 __xorg-apps()
@@ -850,6 +806,7 @@ __xorg-apps()
 	{
                 __git-clone git://anongit.freedesktop.org/xorg/app/luit
 		__cd luit
+		git pull
 		__bld-common --enable-maintainer-mode --disable-selective-werror
 	}
 
@@ -1153,34 +1110,19 @@ __xorg-fonts()
 
 __xml-parser()
 {
-	__wget http://search.cpan.org/CPAN/authors/id/T/TO/TODDR/XML-Parser-2.41.tar.gz
-	__cd XML-Parser-2.41
-	perl Makefile.PL
-	__mk
-	__mk install
-	ldconfig
+	echo
 }
 
 __intltool()
 {
-	wget -c -B $SRC_DIR http://launchpad.net/intltool/trunk/0.50.2/+download/intltool-0.50.2.tar.gz
-	__cd intltool-0.50.2
-
-	$DIST_CLEAN
-	__cfg --prefix=/usr
-
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
-
-	install -v -m644 -D doc/I18N-HOWTO /usr/share/doc/intltool-0.50.2/I18N-HOWTO
+	echo
 }
 
 __xkeyboard-config()
 {
 	__git-clone git://anongit.freedesktop.org/xkeyboard-config
 	__cd xkeyboard-config
+	git pull
 
 	$DIST_CLEAN
 	./autogen.sh
@@ -1198,19 +1140,20 @@ __xkeyboard-config()
 __printproto()
 {
 	__git-clone git://anongit.freedesktop.org/xorg/proto/printproto
-	__cd printproto
+	__common printproto
 }
 
 __libxp()
 {
 	__git-clone git://anongit.freedesktop.org/xorg/lib/libXp
-	__cd libXp
+	__common libXp
 }
 
 __pixman()
 {
 	__git-clone git://anongit.freedesktop.org/pixman
 	__cd pixman
+	git pull
 
 	$DIST_CLEAN
 	./autogen.sh
@@ -1226,6 +1169,7 @@ __xorg-server()
 {
 	__git-clone git://anongit.freedesktop.org/xorg/xserver xorg-server
 	__cd xorg-server
+	git pull
 
 	$DIST_CLEAN
 	./autogen.sh
@@ -1243,11 +1187,23 @@ __xorg-server()
 	__mk install
 	ldconfig
 
-mkdir -pv /etc/X11/xorg.conf.d
+	mkdir -pv /etc/X11/xorg.conf.d
+
+	grep "/tmp/.ICE-unix dir 1777 root root" /etc/sysconfig/createfiles
+	if [ $? -ne 0 ]
+	then
 cat >> /etc/sysconfig/createfiles << .
 /tmp/.ICE-unix dir 1777 root root
+.
+	fi
+
+	grep "/tmp/.X11-unix dir 1777 root root" /etc/sysconfig/createfiles
+	if [ $? -ne 0 ]
+	then
+cat >> /etc/sysconfig/createfiles << .
 /tmp/.X11-unix dir 1777 root root
 .
+	fi
 }
 
 __xorg-drivers()
@@ -1258,10 +1214,23 @@ __xorg-drivers()
 		__common xf86-input-evdev
 	}
 
+	__xf86-input-keyboard()
+	{
+		__git-clone git://anongit.freedesktop.org/xorg/driver/xf86-input-keyboard
+		__common xf86-input-keyboard
+	}
+
+	__xf86-input-mouse()
+	{
+		__git-clone git://anongit.freedesktop.org/xorg/driver/xf86-input-mouse
+		__common xf86-input-mouse
+	}
+
 	__xf86-input-wacom()
 	{
 		__git-clone git://people.freedesktop.org/~whot/xf86-input-wacom
 		__cd xf86-input-wacom
+		git pull
                 __bld-common --enable-maintainer-mode --disable-selective-werror
 	}
 
@@ -1277,23 +1246,26 @@ __xorg-drivers()
 		__common xf86-video-intel
 	}
 
-	__xf86-video-vesa()
+	__xf86-video-modesetting()
 	{
-		__git-clone git://anongit.freedesktop.org/xorg/driver/xf86-video-vesa
-		__common xf86-video-vesa
+		__git-clone git://anongit.freedesktop.org/xorg/driver/xf86-video-modesetting
+		__common xf86-video-modesetting
 	}
 
-	__xf86-input-evdev
-	__xf86-input-wacom
-	__xf86-video-fbdev	
-	__xf86-video-intel
-###	__xf86-video-vesa
+        __xf86-input-evdev
+        __xf86-input-keyboard
+        __xf86-input-mouse
+        __xf86-input-wacom
+        __xf86-video-fbdev
+        __xf86-video-intel
+        __xf86-video-modesetting
 }
 
 __twm()
 {
 	__git-clone git://anongit.freedesktop.org/xorg/app/twm
 	__cd twm
+	git pull
 
 	sed -i -e '/^rcdir =/s,^\(rcdir = \).*,\1/etc/X11/app-defaults,' src/Makefile.in
 
@@ -1347,6 +1319,7 @@ __xinit()
 {
 	__git-clone git://anongit.freedesktop.org/xorg/app/xinit
 	__cd xinit
+	git pull
 
 	$DIST_CLEAN
 	./autogen.sh
@@ -1374,7 +1347,7 @@ __xorg-config()
 	{
 		wget -c --directory-prefix=${SRC_DIR} \
 			http://sourceforge.net/projects/dejavu/files/dejavu/2.33/dejavu-fonts-ttf-2.33.tar.bz2
-		__cd dejavu-fonts-ttf-2.33
+		__dcd dejavu-fonts-ttf-2.33
 		cd ttf
 
 		install -v -d -m755 /usr/share/fonts/dejavu
@@ -1384,7 +1357,10 @@ __xorg-config()
 
 	__dejavu-fonts-ttf
 
-cat > /etc/X11/xorg.conf.d/xkb-defaults.conf << .
+	ls /etc/X11/xorg.conf.d/16-xkb-defaults.conf
+	if [ $? -ne 0 ]
+	then
+cat > /etc/X11/xorg.conf.d/16-xkb-defaults.conf << .
 Section "InputClass"
 	Identifier	"XKB Defaults"
 	MatchIsKeyboard	"yes"
@@ -1393,8 +1369,12 @@ Section "InputClass"
 	Option		"XkbModel" "pc106"
 EndSection
 .
+	fi
 
-cat > /etc/X11/xorg.conf.d/videocard-0.conf << .
+	ls /etc/X11/xorg.conf.d/15-videocard-intel.conf
+	if [ $? -ne 0 ]
+	then
+cat > /etc/X11/xorg.conf.d/15-videocard-intel.conf << .
 Section "ServerLayout"
 	Identifier	"DefaultLayout"
 	Screen		0 "Screen0" 0 0
@@ -1411,6 +1391,7 @@ Section "Device"
 	Identifier	"Device0"
 	Driver		"intel"
 	Option		"DRI" "true"
+	Option		"AccelMethod" "uxa"
 EndSection
 
 Section "Screen"
@@ -1424,13 +1405,19 @@ Section "Screen"
 	EndSubSection
 EndSection
 .
+	fi
 
+	ls /etc/X11/xorg.conf.d/50-wacom.conf
+	if [ $? -ne 0 ]
+	then
 cat > /etc/X11/xorg.conf.d/50-wacom.conf << .
 Section "InputClass"
 	Identifier 	"Wacom class"
 	MatchProduct 	"Wacom|WACOM|WALTOP|Hanwang"
 	MatchDevicePath	"/dev/input/event*"
 	Driver		"wacom"
+
+#	Option		"Rotate" "CCW"
 
 	Option		"TopX" "0"
 	Option		"BottomX" "30479"
@@ -1460,10 +1447,10 @@ Section "InputClass"
 	Option		"Button2" "3"
 EndSection
 .
+	fi
 
+	cp -f /etc/X11/app-defaults/xinitrc{.orig,}
 }
-
-__init-env
 
 __all()
 {
@@ -1496,7 +1483,7 @@ __all()
 ###	__libpng
 	__xorg-apps
 	__xcursor-themes
-###	__xorg-fonts
+	__xorg-fonts
 ###	__xml-parser
 ###	__intltool
 	__xkeyboard-config
@@ -1512,4 +1499,6 @@ __all()
 	__xorg-config
 }
 
+__init-env
 $@
+
