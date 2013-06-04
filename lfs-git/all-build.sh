@@ -100,8 +100,8 @@ __binutils()
 
 __sed()
 {
-        __git-clone git://git.savannah.gnu.org/sed.git
-        __cd sed
+        __git-clone git://git.savannah.gnu.org/sed.git sed.git
+        __cd sed.git
         git pull
 
         $DIST_CLEAN
@@ -293,15 +293,20 @@ __e2fsprogs()
 
 __linux-pam()
 {
-        __wget http://linux-pam.org/library/Linux-PAM-1.1.6.tar.bz2
-        __wget http://linux-pam.org/documentation/Linux-PAM-1.1.6-docs.tar.bz2
-        __dcd Linux-PAM-1.1.6
+#        __wget http://linux-pam.org/library/Linux-PAM-1.1.6.tar.bz2
+#        __wget http://linux-pam.org/documentation/Linux-PAM-1.1.6-docs.tar.bz2
+#        __dcd Linux-PAM-1.1.6
+#        tar -xf ../Linux-PAM-1.1.6-docs.tar.bz2 --strip-components=1
 
-        tar -xf ../Linux-PAM-1.1.6-docs.tar.bz2 --strip-components=1
+	git clone git://git.fedorahosted.org/linux-pam.git linux-pam.git
+	__cd linux-pam.git
+	git pull
 
+	$DIST_CLEAN
+	./autogen.sh
         __cfg --prefix=/usr                             \
               --sysconfdir=/etc                         \
-              --docdir=/usr/share/doc/Linux-PAM-1.1.6   \
+              --docdir=/usr/share/doc/Linux-PAM-git	\
               --disable-nis
 
         $MAKE_CLEAN
@@ -578,7 +583,9 @@ __m4()
 
 __bison()
 {
-        __cd $BASE_DIR/bison
+	git clone git://git.savannah.gnu.org/bison.git bison.git
+        __cd bison.git
+	git pull
 
         ./bootstrap
 
@@ -762,12 +769,13 @@ __automake()
 
 __diffutils()
 {
-        __cd $BASE_DIR/diffutils
+	__wget ftp://ftp.gnu.org/gnu/diffutils/diffutils-3.3.tar.xz
+        __dcd diffutils-3.3
 
         sed -i -e '/gets is a/d' lib/stdio.in.h
 
         $DIST_CLEAN
-        ./configure --prefix=/usr
+        __cfg --prefix=/usr
 
         $MAKE_CLEAN
         __mk
@@ -777,17 +785,19 @@ __diffutils()
 
 __gawk()
 {
-        __cd $BASE_DIR/gawk
+	git clone git://git.savannah.gnu.org/gawk.git gawk.git
+        __cd gawk.git
+	git pull
 
         ./bootstrup
 
         $DIST_CLEAN
-        ./configure --prefix=/usr --sysconfdir=/etc
+        __cfg --prefix=/usr --sysconfdir=/etc
 
         $MAKE_CLEAN
         __mk
         __mk install
-        ldconfig
+        dconfig
 
         mkdir -v /usr/share/doc/gawk
         cp -v doc/{awkforai.txt,*.{eps,pdf,jpg}} /usr/share/doc/gawk
@@ -946,7 +956,9 @@ __iproute2()
 
 __kbd()
 {
-        __cd $BASE_DIR/kbd
+	git clone git://git.altlinux.org/people/legion/packages/kbd.git kbd.git
+        __cd kbd.git
+	git pull
 
         sed -i '/guardado\ el/s/\(^.*en\ %\)\(.*\)/\14\$\2/' po/es.po
 
@@ -955,8 +967,8 @@ __kbd()
         touch -d '2011-05-07 08:30' configure.ac
 
         $DIST_CLEAN
-        ./configure --prefix=/usr \
-                --datadir=/lib/kbd
+	./autogen.sh
+        __cfg --prefix=/usr --datadir=/lib/kbd
 
         $MAKE_CLEAN
         __mk

@@ -34,7 +34,7 @@ __haskell-mode()
 	__wget http://projects.haskell.org/haskellmode-emacs/haskell-mode-2.8.0.tar.gz
 	__dcd haskell-mode-2.8.0
 
-	cp -rf ${BASE_DIR}/haskell-mode-2.8.0 /usr/lib/emacs/haskell-mode
+	cp -rf ${BASE_DIR}/haskell-mode-2.8.0 /usr/share/emacs/site-lisp/haskell-mode/
 }
 
 __haskell-mode-config()
@@ -46,7 +46,7 @@ __haskell-mode-config()
 	then
 cat >> /etc/emacs.el << .
 
-(load "/usr/lib/emacs/haskell-mode/haskell-site-file")
+(load "/usr/share/emacs/site-lisp/haskell-mode/haskell-site-file")
 (add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
 (add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
