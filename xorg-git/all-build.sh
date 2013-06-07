@@ -744,7 +744,7 @@ __mesa-lib()
             	--enable-glx-tls               	\
 		--with-llvm-shared-libs		\
             	--with-egl-platforms="drm,x11" 	\
-                --with-gallium-drivers="i915" \
+                --with-gallium-drivers="i915"	\
                 --with-dri-drivers="i965"
 
 	$MAKE_CLEAN
@@ -1064,6 +1064,7 @@ __xorg-fonts()
 {
 	__xorg-fonts-common()
 	{
+		FONTS_URL="ftp://ftp.yz.yamagata-u.ac.jp/pub/X11/x.org/X11R7.7/src/font"
 		__wget $FONTS_URL/$1.tar.bz2
 		__common $1
 	}

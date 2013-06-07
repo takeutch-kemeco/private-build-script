@@ -8,6 +8,23 @@ DIST_CLEAN="make distclean"
 
 . ./__common-func.sh
 
+__maxima()
+{
+	git clone git://git.code.sf.net/p/maxima/code maxima.git
+	__cd maxima.git
+	git pull
+
+	$DIST_CLEAN
+	./bootstrap
+	__cfg --prefix=/usr --sysconfdir=/etc --localstatedir=/var --libexecdir=/usr/lib
+
+	$MAKE_CLEAN
+	__mk
+	__mk install
+	__mk doc install
+	ldconfig
+}
+
 __wxWidgets()
 {
 	git clone git://github.com/wxWidgets/wxWidgets.git wxWidgets.git
@@ -45,6 +62,7 @@ __wxmaxima()
 __all()
 {
 #__rem() {
+	__maxima
 	__wxWidgets
 	__wxmaxima
 }
