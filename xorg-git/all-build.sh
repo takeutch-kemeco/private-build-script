@@ -1066,7 +1066,8 @@ __xorg-fonts()
 	{
 		FONTS_URL="ftp://ftp.yz.yamagata-u.ac.jp/pub/X11/x.org/X11R7.7/src/font"
 		__wget $FONTS_URL/$1.tar.bz2
-		__common $1
+		__dcd $1
+		__bld-common
 	}
 
 #	__rem() {
@@ -1408,9 +1409,6 @@ EndSection
 .
 	fi
 
-	ls /etc/X11/xorg.conf.d/50-wacom.conf
-	if [ $? -ne 0 ]
-	then
 cat > /etc/X11/xorg.conf.d/50-wacom.conf << .
 Section "InputClass"
 	Identifier 	"Wacom class"
@@ -1448,7 +1446,6 @@ Section "InputClass"
 	Option		"Button2" "3"
 EndSection
 .
-	fi
 
 	cp -f /etc/X11/app-defaults/xinitrc{.orig,}
 }
