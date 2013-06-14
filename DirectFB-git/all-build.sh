@@ -45,23 +45,28 @@ __direct-fb()
 
 	$DIST_CLEAN
 	./autogen.sh
-	__cfg --prefix=/usr			\
-	      --sysconfdir=/etc			\
-	      --localstatedir=/var		\
-	      --libexecdir=/usr/lib		\
-  	      --enable-x11 			\
-  	      --enable-egl=no 			\
-  	      --enable-sdl 			\
-  	      --enable-mesa 			\
-  	      --enable-jpeg 			\
-  	      --enable-zlib 			\
-  	      --enable-png 			\
-  	      --enable-gstreamer=no 		\
-  	      --with-smooth-scaling 		\
-	      --enable-one			\
-	      --enable-voodoo			\
-  	      --with-gfxdrivers=i810,i830 	\
-	      --enable-fbdev
+	__cfg --prefix=/usr --sysconfdir=/etc --enable-x11 --enable-egl=no --enable-mesa --enable-gstreamer=no --with
+-gfxdrivers=i810,i830 --enable-png --enable-jpeg --enable-svg=no --enable-mng=no --enable-jpeg2000=no --enable-imlib2=n
+o --enable-webp=no --enable-linotype=no --enable-gif=no --enable-video4linux=no --enable-debug-support=no --enable-netw
+ork=no --with-smooth-scaling --without-setsockopt --enable-x11=no --enable-pnm=no --enable-bmp=no --enable-mpeg2=no
+
+#	__cfg --prefix=/usr			\
+#	      --sysconfdir=/etc			\
+#	      --localstatedir=/var		\
+#	      --libexecdir=/usr/lib		\
+#  	      --enable-x11 			\
+#  	      --enable-egl=no 			\
+#  	      --enable-sdl 			\
+#  	      --enable-mesa 			\
+#  	      --enable-jpeg 			\
+#  	      --enable-zlib 			\
+#  	      --enable-png 			\
+#  	      --enable-gstreamer=no 		\
+#  	      --with-smooth-scaling 		\
+#	      --enable-one			\
+#	      --enable-voodoo			\
+#  	      --with-gfxdrivers=i810,i830 	\
+#	      --enable-fbdev
 
 	$MAKE_CLEAN
 	__mk

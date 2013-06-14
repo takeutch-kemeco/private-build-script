@@ -99,7 +99,7 @@ __gtk-doc()
 
 __glib()
 {
-	__cd glib
+	__cd glib.git
 	__bld-common --with-pcre=system
 }
 
@@ -117,10 +117,7 @@ __dbus()
 {
 	__cd dbus
 	__git-clean
-
-	git checkout origin/dbus-1.6
-	git checkout -b 1.6
-	git checkout 1.6
+	git checkout master
 
 	groupadd -g 27 messagebus
 	useradd -c "D-Bus Message Daemon User" -d /var/run/dbus -u 27 -g messagebus -s /bin/false messagebus
@@ -184,9 +181,9 @@ __at-spi2-atk()
 {
 	__cd at-spi2-atk
 	__git-clean
-#	git checkout AT_SPI2_ATK_2_7_5
-#	git checkout -b 2.7.5
-#	git checkout 2.7.5
+	git checkout AT_SPI2_ATK_2_7_5
+	git checkout -b 2.7.5
+	git checkout 2.7.5
 
 	$DIST_CLEAN
 	./autogen.sh
@@ -224,22 +221,32 @@ __nasm()
 
 __libjpeg-turbo()
 {
-	__wget http://downloads.sourceforge.net/libjpeg-turbo/libjpeg-turbo-1.2.1.tar.gz
-	__dcd libjpeg-turbo-1.2.1
+	__wget http://downloads.sourceforge.net/libjpeg-turbo/libjpeg-turbo-1.3.0.tar.gz
+	__dcd libjpeg-turbo-1.3.0
 
 	__bld-common --mandir=/usr/share/man	\
                      --with-jpeg8
 
-	docsdir=/usr/share/doc/libjpeg-turbo-1.2.1
+	docsdir=/usr/share/doc/libjpeg-turbo-1.3.0
 	make docdir=$docsdir exampledir=$docsdir install
 	unset docsdir
 }
 
 __libpng()
 {
-	__wget http://downloads.sourceforge.net/libpng/libpng-1.5.13.tar.xz
-	__decord libpng-1.5.13
-	__common libpng-1.5.13
+	__cd libpng.git
+	git pull
+
+        $DIST_CLEAN
+        ./autogen.sh
+        __cfg --prefix=/usr             \
+              --sysconfdir=/etc         \
+	      --enable-maintainer-mode
+
+        $MAKE_CLEAN
+        __mk
+        __mk install
+        ldconfig
 }
 
 __libtiff()
