@@ -165,6 +165,12 @@ __xorg-proto()
 		__common xextproto
 	}
 
+	__xf86miscproto()
+	{
+		__git-clone git://anongit.freedesktop.org/xorg/proto/xf86miscproto
+		__common xf86miscproto
+	}
+
 	__xf86bigfontproto()
 	{
 		__git-clone git://anongit.freedesktop.org/xorg/proto/xf86bigfontproto
@@ -220,6 +226,7 @@ __xorg-proto()
 	__videoproto
 	__xcmiscproto
 	__xectproto
+	__xf86miscproto
 	__xf86bigfontproto
 	__xf86dgaproto
 	__xf86driproto
@@ -1236,17 +1243,11 @@ __xorg-drivers()
                 __bld-common --enable-maintainer-mode --disable-selective-werror
 	}
 
-	__xf86-video-fbdev()
-	{
-		__git-clone git://anongit.freedesktop.org/xorg/driver/xf86-video-fbdev
-		__common xf86-video-fbdev
-	}
-
-	__xf86-video-intel()
-	{
-		__git-clone git://anongit.freedesktop.org/xorg/driver/xf86-video-intel
-		__common xf86-video-intel
-	}
+        __xf86-video-intel()
+        {
+                __git-clone git://anongit.freedesktop.org/xorg/driver/xf86-video-intel
+                __common xf86-video-intel 
+        }
 
 	__xf86-video-modesetting()
 	{
@@ -1254,11 +1255,11 @@ __xorg-drivers()
 		__common xf86-video-modesetting
 	}
 
+#	__rem(){
         __xf86-input-evdev
         __xf86-input-keyboard
         __xf86-input-mouse
         __xf86-input-wacom
-        __xf86-video-fbdev
         __xf86-video-intel
         __xf86-video-modesetting
 }
