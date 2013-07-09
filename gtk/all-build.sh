@@ -318,9 +318,19 @@ __pangox-compat()
 
 __gtk+2()
 {
-	__wget ftp://ftp.gnome.org/pub/gnome/sources/gtk+/2.24/gtk+-2.24.20.tar.xz
-	__dcd gtk+-2.24.20
-	__bld-common
+	__cd gtk+-2.24.git
+	git checkout master
+	git pull
+	git checkout 2.24.19
+	git checkout -d 2.24.19
+
+	./autogen.sh
+	__cfg --prefix=/usr --sysconfdir=/etc --with-xinput --with-gdktarget=x11 --with-x
+
+	$MAKE_CLEAN
+	__mk
+	__mk install
+	ldconfig
 }
 
 __gtk+3()
