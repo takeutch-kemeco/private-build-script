@@ -43,16 +43,16 @@ __scim()
 		IM_SCIM_PATH="\"\/usr\/lib\/gtk-2.0\/2.10.0\/immodules\/im-scim.so\""
 		IM_SCIM_PARAM="\"scim\" \"SCIM Input Method\" \"gtk20\" \"\/usr\/share\/locale\" \"ja\""
 
-		grep "im-scim.so" /etc/gtk-2.0/gtk.immodule
+		grep "im-scim.so" /etc/gtk-2.0/gtk.immodules
 		if [ $? -ne 0 ]
 		then
-			echo -e "\nim-scim.so\nSCIM Input Method" >> /etc/gtk-2.0/gtk.immodule
+			echo -e "\nim-scim.so\nSCIM Input Method" >> /etc/gtk-2.0/gtk.immodules
 		fi
 
-		cp -v /etc/gtk-2.0/gtk.immodule{,.orig}
+		cp -v /etc/gtk-2.0/gtk.immodules{,.orig}
 		sed 	-e "s/^.*im-scim.so.*$/${IM_SCIM_PATH}/g" 		\
 		    	-e "s/^.*SCIM Input Method.*$/${IM_SCIM_PARAM}/g"	\
-                       	/etc/gtk-2.0/gtk.immodule.orig > /etc/gtk-2.0/gtk.immodule
+                       	/etc/gtk-2.0/gtk.immodules.orig > /etc/gtk-2.0/gtk.immodules
 	}
 
 	__scim-config-env()
