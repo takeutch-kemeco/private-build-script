@@ -13,11 +13,7 @@ MAKE_CLEAN="make clean"
 
 __git-clean()
 {
-	git clone . b
-	cp b/* . -rf
-	rm b -rf
-	git checkout master
-	git pull
+	echo
 }
 
 __bld-common()
@@ -75,6 +71,7 @@ __pcre()
               --enable-unicode-properties       \
               --enable-pcregrep-libz            \
               --enable-pcregrep-libbz2          \
+              --enable-pcretest-libreadline     \
               --disable-static
 
 	$MAKE_CLEAN
@@ -219,17 +216,13 @@ __nasm()
 	install-info /usr/share/info/nasm.info /usr/share/info/dir
 }
 
-__libjpeg-turbo()
+__libjpeg()
 {
-	__wget http://downloads.sourceforge.net/libjpeg-turbo/libjpeg-turbo-1.3.0.tar.gz
-	__dcd libjpeg-turbo-1.3.0
+	__wget http://www.ijg.org/files/jpegsrc.v9.tar.gz
+	__decord jpegsrc.v9
+	__cd jpeg-9
 
-	__bld-common --mandir=/usr/share/man	\
-                     --with-jpeg8
-
-	docsdir=/usr/share/doc/libjpeg-turbo-1.3.0
-	make docdir=$docsdir exampledir=$docsdir install
-	unset docsdir
+	__bld-common
 }
 
 __libpng()
@@ -322,13 +315,17 @@ __pangox-compat()
 	__common pangox-compat
 }
 
+__gtk+2()
+{
+	__wget ftp://ftp.gnome.org/pub/gnome/sources/gtk+/2.24/gtk+-2.24.20.tar.xz
+	__dcd gtk+-2.24.20
+	__bld-common
+}
+
 __gtk+3()
 {
 	__cd gtk+
 	git-clean
-#	git checkout 3.7.8
-#	git checkout -b 3.7.8
-#	git checkout 3.7.8
 
         $DIST_CLEAN
         ./autogen.sh
@@ -391,7 +388,7 @@ __gdk-pixbuf-package()
 {
 #__rem() {
 	__nasm
-	__libjpeg-turbo
+	__libjpeg
 	__libpng
 	__libtiff
 	__gdk-pixbuf
@@ -436,6 +433,7 @@ __all()
 	__at-spi2-package
 	__gdk-pixbuf-package
 	__pango-package
+	__gtk+2
 	__gtk+3
 }
 

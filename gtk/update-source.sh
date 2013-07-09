@@ -1,12 +1,13 @@
 #!/bin/bash
 
 BASE_DIR=$(pwd)
+SRC_DIR=${BASE_DIR}/src
 
-. ../common-func/__common-func.sh
+. ./__common-func.sh
 
 for n in $(__lsdir)
 do
-	__cd $BASE_DIR/$n
+	__cd $n
 	if [ $? -eq 0 ]
 	then
 		ls .git
