@@ -246,7 +246,8 @@ __libtiff()
 {
 	__wget ftp://ftp.remotesensing.org/libtiff/tiff-4.0.3.tar.gz
 	__decord tiff-4.0.3
-	__common tiff-4.0.3
+	__cd tiff-4.0.3
+	__bld-common --disable-mdi --disable-old-jpeg --disable-pixarlog --disable-logluv --disable-next --disable-thunder --disable-packbits --disable-ccitt --disable-jpeg
 }
 
 __gdk-pixbuf()
