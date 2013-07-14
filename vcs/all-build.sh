@@ -125,6 +125,16 @@ __svn()
         __bld-common --with-serf=/usr
 }
 
+__gdbm()
+{
+	git clone git://git.gnu.org.ua/gdbm.git
+	__cd gdbm
+	git pull
+
+###	./bootstrap
+	__bld-common
+}
+
 __all()
 {
 #__rem(){
@@ -137,6 +147,8 @@ __all()
         __serf
         __sqlite3
         __svn
+	__gdbm
 }
 
 $@
+
