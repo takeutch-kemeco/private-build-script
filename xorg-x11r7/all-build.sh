@@ -241,8 +241,8 @@ __makedepend()
 
 __libxau()
 {
-	__wget ftp://ftp.x.org/pub/individual/lib/libXau-1.0.7.tar.bz2
-	__common libXau-1.0.7
+	__wget ftp://ftp.x.org/pub/individual/lib/libXau-1.0.8.tar.bz2
+	__common libXau-1.0.8
 }
 
 __libxdmcp()
@@ -267,9 +267,9 @@ __libpthread-stubs()
 
 __python27()
 {
-	__wget http://www.python.org/ftp/python/2.7.4/Python-2.7.4.tar.xz
-	__wget http://docs.python.org/ftp/python/doc/2.7.4/python-2.7.4-docs-html.tar.bz2
-	__dcd Python-2.7.4
+	__wget http://www.python.org/ftp/python/2.7.5/Python-2.7.5.tar.xz
+	__wget http://docs.python.org/ftp/python/doc/2.7.5/python-2.7.5-docs-html.tar.bz2
+	__dcd Python-2.7.5
 
 	$DIST_CLEAN
 	__cfg --prefix=/usr --enable-shared
@@ -282,21 +282,20 @@ __python27()
 	chmod -v 755 /usr/lib/libpython2.7.so.1.0
 	ldconfig
 
-	install -v -m755 -d /usr/share/doc/Python-2.7.4
-	cp -rfv Doc/build/html/* /usr/share/doc/python-2.7.4
+	install -v -m755 -d /usr/share/doc/Python-2.7.5
+	cp -rfv Doc/build/html/* /usr/share/doc/python-2.7.5
 
-	install -v -m755 -d /usr/share/doc/Python-2.7.4
+	install -v -m755 -d /usr/share/doc/Python-2.7.5
 
-	tar --strip-components=1 -C /usr/share/doc/Python-2.7.4 \
-		-xvf ${SRC_DIR}/python-2.7.4-docs-html.tar.bz2
+	tar --strip-components=1 -C /usr/share/doc/Python-2.7.5 -xvf ${SRC_DIR}/python-2.7.5-docs-html.tar.bz2
 
-	find /usr/share/doc/Python-2.7.4 -type d -exec chmod 0755 {} \;
-	find /usr/share/doc/Python-2.7.4 -type f -exec chmod 0644 {} \;
+	find /usr/share/doc/Python-2.7.5 -type d -exec chmod 0755 {} \;
+	find /usr/share/doc/Python-2.7.5 -type f -exec chmod 0644 {} \;
 
-	grep "export PYTHONDOCS=/usr/share/doc/Python-2.7.4" /etc/profile
+	grep "export PYTHONDOCS=/usr/share/doc/Python-2.7.5" /etc/profile
 	if [ $? -ne 0 ]
 	then
-		echo "export PYTHONDOCS=/usr/share/doc/Python-2.7.4" >> /etc/profile
+		echo "export PYTHONDOCS=/usr/share/doc/Python-2.7.5" >> /etc/profile
 	fi
 }
 
@@ -346,11 +345,11 @@ __libxslt()
 
 __libxcb()
 {
-	__wget http://xcb.freedesktop.org/dist/libxcb-1.9.tar.bz2
-	__dcd libxcb-1.9
+	__wget http://xcb.freedesktop.org/dist/libxcb-1.9.1.tar.bz2
+	__dcd libxcb-1.9.1
 
 	$DIST_CLEAN
-	__cfg $XORG_CONFIG --docdir='${datadir}'/doc/libxcb-1.9 --enable-xinput --enable-xkb --enable-render --enable-record
+	__cfg $XORG_CONFIG --docdir='${datadir}'/doc/libxcb-1.9.1 --enable-xinput --enable-xkb --enable-render --enable-record
 
 	$MAKE_CLEAN
 	__mk
@@ -433,20 +432,20 @@ __xorg-libs()
 
 	__libX11()
 	{
-		__wget ${LIBS_URL}/libX11-1.5.0.tar.bz2
-		__common libX11-1.5.0
+		__wget ${LIBS_URL}/libX11-1.6.0.tar.bz2
+		__common libX11-1.6.0
 	}
 
 	__libXext()
 	{
-                __wget ${LIBS_URL}/libXext-1.3.1.tar.bz2
-		__common libXext-1.3.1
+                __wget ${LIBS_URL}/libXext-1.3.2.tar.bz2
+		__common libXext-1.3.2
 	}
 
 	__libFS()
 	{
-                __wget ${LIBS_URL}/libFS-1.0.4.tar.bz2
-		__common libFS-1.0.4
+                __wget ${LIBS_URL}/libFS-1.0.5.tar.bz2
+		__common libFS-1.0.5
 	}
 
 	__libICE()
@@ -469,8 +468,8 @@ __xorg-libs()
 
 	__libXt()
 	{
-                __wget ${LIBS_URL}/libXt-1.1.3.tar.bz2
-		__common libXt-1.1.3
+                __wget ${LIBS_URL}/libXt-1.1.4.tar.bz2
+		__common libXt-1.1.4
 	}
 
 	__libXmu()
@@ -493,8 +492,8 @@ __xorg-libs()
 
 	__libXfixes()
 	{
-                __wget ${LIBS_URL}/libXfixes-5.0.tar.bz2
-		__common libXfixes-5.0
+                __wget ${LIBS_URL}/libXfixes-5.0.1.tar.bz2
+		__common libXfixes-5.0.1
 	}
 
 	__libXcomposite()
@@ -505,14 +504,14 @@ __xorg-libs()
 
 	__libXrender()
 	{
-                __wget ${LIBS_URL}/libXrender-0.9.7.tar.bz2
-		__common libXrender-0.9.7
+                __wget ${LIBS_URL}/libXrender-0.9.8.tar.bz2
+		__common libXrender-0.9.8
 	}
 
 	__libXcursor()
 	{
-                __wget ${LIBS_URL}/libXcursor-1.1.13.tar.bz2
-		__common libXcursor-1.1.13
+                __wget ${LIBS_URL}/libXcursor-1.1.14.tar.bz2
+		__common libXcursor-1.1.14
 	}
 
 	__libXdamage()
@@ -523,8 +522,8 @@ __xorg-libs()
 
 	__libfontenc()
 	{
-                __wget ${LIBS_URL}/libfontenc-1.1.1.tar.bz2
-		__common libfontenc-1.1.1
+                __wget ${LIBS_URL}/libfontenc-1.1.2.tar.bz2
+		__common libfontenc-1.1.2
 	}
 
 	__libXfont()
@@ -549,32 +548,32 @@ __xorg-libs()
 
 	__libXi()
 	{
-                __wget ${LIBS_URL}/libXi-1.7.1.tar.bz2
-		__common libXi-1.7.1
+                __wget ${LIBS_URL}/libXi-1.7.2.tar.bz2
+		__common libXi-1.7.2
 	}
 
 	__libXinerama()
 	{
-                __wget ${LIBS_URL}/libXinerama-1.1.2.tar.bz2
-		__common libXinerama-1.1.2
+                __wget ${LIBS_URL}/libXinerama-1.1.3.tar.bz2
+		__common libXinerama-1.1.3
 	}
 
 	__libXrandr()
 	{
-                __wget ${LIBS_URL}/libXrandr-1.4.0.tar.bz2
-		__common libXrandr-1.4.0
+                __wget ${LIBS_URL}/libXrandr-1.4.1.tar.bz2
+		__common libXrandr-1.4.1
 	}
 
 	__libXres()
 	{
-                __wget ${LIBS_URL}/libXres-1.0.6.tar.bz2
-		__common libXres-1.0.6
+                __wget ${LIBS_URL}/libXres-1.0.7.tar.bz2
+		__common libXres-1.0.7
 	}
 
 	__libXtst()
 	{
-                __wget ${LIBS_URL}/libXtst-1.2.1.tar.bz2
-		__dcd libXtst-1.2.1
+                __wget ${LIBS_URL}/libXtst-1.2.2.tar.bz2
+		__dcd libXtst-1.2.2
 
 		$DIST_CLEAN
 		__cfg $XORG_CONFIG --with-appdefaultdir=/etc/X11/app-defaults
@@ -587,14 +586,14 @@ __xorg-libs()
 
 	__libXv()
 	{
-                __wget ${LIBS_URL}/libXv-1.0.7.tar.bz2
-		__common libXv-1.0.7
+                __wget ${LIBS_URL}/libXv-1.0.9.tar.bz2
+		__common libXv-1.0.9
 	}
 
 	__libXvMC()
 	{
-                __wget ${LIBS_URL}/libXvMC-1.0.7.tar.bz2
-		__common libXvMC-1.0.7
+                __wget ${LIBS_URL}/libXvMC-1.0.8.tar.bz2
+		__common libXvMC-1.0.8
 	}
 
 	__libXxf86misc()
@@ -605,20 +604,20 @@ __xorg-libs()
 
 	__libXxf86dga()
 	{
-                __wget ${LIBS_URL}/libXxf86dga-1.1.3.tar.bz2
-		__common libXxf86dga-1.1.3
+                __wget ${LIBS_URL}/libXxf86dga-1.1.4.tar.bz2
+		__common libXxf86dga-1.1.4
 	}
 
 	__libXx86vm()
 	{
-                __wget ${LIBS_URL}/libXxf86vm-1.1.2.tar.bz2
-		__common libXxf86vm-1.1.2
+                __wget ${LIBS_URL}/libXxf86vm-1.1.3.tar.bz2
+		__common libXxf86vm-1.1.3
 	}
 
 	__libdmx()
 	{
-                __wget ${LIBS_URL}/libdmx-1.1.2.tar.bz2
-		__common libdmx-1.1.2
+                __wget ${LIBS_URL}/libdmx-1.1.3.tar.bz2
+		__common libdmx-1.1.3
 	}
 
 	__libpciaccess()
@@ -725,8 +724,8 @@ __xcb-util-wm()
 
 __libdrm()
 {
-	__wget http://dri.freedesktop.org/libdrm/libdrm-2.4.43.tar.bz2
-	__dcd libdrm-2.4.43
+	__wget http://dri.freedesktop.org/libdrm/libdrm-2.4.46.tar.bz2
+	__dcd libdrm-2.4.46
 
 	$DIST_CLEAN
 
@@ -746,12 +745,14 @@ __libdrm()
 
 __mesa-lib()
 {
-	__wget ftp://ftp.freedesktop.org/pub/mesa/9.1.1/MesaLib-9.1.1.tar.bz2
-###	__wget http://www.linuxfromscratch.org/patches/blfs/svn/MesaLib-9.1-add_xdemos-1.patch
-	__decord MesaLib-9.1.1
-	__cd Mesa-9.1.1
+	__wget ftp://ftp.freedesktop.org/pub/mesa/9.1.4/MesaLib-9.1.4.tar.bz2
+	__decord MesaLib-9.1.4
+	__cd Mesa-9.1.4
 
-###	patch -Np1 -i ${SRC_DIR}/MesaLib-9.1-add_xdemos-1.patch
+        __wget http://www.linuxfromscratch.org/patches/blfs/svn/MesaLib-9.1.4-llvm_fixes-1.patch
+        __wget http://www.linuxfromscratch.org/patches/blfs/svn/MesaLib-9.1.4-add_xdemos-1.patch
+	patch -Np1 -i ${SRC_DIR}/MesaLib-9.1.4-add_xdemos-1.patch
+        patch -Np1 -i ${SRC_DIR}/MesaLib-9.1.4-llvm_fixes-1.patch
 
 	$DIST_CLEAN
 	autoreconf -fi
@@ -780,8 +781,8 @@ __mesa-lib()
 
 ###	__mk -C xdemos DEMOS_PREFIX=/usr install
 
-	install -v -dm755 /usr/share/doc/MesaLib-9.1.1
-	cp -rfv docs/* /usr/share/doc/MesaLib-9.1.1
+	install -v -dm755 /usr/share/doc/MesaLib-9.1.4
+	cp -rfv docs/* /usr/share/doc/MesaLib-9.1.4
 
 	__mesa-glu()
 	{
@@ -808,11 +809,11 @@ __xbitmaps()
 
 __libpng()
 {
-	__wget http://downloads.sourceforge.net/libpng/libpng-1.5.15.tar.xz
-	__wget http://downloads.sourceforge.net/libpng-apng/libpng-1.5.15-apng.patch.gz
-	__dcd libpng-1.5.15
+	__wget http://downloads.sourceforge.net/libpng/libpng-1.6.2.tar.xz
+	__wget http://downloads.sourceforge.net/libpng-apng/libpng-1.6.2-apng.patch.gz
+	__dcd libpng-1.6.2
 
-	gzip -cd ${SRC_DIR}/libpng-1.5.15-apng.patch.gz | patch -p1
+	gzip -cd ${SRC_DIR}/libpng-1.6.2-apng.patch.gz | patch -p1
 
 	$DIST_CLEAN
 	__cfg --prefix=/usr --disable-static
@@ -822,8 +823,8 @@ __libpng()
 	__mk install
 	ldconfig
 
-	mkdir /usr/share/doc/libpng-1.5.15
-	cp README libpng-manual.txt /usr/share/doc/libpng-1.5.15
+	mkdir /usr/share/doc/libpng-1.6.2
+	cp README libpng-manual.txt /usr/share/doc/libpng-1.6.2
 }
 
 __xorg-apps()
@@ -909,8 +910,8 @@ __xorg-apps()
 
 	__xdpyinfo()
 	{
-                __wget ${APPS_URL}/xdpyinfo-1.3.0.tar.bz2
-		__common xdpyinfo-1.3.0
+                __wget ${APPS_URL}/xdpyinfo-1.3.1.tar.bz2
+		__common xdpyinfo-1.3.1
 	}
 
 	__xdriinfo()
@@ -1012,8 +1013,8 @@ __xorg-apps()
 
 	__xrefresh()
 	{
-                __wget ${APPS_URL}/xrefresh-1.0.4.tar.bz2
-		__common xrefresh-1.0.4
+                __wget ${APPS_URL}/xrefresh-1.0.5.tar.bz2
+		__common xrefresh-1.0.5
 	}
 
 	__xset()
@@ -1042,8 +1043,8 @@ __xorg-apps()
 
 	__xwininfo()
 	{
-                __wget ${APPS_URL}/xwininfo-1.1.2.tar.bz2
-		__common xwininfo-1.1.2
+                __wget ${APPS_URL}/xwininfo-1.1.3.tar.bz2
+		__common xwininfo-1.1.3
 	}
 
 	__xwud()
@@ -1174,8 +1175,8 @@ __intltool()
 
 __xkeyboard-config()
 {
-	__wget ftp://ftp.x.org/pub/individual/data/xkeyboard-config/xkeyboard-config-2.8.tar.bz2
-	__dcd xkeyboard-config-2.8
+	__wget ftp://ftp.x.org/pub/individual/data/xkeyboard-config/xkeyboard-config-2.9.tar.bz2
+	__dcd xkeyboard-config-2.9
 
 	$DIST_CLEAN
 	__cfg $XORG_CONFIG --with-xkb-rules-symlink=xorg
@@ -1185,8 +1186,8 @@ __xkeyboard-config()
 	__mk install
 	ldconfig
 
-	install -dv -m755 $XORG_PREFIX/share/doc/xkeyboard-config-2.8
-	install -v -m644 docs/{README,HOWTO}* $XORG_PREFIX/share/doc/xkeyboard-config-2.8
+	install -dv -m755 $XORG_PREFIX/share/doc/xkeyboard-config-2.9
+	install -v -m644 docs/{README,HOWTO}* $XORG_PREFIX/share/doc/xkeyboard-config-2.9
 }
 
 __printproto()
@@ -1203,8 +1204,8 @@ __libxp()
 
 __pixman()
 {
-	__wget http://cairographics.org/releases/pixman-0.28.2.tar.gz
-	__dcd pixman-0.28.2
+	__wget http://cairographics.org/releases/pixman-0.30.0.tar.gz
+	__dcd pixman-0.30.0
 
 	$DIST_CLEAN
 	__cfg  --prefix=/usr --disable-static
@@ -1217,9 +1218,12 @@ __pixman()
 
 __xorg-server()
 {
-	__wget ftp://ftp.x.org/pub/individual/xserver/xorg-server-1.14.0.tar.bz2
-	__dcd xorg-server-1.14.0
- 
+	__wget ftp://ftp.x.org/pub/individual/xserver/xorg-server-1.14.2.tar.bz2
+	__dcd xorg-server-1.14.2
+
+        __wget http://www.linuxfromscratch.org/patches/blfs/svn/xorg-server-1.14.2-add_prime_support-1.patch
+        patch -Np1 -i ${SRC_DIR}/xorg-server-1.14.2-add_prime_support-1.patch
+
 	$DIST_CLEAN
 	./autogen.sh
 	__cfg $XORG_CONFIG 			\
@@ -1277,8 +1281,8 @@ __xorg-drivers()
 
 	__xf86-input-wacom()
 	{
-		__wget http://downloads.sourceforge.net/linuxwacom/xf86-input-wacom-0.20.0.tar.bz2
-		__common xf86-input-wacom-0.20.0
+		__wget http://downloads.sourceforge.net/linuxwacom/xf86-input-wacom-0.21.0.tar.bz2
+		__common xf86-input-wacom-0.21.0
 	}
 
 	__xf86-video-fbdev()
@@ -1289,8 +1293,8 @@ __xorg-drivers()
 
 	__xf86-video-intel()
 	{
-		__wget ${DRIVER_URL}/xf86-video-intel-2.21.3.tar.bz2
-		__common xf86-video-intel-2.21.3
+		__wget ${DRIVER_URL}/xf86-video-intel-2.21.11.tar.bz2
+		__common xf86-video-intel-2.21.11
 	}
 
 	__xf86-video-modesetting()
@@ -1326,11 +1330,11 @@ __twm()
 
 __xterm()
 {
-	__wget ftp://invisible-island.net/xterm/xterm-291.tgz
+	__wget ftp://invisible-island.net/xterm/xterm-295.tgz
 
 	cd ${BASE_DIR}
-	gzip -dc ${SRC_DIR}/xterm-291.tgz | tar xvf -
-	__cd xterm-291
+	gzip -dc ${SRC_DIR}/xterm-295.tgz | tar xvf -
+	__cd xterm-295
 
 	sed -i '/v0/,+1s/new:/new:kb=^?:/' termcap
 	echo -e '\tkbs=\\177,' >> terminfo
@@ -1460,7 +1464,7 @@ Section "InputClass"
 	MatchDevicePath	"/dev/input/event*"
 	Driver		"wacom"
 
-#	Option		"Rotate" "CCW"
+	Option		"Rotate" "CCW"
 
 	Option		"TopX" "0"
 	Option		"BottomX" "30479"
