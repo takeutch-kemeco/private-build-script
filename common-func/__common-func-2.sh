@@ -132,12 +132,55 @@ __patch()
 	fi
 }
 
+__git-pull()
+{
+	ls .git
+	if [ $? -eq 0 ]
+	then
+		git pull
+	fi	
+}
+
+__autogen()
+{
+	ls autogen.sh
+	if [ $? -eq 0 ]
+	then
+		./autogen.sh
+	fi
+}
+
 __cfg()
 {
+        __autogen
 	./configure $@
 	if [ $? -ne 0 ]
 	then
 		__err "./configure error!! ["$@"]"
 	fi
+}
+
+__bld-common-simple()
+{
+	__git-pull
+
+	$DIST_CLEAN
+	__cfg --prefix=/usr $@
+
+	$MAKE_CLEAN
+	__mk
+	__mk install
+	ldconfig
+}
+
+__bld-common()
+{
+	__bld-common-simple --sysconfdir=/etc $@
+}
+
+__common()
+{
+	__cd $1
+	__bld-common
 }
 

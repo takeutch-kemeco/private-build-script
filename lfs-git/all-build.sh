@@ -1202,13 +1202,12 @@ __systemd-ui()
 
 __vim()
 {
-        __cd $BASE_DIR/vim
+        __cd vim
 
         echo '#define SYS_VIMRC_FILE "/etc/vimrc"' >> src/feature.h
 
         $DIST_CLEAN
-        ./configure --prefix=/usr       \
-                --enable-multibyte
+	./configure --prefix=/usr --enable-multibyte --disable-darwin --disable-selinux --disable-xsmp --disable-xsmp-interact --enable-luainterp=no --enable-perlinterp=no --enable-pythoninterp=no --enable-python3interp=no --enable-tclinterp=no --enable-rubyinterp=no  --disable-netbeans --enable-sniff=no --enable-multibyte --enable-hangulinput=no --enable-xim=no --enable-fontset=no --enable-gui=no    --enable-gtk2-check=no --enable-gnome-check=no --enable-motif-check=no --enable-athena-check=no --enable-nextaw-check=no --enable-carbon-check=no --disable-gtktest --disable-largefile --disable-acl --disable-gpm --disable-sysmouse --disable-nls --with-features=normal --with-x=no --with-gnome=no 
 
         $MAKE_CLEAN
         __mk

@@ -155,6 +155,15 @@ cat > /etc/dbus-1/session-local.conf << "EOF"
 EOF
 }
 
+__dbus-glib()
+{
+	cd ${BASE_DIR}
+	git clone git://anongit.freedesktop.org/dbus/dbus-glib
+	__cd dbus-glib
+	git pull
+	__bld-common --libexecdir=/usr/lib/dbus-1.0
+}
+
 __at-spi2-core()
 {
 	__cd at-spi2-core
@@ -321,8 +330,8 @@ __gtk+2()
 	__cd gtk+-2.24.git
 	git checkout master
 	git pull
-	git checkout 2.24.19
-	git checkout -d 2.24.19
+	git checkout 2.24.18
+	git checkout -b 2.24.18
 
 	./autogen.sh
 	__cfg --prefix=/usr --sysconfdir=/etc --with-xinput --with-gdktarget=x11 --with-x
@@ -352,17 +361,10 @@ __gtk+3()
 	gtk-query-immodules-3.0 --update-cache
 	glib-compile-schemas /usr/share/glib-2.0/schemas
 
-	mkdir -p ~/.config/gtk-3.0
-cat > ~/.config/gtk-3.0/settings.ini << "EOF"
+cat > /etc/gtk-3.0/settings.ini << "EOF"
 [Settings]
 gtk-theme-name = Adwaita
 gtk-fallback-icon-theme = gnome
-EOF
-
-cat > /etc/gtk-3.0/settings.ini << "EOF"
-[Settings]
-gtk-theme-name = Clearwaita
-gtk-fallback-icon-theme = elementary
 EOF
 }
 
@@ -381,7 +383,7 @@ __dbus-package()
 #__rem() {
 	__expat
 	__dbus
-	
+	__dbus-glib
 }
 
 __at-spi2-package()
