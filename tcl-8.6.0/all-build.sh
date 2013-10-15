@@ -29,9 +29,8 @@ __bld-common()
 
 __tcl()
 {
-	__wget http://downloads.sourceforge.net/tcl/tcl8.6.0-src.tar.gz
-	__wget http://downloads.sourceforge.net/tcl/tcl8.6.0-html.tar.gz
-
+#	__wget http://downloads.sourceforge.net/tcl/tcl8.6.0-src.tar.gz
+#	__wget http://downloads.sourceforge.net/tcl/tcl8.6.0-html.tar.gz
 	__decord tcl8.6.0-src
 	__cd tcl8.6.0
 	tar -xf ${SRC_DIR}/tcl8.6.0-html.tar.gz --strip-components=1
@@ -59,7 +58,7 @@ __tcl()
 
 __tk()
 {
-	__wget http://downloads.sourceforge.net/tcl/tk8.6.0-src.tar.gz
+#	__wget http://downloads.sourceforge.net/tcl/tk8.6.0-src.tar.gz
 	__decord tk8.6.0-src
 	__cd tk8.6.0/unix
 

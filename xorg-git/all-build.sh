@@ -1215,6 +1215,12 @@ cat >> /etc/sysconfig/createfiles << .
 	fi
 }
 
+__libevdev()
+{
+	__git-clone git://anongit.freedesktop.org/libevdev
+	__common libevdev
+}
+
 __xorg-drivers()
 {
 	__xf86-input-evdev()
@@ -1490,6 +1496,7 @@ __all()
 	__libxp
 	__pixman
 	__xorg-server
+	__libevdev
 	__xorg-drivers
 	__twm
 	__xterm
