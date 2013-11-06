@@ -117,6 +117,12 @@ __xorg-proto()
 		__common kbproto
 	}
 
+	__presentproto()
+	{
+		__git-clone git://anongit.freedesktop.org/xorg/proto/presentproto
+		__common presentproto
+	}       
+
 	__randrproto()
 	{
 		__git-clone git://anongit.freedesktop.org/xorg/proto/randrproto
@@ -218,6 +224,7 @@ __xorg-proto()
 	__glproto
 	__inputproto
 	__kbproto
+        __presentproto
 	__randrproto
 	__recordproto
 	__renderproto
@@ -1423,13 +1430,13 @@ Section "InputClass"
 	MatchDevicePath	"/dev/input/event*"
 	Driver		"wacom"
 
-#	Option		"Rotate" "CCW"
+	Option		"Rotate" "CCW"
 
 	Option		"TopX" "0"
 	Option		"BottomX" "30479"
 
-	Option		"TopY" "2000"
-	Option		"BottomY" "19144"
+	Option		"TopY" "3000"
+	Option		"BottomY" "20144"
 EndSection
 
 Section "InputClass"
