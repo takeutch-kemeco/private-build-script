@@ -10,7 +10,7 @@ DIST_CLEAN="make distclean"
 
 __emacs()
 {
-	__wget ftp://ftp.ring.gr.jp/pub/GNU/emacs/emacs-24.3.tar.xz
+	__wget http://core.ring.gr.jp/pub/GNU/emacs/emacs-24.3.tar.xz
 	__dcd emacs-24.3
 
 	$DIST_CLEAN
@@ -18,7 +18,8 @@ __emacs()
 	      --sysconfdir=/etc				\
 	      --localstatedir=/var			\
 	      --libexecdir=/usr/lib			\
-	      --without-gif
+	      --without-gif                             \
+              --with-x-toolkit=no
 
 	$MAKE_CLEAN
 	__mk

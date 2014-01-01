@@ -89,7 +89,9 @@ __scim-anthy()
 __anthy()
 {
 #	__wget http://jaist.dl.sourceforge.jp/anthy/37536/anthy-9100h.tar.gz
-	__common anthy-9100h
+	__dcd anthy-9100h
+        patch -p1 < ../anthy-9100h-emacs23-input.patch
+        __bld-common
 }
 
 __init-env

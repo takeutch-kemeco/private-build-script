@@ -1,0 +1,15 @@
+diff --git a/src-util/anthy.el b/src-util/anthy.el
+index 0270d83..d66197c 100644
+--- a/src-util/anthy.el
++++ b/src-util/anthy.el
+@@ -892,7 +892,9 @@
+ 	 ((event-matches-key-specifier-p event 'backspace) 8)
+ 	 (t
+ 	  (char-to-int (event-to-character event)))))
+-    last-command-char))
++    (if (< emacs-major-version 23)
++        last-command-char
++      last-command-event)))
+ 
+ ;;
+ ;;
