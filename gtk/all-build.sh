@@ -97,7 +97,7 @@ __gtk-doc()
 __glib()
 {
 	__cd glib.git
-	__bld-common --with-pcre=system
+	__bld-common --with-pcre=system --enable-debug=no
 }
 
 __gobject-introspection()
@@ -187,9 +187,9 @@ __at-spi2-atk()
 {
 	__cd at-spi2-atk
 	__git-clean
-	git checkout AT_SPI2_ATK_2_7_5
-	git checkout -b 2.7.5
-	git checkout 2.7.5
+	git checkout AT_SPI2_ATK_2_9_4
+	git checkout -b 2.9.4
+	git checkout 2.9.4
 
 	$DIST_CLEAN
 	./autogen.sh
@@ -330,8 +330,8 @@ __gtk+2()
 	__cd gtk+-2.24.git
 	git checkout master
 	git pull
-	git checkout 2.24.18
-	git checkout -b 2.24.18
+	git checkout 2.24.20
+	git checkout -b 2.24.20
 
 	./autogen.sh
 	__cfg --prefix=/usr --sysconfdir=/etc --with-xinput --with-gdktarget=x11 --with-x
