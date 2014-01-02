@@ -1,11 +1,12 @@
-git://git.gnome.org/vte
+git clone git://git.xfce.org/xfce/libxfce4ui
+git clone git://git.gnome.org/vte
 git clone git://git.xfce.org/xfce/libxfce4util
 git clone git://git.xfce.org/xfce/xfconf
 git clone git://git.xfce.org/xfce/libxfce4ui
 git clone git://git.xfce.org/xfce/exo
 git clone git://git.xfce.org/xfce/garcon
 git clone git://git.xfce.org/xfce/gtk-xfce-engine
-gic clone git://git.gnome.org/libwnck
+git clone git://git.gnome.org/libwnck
 git clone git://git.gnome.org/libglade
 git clone git://git.xfce.org/xfce/libxfce4ui
 git clone git://git.xfce.org/xfce/thunar

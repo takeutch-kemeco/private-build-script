@@ -16,18 +16,9 @@ __init-env()
 	echo
 }
 
-__git-clean()
-{
-	git clone . b
-	cp b/* . -rf
-	rm b -rf
-	git checkout master
-	git pull
-}
-
 __bld-common()
 {
-	__git-clean
+	git pull
 
 	cp configure.ac.in{,.orig}
 	sed -e "s/-Wall/ /g" configure.ac.in.orig | sed -e "s/-Werror/ /g" > configure.ac.in
@@ -54,7 +45,7 @@ __common()
 __vte()
 {
 	__cd vte
-	__git-clean
+	git pull
 
 	$DIST_CLEAN
 	./autogen.sh --prefix=/usr 			\
@@ -96,6 +87,11 @@ __thunar()
 __garcon()
 {
 	__common garcon
+}
+
+__gtk-xfce-engine()
+{
+        __common gtk-xfce-engine
 }
 
 __thunar-volman()
