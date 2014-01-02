@@ -87,6 +87,12 @@ __xorg-proto()
 		__common dri2proto
 	}
 
+	__dri3proto()
+	{
+		__git-clone git://anongit.freedesktop.org/xorg/proto/dri3proto
+		__common dri3proto
+	}
+
 	__fixesproto()
 	{
 		__git-clone git://anongit.freedesktop.org/xorg/proto/fixesproto
@@ -219,6 +225,7 @@ __xorg-proto()
 	__damageproto
 	__dmxproto
 	__dri2proto
+        __dri3proto
 	__fixesproto
 	__fontsproto
 	__glproto
@@ -716,6 +723,12 @@ __xcb-util-wm()
 	__common xcb-util-wm
 }
 
+__libxshmfence()
+{
+	__git-clone git://anongit.freedesktop.org/xorg/lib/libxshmfence
+	__common libxshmfence
+}
+
 __libdrm()
 {
 	__git-clone git://anongit.freedesktop.org/mesa/drm libdrm
@@ -859,11 +872,13 @@ __xorg-apps()
                 __git-clone git://anongit.freedesktop.org/xorg/app/x11perf
 		__common x11perf
 	}
-
+        
+        ### リモートデスクトップは使わないのでuninstall
 	__xauth()
 	{
                 __git-clone git://anongit.freedesktop.org/xorg/app/xauth
 		__common xauth
+                __mk uninstall
 	}
 
 	__xbacklight()
@@ -908,10 +923,12 @@ __xorg-apps()
 		__common xgamma
 	}
 
+        ### リモートデスクトップは使わないのでuninstall
 	__xhost()
 	{
                 __git-clone git://anongit.freedesktop.org/xorg/app/xhost
 		__common xhost
+                __mk uninstall
 	}
 
 	__xinput()
@@ -1489,6 +1506,7 @@ __all()
 	__xcb-util-keysyms
 	__xcb-util-renderutil
 	__xcb-util-wm
+        __libxshmfence
 	__libdrm
 	__mesa-lib
 	__xbitmaps
