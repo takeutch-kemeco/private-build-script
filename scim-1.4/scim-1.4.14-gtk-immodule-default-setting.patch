@@ -1,0 +1,136 @@
+diff --git a/configure.ac b/configure.ac
+index 103cd20..7790d1a 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -250,7 +250,11 @@ if test "$SCIM_HAS_GTK2" = "yes"; then
+   GTK2_BINARY_VERSION=`$PKG_CONFIG --variable=gtk_binary_version gtk+-2.0`
+   GTK2_LIBDIR=`$PKG_CONFIG --variable=libdir gtk+-2.0`
+   GTK2_IM_MODULEDIR=$GTK2_LIBDIR/gtk-2.0/$GTK2_BINARY_VERSION/immodules
++  GTK2_IM_MODULE_LOCALEDIR=/usr/share/locale
++  GTK2_IM_MODULE_LOCALE=ja
+   AC_SUBST(GTK2_IM_MODULEDIR)
++  AC_DEFINE_UNQUOTED(GTK2_IM_MODULE_LOCALEDIR, "$GTK2_IM_MODULE_LOCALEDIR", [locale dir of gtk2 immodule.])
++  AC_DEFINE_UNQUOTED(GTK2_IM_MODULE_LOCALE, "$GTK2_IM_MODULE_LOCALE", [locale of gtk2 immodule.])
+ fi
+ 
+ if test "$SCIM_HAS_GTK3" = "yes"; then
+@@ -258,7 +262,11 @@ if test "$SCIM_HAS_GTK3" = "yes"; then
+   GTK3_BINARY_VERSION=`$PKG_CONFIG --variable=gtk_binary_version gtk+-3.0`
+   GTK3_LIBDIR=`$PKG_CONFIG --variable=libdir gtk+-3.0`
+   GTK3_IM_MODULEDIR=$GTK3_LIBDIR/gtk-3.0/$GTK3_BINARY_VERSION/immodules
++  GTK3_IM_MODULE_LOCALEDIR=/usr/share/locale
++  GTK3_IM_MODULE_LOCALE=ja
+   AC_SUBST(GTK3_IM_MODULEDIR)
++  AC_DEFINE_UNQUOTED(GTK3_IM_MODULE_LOCALEDIR, "$GTK3_IM_MODULE_LOCALEDIR", [locale dir of gtk3 immodule.])
++  AC_DEFINE_UNQUOTED(GTK3_IM_MODULE_LOCALE, "$GTK3_IM_MODULE_LOCALE", [locale of gtk3 immodule.])
+ fi
+ 
+ # Check if we have gthread
+@@ -335,16 +343,31 @@ AC_ARG_WITH([gtk2-im-module-dir],
+ 		[Select GTK2 immodule dir])],
+ 	[GTK2_IM_MODULEDIR=$with_gtk2_im_module_dir])
+ 
+-AC_ARG_WITH([gtk2-im-module-dir],
+-	[AS_HELP_STRING([--with-gtk2-im-module-dir=dir],
+-		[Select GTK2 immodule dir])],
+-	[GTK2_IM_MODULEDIR=$with_gtk2_im_module_dir])
++AC_ARG_WITH([gtk2-im-module-locale-dir],
++	[AS_HELP_STRING([--with-gtk2-im-module-locale-dir=dir],
++		[Select GTK2 immodule locale dir])],
++	[GTK2_IM_MODULE_LOCALEDIR=$with_gtk2_im_module_locale_dir])
++
++AC_ARG_WITH([gtk2-im-module-locale],
++	[AS_HELP_STRING([--with-gtk2-im-module-locale=ja],
++		[Select GTK2 immodule locale])],
++	[GTK2_IM_MODULE_LOCALE=$with_gtk2_im_module_locale])
+ 
+ AC_ARG_WITH([gtk3-im-module-dir],
+ 	[AS_HELP_STRING([--with-gtk3-im-module-dir=dir], 
+ 	    [Select GTK3 immodule dir])],
+ 	[GTK3_IM_MODULEDIR=$with_gtk3_im_module_dir])
+ 
++AC_ARG_WITH([gtk3-im-module-locale-dir],
++	[AS_HELP_STRING([--with-gtk3-im-module-locale-dir=dir],
++		[Select GTK3 immodule locale dir])],
++	[GTK3_IM_MODULE_LOCALEDIR=$with_gtk3_im_module_locale_dir])
++
++AC_ARG_WITH([gtk3-im-module-locale],
++	[AS_HELP_STRING([--with-gtk3-im-module-locale=ja],
++		[Select GTK3 immodule locale])],
++	[GTK3_IM_MODULE_LOCALE=$with_gtk3_im_module_locale])
++
+ AC_ARG_WITH([qt3-moc],
+ 	[AS_HELP_STRING([--with-qt3-moc=file],
+ 		[Select QT3 moc program (default to QT3_PREFIX/bin/moc)])],
+@@ -976,7 +999,11 @@ Module options:
+   Enable TrayIcon          $enable_tray_icon
+ 
+   GTK2 IMModule dir        $GTK2_IM_MODULEDIR
++  GTK2 IMModule locale dir $GTK2_IM_MODULE_LOCALEDIR
++  GTK2 IMModule locale     $GTK2_IM_MODULE_LOCALE
+   GTK3 IMModule dir        $GTK3_IM_MODULEDIR
++  GTK3 IMModule locale dir $GTK3_IM_MODULE_LOCALEDIR
++  GTK3 IMModuel locale     $GTK3_IM_MODULE_LOCALE
+   QT3 IMModule dir         $QT3_IM_MODULEDIR
+   QT4 IMModule dir         $QT4_IM_MODULEDIR
+   Clutter IMModule dir     $CLUTTER_IM_MODULEDIR
+diff --git a/extras/immodules/client-gtk/gtk2/Makefile.am b/extras/immodules/client-gtk/gtk2/Makefile.am
+index f790d72..900e37e 100644
+--- a/extras/immodules/client-gtk/gtk2/Makefile.am
++++ b/extras/immodules/client-gtk/gtk2/Makefile.am
+@@ -35,8 +35,8 @@ im_scim_la_SOURCES = ../im-scim-bridge-gtk.c \
+ 							../scim-bridge-client-imcontext-gtk.c \
+ 							../scim-bridge-client-key-event-utility-gtk.c
+ 
+-im_scim_la_CXXFLAGS=@GTK2_CFLAGS@
+-im_scim_la_CFLAGS  =@GTK2_CFLAGS@
++im_scim_la_CXXFLAGS=@GTK2_CFLAGS@ -DGTK2_IM_MODULE
++im_scim_la_CFLAGS  =@GTK2_CFLAGS@ -DGTK2_IM_MODULE
+ 
+ im_scim_la_LDFLAGS = -rpath $(moduledir) \
+ 		     -avoid-version -no-undefined \
+diff --git a/extras/immodules/client-gtk/gtk3/Makefile.am b/extras/immodules/client-gtk/gtk3/Makefile.am
+index bea915c..7abc5bd 100644
+--- a/extras/immodules/client-gtk/gtk3/Makefile.am
++++ b/extras/immodules/client-gtk/gtk3/Makefile.am
+@@ -35,8 +35,8 @@ im_scim_la_SOURCES = ../im-scim-bridge-gtk.c \
+ 							../scim-bridge-client-imcontext-gtk.c \
+ 							../scim-bridge-client-key-event-utility-gtk.c
+ 
+-im_scim_la_CXXFLAGS=@GTK3_CFLAGS@
+-im_scim_la_CFLAGS  =@GTK3_CFLAGS@
++im_scim_la_CXXFLAGS=@GTK3_CFLAGS@ -DGTK3_IM_MODULE
++im_scim_la_CFLAGS  =@GTK3_CFLAGS@ -DGTK3_IM_MODULE
+ 
+ im_scim_la_LDFLAGS = -rpath $(moduledir) \
+ 		     -avoid-version -no-undefined \
+diff --git a/extras/immodules/client-gtk/im-scim-bridge-gtk.c b/extras/immodules/client-gtk/im-scim-bridge-gtk.c
+index c54964a..57fe8bc 100644
+--- a/extras/immodules/client-gtk/im-scim-bridge-gtk.c
++++ b/extras/immodules/client-gtk/im-scim-bridge-gtk.c
+@@ -35,12 +35,21 @@ static const GtkIMContextInfo scim_bridge_info =
+     "scim",
+     /* Human readable name */
+     "SCIM Input Method",
++#if defined GTK2_IM_MODULE
+     /* Translation domain */
+-    "",
+-    /* Dir for bindtextdomain (not strictly needed for "gtk+") */
+-    "",
++    "gtk20",
++    /* Dir for bindtextdomain */
++    GTK2_IM_MODULE_LOCALEDIR,
+     /* Languages for which this module is the default */
+-    ""
++    GTK2_IM_MODULE_LOCALE,
++#elif defined GTK3_IM_MODULE
++    /* Translation domain */
++    "gtk30",
++    /* Dir for bindtextdomain */
++    GTK3_IM_MODULE_LOCALEDIR,
++    /* Languages for which this module is the default */
++    GTK3_IM_MODULE_LOCALE,
++#endif
+ };
+ 
+ static const GtkIMContextInfo *info_list[] =

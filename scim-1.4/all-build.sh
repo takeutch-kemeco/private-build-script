@@ -36,24 +36,10 @@ __scim()
 {
 #	__wget http://downloads.sourceforge.net/project/scim/scim/1.4.14/scim-1.4.14.tar.gz
 	__dcd scim-1.4.14
+        patch -p1 < ../scim-1.4.14-gtk-immodule-default-setting.patch
 	__bld-common --with-gtk-version=2
 
-	__scim-config-gtk()
-	{
-		IM_SCIM_PATH="\"\/usr\/lib\/gtk-2.0\/2.10.0\/immodules\/im-scim.so\""
-		IM_SCIM_PARAM="\"scim\" \"SCIM Input Method\" \"gtk20\" \"\/usr\/share\/locale\" \"ja\""
-
-		grep "im-scim.so" /etc/gtk-2.0/gtk.immodules
-		if [ $? -ne 0 ]
-		then
-			echo -e "\nim-scim.so\nSCIM Input Method" >> /etc/gtk-2.0/gtk.immodules
-		fi
-
-		cp -v /etc/gtk-2.0/gtk.immodules{,.orig}
-		sed 	-e "s/^.*im-scim.so.*$/${IM_SCIM_PATH}/g" 		\
-		    	-e "s/^.*SCIM Input Method.*$/${IM_SCIM_PARAM}/g"	\
-                       	/etc/gtk-2.0/gtk.immodules.orig > /etc/gtk-2.0/gtk.immodules
-	}
+        gtk-query-immodules-2.0 --update-cache
 
 	__scim-config-env()
 	{
@@ -76,7 +62,6 @@ __scim()
 		fi
 	}
 
-	__scim-config-gtk
 	__scim-config-env
 }
 
