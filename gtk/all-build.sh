@@ -340,6 +340,8 @@ __gtk+2()
 	__mk
 	__mk install
 	ldconfig
+
+        gtk-query-immodules-2.0 --update-cache
 }
 
 __gtk+3()
