@@ -20,6 +20,7 @@ do
 		ls .svn
 		if [ $? -eq 0 ]
 		then
+                        svn upgrade
 			svn update
 		fi
 

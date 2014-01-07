@@ -142,7 +142,7 @@ __ffmpeg()
 	__cd ffmpeg
         __bld-common-simple --disable-debug --enable-shared --enable-gpl --enable-x11grab --enable-version3 \
                             --enable-nonfree --enable-libfaac --enable-libfreetype --enable-libmp3lame \
-                            --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libvpx \
+                            --enable-libtheora --enable-libvorbis --enable-libvpx \
                             --enable-libxvid --enable-libpulse --enable-openssl
 }
 
@@ -175,7 +175,7 @@ __flac
 __faad2
 __faac
 __lame
-__libav
+### __libav
 __speex
 __ffmpeg
 
