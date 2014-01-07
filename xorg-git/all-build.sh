@@ -763,16 +763,16 @@ __mesa-lib()
             	--enable-gles1                 	\
             	--enable-gles2                 	\
             	--enable-openvg                	\
-		--enable-osmesa			\
             	--enable-xa                    	\
             	--enable-gbm                   	\
             	--enable-gallium-egl           	\
             	--enable-gallium-gbm           	\
             	--enable-glx-tls               	\
+                --enable-dri                    \
 		--with-llvm-shared-libs		\
             	--with-egl-platforms="drm,x11" 	\
-                --with-gallium-drivers="i915"	\
-                --with-dri-drivers="i965"
+                --with-gallium-drivers="swrast"	\
+                --with-dri-drivers="i965,swrast"
 
 	$MAKE_CLEAN
 	__mk
