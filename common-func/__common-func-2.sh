@@ -107,6 +107,17 @@ __mk()
 	fi
 }
 
+__mkinst()
+{
+    __echo-g $CURBUILDAPP "[ sudo make install" $@ "]"
+
+    sudo make install $@
+    if [ $? -ne 0 ]
+    then
+	__err "sudo make install error!!"
+    fi
+}
+
 __lsdir()
 {
 	ls -F | grep / | sed -e "s/\/$//g"
@@ -169,8 +180,8 @@ __bld-common-simple()
 
 	$MAKE_CLEAN
 	__mk
-	__mk install
-	ldconfig
+	__mkinst
+	sudo ldconfig
 }
 
 __bld-common()
