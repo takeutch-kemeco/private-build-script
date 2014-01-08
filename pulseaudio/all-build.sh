@@ -2,62 +2,40 @@
 
 BASE_DIR=$(pwd)
 
-#DIST_CLEAN=
-DIST_CLEAN="make distclean"
+DIST_CLEAN=
+#DIST_CLEAN="make distclean"
 
-#MAKE_CLEAN=
-MAKE_CLEAN="make clean"
+MAKE_CLEAN=
+#MAKE_CLEAN="make clean"
 
-. ../common-func/__common-func.sh
-
-__common()
-{
-	__cd $1
-
-	$DIST_CLEAN
-	./autogen.sh
-	./configure --prefix=/usr
-
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
-}
+. ../common-func/__common-func-2.sh
 
 __libsndfile()
 {
-	__common $BASE_DIR/libsndfile
+    git clone https://github.com/erikd/libsndfile.git
+    __common libsndfile
 }
 
 __pulseaudio()
 {
-	__cd $BASE_DIR/pulseaudio
+    git clone git clone http://anongit.freedesktop.org/git/pulseaudio/pulseaudio.git
+    __cd pulseaudio
 
-	groupadd -g 58 pulse
-	groupadd -g 59 pulse-access
-	useradd -c "Pulseaudio User" -d /var/run/pulse -g pulse -s /bin/false -u 58 pulse
-	usermod -a -G audio pulse
+    sudo groupadd -g 58 pulse
+    sudo groupadd -g 59 pulse-access
+    sudo useradd -c "Pulseaudio User" -d /var/run/pulse -g pulse -s /bin/false -u 58 pulse
+    sudo usermod -a -G audio pulse
 
-	find . -name "Makefile.in" | xargs sed -i "s|(libdir)/@PACKAGE@|(libdir)/pulse|"
+    find . -name "Makefile.in" | xargs sed -i "s|(libdir)/@PACKAGE@|(libdir)/pulse|"
 
-	$DIST_CLEAN
-	./autogen.sh
-	./configure --prefix=/usr	\
-            	--sysconfdir=/etc 	\
-            	--localstatedir=/var 	\
-            	--libexecdir=/usr/lib	\
-            	--with-module-dir=/usr/lib/pulse/modules
-
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
+    __bld-common --localstatedir=/var --libexecdir=/usr/lib \
+                 --with-module-dir=/usr/lib/pulse/modules --without-caps
 }
 
 __all()
 {
-__libsndfile
-__pulseaudio
+    __libsndfile
+    __pulseaudio
 }
 
 $@
