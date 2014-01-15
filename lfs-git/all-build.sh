@@ -80,22 +80,24 @@ __file()
 
 __binutils()
 {
-        __wget http://ftp.gnu.org/gnu/binutils/binutils-2.23.2.tar.bz2
-        __dcd binutils-2.23.2
+        __wget http://ftp.gnu.org/gnu/binutils/binutils-2.24.tar.bz2
+        __dcd binutils-2.24
         __cdbt
 
         $DIST_CLEAN
-        $BASE_DIR/binutils-2.23.2/configure     \
-                --prefix=/usr                   \
-                --enable-shared                 \
-                --enable-werror=no
+        $BASE_DIR/binutils-2.24/configure               \
+                --prefix=/usr                           \
+                --libdir=/usr/lib                       \
+                --enable-shared                         \
+                --disable-multilib                      \
+                --enable-64-bit-bfd
 
         $MAKE_CLEAN
-        __mk tooldir=/usr
-        __mk tooldir=/usr install
+        make tooldir=/usr
+        sudo make tooldir=/usr install
 
-        cp -vf $BASE_DIR/binutils-2.23.2/include/libiberty.h /usr/include/
-        ldconfig
+        sudo cp -vf $BASE_DIR/binutils-2.24/include/libiberty.h /usr/include/
+        sudo ldconfig
 }
 
 __sed()
