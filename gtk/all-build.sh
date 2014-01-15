@@ -3,146 +3,95 @@
 BASE_DIR=$(pwd)
 SRC_DIR=${BASE_DIR}/src
 
-#DIST_CLEAN
-DIST_CLEAN="make distclean"
+DIST_CLEAN=
+#DIST_CLEAN="make distclean"
 
-#MAKE_CLEAN=
-MAKE_CLEAN="make clean"
+MAKE_CLEAN=
+#MAKE_CLEAN="make clean"
 
-. ./__common-func.sh
-
-__git-clean()
-{
-	echo
-}
-
-__bld-common()
-{
-	__git-clean
-
-	$DIST_CLEAN
-	./autogen.sh
-	__cfg --prefix=/usr		\
-              --sysconfdir=/etc		\
-	      $@
-
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
-}
-
-__common()
-{
-	__cd $1
-	__bld-common
-}
+. ../common-func/__common-func-2.sh
 
 __libffi()
 {
-	__common libffi
+    git clone git://github.com/atgreen/libffi.git
+    __common libffi
 
-	cp -f $BASE_DIR/libffi/`gcc -dumpmachine`/include/ffi.h /usr/include/
-	cp -f $BASE_DIR/libffi/`gcc -dumpmachine`/include/ffitarget.h /usr/include/
-
-	ldconfig
+    sudo cp -f $BASE_DIR/libffi/`gcc -dumpmachine`/include/ffi.h /usr/include/
+    sudo cp -f $BASE_DIR/libffi/`gcc -dumpmachine`/include/ffitarget.h /usr/include/
 }
 
 __pkg-config()
 {
-	__cd pkg-config
-	rm -f /usr/bin/`gcc -dumpmachine`-pkg-config
-	__bld-common --docdir=/usr/share/doc/pkg-config-0.28 \
-                     --with-internal-glib
+    git clone git://anongit.freedesktop.org/pkg-config
+    __cd pkg-config
+    sudo rm -f /usr/bin/`gcc -dumpmachine`-pkg-config
+    __bld-common --docdir=/usr/share/doc/pkg-config-0.28 --with-internal-glib
 }
 
 __pcre()
 {
-	__cd pcre
+    svn co svn://vcs.exim.org/pcre/code/trunk pcre
+    __cd pcre
+    __bld-common --docdir=/usr/share/doc/pcre --enable-utf \
+                 --enable-unicode-properties --enable-pcregrep-libz \
+                 --enable-pcregrep-libbz2 --enable-pcretest-libreadline
 
-	svn cleanup
-	svn update
+    sudo cp -f /usr/lib/libpcre.la      /lib/
+    sudo cp -f /usr/lib/libpcrecpp.la   /lib/
+    sudo cp -f /usr/lib/libpcreposix.la /lib/
 
-	$DIST_CLEAN
-	./autogen.sh
-	__cfg --prefix=/usr                     \
-              --docdir=/usr/share/doc/pcre      \
-              --enable-utf                      \
-              --enable-unicode-properties       \
-              --enable-pcregrep-libz            \
-              --enable-pcregrep-libbz2          \
-              --enable-pcretest-libreadline     \
-              --disable-static
-
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
-
-	cp -f /usr/lib/libpcre.la      /lib/
-	cp -f /usr/lib/libpcrecpp.la   /lib/
-	cp -f /usr/lib/libpcreposix.la /lib/
-
-	ln -sf /usr/lib/libpcre.so      /lib/libpcre.so
-	ln -sf /usr/lib/libpcrecpp.so   /lib/libpcrecpp.so
-	ln -sf /usr/lib/libpcreposix.so /lib/libpcreposix.so
-	ldconfig
+    sudo ln -sf /usr/lib/libpcre.so      /lib/libpcre.so
+    sudo ln -sf /usr/lib/libpcrecpp.so   /lib/libpcrecpp.so
+    sudo ln -sf /usr/lib/libpcreposix.so /lib/libpcreposix.so
+    sudo ldconfig
 }
 
 __gtk-doc()
 {
-	__common gtk-doc
+    git clone git://git.gnome.org/gtk-doc
+    __common gtk-doc
 }
 
 __glib()
 {
-	__cd glib.git
-	__bld-common --with-pcre=system --enable-debug=no
+    git clone git://git.gnome.org/glib
+    __cd glib
+    __bld-common --with-pcre=system --enable-debug=no
 }
 
 __gobject-introspection()
 {
-	__common gobject-introspection
+    git clone git://git.gnome.org/gobject-introspection
+    __common gobject-introspection
 }
 
 __expat()
 {
-	__common expat
+#   cvs -z3 -d:pserver:anonymous@expat.cvs.sourceforge.net:/cvsroot/expat co expat
+    __wget http://downloads.sourceforge.net/expat/expat-2.1.0.tar.gz
+    __decord expat-2.1.0
+    __common expat-2.1.0
 }
 
 __dbus()
 {
-	__cd dbus
-	__git-clean
-	git checkout master
+    git clone git://anongit.freedesktop.org/dbus/dbus
+    sudo groupadd -g 27 messagebus
+    sudo useradd -c "D-Bus Message Daemon User" -d /var/run/dbus -u 27 \
+                 -g messagebus -s /bin/false messagebus
+    __cd dbus
+    __bld-common --localstatedir=/var 			\
+                 --libexecdir=/usr/lib/dbus-1.0 	\
+                 --with-console-auth-dir=/run/console/ 	\
+                 --without-systemdsystemunitdir 	\
+                 --disable-systemd 			\
+                 --disable-static			\
+                 --disable-Werror			\
+	         --disable-tests
 
-	groupadd -g 27 messagebus
-	useradd -c "D-Bus Message Daemon User" -d /var/run/dbus -u 27 -g messagebus -s /bin/false messagebus
+    sudo dbus-uuidgen --ensure
 
-	$DIST_CLEAN
-	./autogen.sh
-#	cmake -DCMAKE_INSTALL_PREFIX=/prefix
-	__cfg --prefix=/usr				\
-              --sysconfdir=/etc 			\
-              --localstatedir=/var 			\
-              --libexecdir=/usr/lib/dbus-1.0 		\
-              --with-console-auth-dir=/run/console/ 	\
-              --without-systemdsystemunitdir 		\
-              --disable-systemd 			\
-              --disable-static				\
-              --disable-Werror				\
-	      --disable-tests
-
-	$MAKE_CLEAN
-#	__mk
-#	__mk install
-	make
-	make install
-	ldconfig
-
-	dbus-uuidgen --ensure
-
-cat > /etc/dbus-1/session-local.conf << "EOF"
+cat > /tmp/t << "EOF" 
 <!DOCTYPE busconfig PUBLIC
  "-//freedesktop//DTD D-BUS Bus Configuration 1.0//EN"
  "http://www.freedesktop.org/standards/dbus/1.0/busconfig.dtd">
@@ -153,303 +102,249 @@ cat > /etc/dbus-1/session-local.conf << "EOF"
 
 </busconfig>
 EOF
+
+    sudo cp /tmp/t /etc/dbus-1/session-local.conf
 }
 
 __dbus-glib()
 {
-	cd ${BASE_DIR}
-	git clone git://anongit.freedesktop.org/dbus/dbus-glib
-	__cd dbus-glib
-	git pull
-	__bld-common --libexecdir=/usr/lib/dbus-1.0
+    git clone git://anongit.freedesktop.org/dbus/dbus-glib
+    __cd dbus-glib
+    __bld-common --libexecdir=/usr/lib/dbus-1.0
 }
 
 __at-spi2-core()
 {
-	__cd at-spi2-core
-	__bld-common --libexecdir=/usr/lib/at-spi2-core
+    git clone git://git.gnome.org/at-spi2-core
+    __cd at-spi2-core
+    __bld-common --libexecdir=/usr/lib/at-spi2-core
 }
 
 __atk()
 {
-	__common atk
+    git clone git://git.gnome.org/atk
+    __common atk
 }
 
 __intltool()
 {
-#	__wget http://launchpad.net/intltool/trunk/0.50.2/+download/intltool-0.50.2.tar.gz
-	__decord intltool-0.50.2
-	__common intltool-0.50.2
-	install -v -m644 -D doc/I18N-HOWTO /usr/share/doc/intltool-0.50.2/I18N-HOWTO
+    __wget http://launchpad.net/intltool/trunk/0.50.2/+download/intltool-0.50.2.tar.gz
+    __decord intltool-0.50.2
+    __common intltool-0.50.2
+    sudo install -v -m644 -D doc/I18N-HOWTO /usr/share/doc/intltool-0.50.2/I18N-HOWTO
 }
 
 __at-spi2-atk()
 {
-	__cd at-spi2-atk
-	__git-clean
-	git checkout AT_SPI2_ATK_2_9_4
-	git checkout -b 2.9.4
-	git checkout 2.9.4
-
-	$DIST_CLEAN
-	./autogen.sh
-	__cfg --prefix=/usr
-
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
+    git clone git://git.gnome.org/at-spi2-atk
+    __common at-spi2-atk
 }
 
 __nasm()
 {
-	__wget http://www.nasm.us/pub/nasm/releasebuilds/2.10.07/nasm-2.10.07.tar.xz
-	__wget http://www.nasm.us/pub/nasm/releasebuilds/2.10.07/nasm-2.10.07-xdoc.tar.xz
-#	__decord nasm-2.10.07
-	__cd nasm-2.10.07
-
-	tar -xf ${SRC_DIR}/nasm-2.10.07-xdoc.tar.xz --strip-components=1
-
-	$DIST_CLEAN
-	__cfg --prefix=/usr
-
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
-
-	install -m755 -d         /usr/share/doc/nasm-2.10.07/html
-	cp -v doc/html/*.html    /usr/share/doc/nasm-2.10.07/html
-	cp -v doc/*.{txt,ps,pdf} /usr/share/doc/nasm-2.10.07
-	cp -v doc/info/*         /usr/share/info
-	install-info /usr/share/info/nasm.info /usr/share/info/dir
+    git clone git://repo.or.cz/nasm.git
+    __common nasm
 }
 
 __libjpeg()
 {
-	__wget http://www.ijg.org/files/jpegsrc.v9.tar.gz
-	__decord jpegsrc.v9
-	__cd jpeg-9
-
-	__bld-common
+    __wget http://www.ijg.org/files/jpegsrc.v9.tar.gz
+    __decord jpegsrc.v9
+    __common jpeg-9
 }
 
 __libpng()
 {
-	__cd libpng.git
-	git pull
-
-        $DIST_CLEAN
-        ./autogen.sh
-        __cfg --prefix=/usr             \
-              --sysconfdir=/etc         \
-	      --enable-maintainer-mode
-
-        $MAKE_CLEAN
-        __mk
-        __mk install
-        ldconfig
+    git clone git://libpng.git.sourceforge.net/gitroot/libpng/libpng
+    __cd libpng
+    __bld-common --enable-maintainer-mode
 }
 
 __libtiff()
 {
-	__wget ftp://ftp.remotesensing.org/libtiff/tiff-4.0.3.tar.gz
-	__decord tiff-4.0.3
-	__cd tiff-4.0.3
-	__bld-common --disable-mdi --disable-old-jpeg --disable-pixarlog --disable-logluv --disable-next --disable-thunder --disable-packbits --disable-ccitt --disable-jpeg
+    __wget ftp://ftp.remotesensing.org/libtiff/tiff-4.0.3.tar.gz
+    __decord tiff-4.0.3
+    __cd tiff-4.0.3
+    __bld-common --disable-mdi --disable-old-jpeg --disable-pixarlog \
+                 --disable-logluv --disable-next --disable-thunder \
+                 --disable-packbits --disable-ccitt --disable-jpeg
 }
 
 __gdk-pixbuf()
 {
-	__cd gdk-pixbuf
-	__bld-common --with-x11
+    git clone git://git.gnome.org/gdk-pixbuf
+    __cd gdk-pixbuf
+    __bld-common --with-x11
 }
 
 __freetype2()
 {
-	__cd freetype2
-	sed -i -r 's:.*(#.*SUBPIXEL.*) .*:\1:' include/freetype/config/ftoption.h
-	__bld-common
+    git clone git://git.sv.gnu.org/freetype/freetype2.git
+    __cd freetype2
+    cp include/freetype/config/{ftoption.h,ftoption.h.orig}
+    sed -i -r 's:.*(#.*SUBPIXEL.*) .*:\1:' include/freetype/config/ftoption.h
+    __bld-common
+    cp include/freetype/config/{ftoption.h.orig,ftoption.h}
 }
 
 __fontconfig()
 {
-	__cd fontconfig
-	__bld-common --localstatedir=/var		\
-                     --docdir=/usr/share/doc/fontconfig	\
-                     --disable-docs			\
-                     --disable-static
+    git clone git://anongit.freedesktop.org/fontconfig
+    __cd fontconfig
+    __bld-common --localstatedir=/var --disable-docs 
 }
 
 __pixman()
 {
-	__common pixman
+    git clone git://anongit.freedesktop.org/pixman
+    __common pixman
 }
 
 __cairo()
 {
-	__cd cairo
-	__bld-common --enable-tee   		\
-                     --enable-gl                \
-                     --enable-xcb               \
-                     --enable-gtk-doc           \
-                     --enable-xcb-drm           \
-                     --enable-glsv2             \
-                     --enable-xlib-xcb          \
-                     --enable-xml               \
-                     --enable-directfb=auto     \
-                     --enable-ft                \
-                     --enable-fc
+    git clone git://anongit.freedesktop.org/git/cairo
+    __cd cairo
+    __bld-common --enable-tee               \
+                 --enable-gl                \
+                 --enable-xcb               \
+                 --enable-glsv2             \
+                 --enable-xlib-xcb          \
+                 --enable-directfb=auto     \
+                 --enable-ft                \
+                 --enable-fc
 }
 
 __ragel()
 {
-	__wget http://www.complang.org/ragel/ragel-6.8.tar.gz
-	__dcd ragel-6.8
-	__common ragel-6.8
+#   git clone git://git.complang.org/ragel.git 
+    __wget http://www.complang.org/ragel/ragel-6.8.tar.gz
+    __dcd ragel-6.8
+    __bld-common
 }
 
 __harfbuzz()
 {
-	__common harfbuzz
+    git clone git://anongit.freedesktop.org/harfbuzz
+    __common harfbuzz
 }
 
 __pango()
 {
-	__common pango
-	pango-querymodules --update-cache
+    git clone git://git.gnome.org/pango
+    __common pango
+    sudo pango-querymodules --update-cache
 }
 
 __pangox-compat()
 {
-	__common pangox-compat
+    git clone git://git.gnome.org/pangox-compat
+    __common pangox-compat
 }
 
 __gtk+2()
 {
-	__cd gtk+-2.24.git
-	git checkout master
-	git pull
-	git checkout 2.24.20
-	git checkout -b 2.24.20
+    git clone git://git.gnome.org/gtk+
+    git clone gtk+ gtk+-2.24.git
+    __cd gtk+-2.24.git
+    git checkout master
+    git pull
+    git checkout 2.24.20
+    git checkout -b 2.24.20
+    __bld-common --with-xinput --with-gdktarget=x11 --with-x
+    sudo gtk-query-immodules-2.0 --update-cache
 
-	./autogen.sh
-	__cfg --prefix=/usr --sysconfdir=/etc --with-xinput --with-gdktarget=x11 --with-x
-
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
-
-        gtk-query-immodules-2.0 --update-cache
+cat > /tmp/t << "EOF"
+include "/usr/share/themes/Adwaita/gtk-2.0/gtkrc"
+gtk-icon-theme-name = "Mist"
+EOF
+    sudo cp /tmp/t /etc/gtk-2.0/gtkrc
 }
 
 __gtk+3()
 {
-	__cd gtk+
-	git-clean
+    git clone git://git.gnome.org/gtk+
+    __common gtk+
+    sudo gtk-query-immodules-3.0 --update-cache
+    sudo glib-compile-schemas /usr/share/glib-2.0/schemas
 
-        $DIST_CLEAN
-        ./autogen.sh
-        __cfg --prefix=/usr             \
-              --sysconfdir=/etc         \
-              $@
-
-        $MAKE_CLEAN
-        __mk
-        __mk install
-        ldconfig
-
-	gtk-query-immodules-3.0 --update-cache
-	glib-compile-schemas /usr/share/glib-2.0/schemas
-
-cat > /etc/gtk-3.0/settings.ini << "EOF"
+cat > /tmp/t << "EOF"
 [Settings]
 gtk-theme-name = Adwaita
-gtk-fallback-icon-theme = gnome
+gtk-fallback-icon-theme = Mist
 EOF
+    sudo cp /tmp/t /etc/gtk-3.0/settings.ini
 }
 
 __glib-package()
 {
-#__rem() {
-	__libffi
-	__pkg-config
-	__pcre
-	__gtk-doc
-	__glib
+    __libffi
+    __pkg-config
+    __pcre
+    __gtk-doc
+    __glib
 }
 
 __dbus-package()
 {
-#__rem() {
-	__expat
-	__dbus
-	__dbus-glib
+    __expat
+    __dbus
+    __dbus-glib
 }
 
 __at-spi2-package()
 {
-#__rem() {
-	__dbus-package
-	__gobject-introspection
-	__at-spi2-core
-	__atk
-	__intltool
-	__at-spi2-atk
+    __dbus-package
+    __gobject-introspection
+    __at-spi2-core
+    __atk
+    __intltool
+    __at-spi2-atk
 }
 
 __gdk-pixbuf-package()
 {
-#__rem() {
-	__nasm
-	__libjpeg
-	__libpng
-	__libtiff
-	__gdk-pixbuf
-
+    __nasm
+    __libjpeg
+    __libpng
+    __libtiff
+    __gdk-pixbuf
 }
 
 __fontconfig-package()
 {
-#__rem() {
-	__freetype2
-	__fontconfig
+    __freetype2
+    __fontconfig
 }
 
 __cairo-package()
 {
-#__rem() {
-	__fontconfig-package
-	__pixman
-	__cairo
+    __fontconfig-package
+    __pixman
+    __cairo
 }
 
 __harfbuzz-package()
 {
-#__rem() {
-	__ragel
-	__harfbuzz
+    __ragel
+    __harfbuzz
 }
 
 __pango-package()
 {
-#__rem() {
-	__cairo-package
-	__harfbuzz-package
-	__pango
-	__pangox-compat
+    __cairo-package
+    __harfbuzz-package
+    __pango
+    __pangox-compat
 }
 
 __all()
 {
-#__rem() {
-	__glib-package
-	__at-spi2-package
-	__gdk-pixbuf-package
-	__pango-package
-	__gtk+2
-	__gtk+3
+    __glib-package
+    __at-spi2-package
+    __gdk-pixbuf-package
+    __pango-package
+    __gtk+2
+    __gtk+3
 }
 
 $@
