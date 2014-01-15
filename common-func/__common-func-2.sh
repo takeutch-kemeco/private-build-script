@@ -1,4 +1,4 @@
-### common-func.sh
+### __common-func-2.sh
 
 CURBUILDAPP=
 
@@ -116,6 +116,8 @@ __mkinst()
     then
 	__err "sudo make install error!!"
     fi
+
+    sudo ldconfig
 }
 
 __lsdir()
@@ -141,6 +143,12 @@ __patch()
     then
 	__err "patch error!! ["$@"]"
     fi
+}
+
+__git-clone()
+{
+    cd ${BASE_DIR}
+    git clone $@
 }
 
 __git-pull()
@@ -219,7 +227,6 @@ __bld-common-simple()
     $MAKE_CLEAN
     __mk
     __mkinst
-    sudo ldconfig
 }
 
 __bld-common()
