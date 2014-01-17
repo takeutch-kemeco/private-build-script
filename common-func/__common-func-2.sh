@@ -151,6 +151,18 @@ __git-clone()
     git clone $@
 }
 
+__hg-clone()
+{
+    cd ${BASE_DIR}
+    hg clone $@
+}
+
+__svn-clone()
+{
+    cd ${BASE_DIR}
+    svn co $@
+}
+
 __git-pull()
 {
     ls .git 2>& 1>& /dev/null
