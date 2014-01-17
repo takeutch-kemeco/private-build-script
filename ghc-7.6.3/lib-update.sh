@@ -2,7 +2,9 @@
 
 __cabal()
 {
-    sudo cabal install --prefix=/usr --global --reinstall --force-reinstall $@
+    sudo cabal install --force-reinstall --reinstall \
+                       --enable-documentation --haddock-html \
+                       --global --prefix=/usr $@
 }
 
 sudo cabal update
