@@ -138,7 +138,7 @@ __wget()
 
 __patch()
 {
-    patch $@
+    patch -p1 < $@
     if [ $? -eq 2 ]
     then
 	__err "patch error!! ["$@"]"
