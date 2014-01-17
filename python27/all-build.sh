@@ -1,142 +1,151 @@
 #!/bin/bash
 
 BASE_DIR=$(pwd)
+SRC_DIR=${BASE_DIR}/src
 
-#DIST_CLEAN=
-DIST_CLEAN="make distclean"
+DIST_CLEAN=
+#DIST_CLEAN="make distclean"
 
-#MAKE_CLEAN=
-MAKE_CLEAN="make clean"
+MAKE_CLEAN=
+#MAKE_CLEAN="make clean"
 
-. ../common-func/__common-func.sh
+. ../common-func/__common-func-2.sh
 
-__python27() {
-	__cd $BASE_DIR/python27
-	$DIST_CLEAN
-	./configure --prefix=/usr --enable-shared --with-system-ffi
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
+__pmk()
+{
+    python2 setup.py clean	
+    python2 setup.py build $@
+    if [ $? -ne 0 ]
+    then
+	__err
+    fi
 }
 
-__pmk() {
-	python setup.py clean	
-	python setup.py $@
-	if [ $? -ne 0 ]
-	then
-		__err
-	fi
+__pmkinst()
+{
+    sudo python2 setup.py install --prefix=/usr $@
 }
 
-__pyxml() {
-	__cd $BASE_DIR/pyxml
-	$MAKE_CLEAN
-	__pmk build
-	
-	__pmk install --prefix=/usr	
-	install -v -m644 doc/man/xmlproc_*.1 /usr/share/man/man1
-	install -v -m755 -d /usr/share/doc/PyXML-0.8.4
-	cp -v -R doc demo test /usr/share/doc/PyXML-0.8.4
-	install -v -m644 README* /usr/share/doc/PyXML-0.8.4
+__python27()
+{
+    __wget http://www.python.org/ftp/python/2.7.6/Python-2.7.6.tar.xz
+    __dcd Python-2.7.6
+    __bld-common --enable-shared --with-system-ffi
+}
 
-#	__cd test
-#	python regrtest.py
+__pyxml()
+{
+    __wget -c ftp://mirror.ovh.net/gentoo-distfiles/distfiles/PyXML-0.8.4.tar.gz
+    __dcd PyXML-0.8.4
+    __pmk
+    __pmkinst
+    sudo install -v -m644 doc/man/xmlproc_*.1 /usr/share/man/man1
+    sudo install -v -m755 -d /usr/share/doc/PyXML-0.8.4
+    sudo cp -v -R doc demo test /usr/share/doc/PyXML-0.8.4
+    sudo install -v -m644 README* /usr/share/doc/PyXML-0.8.4
 }
 
 __py2cairo() {
-	__cd $BASE_DIR/py2cairo
-	./waf configure --prefix=/usr
-	$MAKE_CLEAN
-	./waf build
-	./waf install
+    __git-clone git://git.cairographics.org/git/py2cairo
+    __cd py2cairo
+    ./waf configure --prefix=/usr
+    ./waf build
+    sudo ./waf install
 }
 
 __pygobject2() {
-	__cd $BASE_DIR/pygobject2
-	patch -p1 < ../pygobject-2.28.6-introspection-1.patch
-	$DIST_CLEAN
-	./configure --prefix=/usr
-	$MAKE_CLEAN
-	__mk
-	__mk install
+    __wget http://ftp.gnome.org/pub/GNOME/sources/pygobject/2.28/pygobject-2.28.6.tar.xz
+    __dcd pygobject-2.28.6
+    __patch ${BASE_DIR}/pygobject-2.28.6-introspection-1.patch
+    __bld-common
 }
 
-__pygobject3() {
-	__cd $BASE_DIR/pygobject3
-	$DIST_CLEAN
-	./configure --prefix=/usr
-	$MAKE_CLEAN
-	__mk
-	__mk install
-}
 __numpy() {
-	__cd $BASE_DIR/numpy
-	__pmk install --prefix=/usr	
+    __git-clone git://github.com/numpy/numpy.git numpy
+    __cd numpy
+    __pmk
+    __pmkinst
+}
+
+__sphinx()
+{
+    __hg-clone https://bitbucket.org/birkenfeld/sphinx
+    __cd sphinx
+    __pmk
+    __pmkinst
+}
+
+__cython()
+{
+    __wget http://cython.org/release/Cython-0.19.2.tar.gz
+    __dcd Cython-0.19.2
+    __pmk
+    __pmkinst
+}
+
+__atlas()
+{
+    ### __wget atlas3.11.17.tar.bz2
+    __decord atlas3.11.17
+    __cdbt
+    ${BASE_DIR}/ATLAS/configure --prefix=/usr
+    __mk
+    __mkinst
 }
 
 __scipy() {
-	__cd $BASE_DIR/scipy
-	__pmk install --prefix=/usr	
+    __git-clone git://github.com/scipy/scipy.git scipy
+    __cd scipy
+    __pmk
+    __pmkinst
 }
 
-__pygtk() {
-	__cd $BASE_DIR/pygtk
-	$DIST_CLEAN
-	./configure --prefix=/usr
-	$MAKE_CLEAN
-	__mk
-	__mk install
+__pygtk2() {
+    __wget ftp://ftp.gnome.org/pub/gnome/sources/pygtk/2.24/pygtk-2.24.0.tar.bz2
+    __common pygtk-2.24.0
 }
 
 __pygtksourceview() {
-	__cd $BASE_DIR/pygtksourceview
-	$DIST_CLEAN
-	./configure --prefix=/usr
-	$MAKE_CLEAN
-	__mk
-	__mk install
-}
-
-__pyatspi() {
-	__cd $BASE_DIR/pyatspi
-	$DIST_CLEAN
-	./configure --prefix=/usr
-	$MAKE_CLEAN
-	__mk
-	__mk install
+    __wget http://ftp.gnome.org/pub/gnome/sources/pygtksourceview/2.10/pygtksourceview-2.10.1.tar.bz2
+    __dcd pygtksourceview-2.10.1
+    __bld-common
 }
 
 __pyxdg() {
-	__cd $BASE_DIR/pyxdg
-	__pmk install --prefix=/usr
+    __git-clone git://anongit.freedesktop.org/xdg/pyxdg
+    __cd pyxdg
+    __pmk
+    __pmkinst
 }
 
 __ipython() {
-	__cd $BASE_DIR/ipython
-	__pmk install --prefix=/usr
+    __wget http://archive.ipython.org/release/1.1.0/ipython-1.1.0.tar.gz
+    __dcd ipython-1.1.0
+    __pmk
+    __pmkinst
 }
 
 __matplotlib() {
-	__cd $BASE_DIR/matplotlib
-	__pmk install --prefix=/usr
+    __git-clone git://github.com/matplotlib/matplotlib.git
+    __cd matplotlib
+    __pmk
+    __pmkinst
 }
 
 __all()
 {
-#__rem(){
 __python27
-
 __pyxml
 __py2cairo
 __pygobject2
-__pygobject3
 __numpy
-__scipy
+__sphinx
+__cython
+###__atlas
+###__scipy
 __matplotlib
-__pygtk
-###__pygtksourceview
-__pyatspi
+__pygtk2
+__pygtksourceview
 __pyxdg
 __ipython
 }
