@@ -147,19 +147,19 @@ __patch()
 
 __git-clone()
 {
-    cd ${BASE_DIR}
+    cd $BASE_DIR
     git clone $@
 }
 
 __hg-clone()
 {
-    cd ${BASE_DIR}
+    cd $BASE_DIR
     hg clone $@
 }
 
 __svn-clone()
 {
-    cd ${BASE_DIR}
+    cd $BASE_DIR
     svn co $@
 }
 

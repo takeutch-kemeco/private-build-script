@@ -62,7 +62,8 @@ __glib()
 __gobject-introspection()
 {
     git clone git://git.gnome.org/gobject-introspection
-    __common gobject-introspection
+    __cd gobject-introspection 
+    __bld-common PYTHON=/usr/bin/python2
 }
 
 __expat()
@@ -275,6 +276,35 @@ EOF
     sudo cp /tmp/t /etc/gtk-3.0/settings.ini
 }
 
+__gtk-engines2()
+{
+    __git-clone git://git.gnome.org/gtk-engines
+    __git-clone gtk-engines gtk-engines2
+    __cd gtk-engines2
+    git checkout GTK_ENGINES_2_20_2
+    git checkout -b 2.20.2
+
+    cp autogen.sh autogen.sh.orig
+    sed -e "s/1\.11/1\.14/g" autogen.sh.orig
+
+    __autogen.sh
+    __cfg --prefix=/usr --sysconfdir=/etc
+    # 必ずエラーとなるので
+    make
+    __mkinst
+}
+
+__gtk-engines3()
+{
+    __git-clone git://git.gnome.org/gtk-engines
+    __cd gtk-engines
+    __autogen.sh
+    __cfg --prefix=/usr --sysconfdir=/etc
+    # 必ずエラーとなるので
+    make
+    __mkinst
+}
+
 __glib-package()
 {
     __libffi
@@ -345,6 +375,8 @@ __all()
     __pango-package
     __gtk+2
     __gtk+3
+    __gtk-engines2
+    __gtk-engines3
 }
 
 $@
