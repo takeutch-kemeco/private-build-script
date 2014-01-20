@@ -19,7 +19,7 @@ __scim()
     ./bootstrap
     __bld-common --with-gtk-version=2
 
-    gtk-query-immodules-2.0 --update-cache
+    sudo gtk-query-immodules-2.0 --update-cache
 
     __scim-config-env()
     {
