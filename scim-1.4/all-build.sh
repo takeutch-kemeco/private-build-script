@@ -16,6 +16,7 @@ __scim()
     __wget http://downloads.sourceforge.net/project/scim/scim/1.4.14/scim-1.4.14.tar.gz
     __dcd scim-1.4.14
     patch -p1 < ../scim-1.4.14-gtk-immodule-default-setting.patch
+    ./bootstrap
     __bld-common --with-gtk-version=2
 
     gtk-query-immodules-2.0 --update-cache
@@ -48,6 +49,7 @@ __scim-anthy()
 {
     __wget http://jaist.dl.sourceforge.jp/scim-imengine/37309/scim-anthy-1.2.7.tar.gz
     __dcd scim-anthy-1.2.7
+    patch -p1 < ../scim-1.4.14-gtk-immodule-default-setting.patch
     __common scim-anthy-1.2.7
 }
 
