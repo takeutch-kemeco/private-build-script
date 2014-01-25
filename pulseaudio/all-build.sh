@@ -12,13 +12,13 @@ MAKE_CLEAN=
 
 __libsndfile()
 {
-    git clone https://github.com/erikd/libsndfile.git
+    __git-clone https://github.com/erikd/libsndfile.git
     __common libsndfile
 }
 
 __pulseaudio()
 {
-    git clone git clone http://anongit.freedesktop.org/git/pulseaudio/pulseaudio.git
+    __git-clone http://anongit.freedesktop.org/git/pulseaudio/pulseaudio.git
     __cd pulseaudio
 
     sudo groupadd -g 58 pulse
