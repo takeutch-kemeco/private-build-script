@@ -3,8 +3,9 @@
 __cabal()
 {
     sudo cabal install --force-reinstall --reinstall \
-                       --enable-shared \
-                       --enable-documentation --haddock-html \
+                       --enable-shared --enable-executable-dynamic \
+                       --enable-optimization=2 \
+                       --enable-documentation --haddock-hyperlink-source --haddock-html \
                        --global --prefix=/usr $@
     sudo ghc-pkg recache
 }
