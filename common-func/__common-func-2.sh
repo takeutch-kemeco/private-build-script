@@ -219,6 +219,22 @@ __autogen()
     fi
 }
 
+__self-autogen()
+{
+    ls m4 2>& 1>& /dev/null
+    if [ $? -eq 0 ]
+    then
+        aclocal --force -I m4
+    else
+        aclocal --install
+    fi
+
+    libtoolize
+    autoheader
+    automake -acf
+    autoconf
+}
+
 __cfg()
 {
     __autogen
