@@ -2,6 +2,11 @@
 
 CURBUILDAPP=
 
+__dep()
+{
+    echo Dependent Apps: $@
+}
+
 __echo-setcol-green()
 {
     COLGREEN=$'\e[1;32;1m'
