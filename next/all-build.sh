@@ -116,6 +116,23 @@ __harfbuzz()
     __dep glib icu freetype cairo gobject-introspection
 }
 
+__inetutils()
+{
+    __dep ""
+
+    __git-clone git://git.savannah.gnu.org/inetutils.git
+    __cd inetutils
+    ./bootstrap
+    ### ping, traceroute, telnet 以外は全て無効。
+    ### r*系のツールはセキュリティー的観点からはシステムに入れるべきではない。
+    __bld-common --libexecdir=/usr/sbin --localstatedir=/var \
+                 --disable-servers --disable-ifconfig --disable-ftpd --disable-inetd --disable-rexecd \
+                 --disable-rlogind --disable-rshd --disable-syslogd --disable-talkd --disable-telnetd \
+                 --disable-tftpd --disable-uucpd --disable-ftp --disable-ping6 --disable-rcp \
+                 --disable-rexec --disable-rlogin --disable-rsh --disable-logger --disable-talk \
+                 --disable-tftp --disable-whois --disable-rpath --disable-ipv6
+}
+
 __iproute2()
 {
     __dep ""
@@ -198,6 +215,28 @@ __python-2.7.6()
 __python-27()
 {
     __python-2.7.6
+}
+
+__sysklogd()
+{
+    __dep ""
+
+    __wget http://www.infodrom.org/projects/sysklogd/download/sysklogd-1.5.tar.gz
+    __dcd sysklogd-1.5
+    __mk
+    __mkinst BINDIR=/sbin
+
+    T=mktemp
+    cat > $T << .
+auth,authpriv.* -/var/log/auth.log
+*.*;auth,authpriv.none -/var/log/sys.log
+daemon.* -/var/log/daemon.log
+kern.* -/var/log/kern.log
+mail.* -/var/log/mail.log
+user.* -/var/log/user.log
+*.emerg *
+.
+    sudo cp $T /etc/syslog.conf
 }
 
 __tar-1.27()
