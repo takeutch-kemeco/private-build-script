@@ -29,9 +29,14 @@ __acl()
     __bld-common INSTALL_USER=root INSTALL_GROUP=root
 }
 
+__cairo()
+{
+    __dep libpng glib pixman fontconfig
+}
+
 __coreutils-git()
 {
-    __dep acl
+    __dep acl attr
 
     __git-clone git://git.savannah.gnu.org/coreutils.git
     __common coreutils
@@ -39,7 +44,7 @@ __coreutils-git()
 
 __coreutils-8.22()
 {
-    __dep acl
+    __dep acl attr
 
     __wget http://ftp.gnu.org/gnu/coreutils/coreutils-8.22.tar.xz
     __dcd coreutils-8.22
@@ -65,6 +70,62 @@ __gettext()
     __gettext-0.18.3.2
 }
 
+__glib()
+{
+    __dep libffi python-27 pcre attr
+
+    __git-clone git://git.gnome.org/glib
+    __cd glib
+    __bld-common --with-pcre=system --enable-debug=no
+}
+
+__gnome-icon-theme()
+{
+    __dep gtk+3 gtk+2 hicolor-icon-themes icon-naming-utils intltool xml::simple
+
+    __git-clone git://git.gnome.org/gnome-icon-theme
+    __common gnome-icon-theme
+}
+
+__gnome-icon-theme-extras()
+{
+    __dep gnome-icon-theme
+
+    __git-clone git://git.gnome.org/gnome-icon-theme-extras
+    __common gnome-icon-theme-extras
+}
+
+__gnome-icon-theme-symbolic()
+{
+    __dep gnome-icon-theme
+
+    __git-clone git://git.gnome.org/gnome-icon-theme-symbolic
+    __common gnome-icon-theme-symbolic
+}
+
+__gnome-themes-standard()
+{
+    __dep gtk+2 gtk+3 librsvg
+
+    __git-clone git://git.gnome.org/gnome-themes-standard
+    __common gnome-themes-standard
+}
+
+__harfbuzz()
+{
+    __dep glib icu freetype cairo gobject-introspection
+}
+
+__iproute2()
+{
+    __dep ""
+
+    __git-clone git://git.kernel.org/pub/scm/linux/kernel/git/shemminger/iproute2.git
+    __cd iproute2
+    __mk DESTDIR=
+    __mkinst DESTDIR= SBINDIR=/sbin MANDIR=/usr/share/man DOCDIR=/usr/share/doc/iproute2
+}
+
 __libcap()
 {
     __dep attr linux-pam
@@ -72,6 +133,14 @@ __libcap()
     __git-clone git://git.kernel.org/pub/scm/linux/kernel/git/morgan/libcap.git
     __cd libcap
     __mkinst prefix=/usr SBINDIR=/sbin PAM_LIBDIR=/lib RAISE_SETFCAP=no
+}
+
+__libcroco()
+{
+    __dep glib libxml
+
+    __git-clone git://git.gnome.org/libcroco
+    __common libcroco
 }
 
 __libffi()
@@ -82,16 +151,38 @@ __libffi()
     __common libffi
 }
 
+__librsvg()
+{
+    __dep gdk-pixbuf libcroco pango gtk+3 gobject-introspection vala
+
+    __git-clone git://git.gnome.org/librsvg
+    __cd librsvg
+    __bld-common --enable-vala
+}
+
+__libxml2()
+{
+    __dep python-27
+
+    __git-clone git://git.gnome.org/libxml2 
+    __common libxml2
+}
+
+__pango()
+{
+    __dep cairo harfbuzz xorg gobject-introspenction
+}
+
 __pcre-8.34()
 {
     __dep ""
 
-     __wget http://downloads.sourceforge.net/pcre/pcre-8.34.tar.bz2
-     __dcd  pcre-8.34
-     __bld-common --docdir=/usr/share/doc/pcre-8.34 --enable-unicode-properties \
-                  --enable-pcre16 --enable-pcre32 \
-                  --enable-pcregrep-libz --enable-pcregrep-libbz2 \
-                  --enable-pcretest-libreadline
+    __wget http://downloads.sourceforge.net/pcre/pcre-8.34.tar.bz2
+    __dcd  pcre-8.34
+    __bld-common --docdir=/usr/share/doc/pcre-8.34 --enable-unicode-properties \
+                 --enable-pcre16 --enable-pcre32 \
+                 --enable-pcregrep-libz --enable-pcregrep-libbz2 \
+                 --enable-pcretest-libreadline
 }
 
 __pcre()
@@ -102,6 +193,55 @@ __pcre()
 __python-2.7.6()
 {
     __dep expat libffi
+}
+
+__python-27()
+{
+    __python-2.7.6
+}
+
+__tar-1.27()
+{
+    __dep acl attr
+
+    __wget http://ftp.gnu.org/gnu/tar/tar-1.27.tar.xz
+    __dcd tar-1.27
+    __bld-common
+}
+
+__tar-git()
+{
+    __dep acl attr
+
+    __git-clone git://git.savannah.gnu.org/tar.git
+    __common tar
+}
+
+__tar()
+{
+    __tar-1.27
+}
+
+__vala-0.22.1()
+{
+    __dep glib dbus libxslt
+
+    __wget http://ftp.gnome.org/pub/gnome/sources/vala/0.22/vala-0.22.1.tar.xz
+    __dcd vala-0.22.1
+    __bld-common
+}
+
+__vala-git()
+{
+    __dep glib dbus libxslt
+
+    __git-clone git://git.gnome.org/vala
+    __common vala
+}
+
+__vala()
+{
+    __vala-0.22.1
 }
 
 $@
