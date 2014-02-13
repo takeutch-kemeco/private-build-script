@@ -249,8 +249,8 @@ __gtk+2()
     __cd gtk+-2.24.git
     git checkout master
     git pull
-    git checkout 2.24.20
-    git checkout -b 2.24.20
+    git checkout 2.24.22
+    git checkout -b 2.24.22
     __bld-common --with-xinput --with-gdktarget=x11 --with-x
     sudo gtk-query-immodules-2.0 --update-cache
 
