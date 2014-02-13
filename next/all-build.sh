@@ -148,7 +148,7 @@ __dbus()
 {
     __dep expat
 
-    git clone git://anongit.freedesktop.org/dbus/dbus
+    __git-clone git://anongit.freedesktop.org/dbus/dbus
     sudo groupadd -g 27 messagebus
     sudo useradd -c "D-Bus Message Daemon User" -d /var/run/dbus -u 27 \
                  -g messagebus -s /bin/false messagebus
@@ -178,6 +178,17 @@ __dbus()
     sudo install $T /etc/dbus-1/session-local.conf
 }
 
+__doxygen()
+{
+    __dep ghostscript python2
+
+    __wget http://ftp.stack.nl/pub/doxygen/doxygen-1.8.6.src.tar.gz
+    __dcd doxygen-1.8.6
+    ./configure --prefix /usr --docdir /usr/share/doc/doxygen-1.8.6
+    __mk
+    __mkinst
+}
+
 __fontconfig()
 {
     __dep freetype2 expat
@@ -197,6 +208,15 @@ __freetype2()
     sed -i -r 's:.*(#.*SUBPIXEL.*) .*:\1:' include/config/ftoption.h
     __bld-common
     cp include/config/{ftoption.h.orig,ftoption.h}
+}
+
+__geany()
+{
+    __dep gtk+2
+
+    __git-clone git://github.com/geany/geany.git
+    __cd geany
+    __bld-common --enable-gtk3
 }
 
 __gettext-0.18.3.2()
