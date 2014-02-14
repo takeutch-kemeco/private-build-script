@@ -6,617 +6,411 @@ SRC_DIR=$BASE_DIR/src
 #MAKE_CLEAN=
 MAKE_CLEAN="make clean"
 
-#DIST_CLEAN=
-DIST_CLEAN="make distclean"
+DIST_CLEAN=
+#DIST_CLEAN="make distclean"
 
-. ./__common-func.sh
+XFCE_URL="http://archive.xfce.org/xfce/4.10/src"
 
-__init-env()
-{
-	XFCE_URL="http://archive.xfce.org/xfce/4.10/src"
-}
-
-__bld-common()
-{
-	$DIST_CLEAN
-	__cfg --prefix=/usr --sysconfdir=/etc
-
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
-}
-
-__common()
-{
-	__dcd $1
-	__bld-common
-}
+. ../common-func/__common-func-2.sh
 
 __perl-module-common()
 {
-	__dcd $1
-
-	perl Makefile.PL
-	__mk
-	__mk install
-	ldconfig
+    perl Makefile.PL
+    __mk
+    __mkinst
 }
 
 __lsb-init-functions()
 {
-	mkdir -p /lib/lsb
-	cp -f $SRC_DIR/init-functions /lib/lsb/
+    mkdir -p /lib/lsb
+    cp -f $SRC_DIR/init-functions /lib/lsb/
 }
 
 __which()
 {
-	__wget ftp://ftp.gnu.org/gnu/which/which-2.20.tar.gz
-	__common which-2.20
+    __wget ftp://ftp.gnu.org/gnu/which/which-2.20.tar.gz
+    __dcd which-2.20
+    __bld-common
 }
 
 __perl-module-uri()
 {
-	__wget http://www.cpan.org/authors/id/G/GA/GAAS/URI-1.60.tar.gz
-	__perl-module-common URI-1.60
+    __wget http://www.cpan.org/authors/id/G/GA/GAAS/URI-1.60.tar.gz
+    __dcd URI-1.60
+    __perl-module-common
 }
 
 __libffi()
 {
-	__wget ftp://sourceware.org/pub/libffi/libffi-3.0.11.tar.gz
-	__wget http://www.linuxfromscratch.org/patches/blfs/svn/libffi-3.0.11-includedir-1.patch
-
-	__dcd libffi-3.0.11
-	patch -Np1 -i $SRC_DIR/libffi-3.0.11-includedir-1.patch
-
-	__bld-common
+    echo
 }
 
 __pcre()
 {
-	__wget http://downloads.sourceforge.net/pcre/pcre-8.32.tar.bz2
-
-	__dcd pcre-8.32
-	patch -Np1 -i $SRC_DIR/libffi-3.0.11-includedir-1.patch
-
-	__cfg --prefix=/usr			\
-      	      --docdir=/usr/share/doc/pcre-8.32	\
-              --enable-utf                      \
-              --enable-unicode-properties       \
-              --enable-pcregrep-libz            \
-              --enable-pcregrep-libbz2          \
-              --disable-static
-
-	__mk
-	__mk install
-	ldconfig
-
-	mv -v /usr/lib/libpcre.so.* /lib
-	ln -sfv ../../lib/libpcre.so.1.2.0 /usr/lib/libpcre.so
+    echo
 }
 
 __pkg-config()
 {
-	__wget http://pkgconfig.freedesktop.org/releases/pkg-config-0.27.1.tar.gz
-	__dcd pkg-config-0.27.1
-
-	$DIST_CLEAN
-	__cfg --prefix=/usr				\
-              --docdir=/usr/share/doc/pkg-config-0.27.1	\
-              --with-internal-glib
-
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
+    echo
 }
 
 __glib()
 {
-	__wget ftp://ftp.gnome.org/pub/gnome/sources/glib/2.34/glib-2.34.2.tar.xz
-	__dcd glib-2.34.2
-
-	$DIST_CLEAN
-	__cfg --prefix=/usr --with-pcre=system
-
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
+    echo
 }
 
 __dbus()
 {
-	__wget http://dbus.freedesktop.org/releases/dbus/dbus-1.6.8.tar.gz
-	__dcd dbus-1.6.8
-
-	groupadd -g 18 messagebus
-	useradd -c "D-Bus Message Daemon User" -d /var/run/dbus -u 18 -g messagebus -s /bin/false messagebus
-
-	$DIST_CLEAN
-	__cfg --prefix=/usr				\
-              --sysconfdir=/etc 			\
-              --localstatedir=/var 			\
-              --libexecdir=/usr/lib/dbus-1.0 		\
-              --with-console-auth-dir=/run/console/ 	\
-              --without-systemdsystemunitdir 		\
-              --disable-systemd 			\
-              --disable-static
-
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
-
-	mv -v /usr/share/doc/dbus /usr/share/doc/dbus-1.6.8
-
-	dbus-uuidgen --ensure
-
-	ls /etc/dbus-1/session-local.conf
-	if [ $? -ne 0 ]
-	then
-cat > /etc/dbus-1/session-local.conf << .
-<!DOCTYPE busconfig PUBLIC
- "-//freedesktop//DTD D-BUS Bus Configuration 1.0//EN"
- "http://www.freedesktop.org/standards/dbus/1.0/busconfig.dtd">
-<busconfig>
-
-  <!-- Search for .service files in /usr/local -->
-  <servicedir>/usr/local/share/dbus-1/services</servicedir>
-
-</busconfig>
-.
-	fi
+    echo
 }
 
 __blfs-bootscripts-dbus()
 {
-	__wget http://www.linuxfromscratch.org/blfs/downloads/svn/blfs-bootscripts-20120828.tar.bz2
-	__dcd blfs-bootscripts-20120828
-
-	__mk install-dbus
-	ldconfig
+    echo
 }
 
 __dbus-glib()
 {
-	__wget http://dbus.freedesktop.org/releases/dbus-glib/dbus-glib-0.100.tar.gz
-	__dcd dbus-glib-0.100
-
-	$DIST_CLEAN
-	__cfg --prefix=/usr			\
-              --sysconfdir=/etc			\
-              --libexecdir=/usr/lib/dbus-1.0 	\
-              --disable-static
-
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
+    echo
 }
 
 __gobject-introspection()
 {
-	__wget ftp://ftp.gnome.org/pub/gnome/sources/gobject-introspection/1.34/gobject-introspection-1.34.2.tar.xz
-	__common gobject-introspection-1.34.2
+    echo
 }
 
 __atk()
 {
-	__wget ftp://ftp.gnome.org/pub/gnome/sources/atk/2.6/atk-2.6.0.tar.xz
-	__common atk-2.6.0
+    echo
 }
 
 __cairo()
 {
-	__wget http://cairographics.org/releases/cairo-1.12.8.tar.xz
-	__wget http://www.linuxfromscratch.org/patches/blfs/svn/cairo-1.12.8-expose_snapshot-1.patch
-
-	__dcd cairo-1.12.8
-	patch -Np1 -i $SRC_DIR/cairo-1.12.8-expose_snapshot-1.patch
-
-	$DIST_CLEAN
-	__cfg --prefix=/usr	\
-              --enable-tee  	\
-              --enable-xcb  	\
-              --disable-static
-
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
+    echo
 }
 
 __libjpeg-8d()
 {
-	__wget http://www.ijg.org/files/jpegsrc.v8d.tar.gz
-	__decord jpegsrc.v8d
-	__cd jpeg-8d
-	__bld-common
+    echo
 }
 
 __libtiff()
 {
-	__wget ftp://ftp.remotesensing.org/libtiff/tiff-4.0.3.tar.gz
-	__common tiff-4.0.3
+    echo
 }
 
 __libexif()
 {
-	__wget http://downloads.sourceforge.net/libexif/libexif-0.6.21.tar.bz2
-	__dcd libexif-0.6.21
-
-	$DIST_CLEAN
-	__cfg --prefix=/usr					\
-              --with-doc-dir=/usr/share/doc/libexif-0.6.21
-
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
+    __wget http://downloads.sourceforge.net/libexif/libexif-0.6.21.tar.bz2
+    __dcd libexif-0.6.21
+    __bld-common
 }
 
 __gdk-pixbuf()
 {
-	__wget ftp://ftp.gnome.org/pub/gnome/sources/gdk-pixbuf/2.26/gdk-pixbuf-2.26.5.tar.xz
-	__dcd gdk-pixbuf-2.26.5
-
-	$DIST_CLEAN
-	__cfg --prefix=/usr --with-x11
-
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
+    echo
 }
 
 __harfbuzz()
 {
-	__wget http://www.freedesktop.org/software/harfbuzz/release/harfbuzz-0.9.6.tar.bz2
-	__common harfbuzz-0.9.6
+    echo
 }
 
 __pango()
 {
-	__wget ftp://ftp.gnome.org/pub/gnome/sources/pango/1.32/pango-1.32.2.tar.xz
-	__common pango-1.32.2
-
-	pango-querymodules --update-cache
-
-	__pangox-compat()
-	{
-		__wget ftp://ftp.gnome.org/pub/gnome/sources/pangox-compat/0.0/pangox-compat-0.0.2.tar.xz
-		__common pangox-compat-0.0.2
-	}
-
-	__pangox-compat
+    echo
 }
 
 __hicolor-icon-theme()
 {
-	__wget http://icon-theme.freedesktop.org/releases/hicolor-icon-theme-0.12.tar.gz
-	__common hicolor-icon-theme-0.12
+    __wget http://icon-theme.freedesktop.org/releases/hicolor-icon-theme-0.12.tar.gz  
+    __dcd hicolor-icon-theme-0.12
+    __bld-common
 }
 
 __gtk+2()
 {
-	__wget ftp://ftp.gnome.org/pub/gnome/sources/gtk+/2.24/gtk+-2.24.17.tar.xz
-	__dcd gtk+-2.24.17
-
-	sed -i 's#l \(gtk-.*\).sgml#& -o \1#' docs/{faq,tutorial}/Makefile.in
-	sed -i 's#.*@man_#man_#' docs/reference/gtk/Makefile.in
-
-	$DIST_CLEAN
-	__cfg --prefix=/usr		\
-	      --sysconfdir=/etc		\
-	      --with-xinput=yes 	\
-	      --with-gdktarget=x11 	\
-	      --with-x
-
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
-
-	ls /etc/gtk-2.0/gtk.immodules
-	if [ $? -ne 0 ]
-	then
-		gtk-query-immodules-2.0 > /etc/gtk-2.0/gtk.immodules
-	fi
-
-	ls /etc/gtk-2.0/gtkrc
-	if [ $? -ne 0 ]
-	then
-cat > /etc/gtk-2.0/gtkrc << .
-include "/usr/share/themes/Clearlooks/gtk-2.0/gtkrc"
-gtk-icon-theme-name = "elementary"
-.
-	fi
+    echo
 }
 
 __perl-module-xml-simple()
 {
-	__wget http://cpan.org/authors/id/G/GR/GRANTM/XML-Simple-2.20.tar.gz
-	__perl-module-common XML-Simple-2.20
+    __wget http://cpan.org/authors/id/G/GR/GRANTM/XML-Simple-2.20.tar.gz
+    __dcd XML-Simple-2.20
+    __perl-module-common 
 }
 
 __icon-naming-utils()
 {
-	__wget http://tango.freedesktop.org/releases/icon-naming-utils-0.8.90.tar.bz2
-	__dcd icon-naming-utils-0.8.90
-
-	$DIST_CLEAN
-	__cfg --prefix=/usr				\
-	      --libexecdir=/usr/lib/icon-naming-utils
-
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
+    __wget http://tango.freedesktop.org/releases/icon-naming-utils-0.8.90.tar.bz2
+    __dcd icon-naming-utils-0.8.90
+    __bld-common --libexecdir=/usr/lib/icon-naming-utils
 }
 
 __gtk-engines()
 {
-	__wget http://ftp.gnome.org/pub/gnome/sources/gtk-engines/2.20/gtk-engines-2.20.2.tar.bz2
-	__common gtk-engines-2.20.2
+    echo
 }
 
 __gnome-themes()
 {
-	__wget http://ftp.gnome.org/pub/gnome/sources/gnome-themes/2.32/gnome-themes-2.32.1.tar.bz2
-	__common gnome-themes-2.32.1
+    echo
 }
 
 __gnome-icon-theme()
 {
-	__wget ftp://ftp.gnome.org/pub/gnome/sources/gnome-icon-theme/2.31/gnome-icon-theme-2.31.0.tar.bz2
-	__common gnome-icon-theme-2.31.0
+    echo
 }
 
 __gnome-icon-theme-extras()
 {
-	__wget ftp://ftp.gnome.org/pub/gnome/sources/gnome-icon-theme-extras/2.30/gnome-icon-theme-extras-2.30.1.tar.bz2
-	__common gnome-icon-theme-extras-2.30.1
+    echo
 }
 
 __gnome-icon-theme-symbolic()
 {
-	__wget ftp://ftp.gnome.org/pub/gnome/sources/gnome-icon-theme-symbolic/2.31/gnome-icon-theme-symbolic-2.31.0.tar.bz2
-	__common gnome-icon-theme-symbolic-2.31.0
+    echo
 }
 
 __libwnck()
 {
-	__wget ftp://ftp.gnome.org/pub/gnome/sources/libwnck/2.30/libwnck-2.30.7.tar.xz
-	__dcd libwnck-2.30.7
+    __wget ftp://ftp.gnome.org/pub/gnome/sources/libwnck/2.30/libwnck-2.30.7.tar.xz
+    __dcd libwnck-2.30.7
 
-	$DIST_CLEAN
-	__cfg --prefix=/usr --disable-static --program-suffix=-1
+    $DIST_CLEAN
+    __cfg --prefix=/usr --disable-static --program-suffix=-1
 
-	$MAKE_CLEAN
-	__mk GETTEXT_PACKAGE=libwnck-1
-	__mk GETTEXT_PACKAGE=libwnck-1 install
-	ldconfig
+    $MAKE_CLEAN
+    __mk GETTEXT_PACKAGE=libwnck-1
+    sudo make GETTEXT_PACKAGE=libwnck-1 install
+    ldconfig
 }
 
 __libnotify()
 {
-	__wget ftp://ftp.gnome.org/pub/gnome/sources/libnotify/0.5/libnotify-0.5.2.tar.bz2
-	__common libnotify-0.5.2
+    __wget ftp://ftp.gnome.org/pub/gnome/sources/libnotify/0.5/libnotify-0.5.2.tar.bz2
+    __dcd libnotify-0.5.2
+    __bld-common
 }
 
 __vte()
 {
-	__wget ftp://ftp.gnome.org/pub/gnome/sources/vte/0.28/vte-0.28.2.tar.xz
-	__dcd vte-0.28.2
-
-	$DIST_CLEAN
-	__cfg --prefix=/usr			\
-	      --sysconfdir=/etc			\
-	      --libexecdir=/usr/lib/vte-2.90	\
-	      --enable-introspection
-
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
+    __wget ftp://ftp.gnome.org/pub/gnome/sources/vte/0.28/vte-0.28.2.tar.xz
+    __dcd vte-0.28.2
+    __bld-common --enable-introspection
 }
 
 __libxfce4util()
 {
-	__wget $XFCE_URL/libxfce4util-4.10.0.tar.bz2
-	__common libxfce4util-4.10.0
+    __wget $XFCE_URL/libxfce4util-4.10.0.tar.bz2
+    __dcd libxfce4util-4.10.0
+    __bld-common
 }
 
 __xfconf()
 {
-	__wget $XFCE_URL/xfconf-4.10.0.tar.bz2
-	__common xfconf-4.10.0
+    __wget $XFCE_URL/xfconf-4.10.0.tar.bz2
+    __dcd xfconf-4.10.0
+    __bld-common
 }
 
 __libxfce4ui()
 {
-	__wget $XFCE_URL/libxfce4ui-4.10.0.tar.bz2
-	__common libxfce4ui-4.10.0
+    __wget $XFCE_URL/libxfce4ui-4.10.0.tar.bz2
+    __dcd libxfce4ui-4.10.0
+    __bld-common
 }
 
 __exo()
 {
-	__wget $XFCE_URL/exo-0.8.0.tar.bz2
-	__common exo-0.8.0
+    __wget $XFCE_URL/exo-0.8.0.tar.bz2
+    __dcd exo-0.8.0
+    __bld-common
 }
 
 __thunar()
 {
-	__wget $XFCE_URL/Thunar-1.4.0.tar.bz2
-	__common Thunar-1.4.0
+    __wget $XFCE_URL/Thunar-1.4.0.tar.bz2
+    __dcd Thunar-1.4.0
+    __bld-common
 }
 
 __garcon()
 {
-	__wget $XFCE_URL/garcon-0.2.0.tar.bz2
-	__common garcon-0.2.0
+    __wget $XFCE_URL/garcon-0.2.0.tar.bz2
+    __dcd garcon-0.2.0
+    __bld-common
 }
 
 __gtk-xfce-engine()
 {
-	__wget $XFCE_URL/gtk-xfce-engine-3.0.0.tar.bz2
-	__common gtk-xfce-engine-3.0.0
+    __wget $XFCE_URL/gtk-xfce-engine-3.0.0.tar.bz2
+    __dcd gtk-xfce-engine-3.0.0
+    __bld-common
 }
 
 __thunar-volman()
 {
-	__wget $XFCE_URL/thunar-volman-0.8.0.tar.bz2
-	__common thunar-volman-0.8.0
+    __wget $XFCE_URL/thunar-volman-0.8.0.tar.bz2
+    __dcd thunar-volman-0.8.0
+    __bld-common
 }
 
 __tumbler()
 {
-	__wget $XFCE_URL/tumbler-0.1.25.tar.bz2
-	__common tumbler-0.1.25
+    __wget $XFCE_URL/tumbler-0.1.25.tar.bz2
+    __dcd tumbler-0.1.25
+    __bld-common
 }
 
 __xfce4-appfinder()
 {
-	__wget $XFCE_URL/xfce4-appfinder-4.10.0.tar.bz2
-	__common xfce4-appfinder-4.10.0
+    __wget $XFCE_URL/xfce4-appfinder-4.10.0.tar.bz2
+    __dcd xfce4-appfinder-4.10.0
+    __bld-common
 }
 
 __xfce4-dev-tools()
 {
-	__wget $XFCE_URL/xfce4-dev-tools-4.10.0.tar.bz2
-	__common xfce4-dev-tools-4.10.0
+    __wget $XFCE_URL/xfce4-dev-tools-4.10.0.tar.bz2
+    __dcd xfce4-dev-tools-4.10.0
+    __bld-common
 }
 
 __xfce4-panel()
 {
-	__wget $XFCE_URL/xfce4-panel-4.10.0.tar.bz2
-	__common xfce4-panel-4.10.0
+    __wget $XFCE_URL/xfce4-panel-4.10.0.tar.bz2
+    __dcd xfce4-panel-4.10.0
+    __bld-common
 }
 
 __xfce4-power-manager()
 {
-	__wget $XFCE_URL/xfce4-power-manager-1.2.0.tar.bz2
-	__common xfce4-power-manager-1.2.0
+    __wget $XFCE_URL/xfce4-power-manager-1.2.0.tar.bz2
+    __dcd xfce4-power-manager-1.2.0
+    __bld-common
 }
 
 __xfce4-session()
 {
-	__wget $XFCE_URL/xfce4-session-4.10.0.tar.bz2
-	__common xfce4-session-4.10.0
+    __wget $XFCE_URL/xfce4-session-4.10.0.tar.bz2
+    __dcd xfce4-session-4.10.0
+    __bld-common
 }
 
 __xfce4-settings()
 {
-	__wget $XFCE_URL/xfce4-settings-4.10.0.tar.bz2
-	__common xfce4-settings-4.10.0
+    __wget $XFCE_URL/xfce4-settings-4.10.0.tar.bz2
+    __dcd xfce4-settings-4.10.0
+    __bld-common
 }
 
 __xfdesktop()
 {
-	__wget $XFCE_URL/xfdesktop-4.10.0.tar.bz2
-	__common xfdesktop-4.10.0
+    __wget $XFCE_URL/xfdesktop-4.10.0.tar.bz2
+    __dcd xfdesktop-4.10.0
+    __bld-common
 }
 
 __xfwm4()
 {
-	__wget $XFCE_URL/xfwm4-4.10.0.tar.bz2
-	__common xfwm4-4.10.0
+    __wget $XFCE_URL/xfwm4-4.10.0.tar.bz2
+    __dcd xfwm4-4.10.0
+    __bld-common
 }
 
 __xfce4-taskmanager()
 {
-	__wget http://archive.xfce.org/src/apps/xfce4-taskmanager/1.0/xfce4-taskmanager-1.0.0.tar.bz2
-	__common xfce4-taskmanager-1.0.0
+    __wget http://archive.xfce.org/src/apps/xfce4-taskmanager/1.0/xfce4-taskmanager-1.0.0.tar.bz2
+    __dcd xfce4-taskmanager-1.0.0
+    __bld-common
 }
 
 __Terminal()
 {
-	__wget http://archive.xfce.org/src/apps/terminal/0.4/Terminal-0.4.8.tar.bz2
-	__common Terminal-0.4.8
+    __wget http://archive.xfce.org/src/apps/terminal/0.4/Terminal-0.4.8.tar.bz2
+    __dcd Terminal-0.4.8
+    __bld-common
 }
 
 __ristretto()
 {
-	__wget http://archive.xfce.org/src/apps/ristretto/0.6/ristretto-0.6.3.tar.bz2
-	__common ristretto-0.6.3
+    __wget http://archive.xfce.org/src/apps/ristretto/0.6/ristretto-0.6.3.tar.bz2
+    __dcd ristretto-0.6.3
+    __bld-common
 }
 
 __all-required()
 {
-#	__rem() {
-	__lsb-init-functions
-	__which
-	__perl-module-uri
-	__libffi
-	__pcre
-	__pkg-config
-	__glib
-	__dbus
-	__blfs-bootscripts-dbus
-	__dbus-glib
-	__gobject-introspection
-	__atk
-	__cairo
-	__libjpeg-8d
-	__libtiff
-	__libexif
-	__gdk-pixbuf
-	__harfbuzz
-	__pango
-	__hicolor-icon-theme
-	__gtk+2
-	__perl-module-xml-simple
-	__icon-naming-utils
-	__gtk-engines
-	__gnome-themes
-	__gnome-icon-theme
-	__gnome-icon-theme-extras
-	__gnome-icon-theme-symbolic
-	__libwnck
-	__libnotify
-	__vte
+    __lsb-init-functions
+    __which
+    __perl-module-uri
+    __libffi
+    __pcre
+    __pkg-config
+    __glib
+    __dbus
+    __blfs-bootscripts-dbus
+    __dbus-glib
+    __gobject-introspection
+    __atk
+    __cairo
+    __libjpeg-8d
+    __libtiff
+    __libexif
+    __gdk-pixbuf
+    __harfbuzz
+    __pango
+    __hicolor-icon-theme
+    __gtk+2
+    __perl-module-xml-simple
+    __icon-naming-utils
+    __gtk-engines
+    __gnome-themes
+    __gnome-icon-theme
+    __gnome-icon-theme-extras
+    __gnome-icon-theme-symbolic
+    __libwnck
+    __libnotify
+    __vte
 }
 
 __base-system()
 {
-#	__rem() {
-	__all-required
-	__libxfce4util
-	__xfconf
-	__libxfce4ui
-	__exo
-	__thunar
-	__garcon
-	__gtk-xfce-engine
-###	__thunar-volman # required gudev
-	__tumbler
-	__xfce4-appfinder
-	__xfce4-dev-tools
-	__xfce4-panel
-###	__xfce4-power-manager # required libnotify
-	__xfce4-session
-	__xfce4-settings
-	__xfdesktop
-	__xfwm4
+    __all-required
+
+    __libxfce4util
+    __xfconf
+    __libxfce4ui
+    __exo
+    __thunar
+    __garcon
+    __gtk-xfce-engine
+### __thunar-volman # required gudev
+    __tumbler
+    __xfce4-appfinder
+    __xfce4-dev-tools
+    __xfce4-panel
+### __xfce4-power-manager # required libnotify
+    __xfce4-session
+    __xfce4-settings
+    __xfdesktop
+    __xfwm4
 }
 
 __extra-apps()
 {
-#	__rem() {
-	__xfce4-taskmanager
-	__Terminal
-	__ristretto
+    __xfce4-taskmanager
+    __Terminal
+    __ristretto
 }
 
 __all()
 {
-#	__rem() {
-	__all-required
-	__base-system
-	__extra-apps
+    __all-required
+    __base-system
+    __extra-apps
 }
 
-__init-env
 $@
-
