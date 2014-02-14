@@ -1,30 +1,15 @@
 #!/bin/bash
 
 BASE_DIR=$(pwd)
-PREFIX=/usr
+SRC_DIR=$BASE_DIR/src
 
-#MAKE_CLEAN=
-MAKE_CLEAN="make distclean && make clean"
+MAKE_CLEAN=
+#MAKE_CLEAN="make clean"
 
-. ../common-func/__common-func.sh
+DIST_CLEAN=
+DIST_CLEAN="make distclean"
 
-__common()
-{
-        __cd $1
-
-        $MAKE_CLEAN
-        ./autogen.sh
-        ./configure --prefix=$PREFIX
-
-        __mk
-        __mk install
-        ldconfig
-}
-
-__gobject-introspection()
-{
-        __common $BASE_DIR/gobject-introspection
-}
+. ../common-func/__common-func-2.sh
 
 __nspr()
 {
@@ -848,17 +833,8 @@ __libvorbis()
 
 __libcanberra()
 {
-        __cd $BASE_DIR/libcanberra
-
-        $MAKE_CLEAN
-        ./autogen.sh
-        ./configure --prefix=$PREFIX    \
-                --sysconfdir=/etc       \
-                --disable-oss
-
-        __mk
-        __mk install
-        ldconfig
+    __cd libcanberra
+    __bld-common --disable-oss --disable-pulse
 }
 
 __iso-codes()
@@ -1155,25 +1131,26 @@ __gvfs()
 
 __gnome-icon-theme()
 {
-        __cd $BASE_DIR/gnome-icon-theme
-
-        $MAKE_CLEAN
-        ./autogen.sh
-        ./configure  --prefix=/usr --enable-all-themes --enable-test-themes --enable-placeholders
-
-        __mk
-        __mk install
-        ldconfig
+    __git-clone git://git.gnome.org/gnome-icon-theme
+    __cd gnome-icon-theme
+    __self-autogen
+    __bld-common --enable-all-themes --enable-test-themes --enable-placeholders
 }
 
 __gnome-icon-theme-extras()
 {
-        __common $BASE_DIR/gnome-icon-theme-extras
+    __git-clone git://git.gnome.org/gnome-icon-theme-extras
+    __cd gnome-icon-theme-extras
+    __self-autogen
+    __bld-common
 }
 
 __gnome-icon-theme-symbolic()
 {
-        __common $BASE_DIR/gnome-icon-theme-symbolic
+    __git-clone git://git.gnome.org/gnome-icon-theme-symbolic
+    __cd gnome-icon-theme-symbolic
+    __self-autogen
+    __bld-common
 }
 
 __libtasn1()
@@ -1583,18 +1560,18 @@ __gnome-shell()
 
 __gnome-themes-standard()
 {
-        __cd $BASE_DIR/gnome-themes-standard
+    __git-clone git://git.gnome.org/gnome-themes-standard
+    __cd gnome-themes-standard
+    __self-autogen
+    __bld-common --enable-all-themes --enable-test-themes --enable-placeholders
+}
 
-        $MAKE_CLEAN
-        ./autogen.sh
-        ./configure --prefix=$PREFIX    \
-                --enable-all-themes     \
-                --enable-test-themes    \
-                --enable-placeholders
-
-        __mk
-        __mk install
-        ldconfig
+__gnome-theme-engine-clearlocks()
+{
+    __git-clone git://git.gnome.org/gtk-theme-engine-clearlooks
+    __cd gtk-theme-engine-clearlooks
+    __self-autogen
+    __bld-common
 }
 
 __gnome-video-effects()
