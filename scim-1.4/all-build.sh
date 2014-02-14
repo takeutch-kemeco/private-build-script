@@ -49,7 +49,6 @@ __scim-anthy()
 {
     __wget http://jaist.dl.sourceforge.jp/scim-imengine/37309/scim-anthy-1.2.7.tar.gz
     __dcd scim-anthy-1.2.7
-    patch -p1 < ../scim-1.4.14-gtk-immodule-default-setting.patch
     __common scim-anthy-1.2.7
 }
 
