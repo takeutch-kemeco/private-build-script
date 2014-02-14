@@ -6,8 +6,8 @@ SRC_DIR=$BASE_DIR/src
 DIST_CLEAN=
 #DIST_CLEAN="make distclean"
 
-MAKE_CLEAN=
-#MAKE_CLEAN="make clean"
+#MAKE_CLEAN=
+MAKE_CLEAN="make clean"
 
 . ../common-func/__common-func-2.sh
 
@@ -37,6 +37,34 @@ __atk()
     __common atk
 }
 
+__apr-1.5.0()
+{
+    __dep ""
+
+    __wget http://archive.apache.org/dist/apr/apr-1.5.0.tar.bz2
+    __dcd apr-1.5.0
+    __bld-common
+}
+
+__apr()
+{
+    __apr-1.5.0
+}
+
+__apr-util-1.5.3()
+{
+    __dep apr openssl sqlite
+
+    __wget http://archive.apache.org/dist/apr/apr-util-1.5.3.tar.bz2
+    __dcd apr-util-1.5.3
+    __bld-common --with-apr=/usr --with-gdbm=/usr --with-openssl=/usr --with-crypto
+}
+
+__apr-util()
+{
+    __apr-util-1.5.3
+}
+
 __at-spi2-atk()
 {
     __dep at-spi2-core atk
@@ -59,14 +87,16 @@ __cairo()
 
     __git-clone git://anongit.freedesktop.org/git/cairo
     __cd cairo
-    __bld-common --enable-tee               \
-                 --enable-gl                \
-                 --enable-xcb               \
-                 --enable-glsv2             \
-                 --enable-xlib-xcb          \
-                 --enable-directfb=auto     \
-                 --enable-ft                \
-                 --enable-fc
+    __bld-common --enable-tee --enable-gl --enable-xcb --enable-glsv2 --enable-xlib-xcb \
+        --enable-directfb=no --enable-ft --enable-fc --enable-test-surfaces=no
+}
+
+__cmake()
+{
+    __git-clone git://cmake.org/cmake.git
+    __cd cmake
+    ./bootstrap
+    __bld-common-simple --system-libs --mandir=/share/man --docdir=/share/doc/cmake
 }
 
 __cogl()
@@ -91,7 +121,7 @@ __cogl()
         --enable-glx=yes                \
         --enable-wgl=no                 \
         --enable-sdl=no                 \
-        --enable-sdl2=yes               \
+        --enable-sdl2=no                \
         --enable-xlib-egl-platform=yes  \
         --enable-introspection=yes
 }
@@ -144,6 +174,16 @@ __colord()
                  --disable-bash-completion --disable-systemd-login
 }
 
+__curl()
+{
+    __dep "?"
+
+    __git-clone git://github.com/bagder/curl.git
+    __cd curl
+    ./buildconf
+    __bld-common --enable-threaded-resolver --with-ca-path=/etc/ssl/certs
+}
+
 __dbus()
 {
     __dep expat
@@ -178,6 +218,15 @@ __dbus()
     sudo install $T /etc/dbus-1/session-local.conf
 }
 
+__dbus-glib()
+{
+    __dep "?"
+
+    git clone git://anongit.freedesktop.org/dbus/dbus-glib
+    __cd dbus-glib
+    __bld-common --libexecdir=/usr/lib/dbus-1.0
+}
+
 __doxygen()
 {
     __dep ghostscript python2
@@ -189,6 +238,19 @@ __doxygen()
     __mkinst
 }
 
+__eudev()
+{
+    __dep "?"
+
+    __git-clone git://github.com/gentoo/eudev.git
+    __cd eudev
+    ./autogen.sh
+    ./configure --prefix=/usr --exec-prefix= --sysconfdir=/etc --enable-libkmod \
+	--with-rootprefix= --with-rootlibdir=/lib --enable-legacylib
+    __mk
+    __mkinst
+}
+
 __fontconfig()
 {
     __dep freetype2 expat
@@ -196,6 +258,17 @@ __fontconfig()
     __git-clone git://anongit.freedesktop.org/fontconfig
     __cd fontconfig
     __bld-common --localstatedir=/var --disable-docs
+}
+
+__freeglut()
+{
+    __dep "?"
+
+    __svn-clone http://svn.code.sf.net/p/freeglut/code/trunk/freeglut/freeglut freeglut
+    __cd freeglut
+    cmake -DCMAKE_INSTALL_PREFIX=/usr .
+    __mk
+    __mkinst
 }
 
 __freetype2()
@@ -254,6 +327,8 @@ __glib()
 
 __gobject-introspection()
 {
+    __dep "?"
+
     __git-clone git://git.gnome.org/gobject-introspection
     __cd gobject-introspection
     __bld-common PYTHON=/usr/bin/python2
@@ -298,12 +373,15 @@ __gtk+2()
     __git-clone git://git.gnome.org/gtk+
     __git-clone gtk+ gtk+-2.24.git
     __cd gtk+-2.24.git
+
+    GTK2VERSION=2.24.22
+    make distclean
     git checkout master
     git pull
-    git branch -D 2.24.22
-    git checkout 2.24.22
-    git checkout -b 2.24.22
-    __bld-common --with-xinput --with-gdktarget=x11 --with-x
+    git branch -D $GTK2VERSION
+    git checkout $GTK2VERSION
+    git checkout -b $GTK2VERSION
+    __bld-common --with-xinput --with-gdktarget=x11 --with-x --disable-cups --disable-papi
     sudo gtk-query-immodules-2.0 --update-cache
 
 cat > /tmp/t << "EOF"
@@ -330,9 +408,45 @@ EOF
     sudo cp /tmp/t /etc/gtk-3.0/settings.ini
 }
 
+__gtk-engines2()
+{
+    __dep "?"
+
+    __git-clone git://git.gnome.org/gtk-engines
+    __git-clone gtk-engines gtk-engines2
+    __cd gtk-engines2
+    git checkout GTK_ENGINES_2_20_2
+    git checkout -b 2.20.2
+
+    cp autogen.sh autogen.sh.orig
+    sed -e "s/1\.11/1\.14/g" autogen.sh.orig
+
+    __autogen.sh
+    __cfg --prefix=/usr --sysconfdir=/etc
+    # 必ずエラーとなるので
+    make
+    __mkinst
+}
+
+__gtk-engines3()
+{
+    __dep "?"
+
+    __git-clone git://git.gnome.org/gtk-engines
+    __cd gtk-engines
+    __autogen.sh
+    __cfg --prefix=/usr --sysconfdir=/etc
+    # 必ずエラーとなるので
+    make
+    __mkinst
+}
+
 __harfbuzz()
 {
     __dep glib icu freetype cairo gobject-introspection
+
+    git clone git://anongit.freedesktop.org/harfbuzz
+    __common harfbuzz
 }
 
 __iana-etc-2.30()
@@ -400,7 +514,7 @@ __lcms2()
 
 __libcroco()
 {
-    __dep glib libxml
+    __dep glib libxml2
 
     __git-clone git://git.gnome.org/libcroco
     __common libcroco
@@ -412,6 +526,13 @@ __libffi()
 
     __git-clone https://github.com/atgreen/libffi.git
     __common libffi
+}
+
+__libpng()
+{
+    git clone git://libpng.git.sourceforge.net/gitroot/libpng/libpng
+    __cd libpng
+    __bld-common --enable-maintainer-mode
 }
 
 __libjpeg-8()
@@ -468,6 +589,64 @@ __libxml2()
     __common libxml2
 }
 
+__libxslt-1.1.28()
+{
+    __dep "?"
+
+###    __wget  ?
+    __dcd libxslt-1.1.28
+    __bld-common
+}
+
+__libxslt()
+{
+    __libxslt-1.1.28
+}
+
+__mplayer-1.1.1()
+{
+    __dep "?"
+
+#   __wget "?"
+    __dcd MPlayer-1.1.1
+    __bld-common-simple
+}
+
+__mplayer()
+{
+    __mplayer-1.1.1
+}
+
+__ncurses-5.9()
+{
+    __dep "?"
+
+    __wget ftp://invisible-island.net/ncurses/ncurses-5.9.tar.gz
+    __dcd ncurses-5.9
+    __bld-common --mandir=/usr/share/man --with-shared --enable-widec
+}
+
+__ncurses()
+{
+    __ncurses-5.9
+}
+
+__openssl-1.0.1f()
+{
+    __dep ""
+
+    __wget http://www.openssl.org/source/openssl-1.0.1f.tar.gz
+    __dcd openssl-1.0.1f
+    ./config --prefix=/usr --openssldir=/etc/ssl --libdir=lib shared zlib-dynamic
+    __mk
+    __mkinst
+}
+
+__openssl()
+{
+    __openssl-1.0.1f
+}
+
 __pango()
 {
     __dep cairo harfbuzz xorg gobject-introspenction
@@ -475,6 +654,14 @@ __pango()
     __git-clone git://git.gnome.org/pango
     __common pango
     sudo pango-querymodules --update-cache
+}
+
+__pangox-compat()
+{
+    __dep pango
+
+    __git-clone git://git.gnome.org/pangox-compat
+    __common pangox-compat
 }
 
 __pcre-8.34()
@@ -512,6 +699,40 @@ __python-27()
     __python-2.7.6
 }
 
+__serf-1.3.3()
+{
+    __dep apr-util openssl scons
+
+    __wget https://serf.googlecode.com/files/serf-1.3.3.tar.bz2
+    __dcd serf-1.3.3
+    sed -i "/Append/s:RPATH=libdir,::"   SConstruct
+    sed -i "/Default/s:lib_static,::"    SConstruct
+    sed -i "/Alias/s:install_static,::"  SConstruct
+    sed -i '/get.*_LIBS/s:)):, '\'\''&:' SConstruct
+    scons PREFIX=/usr
+    sudo scons PREFIX=/usr install
+}
+
+__serf()
+{
+    __serf-1.3.3
+}
+
+__scons-2.3.0()
+{
+    __dep python2
+
+    rm $SRC_DIR/scons-2.3.0.tar.gz
+    __wget http://downloads.sourceforge.net/scons/scons-2.3.0.tar.gz
+    __dcd scons-2.3.0
+    sudo python setup.py install --prefix=/usr --standard-lib --optimize=1 --install-data=/usr/share
+}
+
+__scons()
+{
+    __scons-2.3.0
+}
+
 __sysklogd-1.5()
 {
     __dep syslog.conf
@@ -545,12 +766,12 @@ user.* -/var/log/user.log
     sudo cp $T /etc/syslog.conf
 }
 
-__sqlite-3.8.2()
+__sqlite-3.8.3.1()
 {
     __dep unzip
 
-    __wget http://sqlite.org/2013/sqlite-autoconf-3080200.tar.gz
-    __dcd sqlite-autoconf-3080200
+    __wget http://sqlite.org/2014/sqlite-autoconf-3080301.tar.gz
+    __dcd sqlite-autoconf-3080301
     ./configure --prefix=/usr --sysconfdir=/etc \
                 CFLAGS="-DSQLITE_ENABLE_FTS3=1 -DSQLITE_ENABLE_COLUMN_METADATA=1 \
                         -DSQLITE_ENABLE_UNLOCK_NOTIFY=1 -DSQLITE_SECURE_DELETE=1"
@@ -560,7 +781,21 @@ __sqlite-3.8.2()
 
 __sqlite()
 {
-    __sqlite-3.8.2
+    __sqlite-3.8.3.1
+}
+
+__svn-1.8.5()
+{
+    __dep apr-util sqlite openssl serf dbus
+
+    __wget http://ftp.riken.jp/net/apache/subversion/subversion-1.8.5.tar.bz2
+    __dcd subversion-1.8.5
+    __bld-common --with-serf=/usr
+}
+
+__svn()
+{
+    __svn-1.8.5
 }
 
 __tar-1.27()
