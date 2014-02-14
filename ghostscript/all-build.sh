@@ -8,7 +8,7 @@ IPA_FONT_DIR="/usr/share/fonts/IPAfont00303"
 
 . ../common-func/__common-func.sh
 
-lcms()
+__lcms()
 {
 	__cd $BASE_DIR/Little-CMS
 	autoreconf -vfi
@@ -19,7 +19,7 @@ lcms()
 	ldconfig
 }
 
-ghostscript()
+__ghostscript()
 {
         __cd $BASE_DIR/ghostpdl/gs
 
@@ -39,6 +39,11 @@ EOF
 	cp $IPA_FONT_DIR/*.ttf $PREFIX/share/ghostscript/fonts
 }
 
-lcms
-ghostscript
+__all()
+{
+        __lcms
+        __ghostscript
+}
+
+$@
 
