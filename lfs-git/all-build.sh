@@ -9,7 +9,7 @@ DIST_CLEAN="make distclean"
 #MAKE_CLEAN=
 MAKE_CLEAN="make clean"
 
-. ./__common-func.sh
+. ../common-func/__common-func-2.sh
 
 __git-clone()
 {
@@ -265,32 +265,25 @@ __procps-ng()
 
 __e2fsprogs()
 {
-        __git-clone git://git.kernel.org/pub/scm/fs/ext2/e2fsprogs.git
-        cd e2fsprogs
-        git pull
+    __git-clone git://git.kernel.org/pub/scm/fs/ext2/e2fsprogs.git
+    __cd e2fsprogs
+    git pull
 
-        __cdbt
-
-        $DIST_CLEAN
-        $BASE_DIR/e2fsprogs/configure   \
-                --prefix=/usr           \
-                --with-root-prefix=""   \
-                --enable-elf-shlibs     \
-                --disable-libblkid      \
-                --disable-libuuid       \
-                --disable-uuidd         \
-                --disable-fsck
-
-        $MAKE_CLEAN
-        __mk
-        __mk install
-        __mk install-libs
-        chmod -v u+w /usr/lib/{libcom_err,libe2p,libext2fs,libss}.a
-
-        gunzip -v /usr/share/info/libext2fs.info.gz
-        install-info --dir-file=/usr/share/info/dir /usr/share/info/libext2fs.info
-
-        ldconfig
+    __cdbt
+    $BASE_DIR/e2fsprogs/configure \
+        --prefix=/usr \
+        --with-root-prefix="" \
+        --enable-elf-shlibs \
+        --disable-libblkid \
+        --disable-libuuid \
+        --disable-uuidd \
+        --disable-fsck
+    __mk
+    __mkinst
+    __mkinst install-libs
+    sudo chmod -v u+w /usr/lib/{libcom_err,libe2p,libext2fs,libss}.a
+    sudo gunzip -v /usr/share/info/libext2fs.info.gz
+    sudo install-info --dir-file=/usr/share/info/dir /usr/share/info/libext2fs.info
 }
 
 __linux-pam()
