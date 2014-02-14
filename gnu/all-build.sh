@@ -140,7 +140,7 @@ __dejagnu()
 __wget()
 {
 	__cd wget
-        __bld-common --with-ssl=gnutls --disable-ipv6
+        __bld-common --with-ssl=openssl --with-openssl --disable-ipv6
 }
 
 __all()
