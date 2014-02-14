@@ -19,7 +19,7 @@ __emacs()
 	      --localstatedir=/var			\
 	      --libexecdir=/usr/lib			\
 	      --without-gif                             \
-              --with-x-toolkit=no
+              --with-x-toolkit=yes
 
 	$MAKE_CLEAN
 	__mk
