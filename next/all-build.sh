@@ -663,6 +663,47 @@ __ncurses()
     __ncurses-5.9
 }
 
+__nspr-4.10.3()
+{
+    __dep ""
+
+    __wget http://ftp.mozilla.org/pub/mozilla.org/nspr/releases/v4.10.3/src/nspr-4.10.3.tar.gz
+    __dcd nspr-4.10.3
+    cd nspr
+    __bld-common --with-mozilla --with-pthreads --enable-64bit
+}
+
+__nspr()
+{
+    __nspr-4.10.3
+}
+
+__nss-3.15.4()
+{
+    __dep nspr sqlite
+
+    __wget http://ftp.mozilla.org/pub/mozilla.org/security/nss/releases/NSS_3_15_4_RTM/src/nss-3.15.4.tar.gz
+    __wget http://www.linuxfromscratch.org/patches/blfs/svn/nss-3.15.4-standalone-1.patch
+    __dcd nss-3.15.4
+    patch -Np1 -i $SRC_DIR/nss-3.15.4-standalone-1.patch
+    cd nss
+    make BUILD_OPT=1 NSPR_INCLUDE_DIR=/usr/include/nspr USE_SYSTEM_ZLIB=1 ZLIB_LIBS=-lz USE_64=1 NSS_USE_SYSTEM_SQLITE=1
+
+    cd ../dist
+    sudo install -v -m755 Linux*/lib/*.so              /usr/lib
+    sudo install -v -m644 Linux*/lib/{*.chk,libcrmf.a} /usr/lib
+    sudo install -v -m755 -d                           /usr/include/nss
+    sudo cp -v -RL {public,private}/nss/*              /usr/include/nss
+    sudo chmod -v 644                                  /usr/include/nss/*
+    sudo install -v -m755 Linux*/bin/{certutil,nss-config,pk12util} /usr/bin
+    sudo install -v -m644 Linux*/lib/pkgconfig/nss.pc  /usr/lib/pkgconfig
+}
+
+__nss()
+{
+    __nss-3.15.4
+}
+
 __openssh-6.5p1()
 {
     __dep openssl linux-pam
@@ -917,7 +958,7 @@ __vala()
     __vala-0.22.1
 }
 
-__wget()
+__wget-1.15()
 {
     __dep openssl
 
@@ -926,5 +967,12 @@ __wget()
     __bld-common --with-ssl=openssl --with-openssl --disable-ipv6
 }
 
-$1
+### wget のビルド&インストールを行う
+### 名前が __wget() だと common-func-2.sh 内定義の間数名と重複してしまい、誤動作してしまうため
+__install-wget()
+{
+    __wget-1.15
+}
+
+$@
 
