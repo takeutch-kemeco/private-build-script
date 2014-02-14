@@ -1,8 +1,9 @@
 #!/bin/bash
 
-SRC=$(pwd)
+BASE_DIR=$(pwd)
+SRC_DIR=$BASE_DIR/src
 
-. ../common-func/__common-func.sh
+. ../common-func/__common-func-2.sh
 
 __perl()
 {
