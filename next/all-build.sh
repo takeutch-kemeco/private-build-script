@@ -306,6 +306,16 @@ __gettext()
     __gettext-0.18.3.2
 }
 
+__gdbm()
+{
+    __dep "?"
+
+    git clone git://git.gnu.org.ua/gdbm.git
+    __cd gdbm
+    ./bootstrap
+    __bld-common
+}
+
 __gdk-pixbuf()
 {
     __dep glib libjpeg libpng libtiff gobject-introspection
@@ -314,6 +324,18 @@ __gdk-pixbuf()
     __cd gdk-pixbuf
     __bld-common --with-x11
     sudo gdk-pixbuf-query-loaders --update-cache
+}
+
+__git()
+{
+    __dep "?"
+
+    __git-clone git://git.kernel.org/pub/scm/git/git.git
+    __cd git
+    __git-pull
+    $MAKE_CLEAN
+    __mk prefix=/usr
+    __mkinst prefix=/usr
 }
 
 __glib()
@@ -447,6 +469,16 @@ __harfbuzz()
 
     git clone git://anongit.freedesktop.org/harfbuzz
     __common harfbuzz
+}
+
+__hg()
+{
+    __dep "?"
+
+    __hg-clone http://selenic.com/hg
+    __cd hg
+    __hg-pull
+    sudo python setup.py install
 }
 
 __iana-etc-2.30()
@@ -629,6 +661,38 @@ __ncurses-5.9()
 __ncurses()
 {
     __ncurses-5.9
+}
+
+__openssh-6.5p1()
+{
+    __dep openssl linux-pam
+
+    __wget http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-6.5p1.tar.gz
+    __decord openssh-6.5p1
+    __cd openssh-6.5p1
+
+    sudo install -v -m700 -d /var/lib/sshd
+    sudo chown -v root:sys /var/lib/sshd
+    sudo groupadd -g 50 sshd
+    sudo useradd -c 'sshd PrivSep' -d /var/lib/sshd -g sshd -s /bin/false -u 50 sshd
+
+    $DIST_CLEAN
+    __cfg --prefix=/usr --libexecdir=/usr/lib/openssh --sysconfdir=/etc/ssh --datadir=/usr/share/sshd \
+        --with-md5-passwords --with-privsep-path=/var/lib/sshd
+
+    $MAKE_CLEAN
+    __mk
+    __mkinst
+
+    sudo install -v -m755 contrib/ssh-copy-id /usr/bin
+    sudo install -v -m644 contrib/ssh-copy-id.1 /usr/share/man/man1
+    sudo install -v -m755 -d /usr/share/doc/openssh-6.5p1
+    sudo install -v -m644 INSTALL LICENCE OVERVIEW README* /usr/share/doc/openssh-6.5p1
+}
+
+__openssh()
+{
+    __openssh-6.5p1
 }
 
 __openssl-1.0.1f()
@@ -851,6 +915,15 @@ __vala-git()
 __vala()
 {
     __vala-0.22.1
+}
+
+__wget()
+{
+    __dep openssl
+
+    __wget http://ftp.gnu.org/gnu/wget/wget-1.15.tar.xz
+    __cd wget
+    __bld-common --with-ssl=openssl --with-openssl --disable-ipv6
 }
 
 $1
