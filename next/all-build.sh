@@ -291,7 +291,16 @@ __fontconfig()
     __bld-common --localstatedir=/var --disable-docs
 }
 
-__freeglut()
+__freeglut-2.8.1()
+{
+    __dep "?"
+
+    __wget "?"
+    __dcd freeglut-2.8.1
+    __bld-common
+}
+
+__freeglut-svn()
 {
     __dep "?"
 
@@ -300,6 +309,11 @@ __freeglut()
     cmake -DCMAKE_INSTALL_PREFIX=/usr .
     __mk
     __mkinst
+}
+
+__freeglut()
+{
+    __freeglut-2.8.1
 }
 
 __freetype2()
@@ -1135,7 +1149,7 @@ __install-wget()
 
 __yasm-1.2.0()
 {
-    __dep puthon2 cython
+    __dep python2 cython
 
     __wget http://www.tortall.net/projects/yasm/releases/yasm-1.2.0.tar.gz
     __dcd yasm-1.2.0
