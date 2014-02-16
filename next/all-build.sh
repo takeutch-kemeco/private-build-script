@@ -81,6 +81,23 @@ __at-spi2-core()
     __common at-spi2-core
 }
 
+__binutils-2.24()
+{
+    __dep ""
+
+    __wget http://ftp.gnu.org/gnu/binutils/binutils-2.24.tar.bz2
+    __decord binutils-2.24
+    __cdbt
+    ../binutils-2.24/configure --prefix=/usr --enable-shared
+    __mk tooldir=/usr
+    __mkinst tooldir=/usr install
+}
+
+__binutils()
+{
+    __binutils-2.24
+}
+
 __cairo()
 {
     __dep libpng glib pixman fontconfig
@@ -184,6 +201,20 @@ __curl()
     __bld-common --enable-threaded-resolver --with-ca-path=/etc/ssl/certs
 }
 
+__cython-0.20.1()
+{
+    __dep python2
+
+    __wget http://cython.org/release/Cython-0.20.1.tar.gz
+    __dcd Cython-0.20.1
+    sudo python2 ./setup.py install
+}
+
+__cython()
+{
+    __cython-0.20.1
+}
+
 __dbus()
 {
     __dep expat
@@ -283,6 +314,47 @@ __freetype2()
     cp include/config/{ftoption.h.orig,ftoption.h}
 }
 
+__gcc-4.8.2()
+{
+    __dep gmp mpfr mpc
+
+    __wget http://ftp.gnu.org/gnu/gcc/gcc-4.8.2/gcc-4.8.2.tar.bz2
+    __decord gcc-4.8.2
+    __cdbt
+    ../gcc-4.8.2/configure --prefix=/usr --libexecdir=/usr/lib --enable-shared \
+        --enable-threads=posix --enable-__cxa_atexit --enable-clocale=gnu \
+        --enable-languages=c,c++,fortran --disable-multilib \
+        --disable-bootstrap --with-system-zlib
+#       --disable-libstdcxx-pch --enable-c99 --enable-cloog-backend=isl \
+#       --enable-long-long
+    __mk
+    __mkinst
+    sudo mkdir -pv /usr/share/gdb/auto-load/usr/lib
+    sudo mv -v /usr/lib/*gdb.py /usr/share/gdb/auto-load/usr/lib
+    sudo ldconfig
+}
+
+__gcc()
+{
+    __gcc-4.8.2
+}
+
+__gdb-7.7()
+{
+    __dep python2
+
+    __wget http://ftp.gnu.org/gnu/gdb/gdb-7.7.tar.bz2
+    __dcd gdb-7.7
+    __cfg --prefix=/usr --disable-werror
+    __mk
+    __mkinst -C gdb install
+}
+
+__gdb()
+{
+    __gdb-7.7
+}
+
 __geany()
 {
     __dep gtk+2
@@ -347,6 +419,26 @@ __glib()
     __bld-common --with-pcre=system --enable-debug=no
 }
 
+__glibc-2.19()
+{
+    __dep ""
+    
+    __decord glibc-2.19
+    __cdbt
+    cat > configparms << .
+ASFLAGS-config=-O4 -march=native -mtune=native -msse3
+.
+    $BASE_DIR/glibc-2.19/configure --prefix=/usr --disable-profile --enable-kernel=3.13 \
+        --libexecdir=/usr/lib/glibc --enable-obsolete-rpc
+    __mk
+    __mkinst
+}
+
+__glibc()
+{
+    __glibc-2.19
+}
+
 __gobject-introspection()
 {
     __dep "?"
@@ -354,6 +446,24 @@ __gobject-introspection()
     __git-clone git://git.gnome.org/gobject-introspection
     __cd gobject-introspection
     __bld-common PYTHON=/usr/bin/python2
+}
+
+__gmp-5.1.3()
+{
+    __dep ""
+
+    __wget ftp://ftp.gmplib.org/pub/gmp/gmp-5.1.3.tar.xz
+    __dcd gmp-5.1.3
+    ABI=64 ./configure --prefix=/usr --enable-cxx
+    __mk
+    __mkinst
+    sudo mkdir -v /usr/share/doc/gmp-5.1.3
+    sudo cp -v doc/{isa_abi_headache,configuration} doc/*.html /usr/share/doc/gmp-5.1.3
+}
+
+__gmp()
+{
+    __gmp-5.1.3
 }
 
 __gnome-icon-theme()
@@ -635,11 +745,43 @@ __libxslt()
     __libxslt-1.1.28
 }
 
+__mpc-1.0.2()
+{
+    __dep mpfr
+
+    __wget http://www.multiprecision.org/mpc/download/mpc-1.0.2.tar.gz
+    __dcd mpc-1.0.2
+    __cfg --prefix=/usr
+    __mk
+    __mkinst
+}
+
+__mpc()
+{
+    __mpc-1.0.2
+}
+
+__mpfr-3.1.2()
+{
+    __dep gmp
+
+    __wget http://www.mpfr.org/mpfr-current/mpfr-3.1.2.tar.xz
+    __dcd mpfr-3.1.2
+    ABI=64 ./configure --prefix=/usr --enable-thread-safe --docdir=/usr/share/doc/mpfr-3.1.2
+    __mk
+    __mkinst
+}
+
+__mpfr()
+{
+    __mpfr-3.1.2
+}
+
 __mplayer-1.1.1()
 {
-    __dep "?"
+    __dep yasm
 
-#   __wget "?"
+    __wget http://www.mplayerhq.hu/MPlayer/releases/MPlayer-1.1.1.tar.xz
     __dcd MPlayer-1.1.1
     __bld-common-simple
 }
@@ -784,6 +926,23 @@ __pcre-8.34()
 __pcre()
 {
     __pcre-8.34
+}
+
+__perl-5.8.2()
+{
+    __dep ""
+
+    __wget http://www.cpan.org/src/5.0/perl-5.18.2.tar.gz
+    __dcd perl-5.18.2
+    sh Configure -des -Dprefix=/usr -Dvendorprefix=/usr -Dman1dir=/usr/share/man/man1 -Dman3dir=/usr/share/man/man3 \
+        -Dpager="/usr/bin/less -isR" -Duseshrplib
+    __mk
+    __mkinst
+}
+
+__perl()
+{
+    __perl-5.8.2
 }
 
 __pixman()
@@ -972,6 +1131,20 @@ __wget-1.15()
 __install-wget()
 {
     __wget-1.15
+}
+
+__yasm-1.2.0()
+{
+    __dep puthon2 cython
+
+    __wget http://www.tortall.net/projects/yasm/releases/yasm-1.2.0.tar.gz
+    __dcd yasm-1.2.0
+    __bld-common
+}
+
+__yasm()
+{
+    __yasm-1.2.0
 }
 
 $@
