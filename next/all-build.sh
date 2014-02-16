@@ -328,6 +328,24 @@ __freetype2()
     cp include/config/{ftoption.h.orig,ftoption.h}
 }
 
+__gc()
+{
+    __libatomic_ops()
+    {
+        __git-clone git://github.com/ivmai/libatomic_ops.git
+        __cd libatomic_ops
+        git pull
+    }
+
+    __libatomic_ops
+    __git-clone git://github.com/ivmai/bdwgc.git
+    __cd bdwgc
+    ln -sf ${BASE_DIR}/libatomic_ops ${BASE_DIR}/bdwgc/libatomic_ops
+    ./autoreconf -vif
+    ./automake --add-missing
+    __bld-common
+}
+
 __gcc-4.8.2()
 {
     __dep gmp mpfr mpc
@@ -668,6 +686,16 @@ __lcms2()
     __bld-common
 }
 
+__libarchive()
+{
+    __dep "?"
+
+    __git-clone https://github.com/libarchive/libarchive.git
+    __cd libarchive
+    __autogen
+    __bld-common
+}
+
 __libcroco()
 {
     __dep glib libxml2
@@ -819,6 +847,14 @@ __ncurses()
     __ncurses-5.9
 }
 
+__nettle()
+{
+    __git-clone git://git.lysator.liu.se/nettle/nettle.git
+    __cd nettle
+    __bld-common --disable-documentation
+    sudo chmod -v 755 /usr/lib/libhogweed.so.* /usr/lib/libnettle.so.*
+}
+
 __nspr-4.10.3()
 {
     __dep ""
@@ -967,6 +1003,18 @@ __pixman()
     __common pixman
 }
 
+__popt-1.16()
+{
+    __wget http://rpm5.org/files/popt/popt-1.16.tar.gz
+    __dcd popt-1.16
+    __bld-common
+}
+
+__popt()
+{
+    __popt-1.16
+}
+
 __python-2.7.6()
 {
     __dep expat libffi
@@ -1009,6 +1057,36 @@ __scons-2.3.0()
 __scons()
 {
     __scons-2.3.0
+}
+
+__sudo()
+{
+    __dep linux-pam
+
+    __hg-clone http://www.sudo.ws/repos/sudo
+    __cd sudo
+    __bld-common-simple --libexecdir=/usr/lib/sudo --docdir=/usr/share/doc/sudo \
+        --with-all-insults --with-env-editor --with-pam --without-sendmail
+
+cat > /tmp/t << "EOF" &&
+# Begin /etc/pam.d/sudo
+
+# include the default auth settings
+auth      include     system-auth
+
+# include the default account settings
+account   include     system-account
+
+# Set default environment variables for the service user
+session   required    pam_env.so
+
+# include system session defaults
+session   include     system-session
+
+# End /etc/pam.d/sudo
+EOF
+    sudo cp -f /tmp/t /etc/pam.d/sudo
+    sudo chmod 644 /etc/pam.d/sudo
 }
 
 __sysklogd-1.5()
@@ -1076,6 +1154,18 @@ __svn()
     __svn-1.8.5
 }
 
+__talloc-2.1.0()
+{
+    __wget http://samba.org/ftp/talloc/talloc-2.1.0.tar.gz
+    __dcd talloc-2.1.0
+    __bld-common
+}
+
+__talloc()
+{
+    __talloc-2.1.0
+}
+
 __tar-1.27()
 {
     __dep acl attr
@@ -1096,6 +1186,24 @@ __tar-git()
 __tar()
 {
     __tar-1.27
+}
+
+__tomoyo-tools-2.5.0()
+{
+    __dep "?"
+
+    cd ${BASE_DIR}
+    wget -O ${SRC_DIR}/tomoyo-tools-2.5.0-20140105.tar.gz 'http://sourceforge.jp/frs/redir.php?m=jaist&f=/tomoyo/53357/tomoyo-tools-2.5.0-20140105.tar.gz'
+
+    __decord tomoyo-tools-2.5.0-20140105
+    __cd tomoyo-tools
+    __mk USRLIBDIR=/lib
+    __mkinst USRLIBDIR=/lib install
+}
+
+__tomoyo-tools()
+{
+    __tomoyo-tools-2.5.0
 }
 
 __unzip()
