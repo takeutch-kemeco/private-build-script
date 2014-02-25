@@ -98,6 +98,26 @@ __binutils()
     __binutils-2.24
 }
 
+__bison-git()
+{
+    ### flex と bison は開発版を入れるべきではない
+    echo
+}
+
+__bison-3.0.2()
+{
+    __dep ""
+
+    __wget http://ftp.gnu.org/gnu/bison/bison-3.0.2.tar.xz
+    __dcd bison-3.0.2
+    __bld-common
+}
+
+__bison()
+{
+    __bison-3.0.2
+}
+
 __cairo()
 {
     __dep libpng glib pixman fontconfig
@@ -280,6 +300,34 @@ __eudev()
 	--with-rootprefix= --with-rootlibdir=/lib --enable-legacylib
     __mk
     __mkinst
+}
+
+__flex-git()
+{
+    ### flex と bison は開発版を入れるべきではない
+    echo
+}
+
+__flex-2.5.37()
+{
+### __dep "texlive"
+    __dep ""
+
+    __wget http://downloads.sourceforge.net/project/flex/flex-2.5.37.tar.bz2
+    __dcd flex-2.5.37
+
+    ### texliveが無くてもビルドできるようにMakefileを修正
+    cp configure.in{,.orig}
+    cat configure.in.orig | sed -e "s/^doc\/Makefile.*$//g" > configure.in
+    cp Makefile.am{,.orig}
+    cat Makefile.am.orig | sed -e "s/^[ \t]*doc /\t/g" > Makefile.am
+
+    __bld-common
+}
+
+__flex()
+{
+    __flex-2.5.37
 }
 
 __fontconfig()
@@ -605,6 +653,14 @@ __gtk-engines3()
     __mkinst
 }
 
+__guile()
+{
+    __dep  gc libffi libunistring
+
+    __git-clone git://git.sv.gnu.org/guile.git
+    __common guile
+}
+
 __harfbuzz()
 {
     __dep glib icu freetype cairo gobject-introspection
@@ -763,6 +819,14 @@ __libtiff-4.0.3()
 __libtiff()
 {
     __libtiff-4.0.3
+}
+
+__libunistring()
+{
+    __dep ""
+
+    __git-clone git://git.savannah.gnu.org/libunistring.git
+    __common libunistring
 }
 
 __libxml2()
@@ -1188,6 +1252,21 @@ __tar()
     __tar-1.27
 }
 
+__install-tl()
+{
+    __install-tl-20140225
+}
+
+__install-tl-20140225()
+{
+    __dep ghostscript libdrm freeglut glu libxcb ruby
+
+    __wget http://mirror.ctan.org/systems/texlive/tlnet/install-tl-unx.tar.gz
+    __decord install-tl-unx
+    __cd install-tl-20140225
+    sudo TEXLIVE_INSTALL_PREFIX=/opt/texlive ./install-tl
+}
+
 __tomoyo-tools-2.5.0()
 {
     __dep "?"
@@ -1236,7 +1315,16 @@ __vala-git()
 
 __vala()
 {
-    __vala-0.22.1
+    __vala-git
+}
+
+__vte()
+{
+    __dep gtk-introspection
+
+    __git-clone git://git.gnome.org/vte
+    __cd vte
+    __bld-common --enable-introspection --enable-maintainer-mode
 }
 
 __wget-1.15()
