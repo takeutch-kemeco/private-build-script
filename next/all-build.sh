@@ -81,6 +81,20 @@ __at-spi2-core()
     __common at-spi2-core
 }
 
+__automake-1.14.1()
+{
+    __dep autoconf
+
+    __wget http://ftp.gnu.org/gnu/automake/automake-1.14.1.tar.xz
+    __dcd automake-1.14.1
+    __bld-common
+}
+
+__automake()
+{
+    __automake-1.14.1
+}
+
 __binutils-2.24()
 {
     __dep ""
@@ -653,12 +667,38 @@ __gtk-engines3()
     __mkinst
 }
 
-__guile()
+__guile-git()
 {
     __dep  gc libffi libunistring
 
     __git-clone git://git.sv.gnu.org/guile.git
     __common guile
+}
+
+__guile-2.0.9()
+{
+    __wget http://ftp.gnu.org/pub/gnu/guile/guile-2.0.9.tar.xz
+    __dcd guile-2.0.9
+    __bld-common
+}
+
+__guile()
+{
+    __guile-2.0.9
+}
+
+__guile-lib-0.2.2()
+{
+    __dep ""
+
+    __wget http://download.savannah.gnu.org/releases/guile-lib/guile-lib-0.2.2.tar.gz
+    __dcd guile-lib-0.2.2
+    __bld-common
+}
+
+__guile-lib()
+{
+    __guile-lib-0.2.2
 }
 
 __harfbuzz()
