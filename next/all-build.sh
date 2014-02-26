@@ -222,7 +222,7 @@ __colord()
     sudo groupadd -g 71 colord
     sudo useradd -c "Color Daemon Owner" -d /var/lib/colord -u 71 -g colord -s /bin/false colord
     __bld-common --localstatedir=/var --with-daemon-user=colord --enable-vala \
-                 --disable-bash-completion --disable-systemd-login
+                 --disable-bash-completion --enable-systemd-login
 }
 
 __curl()
@@ -261,13 +261,11 @@ __dbus()
     __bld-common --localstatedir=/var                   \
                  --libexecdir=/usr/lib/dbus-1.0         \
                  --with-console-auth-dir=/run/console/  \
-                 --without-systemdsystemunitdir         \
-                 --disable-systemd                      \
                  --disable-Werror                       \
                  --disable-tests
 
+    sudo ln -sv /etc/machine-id /var/lib/dbus
     sudo dbus-uuidgen --ensure
-
     T=mktemp
     cat > $T << .
 <!DOCTYPE busconfig PUBLIC
@@ -763,6 +761,21 @@ __iproute2()
     __mkinst DESTDIR= SBINDIR=/sbin MANDIR=/usr/share/man DOCDIR=/usr/share/doc/iproute2
 }
 
+__kmod()
+{
+    __dep ""
+
+    __git-clone git://git.kernel.org/pub/scm/utils/kernel/kmod/kmod.git
+    __cd kmod
+    __bld-common --with-xz --with-zlib
+
+    for target in depmod insmod modinfo modprobe rmmod; do
+        sudo ln -sv ../bin/kmod /sbin/$target
+    done
+
+    sudo ln -sv kmod /bin/lsmod
+}
+
 __libcap()
 {
     __dep attr linux-pam
@@ -770,6 +783,15 @@ __libcap()
     __git-clone git://git.kernel.org/pub/scm/linux/kernel/git/morgan/libcap.git
     __cd libcap
     __mkinst prefix=/usr SBINDIR=/sbin PAM_LIBDIR=/lib RAISE_SETFCAP=no
+}
+
+__linux-pam()
+{
+    __dep ""
+
+    __git-clone https://git.fedorahosted.org/git/linux-pam.git
+    __cd linux-pam
+    __bld-common --enable-securedir=/lib/security
 }
 
 __lcms2()
@@ -806,6 +828,32 @@ __libffi()
 
     __git-clone https://github.com/atgreen/libffi.git
     __common libffi
+}
+
+__libgee-git()
+{
+    __dep glib vala gobject-introspection
+
+    __git-clone git://git.gnome.org/libgee
+    __common libgee
+}
+
+__libgee-0.6.8()
+{
+    __dep gilb vala gobject-introspection
+
+    __wget http://ftp.gnome.org/pub/gnome/sources/libgee/0.6/libgee-0.6.8.tar.xz
+    __dcd libgee-0.6.8
+    __bld-common
+}
+
+__libgee()
+{
+    ### gitソースだとgee-0.8.vala, gee-0.8.pcのファイル名となるので、
+    ### gee-1.0.* を想定したビルドで失敗する場合がある。
+    ### tarソースならばgee-1.0.vala, gee-1.0.pcのファイル名となるので、
+    ### 回避手段として使える。
+    __libgee-git
 }
 
 __libmnl()
@@ -1061,7 +1109,11 @@ __openssl-1.0.1f()
     __dep ""
 
     __wget http://www.openssl.org/source/openssl-1.0.1f.tar.gz
+    __wget http://www.linuxfromscratch.org/patches/blfs/svn/openssl-1.0.1f-fix_parallel_build-1.patch
+    __wget http://www.linuxfromscratch.org/patches/blfs/svn/openssl-1.0.1f-fix_pod_syntax-1.patch
     __dcd openssl-1.0.1f
+    patch -Np1 -i $SRC_DIR/openssl-1.0.1f-fix_parallel_build-1.patch
+    patch -Np1 -i $SRC_DIR/openssl-1.0.1f-fix_pod_syntax-1.patch
     ./config --prefix=/usr --openssldir=/etc/ssl --libdir=lib shared zlib-dynamic
     __mk
     __mkinst
@@ -1248,6 +1300,26 @@ user.* -/var/log/user.log
 *.emerg *
 .
     sudo cp $T /etc/syslog.conf
+}
+
+__systemd()
+{
+    ### It is necessary to validate some Linux kernel options (i.e. cgroup, fnotify, module).
+    __dep libcap dbus kmod
+
+    __git-clone git://anongit.freedesktop.org/systemd/systemd
+    __cd systemd
+    __bld-common --config-cache --enable-split-usr --enable-shared --disable-tests --enable-gtk-doc-html=no
+    sudo systemd-machine-id-setup
+    sudo groupadd -g 190 systemd-journal
+}
+
+__systemd-ui()
+{
+    __dep systemd libgee
+
+    __git-clone git://anongit.freedesktop.org/systemd/systemd-ui
+    __common systemd-ui
 }
 
 __sqlite-3.8.3.1()
