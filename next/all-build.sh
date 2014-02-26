@@ -808,6 +808,22 @@ __libffi()
     __common libffi
 }
 
+__libmnl()
+{
+    __dep ""
+
+    __git-clone git://git.netfilter.org/libmnl
+    __common libmnl
+}
+
+__libnftnl()
+{
+    __dep ""
+
+    __git-clone git://git.netfilter.org/libnftnl
+    __common libnftnl
+}
+
 __libpng()
 {
     git clone git://libpng.git.sourceforge.net/gitroot/libpng/libpng
@@ -957,6 +973,14 @@ __nettle()
     __cd nettle
     __bld-common --disable-documentation
     sudo chmod -v 755 /usr/lib/libhogweed.so.* /usr/lib/libnettle.so.*
+}
+
+__nftables()
+{
+    __dep libmnl libnftnl
+
+    __git-clone git://git.netfilter.org/nftables
+    __common nftables
 }
 
 __nspr-4.10.3()
