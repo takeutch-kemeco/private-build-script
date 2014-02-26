@@ -290,6 +290,34 @@ __dbus()
     sudo install $T /etc/dbus-1/session-local.conf
 }
 
+__dhcpcd-6.2.1()
+{
+    __dep ""
+
+    __wget http://roy.marples.name/downloads/dhcpcd/dhcpcd-6.2.1.tar.bz2
+    __dcd dhcpcd-6.2.1
+    __bld-common --libexecdir=/lib/dhcpcd --dbdir=/var/tmp
+
+    cat > /tmp/ifconfig.wlan0 << .
+ONBOOT="yes"
+IFACE="wlan0"
+SERVICE="dhcpcd"
+DHCP_START=""
+DHCP_STOP="-k"
+.
+    sudo install /tmp/ifconfig.wlan0 /etc/sysconfig/network-devices/
+
+    cat > /tmp/resolv.conf << .
+nameserver 192.168.11.1
+.
+    sudo install /tmp/resolv.conf /etc/resolv.conf
+}
+
+__dhcpcd()
+{
+    __dhcpcd-6.2.1
+}
+
 __dbus-glib()
 {
     __dep "?"
