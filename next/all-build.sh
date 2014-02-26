@@ -29,14 +29,6 @@ __acl()
     __bld-common INSTALL_USER=root INSTALL_GROUP=root
 }
 
-__atk()
-{
-    __dep glib
-
-    __git-clone git://git.gnome.org/atk
-    __common atk
-}
-
 __apr-1.5.0()
 {
     __dep ""
@@ -79,6 +71,14 @@ __at-spi2-core()
 
     __git-clone git://git.gnome.org/at-spi2-core
     __common at-spi2-core
+}
+
+__atk()
+{
+    __dep glib
+
+    __git-clone git://git.gnome.org/atk
+    __common atk
 }
 
 __automake-1.14.1()
@@ -225,6 +225,14 @@ __colord()
                  --disable-bash-completion --enable-systemd-login
 }
 
+__cryptsetup()
+{
+    __dep LVM2
+
+    __git-clone https://github.com/mbroz/cryptsetup.git
+    __common cryptsetup
+}
+
 __curl()
 {
     __dep "?"
@@ -261,6 +269,7 @@ __dbus()
     __bld-common --localstatedir=/var                   \
                  --libexecdir=/usr/lib/dbus-1.0         \
                  --with-console-auth-dir=/run/console/  \
+                 --enable-systemd                       \
                  --disable-Werror                       \
                  --disable-tests
 
@@ -590,6 +599,15 @@ __gnome-themes-standard()
     __common gnome-themes-standard
 }
 
+__gnupg()
+{
+    __dep pth libassuan libgcript libksda
+
+    __git-clone git clone git://git.gnupg.org/gnupg.git
+    __cd gnupg
+    --bld-common --enable-maintainer-mode
+}
+
 __gtk+2()
 {
     __dep atk gdk-pixbuf pango gobject-introspection
@@ -776,15 +794,6 @@ __kmod()
     sudo ln -sv kmod /bin/lsmod
 }
 
-__libcap()
-{
-    __dep attr linux-pam
-
-    __git-clone git://git.kernel.org/pub/scm/linux/kernel/git/morgan/libcap.git
-    __cd libcap
-    __mkinst prefix=/usr SBINDIR=/sbin PAM_LIBDIR=/lib RAISE_SETFCAP=no
-}
-
 __linux-pam()
 {
     __dep ""
@@ -814,6 +823,15 @@ __libarchive()
     __bld-common
 }
 
+__libcap()
+{
+    __dep attr linux-pam
+
+    __git-clone git://git.kernel.org/pub/scm/linux/kernel/git/morgan/libcap.git
+    __cd libcap
+    __mkinst prefix=/usr SBINDIR=/sbin PAM_LIBDIR=/lib RAISE_SETFCAP=no
+}
+
 __libcroco()
 {
     __dep glib libxml2
@@ -828,6 +846,26 @@ __libffi()
 
     __git-clone https://github.com/atgreen/libffi.git
     __common libffi
+}
+
+__libgcrypt()
+{
+    __dep libgpg-error
+
+    __git-clone git://git.gnupg.org/libgcrypt.git
+    __cd libgcrypt
+
+    ### fig2dev が無くてもビルドできるように
+    cp configure.ac{,.orig}
+    cat configure.ac.orig | sed -e "s/^doc\/Makefile//g" > configure.ac
+    cp Makefile.am{,.orig}
+    cat Makefile.am.orig | sed -e "s/ doc //g" > Makefile.am
+
+    __self-autogen
+    __bld-common --enable-maintainer-mode
+
+    cp configure.ac{.orig,}
+    cp Makefile.am{.orig,}
 }
 
 __libgee-git()
@@ -854,6 +892,16 @@ __libgee()
     ### tarソースならばgee-1.0.vala, gee-1.0.pcのファイル名となるので、
     ### 回避手段として使える。
     __libgee-git
+}
+
+__libgpg-error()
+{
+    __dep ""
+
+    __git-clone git://git.gnupg.org/libgpg-error.git
+    __cd libgpg-error
+    __self-autogen
+    __bld-common --enable-maintainer-mode
 }
 
 __libmnl()
@@ -911,6 +959,14 @@ __librsvg()
     __bld-common --enable-vala
 }
 
+__libseccomp()
+{
+    __dep ""
+
+    __git-clone git://git.code.sf.net/p/libseccomp/libseccomp
+    __common libseccomp
+}
+
 __libtiff-4.0.3()
 {
     __dep libjpeg-8
@@ -953,6 +1009,29 @@ __libxslt-1.1.28()
 __libxslt()
 {
     __libxslt-1.1.28
+}
+
+__lvm2-2.02.105()
+{
+    ### Use kernel configuration
+    ### Device Drivers --->
+    ###   Multiple devices driver support (RAID and LVM): Y
+    ###   Device mapper support: Y or M
+    ###   Crypt target support: (optional)
+    ###   Snapshot target: (optional)
+    ###   Mirror target: (optional) 
+
+    __dep ""
+
+    __wget ftp://sources.redhat.com/pub/lvm2/LVM2.2.02.105.tgz
+    __dcd LVM2.2.02.105
+    __bld-common --exec-prefix= --with-confdir=/etc \
+        --enable-applib --enable-cmdlib --enable-pkgconfig --enable-udev_sync
+}
+
+__lvm2()
+{
+    __lvm2-2.02.105
 }
 
 __mpc-1.0.2()
@@ -1183,6 +1262,28 @@ __pixman()
     __common pixman
 }
 
+__polkit()
+{
+    __dep "?"
+
+    __git-clone git://anongit.freedesktop.org/polkit
+    __cd polkit
+    sudo groupadd -fg 28 polkitd
+    sudo useradd -c "PolicyKit Daemon Owner" -d /etc/polkit-1 -u 28 -g polkitd -s /bin/false polkitd
+    __bld-common --localstatedir=/var --libexecdir=/usr/lib/polkit-1 --with-authfw=shadow
+    cat > /tmp/polkit-1 << .
+# Begin /etc/pam.d/polkit-1
+
+auth     include        system-auth
+account  include        system-account
+password include        system-password
+session  include        system-session
+
+# End /etc/pam.d/polkit-1
+.
+    sudo install /tmp/polkit-1 /etc/pam.d/
+}
+
 __popt-1.16()
 {
     __wget http://rpm5.org/files/popt/popt-1.16.tar.gz
@@ -1304,14 +1405,34 @@ user.* -/var/log/user.log
 
 __systemd()
 {
+    ### 予めArchLinx等のディストリからバイナリーのsystemd-*.so群を/usr/lib/へ手動コピーしておく必要がある。
+    ### その上で dbus, linux-pam などの依存パッケージのビルドを行わなければビルドが通らない。
+
     ### It is necessary to validate some Linux kernel options (i.e. cgroup, fnotify, module).
-    __dep libcap dbus kmod
+    __dep libcap dbus kmod libseccomp cryptsetup linux-pam
 
     __git-clone git://anongit.freedesktop.org/systemd/systemd
     __cd systemd
-    __bld-common --config-cache --enable-split-usr --enable-shared --disable-tests --enable-gtk-doc-html=no
-    sudo systemd-machine-id-setup
+
     sudo groupadd -g 190 systemd-journal
+    sudo groupadd -g 192 systemd-journal-gateway
+
+    sudo mkdir -p /var/log/journal
+    sudo setfacl -nm g:wheel:rx,d:g:wheel:rx,g:adm:rx,d:g:adm:rx /var/log/journal/
+
+    sudo rm -f /etc/mtab
+    sudo ln -s /proc/mounts /etc/mtab
+
+    sudo mkdir /run
+    sudo rm /var/run -rf
+    sudo ln -s /run /var/run
+
+    ### --enable-compat-libs オプションを付けるとビルドが通らないので、現状ではsystemd-*.so群は
+    ### 別ディストリから手動でコピーしてくる必要がある。（現在ビルド方法を調査中）
+    __bld-common --config-cache --enable-split-usr --enable-shared \
+        --disable-tests --enable-gtk-doc-html=no
+
+    sudo systemd-machine-id-setup
 }
 
 __systemd-ui()
@@ -1430,6 +1551,14 @@ __unzip()
     sed -i -e 's/CFLAGS="-O -Wall/& -DNO_LCHMOD/' unix/Makefile
     __mk -f unix/Makefile linux_noasm
     __mkinst prefix=/usr MANDIR=/usr/share/man/man1
+}
+
+__util-linux()
+{
+    __dep "?"
+
+    __git-clone git://git.kernel.org/pub/scm/utils/util-linux/util-linux.git
+    __common util-linux
 }
 
 __vala-0.22.1()
