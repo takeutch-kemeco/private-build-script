@@ -948,6 +948,20 @@ __libnftnl()
     __common libnftnl
 }
 
+__libnl-3.2.23()
+{
+    __dep "?"
+
+    __wget http://www.carisma.slowglass.com/~tgr/libnl/files/libnl-3.2.23.tar.gz
+    __dcd libnl-3.2.23
+    __bld-common
+}
+
+__libnl()
+{
+    __libnl-3.2.23
+}
+
 __libpng()
 {
     git clone git://libpng.git.sourceforge.net/gitroot/libpng/libpng
@@ -1631,9 +1645,48 @@ __wget-1.15()
 
 ### wget のビルド&インストールを行う
 ### 名前が __wget() だと common-func-2.sh 内定義の間数名と重複してしまい、誤動作してしまうため
-__install-wget()
+__wget-install()
 {
     __wget-1.15
+}
+
+__wpa_supplicant()
+{
+    __wget http://hostap.epitest.fi/releases/wpa_supplicant-2.0.tar.gz
+    __decord wpa_supplicant-2.0
+    __cd wpa_supplicant-2.0/wpa_supplicant
+    cat > .config << .
+CONFIG_BACKEND=file
+CONFIG_CTRL_IFACE=y
+CONFIG_DEBUG_FILE=n
+CONFIG_DEBUG_SYSLOG=n
+CONFIG_DEBUG_SYSLOG_FACILITY=LOG_DAEMON
+CONFIG_DRIVER_NL80211=y
+CONFIG_DRIVER_WEXT=y
+CONFIG_DRIVER_WIRED=y
+CONFIG_EAP_GTC=y
+CONFIG_EAP_LEAP=y
+CONFIG_EAP_MD5=y
+CONFIG_EAP_MSCHAPV2=y
+CONFIG_EAP_OTP=y
+CONFIG_EAP_PEAP=y
+CONFIG_EAP_TLS=y
+CONFIG_EAP_TTLS=y
+CONFIG_IEEE8021X_EAPOL=y
+CONFIG_IPV6=n
+CONFIG_LIBNL32=y
+CONFIG_PEERKEY=y
+CONFIG_PKCS12=y
+CONFIG_READLINE=y
+CONFIG_SMARTCARD=y
+CONFIG_WPS=y
+CFLAGS += -I/usr/include/libnl3
+.
+    __mk BINDIR=/sbin LIBDIR=/lib
+    sudo install -v -m755 wpa_{cli,passphrase,supplicant} /sbin/ &&
+    sudo install -v -m644 doc/docbook/wpa_supplicant.conf.5 /usr/share/man/man5/ &&
+    sudo install -v -m644 doc/docbook/wpa_{cli,passphrase,supplicant}.8 /usr/share/man/man8/
+    sudo ldconfig
 }
 
 __yasm-1.2.0()
