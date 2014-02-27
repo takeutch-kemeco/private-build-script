@@ -76,10 +76,15 @@ __decord()
 
     cd $SRC_DIR
     BN=$(ls $1*.tar.*)
+    if [ $? -ne 0 ]
+    then
+        BN=$(ls $1*.tgz)
+    fi
     __echo-g $BN
 
     cd $BASE_DIR
     case $BN in
+        *.tgz) gzip  -dc $SRC_DIR/$BN | tar xvf - ;;
 	*.gz)  gzip  -dc $SRC_DIR/$BN | tar xvf - ;;
 	*.bz2) bzip2 -dc $SRC_DIR/$BN | tar xvf - ;;
 	*.xz)  xz    -dc $SRC_DIR/$BN | tar xvf - ;;
