@@ -563,6 +563,14 @@ ASFLAGS-config=-O4 -march=native -mtune=native -msse3
     __mkinst
 }
 
+__glib-networking()
+{
+    __dep gnutls gsettings desktop-schemas p11-kit
+
+    __git-clone git://git.gnome.org/glib-networking
+    __common glib-networking
+}
+
 __glibc()
 {
     __glibc-2.19
@@ -1009,6 +1017,14 @@ __libseccomp()
     __common libseccomp
 }
 
+__libsoup()
+{
+    __dep glib-networking libxml sqlite gobject-introspection
+
+    __git-clone git://git.gnome.org/libsoup
+    __common libsoup
+}
+
 __libtiff-4.0.3()
 {
     __dep libjpeg-8
@@ -1074,6 +1090,21 @@ __lvm2-2.02.105()
 __lvm2()
 {
     __lvm2-2.02.105
+}
+
+__midori-0.5.7()
+{
+    __dep cmake libnotify webkitgtk vala
+
+    __wget http://www.midori-browser.org/downloads/midori_0.5.7_all_.tar.bz2
+    __decord midori_0.5.7_all_
+    __cd midori-0.5.7
+    __bld-common-simple --enable-gtk3 --disable-zeitgeist --enable-granite=no --enable-apidocs=no
+}
+
+__midori()
+{
+    __midori-0.5.7
 }
 
 __mpc-1.0.2()
@@ -1632,6 +1663,20 @@ __vte()
     __git-clone git://git.gnome.org/vte
     __cd vte
     __bld-common --enable-introspection --enable-maintainer-mode
+}
+
+__webkitgtk-2.2.4()
+{
+    __dep gperf gst-plugin-base gtk+3 icu libsecret libsoup libwebp mesalib ruby sqlite gudev which gobject-introspection
+
+    __wget http://webkitgtk.org/releases/webkitgtk-2.2.4.tar.xz
+    __dcd webkitgtk-2.2.4
+    __bld-common --enable-introspection --disable-geolocation
+}
+
+__webkitgtk()
+{
+    __webkitgtk-2.2.4
 }
 
 __wget-1.15()
