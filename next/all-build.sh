@@ -1113,6 +1113,30 @@ __libsoup()
     __common libsoup
 }
 
+__libtasn1-git()
+{
+    __dep ""
+
+    __git-clone git://git.savannah.gnu.org/libtasn1.git
+    __cd libtasn1
+    __self-autogen
+    __bld-common-simple
+}
+
+__libtasn1-3.4()
+{
+    __dep ""
+
+    __wget http://ftp.gnu.org/gnu/libtasn1/libtasn1-3.4.tar.gz
+    __dcd libtasn1-3.4
+    __bld-common
+}
+
+__libtasn1()
+{
+    __libtasn1-3.4
+}
+
 __libtiff-4.0.3()
 {
     __dep libjpeg-8
