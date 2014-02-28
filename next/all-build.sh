@@ -1122,6 +1122,14 @@ __libseccomp()
     __common libseccomp
 }
 
+__libsecret()
+{
+    __dep glib gobject-introspection libgcrypt vala
+
+    __git-clone git://git.gnome.org/libsecret
+    __common libsecret
+}
+
 __libsoup()
 {
     __dep glib-networking libxml sqlite gobject-introspection
