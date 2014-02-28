@@ -1205,6 +1205,8 @@ __ncurses-5.9()
     __wget ftp://invisible-island.net/ncurses/ncurses-5.9.tar.gz
     __dcd ncurses-5.9
     __bld-common --mandir=/usr/share/man --with-shared --enable-widec
+    sudo ln -s /usr/lib/{libncursesw.so,libcurses.so}
+    sudo ldconfig
 }
 
 __ncurses()
