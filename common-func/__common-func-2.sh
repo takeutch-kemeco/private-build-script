@@ -278,3 +278,10 @@ __common()
     __bld-common
 }
 
+__pl-common()
+{
+    __dcd $1
+    perl Makefile.PL
+    __mk
+    __mkinst
+}
