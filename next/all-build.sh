@@ -496,6 +496,14 @@ __gcc()
     __gcc-4.8.2
 }
 
+__gcr()
+{
+    __dep glib intltool libgcrypt libtasn1 p11-kit gnupg gobject-introspection gtk+3
+
+    __git-clone git://git.gnome.org/gcr
+    __common gcr
+}
+
 __gdb-7.7()
 {
     __dep python2
