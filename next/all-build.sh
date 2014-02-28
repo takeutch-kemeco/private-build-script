@@ -1877,6 +1877,18 @@ __wget-install()
     __wget-1.15
 }
 
+__which-2.20()
+{
+    __wget ftp://ftp.gnu.org/gnu/which/which-2.20.tar.gz
+    __dcd which-2.20
+    __bld-common
+}
+
+__which()
+{
+    __which-2.20
+}
+
 __wpa_supplicant()
 {
     __wget http://hostap.epitest.fi/releases/wpa_supplicant-2.0.tar.gz
