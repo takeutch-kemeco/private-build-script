@@ -817,6 +817,21 @@ __iana-etc()
     __iana-etc-2.30
 }
 
+__icu-52.1()
+{
+    __dep llvm
+
+    __wget http://download.icu-project.org/files/icu4c/52.1/icu4c-52_1-src.tgz
+    __decord icu4c-52_1-src
+    __cd icu/source
+    __bld-common-simple CXX=g++
+}
+
+__icu()
+{
+    __icu-52.1
+}
+
 __inetutils()
 {
     __dep syslog.conf
