@@ -142,6 +142,34 @@ __cairo()
         --enable-directfb=no --enable-ft --enable-fc --enable-test-surfaces=no
 }
 
+__certificate-authority-certificates()
+{
+    __dep openssl
+
+    sudo install $SRC_DIR/make-cert.pl            /bin/
+    sudo install $SRC_DIR/make-ca.sh              /bin/
+    sudo install $SRC_DIR/remove-expired-certs.sh /bin/
+
+    certhost='http://mxr.mozilla.org'
+    certdir='/mozilla/source/security/nss/lib/ckfw/builtins'
+    url="$certhost$certdir/certdata.txt?raw=1"
+
+    wget --output-document certdata.txt $url
+    unset certhost certdir url
+    make-ca.sh
+    remove-expired-certs.sh certs
+
+    SSLDIR=/etc/ssl
+    sudo install -d ${SSLDIR}/certs
+    sudo cp -v certs/*.pem ${SSLDIR}/certs
+    c_rehash
+    sudo install BLFS-ca-bundle*.crt ${SSLDIR}/ca-bundle.crt
+    sudo ln -sv ../ca-bundle.crt ${SSLDIR}/certs/ca-certificates.crt
+    unset SSLDIR
+
+    rm -r certs BLFS-ca-bundle*
+}
+
 __cmake()
 {
     __git-clone git://cmake.org/cmake.git
