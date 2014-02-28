@@ -641,7 +641,29 @@ __gnupg()
 
     __git-clone git clone git://git.gnupg.org/gnupg.git
     __cd gnupg
-    --bld-common --enable-maintainer-mode
+    __bld-common --enable-maintainer-mode
+}
+
+__gperf-3.0.4()
+{
+    __dep ""
+
+    __wget http://ftp.gnu.org/gnu/gperf/gperf-3.0.4.tar.gz
+    __dcd gperf-3.0.4
+    __bld-common
+}
+
+__gperf-git()
+{
+    __dep ""
+
+    __git-clone git://git.savannah.gnu.org/gperf.git
+    __common gperf
+}
+
+__gperf()
+{
+    __gperf-3.0.4
 }
 
 __gsettings-desktop-schemas()
