@@ -1410,6 +1410,14 @@ __openssl()
     __openssl-1.0.1f
 }
 
+__p11-kit()
+{
+    __dep certificate-authority-certificates libtasn1 libffi
+
+    __git-clone git://anongit.freedesktop.org/p11-glue/p11-kit
+    __common p11-kit
+}
+
 __pango()
 {
     __dep cairo harfbuzz xorg gobject-introspenction
