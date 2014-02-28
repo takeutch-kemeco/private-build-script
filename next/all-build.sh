@@ -663,6 +663,15 @@ __gnome-icon-theme-symbolic()
     __common gnome-icon-theme-symbolic
 }
 
+__gnome-keyring()
+{
+    __dep dbus gcr linux-pam
+
+    __git-clone git://git.gnome.org/gnome-keyring
+    __cd gnome-keyring
+    __bld-common --with-pam-dir=/lib/security
+}
+
 __gnome-themes-standard()
 {
     __dep gtk+2 gtk+3 librsvg
