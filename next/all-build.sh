@@ -1451,6 +1451,21 @@ __popt()
     __popt-1.16
 }
 
+__pth-2.0.7()
+{
+    __dep ""
+
+    __wget ftp://ftp.ossp.org/pkg/lib/pth/pth-2.0.7.tar.gz
+    __dcd pth-2.0.7
+    sed -i 's#$(LOBJS): Makefile#$(LOBJS): pth_p.h Makefile#' Makefile.in
+    __bld-common
+}
+
+__pth()
+{
+    __pth-2.0.7
+}
+
 __python-2.7.6()
 {
     __dep expat libffi
