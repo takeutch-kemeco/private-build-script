@@ -644,6 +644,15 @@ __gnupg()
     --bld-common --enable-maintainer-mode
 }
 
+__gsettings-desktop-schemas()
+{
+    __dep glib libtool gobject-introspection
+
+    __git-clone git://git.gnome.org/gsettings-desktop-schemas
+    __common gsettings-desktop-schemas
+    sudo glib-compile-schemas /usr/share/glib-2.0/schemas
+}
+
 __gtk+2()
 {
     __dep atk gdk-pixbuf pango gobject-introspection
@@ -803,6 +812,20 @@ __inetutils()
                  --disable-tftpd --disable-uucpd --disable-ftp --disable-ping6 --disable-rcp \
                  --disable-rexec --disable-rlogin --disable-rsh --disable-talk \
                  --disable-tftp --disable-rpath --disable-ipv6
+}
+
+__intltool-0.50.2()
+{
+    __dep perl-module-xml-parser
+
+    __wget http://launchpad.net/intltool/trunk/0.50.2/+download/intltool-0.50.2.tar.gz
+    __dcd intltool-0.50.2
+    __bld-common
+}
+
+__intltool()
+{
+    __intltool-0.50.2
 }
 
 __iproute2()
