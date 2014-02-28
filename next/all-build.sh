@@ -946,7 +946,7 @@ __libffi()
 
 __libgcrypt()
 {
-    __dep libgpg-error
+    __dep libgpg-error libcap pth
 
     __git-clone git://git.gnupg.org/libgcrypt.git
     __cd libgcrypt
