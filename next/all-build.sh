@@ -1114,6 +1114,26 @@ __libxslt()
     __libxslt-1.1.28
 }
 
+__llvm-3.4()
+{
+    __dep libffi python2
+
+    __wget http://llvm.org/releases/3.4/llvm-3.4.src.tar.gz
+    __wget http://llvm.org/releases/3.4/clang-3.4.src.tar.gz
+    __wget http://llvm.org/releases/3.4/compiler-rt-3.4.src.tar.gz
+    __dcd llvm-3.4
+    tar -xf $SRC_DIR/clang-3.4.src.tar.gz -C tools
+    tar -xf $SRC_DIR/compiler-rt-3.4.src.tar.gz -C projects
+    mv tools/clang-3.4 tools/clang &&
+    mv projects/compiler-rt-3.4 projects/compiler-rt
+    __bld-common CC=gcc CXX=g++ --enable-libffi --enable-optimized --enable-shared --disable-assertions
+}
+
+__llvm()
+{
+    __llvm-3.4
+}
+
 __lvm2-2.02.105()
 {
     ### Use kernel configuration
