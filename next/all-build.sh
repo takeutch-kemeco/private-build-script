@@ -1132,7 +1132,7 @@ __libsecret()
 
 __libsoup()
 {
-    __dep glib-networking libxml sqlite gobject-introspection
+    __dep glib-networking libxml2 sqlite gobject-introspection
 
     __git-clone git://git.gnome.org/libsoup
     __common libsoup
