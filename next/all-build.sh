@@ -1896,18 +1896,18 @@ __vte()
     __bld-common --enable-introspection --enable-maintainer-mode
 }
 
-__webkitgtk-2.2.4()
+__webkitgtk-2.2.5()
 {
     __dep gperf gst-plugin-base gtk+3 icu libsecret libsoup libwebp mesalib ruby sqlite gudev which gobject-introspection
 
-    __wget http://webkitgtk.org/releases/webkitgtk-2.2.4.tar.xz
-    __dcd webkitgtk-2.2.4
-    __bld-common --enable-introspection --disable-geolocation
+    __wget http://webkitgtk.org/releases/webkitgtk-2.2.5.tar.xz
+    __dcd webkitgtk-2.2.5
+    __bld-common --enable-introspection --disable-geolocation --enable-webkit1=no
 }
 
 __webkitgtk()
 {
-    __webkitgtk-2.2.4
+    __webkitgtk-2.2.5
 }
 
 __wget-1.15()
