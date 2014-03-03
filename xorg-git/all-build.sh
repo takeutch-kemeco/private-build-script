@@ -674,7 +674,10 @@ __xcb-util-common-m4()
 __xcb-util()
 {
     __git-clone git://anongit.freedesktop.org/xcb/util xcb-util
-    __x-common xcb-util
+    __cd xcb-util
+    git pull
+    git submodule update --init
+    __x-bld-common
 }
 
 __xcb-util-image()
@@ -695,13 +698,19 @@ __xcb-util-keysyms()
 __xcb-util-renderutil()
 {
     __git-clone git://anongit.freedesktop.org/xcb/util-renderutil xcb-util-renderutil
-    __x-common xcb-util-renderutil
+    __cd xcb-util-renderutil
+    git pull
+    git submodule update --init
+    __x-bld-common
 }
 
 __xcb-util-wm()
 {
     __git-clone git://anongit.freedesktop.org/xcb/util-wm xcb-util-wm
-    __x-common xcb-util-wm
+    __cd xcb-util-wm
+    git pull
+    git submodule update --init
+    __x-bld-common
 }
 
 __libxshmfence()
@@ -736,8 +745,8 @@ __mesa-lib()
     git pull
 
     $DIST_CLEAN
-    ./autogen.sh
-    __cfg --prefix=/usr                	        \
+    ./autogen.sh \
+          --prefix=/usr                	        \
           --sysconfdir=/etc              	\
           --enable-texture-float         	\
           --enable-gles1                 	\
