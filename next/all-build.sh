@@ -132,6 +132,30 @@ __bison()
     __bison-3.0.2
 }
 
+__bzip2-1.0.6()
+{
+    __dep ""
+
+    __wget http://www.bzip.org/1.0.6/bzip2-1.0.6.tar.gz
+    __dcd bzip2-1.0.6
+
+    $MAKE_CLEAN
+    __mk -f Makefile-libbz2_so
+    __mk clean
+    __mk
+    __mkinst PREFIX=/usr
+
+    sudo cp -v bzip2-shared /bin/bzip2
+    sudo cp -av libbz2.so* /lib
+
+    sudo ldconfig
+}
+
+__bzip2()
+{
+    __bzip2-1.0.6
+}
+
 __cairo()
 {
     __dep libpng glib pixman fontconfig
@@ -896,6 +920,14 @@ __inetutils()
                  --disable-tftp --disable-rpath --disable-ipv6
 }
 
+__intel-driver()
+{
+    __dep libvpx livva "?"
+
+    git clone git://anongit.freedesktop.org/vaapi/intel-driver
+    __common intel-driver
+}
+
 __intltool-0.50.2()
 {
     __dep perl-module-xml-parser
@@ -1206,6 +1238,14 @@ __libxslt()
     __libxslt-1.1.28
 }
 
+__libva()
+{
+    __dep "?"
+
+    git clone git://anongit.freedesktop.org/git/libva
+    __common libva
+}
+
 __llvm-3.4()
 {
     __dep libffi python2
@@ -1247,6 +1287,15 @@ __lvm2-2.02.105()
 __lvm2()
 {
     __lvm2-2.02.105
+}
+
+__libvpx()
+{
+    __dep "?"
+
+    __git-clone https://chromium.googlesource.com/webm/libvpx
+    __cd libvpx
+    __bld-common-simple
 }
 
 __midori-0.5.7()
