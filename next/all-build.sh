@@ -1610,6 +1610,40 @@ __python-27()
     __python-2.7.6
 }
 
+__sane-backends-1.0.24()
+{
+    __dep libusb
+
+    __wget http://fossies.org/linux/misc/sane-backends-1.0.24.tar.gz
+    __dcd sane-backends-1.0.24
+    sudo groupadd -g 70 scanner
+    __bld-common --localstatedir=/var --with-group=scanner --enable-libusb_1_0
+    sudo install -m 644 -v tools/udev/libsane.rules /etc/udev/rules.d/65-scanner.rules
+    sudo chgrp -v scanner /var/lock/sane
+    sudo scanimage -L
+}
+
+__sane-backends()
+{
+    __sane-backends-1.0.24
+}
+
+__sane-frontends-1.0.14()
+{
+    __sane-backends gimp
+
+    __wget ftp://ftp2.sane-project.org/pub/sane/sane-frontends-1.0.14.tar.gz
+    __dcd sane-frontends-1.0.14
+    sed -i -e "/SANE_CAP_ALWAYS_SETTABLE/d" src/gtkglue.c
+    __bld-common
+    sudo ln -v -s /usr/bin/xscanimage /usr/lib/gimp/2.0/plug-ins
+}
+
+__sane-frontends()
+{
+    __sane-frontends-1.0.14
+}
+
 __serf-1.3.3()
 {
     __dep apr-util openssl scons
@@ -1975,6 +2009,24 @@ CFLAGS += -I/usr/include/libnl3
     sudo install -v -m644 doc/docbook/wpa_supplicant.conf.5 /usr/share/man/man5/ &&
     sudo install -v -m644 doc/docbook/wpa_{cli,passphrase,supplicant}.8 /usr/share/man/man8/
     sudo ldconfig
+}
+
+__xsane-0.999()
+{
+    __dep sane-frontends sane-backends gimp
+
+    __wget http://www.xsane.org/download/xsane-0.999.tar.gz
+    __dcd xsane-0.999
+    sed -i -e 's/netscape/xdg-open/'                   src/xsane.h
+    sed -i -e 's/png_ptr->jmpbuf/png_jmpbuf(png_ptr)/' src/xsane-save.c
+    __bld-common
+    sudo ln -v -s firefox /usr/bin/netscape
+    sudo ln -v -s /usr/bin/xsane /usr/lib/gimp/2.0/plug-ins/
+}
+
+__xsane()
+{
+    __xsane-0.999
 }
 
 __yasm-1.2.0()
