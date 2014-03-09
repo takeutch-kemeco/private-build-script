@@ -760,8 +760,8 @@ __mesa-lib()
           --enable-dri                          \
 	  --with-llvm-shared-libs		\
           --with-egl-platforms="drm,x11" 	\
-          --with-gallium-drivers="swrast"	\
-          --with-dri-drivers="i965,swrast"
+          --with-gallium-drivers="i915,swrast"	\
+          --with-dri-drivers="i965,i915,swrast"
 
     $MAKE_CLEAN
     __mk
