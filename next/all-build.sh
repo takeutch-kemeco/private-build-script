@@ -1002,6 +1002,7 @@ __libcap()
 
     __git-clone git://git.kernel.org/pub/scm/linux/kernel/git/morgan/libcap.git
     __cd libcap
+    __mk prefix=/usr SBINDIR=/sbin PAM_LIBDIR=/lib RAISE_SETFCAP=no
     __mkinst prefix=/usr SBINDIR=/sbin PAM_LIBDIR=/lib RAISE_SETFCAP=no
 }
 
