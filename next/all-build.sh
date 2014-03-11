@@ -1006,6 +1006,14 @@ __libcap()
     __mkinst prefix=/usr SBINDIR=/sbin PAM_LIBDIR=/lib RAISE_SETFCAP=no
 }
 
+__libcg()
+{
+    __dep linux-pam
+
+    __git-clone git://git.code.sf.net/p/libcg/libcg
+    __bld-common libcg
+}
+
 __libcroco()
 {
     __dep glib libxml2
