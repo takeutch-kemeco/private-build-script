@@ -1011,7 +1011,9 @@ __libcg()
     __dep linux-pam
 
     __git-clone git://git.code.sf.net/p/libcg/libcg
-    __bld-common libcg
+    __cd libcg
+    ./bootstrap.sh
+    __bld-common
 }
 
 __libcroco()
