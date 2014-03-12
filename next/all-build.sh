@@ -403,6 +403,20 @@ __eudev()
     __mkinst
 }
 
+__expect-5.45()
+{
+    __dep tcl tk
+
+    __wget http://prdownloads.sourceforge.net/expect/expect5.45.tar.gz
+    __dcd expect5.45
+    __bld-common --with-tcl=/usr/lib --enable-shared --mandir=/usr/share/man --with-tclinclude=/usr/include
+}
+
+__expect()
+{
+    __expect-5.45
+}
+
 __flex-git()
 {
     ### flex と bison は開発版を入れるべきではない
