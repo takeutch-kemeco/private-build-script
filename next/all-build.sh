@@ -11,6 +11,9 @@ MAKE_CLEAN="make clean"
 
 . ../common-func/__common-func-2.sh
 
+### ビルド時にシステムメモリーを使いきらないように制限する
+__init-build-group
+
 __attr()
 {
     __dep ""

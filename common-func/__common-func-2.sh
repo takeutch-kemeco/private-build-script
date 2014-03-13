@@ -285,3 +285,12 @@ __pl-common()
     __mk
     __mkinst
 }
+
+### cgroup として build-group を作成し、このスクリプトが含まれる現在のプロセスを登録する。
+### build-group は、ビルド時の使用メモリーの上限を 1GByte までに制限する為に使う。
+__init-build-group()
+{
+    sudo cgcreate -g memory,cpu:/build-group
+    sudo sh -c "echo 1G >  /sys/fs/cgroup/memory/build-group/memory.limit_in_bytes"
+    sudo sh -c "echo $$ >> /sys/fs/cgroup/memory/build-group/tasks"
+}
