@@ -440,6 +440,22 @@ __flex-2.5.37()
     __bld-common
 }
 
+__firefox()
+{
+    __dep "?"
+
+    __hg-clone http://hg.mozilla.org/comm-central/
+    __cd comm-central
+    ./client.py checkout
+
+    __cd comm-central/mozilla
+    sudo rm $BASE_DIR/comm-central/ff-opt -rf
+    ln -sf $SRC_DIR/mozconfig $BASE_DIR/comm-central/mozilla/.mozconfig 
+    __mk -f client.mk configure
+    __mk -f client.mk build
+    __mkinst -f client.mk
+}
+
 __flex()
 {
     __flex-2.5.37
