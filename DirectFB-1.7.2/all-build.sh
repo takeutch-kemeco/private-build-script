@@ -9,29 +9,12 @@ DIST_CLEAN=
 MAKE_CLEAN=
 #MAKE_CLEAN="make clean"
 
-. ./__common-func.sh
-
-__bld-common()
-{
-	$DIST_CLEAN
-	__cfg --prefix=/usr --sysconfdir=/etc --localstatedir=/var --libexecdir=/usr/lib --enable-extra-warnings=no $@
-
-	$MAKE_CLEAN
-	__mk
-	__mk install
-	ldconfig
-}
-
-__common()
-{
-	__cd $1
-	__bld-common
-}
+. ../common-func/__common-func-2.sh
 
 __linux-fusion()
 {
-	__wget http://directfb.org/downloads/Core/linux-fusion/linux-fusion-9.0.2.tar.gz
-	__dcd linux-fusion-9.0.2
+	__wget http://directfb.org/downloads/Core/linux-fusion/linux-fusion-9.0.3.tar.gz
+	__dcd linux-fusion-9.0.3
 
 	$MAKE_CLEAN
 	__mk
@@ -41,13 +24,12 @@ __linux-fusion()
 		__err "カーネルソースのバージョンが rc の場合は、implicet-declaration エラーでビルド失敗するかもしれません。それが原因の場合はカーネルソースのバージョンをリリース版へ checkout してから行えばビルドが通るかもしれません。"
 	fi
 
-	__mk install
-	ldconfig
+	__mkinst
 
-	cat > /etc/udev/rules.d/40-one.rules << .
+	cat > /tmp/40-one.rules << .
 KERNEL=="one[0-9]*", NAME="one/%n", GROUP="video", MODE="0660"
 .
-
+	sudo mv {/tmp,/etc/udev/rules.d}/40-one.rules
 }
 
 __flux()
@@ -59,8 +41,8 @@ __flux()
 
 __direct-fb()
 {
-	__wget http://directfb.org/downloads/Core/DirectFB-1.7/DirectFB-1.7.1.tar.gz
-	__dcd DirectFB-1.7.1
+	__wget http://directfb.org/downloads/Core/DirectFB-1.7/DirectFB-1.7.2.tar.gz
+	__dcd DirectFB-1.7.2
 	__bld-common --enable-egl=no --enable-mesa --enable-jpeg --enable-zlib --enable-png --enable-gstreamer=no \
                      --with-smooth-scaling --enable-one	--with-gfxdrivers=i810,i830 --enable-fbdev --enable-voodoo
 }
@@ -98,8 +80,8 @@ __sawman()
 __all()
 {
 #__rem(){
-#	__linux-fusion
-	__flux
+	__linux-fusion
+#	__flux
 	__direct-fb
         __direct-fb-examples
 #	__fusion-sound
