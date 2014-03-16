@@ -1791,7 +1791,7 @@ __systemd()
     ### その上で dbus, linux-pam などの依存パッケージのビルドを行わなければビルドが通らない。
 
     ### It is necessary to validate some Linux kernel options (i.e. cgroup, fnotify, module).
-    __dep libcap dbus kmod libseccomp cryptsetup linux-pam
+    __dep libcap dbus kmod libseccomp lvm2 cryptsetup linux-pam
 
     __git-clone git://anongit.freedesktop.org/systemd/systemd
     __cd systemd
