@@ -1993,7 +1993,7 @@ __wget-1.15()
     __dep openssl
 
     __wget http://ftp.gnu.org/gnu/wget/wget-1.15.tar.xz
-    __cd wget
+    __dcd wget-1.15
     __bld-common --with-ssl=openssl --with-openssl --disable-ipv6
 }
 
