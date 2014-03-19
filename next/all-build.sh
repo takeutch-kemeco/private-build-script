@@ -195,6 +195,8 @@ __certificate-authority-certificates()
     unset SSLDIR
 
     rm -r certs BLFS-ca-bundle*
+
+    sudo c_rehash
 }
 
 __cmake()
