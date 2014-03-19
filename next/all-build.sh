@@ -1262,6 +1262,14 @@ __libunistring()
     __common libunistring
 }
 
+__libxkbcommon()
+{
+    __dep "?"
+
+    __git-clone https://github.com/xkbcommon/libxkbcommon.git
+    __common libxkbcommon
+}
+
 __libxml2()
 {
     __dep python-27
