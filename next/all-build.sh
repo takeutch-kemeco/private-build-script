@@ -106,6 +106,14 @@ __gawk()
     __common gawk
 }
 
+__bash()
+{
+    __dep readline
+
+    __git-clone git://git.savannah.gnu.org/bash.git
+    __common bash
+}
+
 __binutils-2.24()
 {
     __dep ""
