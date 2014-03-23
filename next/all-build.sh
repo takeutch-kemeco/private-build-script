@@ -98,6 +98,14 @@ __automake()
     __automake-1.14.1
 }
 
+__gawk()
+{
+    __dep readline
+
+    __git-clone git://git.savannah.gnu.org/gawk.git
+    __common gawk
+}
+
 __binutils-2.24()
 {
     __dep ""
@@ -985,6 +993,18 @@ __iproute2()
     __cd iproute2
     __mk DESTDIR=
     __mkinst DESTDIR= SBINDIR=/sbin MANDIR=/usr/share/man DOCDIR=/usr/share/doc/iproute2
+}
+
+__mozjs()
+{
+    __dep libffi nspr python2 zip
+
+    __wget http://ftp.mozilla.org/pub/mozilla.org/js/mozjs17.0.0.tar.gz
+    __dcd mozjs17.0.0
+    cd js/src
+    __bld-common --enable-readline --enable-threadsafe --with-system-ffi --with-system-nspr
+    __mk
+    __mkinst
 }
 
 __kmod()
@@ -2105,5 +2125,20 @@ __yasm()
     __yasm-1.2.0
 }
 
-$@
+__zlib-1.2.8()
+{
+    __dep ""
 
+    __wget http://www.zlib.net/zlib-1.2.8.tar.xz
+    __dcd zlib-1.2.8
+    ./configure --prefix=/usr
+    __mk
+    __mkinst
+}
+
+__zlib()
+{
+    __zlib-1.2.8
+}
+
+$@
