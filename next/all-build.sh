@@ -1133,7 +1133,7 @@ __libmnl()
 
 __libnftnl()
 {
-    __dep ""
+    __dep libmnl
 
     __git-clone git://git.netfilter.org/libnftnl
     __common libnftnl
@@ -1662,6 +1662,14 @@ __python-2.7.6()
 __python-27()
 {
     __python-2.7.6
+}
+
+__readline()
+{
+    __dep ""
+
+    __git-clone git://git.savannah.gnu.org/readline.git
+    __common readline
 }
 
 __sane-backends-1.0.24()
