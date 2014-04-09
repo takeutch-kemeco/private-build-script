@@ -1556,7 +1556,7 @@ __openssl-1.0.1f()
     __dcd openssl-1.0.1f
     patch -Np1 -i $SRC_DIR/openssl-1.0.1f-fix_parallel_build-1.patch
     patch -Np1 -i $SRC_DIR/openssl-1.0.1f-fix_pod_syntax-1.patch
-    ./config --prefix=/usr --openssldir=/etc/ssl --libdir=lib shared zlib-dynamic
+    ./config --prefix=/usr --openssldir=/etc/ssl --libdir=lib shared zlib-dynamic -DOPENSSL_NO_HEARTBEATS
     __mk
     __mkinst
 }
