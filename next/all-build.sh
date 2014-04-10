@@ -1546,24 +1546,24 @@ __openssh()
     __openssh-6.5p1
 }
 
-__openssl-1.0.1f()
+__openssl-1.0.1g()
 {
     __dep ""
 
-    __wget http://www.openssl.org/source/openssl-1.0.1f.tar.gz
-    __wget http://www.linuxfromscratch.org/patches/blfs/svn/openssl-1.0.1f-fix_parallel_build-1.patch
-    __wget http://www.linuxfromscratch.org/patches/blfs/svn/openssl-1.0.1f-fix_pod_syntax-1.patch
-    __dcd openssl-1.0.1f
-    patch -Np1 -i $SRC_DIR/openssl-1.0.1f-fix_parallel_build-1.patch
-    patch -Np1 -i $SRC_DIR/openssl-1.0.1f-fix_pod_syntax-1.patch
-    ./config --prefix=/usr --openssldir=/etc/ssl --libdir=lib shared zlib-dynamic -DOPENSSL_NO_HEARTBEATS
+    __wget http://www.openssl.org/source/openssl-1.0.1g.tar.gz
+    __wget http://www.linuxfromscratch.org/patches/blfs/svn/openssl-1.0.1g-fix_parallel_build-1.patch
+    __wget http://www.linuxfromscratch.org/patches/blfs/svn/openssl-1.0.1g-fix_pod_syntax-1.patch
+    __dcd openssl-1.0.1g
+    patch -Np1 -i $SRC_DIR/openssl-1.0.1g-fix_parallel_build-1.patch
+    patch -Np1 -i $SRC_DIR/openssl-1.0.1g-fix_pod_syntax-1.patch
+    ./config --prefix=/usr --openssldir=/etc/ssl --libdir=lib shared zlib-dynamic
     __mk
     __mkinst
 }
 
 __openssl()
 {
-    __openssl-1.0.1f
+    __openssl-1.0.1g
 }
 
 __p11-kit()
@@ -1957,7 +1957,7 @@ __tomoyo-tools-2.5.0()
     __dep "?"
 
     cd ${BASE_DIR}
-    wget -O ${SRC_DIR}/tomoyo-tools-2.5.0-20140105.tar.gz 'http://sourceforge.jp/frs/redir.php?m=jaist&f=/tomoyo/53357/tomoyo-tools-2.5.0-20140105.tar.gz'
+    wget -O $SRC_DIR/tomoyo-tools-2.5.0-20140105.tar.gz 'http://sourceforge.jp/frs/redir.php?m=jaist&f=/tomoyo/53357/tomoyo-tools-2.5.0-20140105.tar.gz'
 
     __decord tomoyo-tools-2.5.0-20140105
     __cd tomoyo-tools
