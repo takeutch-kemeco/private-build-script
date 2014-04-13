@@ -1889,18 +1889,18 @@ __sqlite()
     __sqlite-3.8.3.1
 }
 
-__svn-1.8.5()
+__svn-1.8.8()
 {
     __dep apr-util sqlite openssl serf dbus
 
-    __wget http://ftp.riken.jp/net/apache/subversion/subversion-1.8.5.tar.bz2
-    __dcd subversion-1.8.5
+    __wget http://ftp.riken.jp/net/apache/subversion/subversion-1.8.8.tar.bz2
+    __dcd subversion-1.8.8
     __bld-common --with-serf=/usr
 }
 
 __svn()
 {
-    __svn-1.8.5
+    __svn-1.8.8
 }
 
 __talloc-2.1.0()
