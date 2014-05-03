@@ -1587,7 +1587,7 @@ __libtiff()
     __libtiff-4.0.3
 }
 
-__libtool()
+__libtool.git()
 {
     __dep ""
 
@@ -1595,6 +1595,20 @@ __libtool()
     __cd libtool
     ./bootstrap
     __bld-common
+}
+
+__libtool-2.4.2()
+{
+    __dep ""
+
+    __wget http://ftp.jaist.ac.jp/pub/GNU/libtool/libtool-2.4.2.tar.xz
+    __dcd libtool-2.4.2
+    __bld-common
+}
+
+__libtool()
+{
+    __libtool-2.4.2
 }
 
 __libunistring()
