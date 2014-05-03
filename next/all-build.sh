@@ -84,6 +84,34 @@ __atk()
     __common atk
 }
 
+__autoconf-2.69()
+{
+    __dep ""
+
+    __wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.xz
+    __dcd autoconf-2.69
+    __bld-common
+}
+
+__autoconf()
+{
+    __autoconf-2.69
+}
+
+__autoconf-archive-2014.02.28()
+{
+    __dep autoonf
+
+    __wget http://ftp.gnu.org/gnu/autoconf-archive/autoconf-archive-2014.02.28.tar.xz
+    __dcd autoconf-archive-2014.02.28
+    __bld-common
+}
+
+__autoconf-archive()
+{
+    __autoconf-archive-2014.02.28
+}
+
 __automake-1.14.1()
 {
     __dep autoconf
