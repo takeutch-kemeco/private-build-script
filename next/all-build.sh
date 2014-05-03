@@ -1725,6 +1725,20 @@ __libvpx()
     __bld-common-simple
 }
 
+__m4-1.4.17()
+{
+    __dep ""
+
+    __wget http://ftp.jaist.ac.jp/pub/GNU/m4/m4-1.4.17.tar.xz
+    __dcd m4-1.4.17
+    __bld-common
+}
+
+__m4()
+{
+    __m4-1.4.17
+}
+
 __midori-0.5.7()
 {
     __dep cmake libnotify webkitgtk vala
