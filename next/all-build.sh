@@ -1936,6 +1936,14 @@ __pixman()
     __common pixman
 }
 
+__pkg-config()
+{
+    __dep ""
+
+    __git-clone git://anongit.freedesktop.org/pkg-config
+    __common pkg-config
+}
+
 __polkit()
 {
     __dep "?"
