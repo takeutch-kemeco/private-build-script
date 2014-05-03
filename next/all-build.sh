@@ -2334,6 +2334,14 @@ __xsane()
     __xsane-0.999
 }
 
+__xz.git()
+{
+    __dep ""
+
+    __git-clone http://git.tukaani.org/xz.git
+    __common xz
+}
+
 __xz-5.0.5()
 {
     __dep ""
@@ -2345,7 +2353,7 @@ __xz-5.0.5()
 
 __xz()
 {
-    __xz-5.0.5
+    __xz.git
 }
 
 __yasm-1.2.0()
