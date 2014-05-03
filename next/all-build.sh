@@ -400,6 +400,160 @@ __dbus-glib()
     __bld-common --libexecdir=/usr/lib/dbus-1.0
 }
 
+__docbook-xml-4.5()
+{
+    __dep libxml2 unzip
+
+    __wget http://www.docbook.org/xml/4.5/docbook-xml-4.5.zip
+    mkdir docbook-xml-4.5
+    cd $BASE_DIR/docbook-xml-4.5
+    sudo cp $SRC_DIR/docbook-xml-4.5.zip $BASE_DIR/docbook-xml-4.5
+    sudo unzip docbook-xml-4.5.zip
+
+    sudo install -v -d -m755 /usr/share/xml/docbook/xml-dtd-4.5
+    sudo install -v -d -m755 /etc/xml
+    sudo chown -R root:root .
+    sudo cp -v -af docbook.cat *.dtd ent/ *.mod /usr/share/xml/docbook/xml-dtd-4.5
+
+    if [ ! -e /etc/xml/docbook ]
+    then
+	sudo xmlcatalog --noout --create /etc/xml/docbook
+    fi
+
+    sudo xmlcatalog --noout --add "public" \
+	"-//OASIS//DTD DocBook XML V4.5//EN" \
+	"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" \
+	/etc/xml/docbook
+    sudo xmlcatalog --noout --add "public" \
+	"-//OASIS//DTD DocBook XML CALS Table Model V4.5//EN" \
+	"file:///usr/share/xml/docbook/xml-dtd-4.5/calstblx.dtd" \
+	/etc/xml/docbook
+    sudo xmlcatalog --noout --add "public" \
+	"-//OASIS//DTD XML Exchange Table Model 19990315//EN" \
+	"file:///usr/share/xml/docbook/xml-dtd-4.5/soextblx.dtd" \
+	/etc/xml/docbook
+    sudo xmlcatalog --noout --add "public" \
+	"-//OASIS//ELEMENTS DocBook XML Information Pool V4.5//EN" \
+	"file:///usr/share/xml/docbook/xml-dtd-4.5/dbpoolx.mod" \
+	/etc/xml/docbook
+    sudo xmlcatalog --noout --add "public" \
+	"-//OASIS//ELEMENTS DocBook XML Document Hierarchy V4.5//EN" \
+	"file:///usr/share/xml/docbook/xml-dtd-4.5/dbhierx.mod" \
+	/etc/xml/docbook
+    sudo xmlcatalog --noout --add "public" \
+	"-//OASIS//ELEMENTS DocBook XML HTML Tables V4.5//EN" \
+	"file:///usr/share/xml/docbook/xml-dtd-4.5/htmltblx.mod" \
+	/etc/xml/docbook
+    sudo xmlcatalog --noout --add "public" \
+	"-//OASIS//ENTITIES DocBook XML Notations V4.5//EN" \
+	"file:///usr/share/xml/docbook/xml-dtd-4.5/dbnotnx.mod" \
+	/etc/xml/docbook
+    sudo xmlcatalog --noout --add "public" \
+	"-//OASIS//ENTITIES DocBook XML Character Entities V4.5//EN" \
+	"file:///usr/share/xml/docbook/xml-dtd-4.5/dbcentx.mod" \
+	/etc/xml/docbook
+    sudo xmlcatalog --noout --add "public" \
+	"-//OASIS//ENTITIES DocBook XML Additional General Entities V4.5//EN" \
+	"file:///usr/share/xml/docbook/xml-dtd-4.5/dbgenent.mod" \
+	/etc/xml/docbook
+    sudo xmlcatalog --noout --add "rewriteSystem" \
+	"http://www.oasis-open.org/docbook/xml/4.5" \
+	"file:///usr/share/xml/docbook/xml-dtd-4.5" \
+	/etc/xml/docbook
+    sudo xmlcatalog --noout --add "rewriteURI" \
+	"http://www.oasis-open.org/docbook/xml/4.5" \
+	"file:///usr/share/xml/docbook/xml-dtd-4.5" \
+	/etc/xml/docbook
+
+    if [ ! -e /etc/xml/catalog ]
+    then
+	sudo xmlcatalog --noout --create /etc/xml/catalog
+    fi
+
+    sudo xmlcatalog --noout --add "delegatePublic" \
+	"-//OASIS//ENTITIES DocBook XML" \
+	"file:///etc/xml/docbook" \
+	/etc/xml/catalog
+    sudo xmlcatalog --noout --add "delegatePublic" \
+	"-//OASIS//DTD DocBook XML" \
+	"file:///etc/xml/docbook" \
+	/etc/xml/catalog
+    sudo xmlcatalog --noout --add "delegateSystem" \
+	"http://www.oasis-open.org/docbook/" \
+	"file:///etc/xml/docbook" \
+	/etc/xml/catalog
+    sudo xmlcatalog --noout --add "delegateURI" \
+	"http://www.oasis-open.org/docbook/" \
+	"file:///etc/xml/docbook" \
+	/etc/xml/catalog
+}
+
+__docbook-xml()
+{
+    __docbook-xml-4.5
+}
+
+__docbook-xsl-1.78.1()
+{
+    __dep libxml2
+
+    __wget http://downloads.sourceforge.net/docbook/docbook-xsl-1.78.1.tar.bz2
+    __wget http://downloads.sourceforge.net/docbook/docbook-xsl-doc-1.78.1.tar.bz2
+    __dcd docbook-xsl-1.78.1
+
+    tar -xf $SRC_DIR/docbook-xsl-doc-1.78.1.tar.bz2 --strip-components=1
+
+    sudo install -v -m755 -d /usr/share/xml/docbook/xsl-stylesheets-1.78.1
+
+    sudo cp -v -R VERSION common eclipse epub extensions fo highlighting html \
+        htmlhelp images javahelp lib manpages params profiling \
+        roundtrip slides template tests tools webhelp website \
+        xhtml xhtml-1_1 \
+	/usr/share/xml/docbook/xsl-stylesheets-1.78.1
+
+    sudo ln -s VERSION /usr/share/xml/docbook/xsl-stylesheets-1.78.1/VERSION.xsl
+
+    sudo install -v -m644 -D README /usr/share/doc/docbook-xsl-1.78.1/README.txt
+    sudo install -v -m644    RELEASE-NOTES* NEWS* /usr/share/doc/docbook-xsl-1.78.1
+
+    sudo cp -v -R doc/* /usr/share/doc/docbook-xsl-1.78.1
+
+    if [ ! -d /etc/xml ]
+    then
+	sudo install -v -m755 -d /etc/xml
+    fi
+
+    if [ ! -f /etc/xml/catalog ]
+    then
+	sudo xmlcatalog --noout --create /etc/xml/catalog
+    fi
+
+    sudo xmlcatalog --noout --add "rewriteSystem" \
+        "http://docbook.sourceforge.net/release/xsl/1.78.1" \
+        "/usr/share/xml/docbook/xsl-stylesheets-1.78.1" \
+	/etc/xml/catalog
+
+    sudo xmlcatalog --noout --add "rewriteURI" \
+        "http://docbook.sourceforge.net/release/xsl/1.78.1" \
+        "/usr/share/xml/docbook/xsl-stylesheets-1.78.1" \
+	/etc/xml/catalog
+
+    sudo xmlcatalog --noout --add "rewriteSystem" \
+        "http://docbook.sourceforge.net/release/xsl/current" \
+        "/usr/share/xml/docbook/xsl-stylesheets-1.78.1" \
+	/etc/xml/catalog
+
+    sudo xmlcatalog --noout --add "rewriteURI" \
+        "http://docbook.sourceforge.net/release/xsl/current" \
+        "/usr/share/xml/docbook/xsl-stylesheets-1.78.1" \
+	/etc/xml/catalog
+}
+
+__docbook-xsl()
+{
+    __docbook-xsl-1.78.1
+}
+
 __doxygen()
 {
     __dep ghostscript python2
@@ -836,6 +990,28 @@ EOF
     sudo cp /tmp/t /etc/gtk-3.0/settings.ini
 }
 
+__gtk-doc.git()
+{
+    __dep docbook-xml docbook-xsl Itstool libxslt
+
+    __git-clone git://git.gnome.org/gtk-doc
+    __common gtk-doc
+}
+
+__gtk-doc-1.19()
+{
+    __dep docbook-xml docbook-xsl Itstool libxslt
+
+    __wget http://ftp.gnome.org/pub/gnome/sources/gtk-doc/1.19/gtk-doc-1.19.tar.xz
+    __dcd gtk-doc-1.19
+    __bld-common
+}
+
+__gtk-doc()
+{
+    __gtk-doc-1.19
+}
+
 __gtk-engines2()
 {
     __dep "?"
@@ -1000,6 +1176,20 @@ __iproute2()
     __cd iproute2
     __mk DESTDIR=
     __mkinst DESTDIR= SBINDIR=/sbin MANDIR=/usr/share/man DOCDIR=/usr/share/doc/iproute2
+}
+
+__itstool-2.0.2()
+{
+    __dep docbook-xml docbook-xsl python2
+
+    __wget http://files.itstool.org/itstool/itstool-2.0.2.tar.bz2
+    __dcd itstool-2.0.2
+    __bld-common
+}
+
+__itstool()
+{
+    __itstool-2.0.2
 }
 
 __mozjs()
@@ -1281,6 +1471,16 @@ __libtiff()
     __libtiff-4.0.3
 }
 
+__libtool()
+{
+    __dep ""
+
+    __git-clone git://git.savannah.gnu.org/libtool.git
+    __cd libtool
+    ./bootstrap
+    __bld-common
+}
+
 __libunistring()
 {
     __dep ""
@@ -1307,9 +1507,9 @@ __libxml2()
 
 __libxslt-1.1.28()
 {
-    __dep "?"
+    __dep libxml2
 
-###    __wget  ?
+    __wget http://xmlsoft.org/sources/libxslt-1.1.28.tar.gz
     __dcd libxslt-1.1.28
     __bld-common
 }
@@ -2116,6 +2316,20 @@ __xsane-0.999()
 __xsane()
 {
     __xsane-0.999
+}
+
+__xz-5.0.5()
+{
+    __dep ""
+
+    __wget http://tukaani.org/xz/xz-5.0.5.tar.xz
+    __dcd xz-5.0.5
+    __bld-common
+}
+
+__xz()
+{
+    __xz-5.0.5
 }
 
 __yasm-1.2.0()
