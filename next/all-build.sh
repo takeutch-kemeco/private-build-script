@@ -2200,6 +2200,27 @@ __scons()
     __scons-2.3.0
 }
 
+__sgml-common-0.6.3()
+{
+    __dep ""
+
+    __wget ftp://sources.redhat.com/pub/docbook-tools/new-trials/SOURCES/sgml-common-0.6.3.tgz
+    __wget http://www.linuxfromscratch.org/patches/blfs/svn/sgml-common-0.6.3-manpage-1.patch
+    __dcd sgml-common-0.6.3
+    patch -Np1 -i $SRC_DIR/sgml-common-0.6.3-manpage-1.patch
+    autoreconf -f -i
+    __bld-common
+    __mkinst docdir=/usr/share/doc
+
+    sudo install-catalog --add /etc/sgml/sgml-ent.cat /usr/share/sgml/sgml-iso-entities-8879.1986/catalog
+    sudo install-catalog --add /etc/sgml/sgml-docbook.cat /etc/sgml/sgml-ent.cat
+}
+
+__sgml-common()
+{
+    __sgml-common-0.6.3
+}
+
 __sudo()
 {
     __dep linux-pam
