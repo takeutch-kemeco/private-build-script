@@ -1033,6 +1033,30 @@ __gnupg()
     __bld-common --enable-maintainer-mode
 }
 
+__gnutls.git()
+{
+    __dep nettle
+
+    __git-clone git://git.savannah.gnu.org/gnutls.git
+    __cd gnutls
+    __self-autogen
+    __bld-common --with-default-trust-store-file=/etc/ssl/ca-bundle.crt
+}
+
+__gnutls-3.3.1()
+{
+    __dep nettle
+
+    __wget http://www.ring.gr.jp/pub/net/gnupg/gnutls/v3.3/gnutls-3.3.1.tar.xz
+    __dcd gnutls-3.3.1
+    __bld-common --with-default-trust-store-file=/etc/ssl/ca-bundle.crt
+}
+
+__gnutls()
+{
+    __gnutls-3.3.1
+}
+
 __gperf-3.0.4()
 {
     __dep ""
