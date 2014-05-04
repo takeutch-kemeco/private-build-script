@@ -1844,6 +1844,7 @@ __nettle()
 {
     __git-clone git://git.lysator.liu.se/nettle/nettle.git
     __cd nettle
+    __self-autogen
     __bld-common --disable-documentation
     sudo chmod -v 755 /usr/lib/libhogweed.so.* /usr/lib/libnettle.so.*
 }
