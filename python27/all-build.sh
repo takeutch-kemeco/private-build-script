@@ -28,7 +28,7 @@ __pmkinst()
 
 __python27()
 {
-    __wget http://www.python.org/ftp/python/2.7.6/Python-2.7.6.tar.xz
+    __wget https://www.python.org/ftp/python/2.7.6/Python-2.7.6.tar.xz
     __dcd Python-2.7.6
     __bld-common --enable-shared --with-system-ffi
 }
