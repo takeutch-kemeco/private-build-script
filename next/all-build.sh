@@ -437,7 +437,7 @@ __docbook-4.5()
     __cd docbook-4.5
     sudo cp $SRC_DIR/docbook-4.5.zip .
     sudo unzip docbook-4.5.zip
-return
+
     sudo sed -i -e '/ISO 8879/d' -e '/gml/d' docbook.cat
 
     sudo install -v -d /usr/share/sgml/docbook/sgml-dtd-4.5
@@ -447,7 +447,7 @@ return
     sudo install-catalog --add /etc/sgml/sgml-docbook-dtd-4.5.cat /usr/share/sgml/docbook/sgml-dtd-4.5/catalog
     sudo install-catalog --add /etc/sgml/sgml-docbook-dtd-4.5.cat /etc/sgml/sgml-docbook.cat
 
-    sudo sh -c "cat >> /usr/share/sgml/docbook/sgml-dtd-4.5/catalog << .
+    cat > /tmp/a << EOF
   -- Begin Single Major Version catalog changes --
 
 PUBLIC "-//OASIS//DTD DocBook V4.4//EN" "docbook.dtd"
@@ -457,7 +457,10 @@ PUBLIC "-//OASIS//DTD DocBook V4.1//EN" "docbook.dtd"
 PUBLIC "-//OASIS//DTD DocBook V4.0//EN" "docbook.dtd"
 
   -- End Single Major Version catalog changes --
-."
+EOF
+
+    cat /usr/share/sgml/docbook/sgml-dtd-4.5/catalog /tmp/a > /tmp/b
+    sudo cp /tmp/b /usr/share/sgml/docbook/sgml-dtd-4.5/catalog
 }
 
 __docbook()
