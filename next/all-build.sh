@@ -428,6 +428,43 @@ __dbus-glib()
     __bld-common --libexecdir=/usr/lib/dbus-1.0
 }
 
+__docbook-4.5()
+{
+    __dep sgml-common unzip
+
+    __wget http://www.docbook.org/sgml/4.5/docbook-4.5.zip
+    mkdir $BASE_DIR/docbook-4.5
+    __cd docbook-4.5
+    sudo cp $SRC_DIR/docbook-4.5.zip .
+    sudo unzip docbook-4.5.zip
+return
+    sudo sed -i -e '/ISO 8879/d' -e '/gml/d' docbook.cat
+
+    sudo install -v -d /usr/share/sgml/docbook/sgml-dtd-4.5
+    sudo chown -R root:root .
+    sudo install -v docbook.cat /usr/share/sgml/docbook/sgml-dtd-4.5/catalog
+    sudo cp -v -af *.dtd *.mod *.dcl /usr/share/sgml/docbook/sgml-dtd-4.5
+    sudo install-catalog --add /etc/sgml/sgml-docbook-dtd-4.5.cat /usr/share/sgml/docbook/sgml-dtd-4.5/catalog
+    sudo install-catalog --add /etc/sgml/sgml-docbook-dtd-4.5.cat /etc/sgml/sgml-docbook.cat
+
+    sudo sh -c "cat >> /usr/share/sgml/docbook/sgml-dtd-4.5/catalog << .
+  -- Begin Single Major Version catalog changes --
+
+PUBLIC "-//OASIS//DTD DocBook V4.4//EN" "docbook.dtd"
+PUBLIC "-//OASIS//DTD DocBook V4.3//EN" "docbook.dtd"
+PUBLIC "-//OASIS//DTD DocBook V4.2//EN" "docbook.dtd"
+PUBLIC "-//OASIS//DTD DocBook V4.1//EN" "docbook.dtd"
+PUBLIC "-//OASIS//DTD DocBook V4.0//EN" "docbook.dtd"
+
+  -- End Single Major Version catalog changes --
+."
+}
+
+__docbook()
+{
+    __docbook-4.5
+}
+
 __docbook-xml-4.3()
 {
     __dep libxml2 unzip
