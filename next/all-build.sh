@@ -209,6 +209,7 @@ __cairo()
 
     __git-clone git://anongit.freedesktop.org/git/cairo
     __cd cairo
+    CFLAGS="$CFLAGS -ffat-lto-objects" \
     __bld-common --enable-tee --enable-gl --enable-xcb --enable-glsv2 --enable-xlib-xcb \
         --enable-directfb=no --enable-ft --enable-fc --enable-test-surfaces=no
 }
