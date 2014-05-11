@@ -11,6 +11,9 @@ DIST_CLEAN=
 
 . ../common-func/__common-func-2.sh
 
+### ビルド時にシステムメモリーを使いきらないように制限する
+__init-build-group
+
 __init-env()
 {
     XORG_PREFIX=/usr
@@ -683,7 +686,9 @@ __xcb-util()
 __xcb-util-image()
 {
     __git-clone git://anongit.freedesktop.org/xcb/util-image xcb-util-image
-    __x-common xcb-util-image
+    __cd xcb-util-image
+    git submodule update --init
+    __x-bld-common
 }
 
 __xcb-util-keysyms()
