@@ -749,6 +749,16 @@ __expect()
     __expect-5.45
 }
 
+__file()
+{
+    __dep ""
+
+    __git-clone https://github.com/file/file.git
+    __cd file
+    __self-autogen
+    __bld-common
+}
+
 __flex-git()
 {
     ### flex と bison は開発版を入れるべきではない
@@ -1006,22 +1016,23 @@ __gobject-introspection()
     __bld-common PYTHON=/usr/bin/python2
 }
 
-__gmp-5.1.3()
+__gmp-6.0.0a()
 {
     __dep ""
 
-    __wget ftp://ftp.gmplib.org/pub/gmp/gmp-5.1.3.tar.xz
-    __dcd gmp-5.1.3
+    __wget http://ftp.gnu.org/gnu/gmp/gmp-6.0.0a.tar.xz
+    __decord gmp-6.0.0a
+    __cd gmp-6.0.0
     ABI=64 ./configure --prefix=/usr --enable-cxx
     __mk
     __mkinst
-    sudo mkdir -v /usr/share/doc/gmp-5.1.3
-    sudo cp -v doc/{isa_abi_headache,configuration} doc/*.html /usr/share/doc/gmp-5.1.3
+    sudo mkdir -v /usr/share/doc/gmp-6.0.0a
+    sudo cp -v doc/{isa_abi_headache,configuration} doc/*.html /usr/share/doc/gmp-6.0.0a
 }
 
 __gmp()
 {
-    __gmp-5.1.3
+    __gmp-6.0.0a
 }
 
 __gnome-icon-theme()
@@ -1118,6 +1129,20 @@ __gperf-git()
 __gperf()
 {
     __gperf-3.0.4
+}
+
+__grep-2.18()
+{
+    __dep ""
+
+    __wget http://ftp.gnu.org/gnu/grep/grep-2.18.tar.xz
+    __dcd grep-2.18
+    __bld-common
+}
+
+__grep()
+{
+    __grep-2.18
 }
 
 __gsettings-desktop-schemas()
@@ -2165,6 +2190,20 @@ __sane-frontends-1.0.14()
 __sane-frontends()
 {
     __sane-frontends-1.0.14
+}
+
+__sed-4.2.2()
+{
+    __dep ""
+
+    __wget http://ftp.gnu.org/gnu/sed/sed-4.2.2.tar.bz2
+    __dcd sed-4.2.2
+    __bld-common
+}
+
+__sed()
+{
+    __sed-4.2.2
 }
 
 __serf-1.3.3()
