@@ -82,7 +82,10 @@ __faad2()
 __faac()
 {
     __wget http://downloads.sourceforge.net/faac/faac-1.28.tar.bz2
+    __wget http://www.linuxfromscratch.org/patches/blfs/svn/faac-1.28-glibc_fixes-1.patch
     __dcd faac-1.28
+    patch -Np1 -i $SRC_DIR/faac-1.28-glibc_fixes-1.patch
+    sed -i -e '/obj-type/d' -e '/Long Term/d' frontend/main.c
     __bld-common
 }
 
@@ -197,7 +200,7 @@ __all()
     __libvpx
     __flac
     __faad2
-#   __faac
+    __faac
     __lame
 ### __libav
     __speex
