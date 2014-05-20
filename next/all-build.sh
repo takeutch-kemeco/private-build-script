@@ -986,7 +986,7 @@ __glibc-2.19()
     __decord glibc-2.19
     __cdbt
     cat > configparms << .
-ASFLAGS-config=-O4 -march=native -mtune=native -msse3
+ASFLAGS-config=-O4 -march=native -mtune=native -msse4.1
 .
     $BASE_DIR/glibc-2.19/configure --prefix=/usr --disable-profile --enable-kernel=3.13 \
         --libexecdir=/usr/lib/glibc --enable-obsolete-rpc
