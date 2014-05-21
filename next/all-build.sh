@@ -1923,6 +1923,14 @@ __nftables()
     __common nftables
 }
 
+__nilfs-utils()
+{
+    __dep ""
+
+    __git-clone git://github.com/nilfs-dev/nilfs-utils.git
+    __common nilfs-utils
+}
+
 __nspr-4.10.3()
 {
     __dep ""
