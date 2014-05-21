@@ -5,7 +5,7 @@ mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/../ff-opt
 mk_add_options AUTOCLOBBER=1
 
 ac_add_options --prefix=/usr
-ac_add_options --enable-optimize="-O4 -march=native -mtune=native -msse3"
+ac_add_options --enable-optimize="-O4 -march=native -mtune=native -msse4.1"
 ac_add_options --disable-static
 ac_add_options --disable-libxul
 
