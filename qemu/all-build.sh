@@ -12,7 +12,6 @@ qemu()
 	__cd $BASE_DIR/qemu
 	./configure --prefix=/usr 	\
 		--disable-werror	\
-		--disable-kvm		\
 		--disable-xen
 
 	$MAKE_CLEAN
