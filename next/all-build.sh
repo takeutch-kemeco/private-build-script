@@ -2162,6 +2162,37 @@ __python-27()
     __python-2.7.6
 }
 
+__qemu-2.0.0()
+{
+    __dep glib python27 sdl xorg alsa check curl mesalib
+
+    __wget http://wiki.qemu.org/download/qemu-2.0.0.tar.bz2
+    __dcd qemu-2.0.0
+    sed -e '/#include <sys\/capability.h>/ d' \
+	-e '/#include "virtio-9p-marshal.h"/ i#include <sys\/capability.h>' \
+	-i fsdev/virtfs-proxy-helper.c
+    __bld-common --docdir=/usr/share/doc/qemu-2.0.0 --target-list=x86_64-softmmu
+    sudo chmod -v 755 /usr/lib/libcacard.so
+    sudo groupadd -g 61 kvm
+
+    __mes "Please enter your user name to be used when kvm"
+    KVM_USER_NAME=""
+    read KVM_USER_NAME
+    sudo usermod -a -G kvm ${KVM_USER_NAME}
+
+    cat > /tmp/a << .
+KERNEL=="kvm", NAME="%k", GROUP="kvm", MODE="0660"
+.
+    sudo mv /tmp/a /lib/udev/rules.d/65-kvm.rules
+
+    sudo ln -sv qemu-system-x86_64 /usr/bin/qemu
+}
+
+__qemu()
+{
+    __qemu-2.0.0
+}
+
 __readline()
 {
     __dep ""
