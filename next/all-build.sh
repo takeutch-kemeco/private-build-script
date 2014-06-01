@@ -1407,6 +1407,38 @@ __harfbuzz()
     __common harfbuzz
 }
 
+__haskell-mode()
+{
+    __dep emacs
+
+    __git-clone git://github.com/haskell/haskell-mode.git
+    __cd haskell-mode
+    __git-pull
+    sudo cp ../haskell-mode /usr/lib/emacs/ -rf
+}
+
+__haskell-mode-config()
+{
+    __dep haskell-mode
+
+    __mes haskell-mode-config
+
+    grep "haskell-mode" /etc/emacs.el
+    if [ $? -ne 0 ]
+    then
+        cat >> /etc/emacs.el << .
+(load "/usr/lib/emacs/haskell-mode/haskell-site-file")
+(add-hook 'haskell-mode-hook 'turn-on-haskell-doc-mode)
+
+(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+(add-hook 'haskell-mode-hook 'turn-on-haskell-indent)
+(add-hook 'haskell-mode-hook 'turn-on-haskell-simple-indent)
+
+(setq haskell-program-name "/usr/bin/ghci")
+.
+    fi
+}
+
 __hg()
 {
     __dep "?"
