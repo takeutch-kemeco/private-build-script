@@ -782,7 +782,102 @@ __flex-2.5.37()
     __bld-common
 }
 
-__firefox()
+__firefox-29.0.1()
+{
+    __dep alsa-lib gtk+2 zip nzip
+
+    __wget http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/29.0.1/source/firefox-29.0.1.source.tar.bz2
+    __decord firefox-29.0.1.source
+    __cd mozilla-release
+    cat > mozconfig << .
+# If you have a multicore machine, firefox will now use all the cores by
+# default. Exceptionally, you can reduce the number of cores, e.g. to 1,
+# by uncommenting the next line and setting a valid number of CPU cores.
+#mk_add_options MOZ_MAKE_FLAGS="-j1"
+
+# If you have installed DBus-Glib comment out this line:
+ac_add_options --disable-dbus
+
+# If you have installed dbus-glib, and you have installed (or will install)
+# wireless-tools, and you wish to use geolocation web services, comment out
+# this line
+ac_add_options --disable-necko-wifi
+
+# If you have installed libnotify comment out this line:
+ac_add_options --disable-libnotify
+
+# GStreamer is necessary for H.264 video playback in HTML5 Video Player;
+# to be enabled, also remember to set "media.gstreamer.enabled" to "true"
+# in about:config. If you have installed GStreamer comment out this line:
+ac_add_options --disable-gstreamer
+
+# Uncomment these lines if you have installed optional dependencies:
+#ac_add_options --enable-system-hunspell
+#ac_add_options --enable-startup-notification
+
+# Comment out following option if you have PulseAudio installed
+ac_add_options --disable-pulseaudio
+
+# Uncomment this line if you compiled Cairo with --enable-tee switch and want
+# to use it instead of the bundled one:
+#ac_add_options --enable-system-cairo
+
+# If you have not installed Yasm then uncomment this line:
+#ac_add_options --disable-webm
+
+# If you have installed xulrunner uncomment the next two ac_add_options lines
+# and check that the sdk will be set by running pkg-config in a subshell
+# and has not become hardcoded or empty when you created this file
+#ac_add_options --with-system-libxul
+#ac_add_options --with-libxul-sdk=$(pkg-config --variable=sdkdir libxul)
+
+# Comment out following options if you have not installed
+# recommended dependencies:
+ac_add_options --enable-system-sqlite
+#ac_add_options --with-system-libevent
+#ac_add_options --with-system-libvpx
+#ac_add_options --with-system-nspr
+#ac_add_options --with-system-nss
+#ac_add_options --with-system-icu
+
+# It is recommended not to touch anything below this line
+ac_add_options --prefix=/usr
+ac_add_options --enable-application=browser
+
+ac_add_options --disable-crashreporter
+ac_add_options --disable-updater
+ac_add_options --disable-tests
+
+ac_add_options --enable-optimize
+ac_add_options --enable-strip
+ac_add_options --enable-install-strip
+
+ac_add_options --enable-gio
+ac_add_options --enable-official-branding
+ac_add_options --enable-safe-browsing
+ac_add_options --enable-url-classifier
+
+ac_add_options --enable-system-ffi
+ac_add_options --enable-system-pixman
+
+ac_add_options --with-pthreads
+
+ac_add_options --with-system-bz2
+ac_add_options --with-system-jpeg
+ac_add_options --with-system-png
+ac_add_options --with-system-zlib
+
+mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/firefox-build-dir
+.
+    __mk -f client.mk
+    __mkinst -C firefox-build-dir install
+    sudo ln -sfv ../lib/firefox-29.0.1/firefox /usr/bin
+    sudo ln -sfv ../xulrunner-29.0.1 /usr/lib/firefox-29.0.1/xulrunner
+    sudo mkdir -pv /usr/lib/mozilla/plugins
+    sudo ln -sfv ../mozilla/plugins /usr/lib/firefox-29.0.1
+}
+
+__firefox-hg()
 {
     __dep "?"
 
@@ -796,6 +891,11 @@ __firefox()
     __mk -f client.mk configure
     __mk -f client.mk build
     __mkinst -f client.mk
+}
+
+__firefox()
+{
+    __firefox-29.0.1
 }
 
 __flex()
