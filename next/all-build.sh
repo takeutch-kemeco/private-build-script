@@ -722,6 +722,20 @@ __doxygen()
     __mkinst
 }
 
+__emacs-24.3()
+{
+    __dep "?"
+
+    __wget http://core.ring.gr.jp/pub/GNU/emacs/emacs-24.3.tar.xz
+    __dcd emacs-24.3
+    __bld-common --localstatedir=/var --libexecdir=/usr/lib --without-gif --with-x-toolkit=yes
+}
+
+__emacs()
+{
+    __emacs-24.3
+}
+
 __eudev()
 {
     __dep "?"
