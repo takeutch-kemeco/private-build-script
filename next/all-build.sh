@@ -2212,12 +2212,12 @@ __pcre()
     __pcre-8.34
 }
 
-__perl-5.8.2()
+__perl-5.20.0()
 {
     __dep ""
 
-    __wget http://www.cpan.org/src/5.0/perl-5.18.2.tar.gz
-    __dcd perl-5.18.2
+    __wget http://www.cpan.org/src/5.0/perl-5.20.0.tar.gz
+    __dcd perl-5.20.0
     sed -i -e "s|BUILD_ZLIB\s*= True|BUILD_ZLIB = False|" \
 	-e "s|INCLUDE\s*= ./zlib-src|INCLUDE    = /usr/include|" \
 	    -e "s|LIB\s*= ./zlib-src|LIB        = /usr/lib|" \
@@ -2230,7 +2230,7 @@ __perl-5.8.2()
 
 __perl()
 {
-    __perl-5.8.2
+    __perl-5.20.0
 }
 
 __pixman()
