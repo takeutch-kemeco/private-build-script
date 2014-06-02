@@ -13,9 +13,9 @@ DIST_CLEAN=
 
 __ghc-binary()
 {
-    __wget https://www.haskell.org/ghc/dist/7.8.1/ghc-7.8.1-x86_64-unknown-linux-deb7.tar.xz
-    __decord ghc-7.8.1-x86_64-unknown-linux-deb7
-    __cd ghc-7.8.1
+    __wget https://www.haskell.org/ghc/dist/7.8.2/ghc-7.8.2-x86_64-unknown-linux-deb7.tar.xz
+    __decord ghc-7.8.2-x86_64-unknown-linux-deb7
+    __cd ghc-7.8.2
     __cfg --prefix=/usr --sysconfdir=/etc
     __mkinst
 }
@@ -30,9 +30,9 @@ __cabal-install()
 
 __ghc()
 {
-    __wget https://www.haskell.org/ghc/dist/7.8.1/ghc-7.8.1-src.tar.xz
-    __decord ghc-7.8.1-src
-    __cd ghc-7.8.1
+    __wget https://www.haskell.org/ghc/dist/7.8.2/ghc-7.8.2-src.tar.xz
+    __decord ghc-7.8.2-src
+    __cd ghc-7.8.2
     __bld-common
 }
 
