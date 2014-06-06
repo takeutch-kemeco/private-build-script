@@ -2150,16 +2150,12 @@ __openssh()
     __openssh-6.5p1
 }
 
-__openssl-1.0.1g()
+__openssl-1.0.1h()
 {
     __dep ""
 
-    __wget http://www.openssl.org/source/openssl-1.0.1g.tar.gz
-    __wget http://www.linuxfromscratch.org/patches/blfs/svn/openssl-1.0.1g-fix_parallel_build-1.patch
-    __wget http://www.linuxfromscratch.org/patches/blfs/svn/openssl-1.0.1g-fix_pod_syntax-1.patch
-    __dcd openssl-1.0.1g
-    patch -Np1 -i $SRC_DIR/openssl-1.0.1g-fix_parallel_build-1.patch
-    patch -Np1 -i $SRC_DIR/openssl-1.0.1g-fix_pod_syntax-1.patch
+    __wget http://www.openssl.org/source/openssl-1.0.1h.tar.gz
+    __dcd openssl-1.0.1h
     ./config --prefix=/usr --openssldir=/etc/ssl --libdir=lib shared zlib-dynamic
     __mk
     __mkinst
@@ -2167,7 +2163,7 @@ __openssl-1.0.1g()
 
 __openssl()
 {
-    __openssl-1.0.1g
+    __openssl-1.0.1h
 }
 
 __p11-kit()
