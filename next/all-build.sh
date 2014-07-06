@@ -1090,7 +1090,7 @@ __glib()
 
     __git-clone git://git.gnome.org/glib
     __cd glib
-    __bld-common --with-pcre=system --enable-debug=no
+    __bld-common --with-pcre=system --enable-debug=no --disable-compile-warnings
 }
 
 __glibc-2.19()
