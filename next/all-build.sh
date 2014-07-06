@@ -2740,11 +2740,13 @@ __which()
     __which-2.20
 }
 
-__wpa_supplicant()
+__wpa_supplicant-2.2()
 {
-    __wget http://hostap.epitest.fi/releases/wpa_supplicant-2.0.tar.gz
-    __decord wpa_supplicant-2.0
-    __cd wpa_supplicant-2.0/wpa_supplicant
+    __dep libnl openssl
+
+    __wget http://hostap.epitest.fi/releases/wpa_supplicant-2.2.tar.gz
+    __decord wpa_supplicant-2.2
+    __cd wpa_supplicant-2.2/wpa_supplicant
     cat > .config << .
 CONFIG_BACKEND=file
 CONFIG_CTRL_IFACE=y
@@ -2777,6 +2779,11 @@ CFLAGS += -I/usr/include/libnl3
     sudo install -v -m644 doc/docbook/wpa_supplicant.conf.5 /usr/share/man/man5/ &&
     sudo install -v -m644 doc/docbook/wpa_{cli,passphrase,supplicant}.8 /usr/share/man/man8/
     sudo ldconfig
+}
+
+__wpa_supplicant()
+{
+    __wpa_supplicant-2.2
 }
 
 __xsane-0.999()
