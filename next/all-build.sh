@@ -2066,7 +2066,8 @@ __nftables()
     __dep libmnl libnftnl
 
     __git-clone git://git.netfilter.org/nftables
-    __common nftables
+    __cd nftables
+    __bld-common LDFLAGS=-lncurses
 }
 
 __nilfs-utils()
