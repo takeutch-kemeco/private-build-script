@@ -2616,6 +2616,21 @@ __tar()
     __tar-1.27
 }
 
+__texinfo-5.2()
+{
+    __dep "?"
+
+    __wget http://ftp.gnu.org/gnu/texinfo/texinfo-5.2.tar.xz
+    __dcd texinfo-5.2
+    __bld-common
+    __mkinst TEXMF=/usr/share/texmf install-tex
+}
+
+__texinfo()
+{
+    __texinfo-5.2
+}
+
 __install-tl()
 {
     __install-tl-20140225
