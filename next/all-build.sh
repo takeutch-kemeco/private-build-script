@@ -981,14 +981,14 @@ __gc()
     __bld-common
 }
 
-__gcc-4.9.0()
+__gcc-4.9.1()
 {
     __dep gmp mpfr mpc
 
-    __wget http://ftp.tsukuba.wide.ad.jp/software/gcc/releases/gcc-4.9.0/gcc-4.9.0.tar.bz2
-    __decord gcc-4.9.0
+    __wget http://ftp.tsukuba.wide.ad.jp/software/gcc/releases/gcc-4.9.1/gcc-4.9.1.tar.bz2
+    __decord gcc-4.9.1
     __cdbt
-    ../gcc-4.9.0/configure --prefix=/usr --libexecdir=/usr/lib --enable-shared \
+    ../gcc-4.9.1/configure --prefix=/usr --libexecdir=/usr/lib --enable-shared \
         --enable-threads=posix --enable-__cxa_atexit --enable-clocale=gnu \
         --enable-languages=c,c++,fortran --disable-multilib \
         --disable-bootstrap --with-system-zlib --enable-c99 \
@@ -1002,7 +1002,7 @@ __gcc-4.9.0()
 
 __gcc()
 {
-    __gcc-4.9.0
+    __gcc-4.9.1
 }
 
 __gcr()
