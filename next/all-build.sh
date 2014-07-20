@@ -301,18 +301,18 @@ __coreutils-git()
     __common coreutils
 }
 
-__coreutils-8.22()
+__coreutils-8.23()
 {
     __dep acl attr
 
-    __wget http://ftp.gnu.org/gnu/coreutils/coreutils-8.22.tar.xz
-    __dcd coreutils-8.22
+    __wget http://ftp.gnu.org/gnu/coreutils/coreutils-8.23.tar.xz
+    __dcd coreutils-8.23
     __bld-common
 }
 
 __coreutils()
 {
-    __coreutils-8.22
+    __coreutils-8.23
 }
 
 __colord()
