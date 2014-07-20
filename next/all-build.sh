@@ -1038,18 +1038,18 @@ __geany()
     __bld-common --enable-gtk3
 }
 
-__gettext-0.18.3.2()
+__gettext-0.19.2()
 {
     __dep ""
 
-    __wget http://ftp.gnu.org/gnu/gettext/gettext-0.18.3.2.tar.gz
-    __dcd gettext-0.18.3.2
+    __wget http://ftp.gnu.org/gnu/gettext/gettext-0.19.2.tar.gz
+    __dcd gettext-0.19.2
     __bld-common
 }
 
 __gettext()
 {
-    __gettext-0.18.3.2
+    __gettext-0.19.2
 }
 
 __gdbm()
