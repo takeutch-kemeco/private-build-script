@@ -1209,18 +1209,18 @@ __gnutls.git()
     __bld-common --with-default-trust-store-file=/etc/ssl/ca-bundle.crt
 }
 
-__gnutls-3.3.1()
+__gnutls-3.3.5()
 {
     __dep nettle
 
-    __wget http://www.ring.gr.jp/pub/net/gnupg/gnutls/v3.3/gnutls-3.3.1.tar.xz
-    __dcd gnutls-3.3.1
+    __wget http://www.ring.gr.jp/pub/net/gnupg/gnutls/v3.3/gnutls-3.3.5.tar.xz
+    __dcd gnutls-3.3.5
     __bld-common --with-default-trust-store-file=/etc/ssl/ca-bundle.crt
 }
 
 __gnutls()
 {
-    __gnutls-3.3.1
+    __gnutls-3.3.5
 }
 
 __gperf-3.0.4()
