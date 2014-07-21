@@ -2052,19 +2052,19 @@ __ncurses()
     __ncurses-5.9
 }
 
-__nettle-3.0()
+__nettle-2.7.1()
 {
     __dep "?"
 
-    __wget http://ftp.gnu.org/gnu/nettle/nettle-3.0.tar.gz
-    __dcd nettle-3.0
+    __wget http://ftp.gnu.org/gnu/nettle/nettle-2.7.1.tar.gz
+    __dcd nettle-2.7.1
     __bld-common
     sudo chmod -v 755 /usr/lib/libhogweed.so.* /usr/lib/libnettle.so.*
 }
 
 __nettle()
 {
-    __nettle-3.0
+    __nettle-2.7.1
 }
 
 __nftables()
