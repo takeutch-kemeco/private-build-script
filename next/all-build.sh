@@ -2052,13 +2052,19 @@ __ncurses()
     __ncurses-5.9
 }
 
+__nettle-3.0()
+{
+    __dep "?"
+
+    __wget http://ftp.gnu.org/gnu/nettle/nettle-3.0.tar.gz
+    __dcd nettle-3.0
+    __bld-common
+    sudo chmod -v 755 /usr/lib/libhogweed.so.* /usr/lib/libnettle.so.*
+}
+
 __nettle()
 {
-    __git-clone git://git.lysator.liu.se/nettle/nettle.git
-    __cd nettle
-    __self-autogen
-    __bld-common --disable-documentation
-    sudo chmod -v 755 /usr/lib/libhogweed.so.* /usr/lib/libnettle.so.*
+    __nettle-3.0
 }
 
 __nftables()
