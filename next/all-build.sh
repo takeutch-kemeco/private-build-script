@@ -373,7 +373,8 @@ __dbus()
                  --with-console-auth-dir=/run/console/  \
                  --enable-systemd                       \
                  --disable-Werror                       \
-                 --disable-tests
+                 --disable-tests                        \
+                 --enable-xml-docs=no
 
     sudo ln -sv /etc/machine-id /var/lib/dbus
     sudo dbus-uuidgen --ensure
