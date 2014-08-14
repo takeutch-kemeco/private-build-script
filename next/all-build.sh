@@ -2663,9 +2663,9 @@ __tomoyo-tools-2.5.0()
     __dep "?"
 
     cd ${BASE_DIR}
-    wget -O $SRC_DIR/tomoyo-tools-2.5.0-20140105.tar.gz 'http://sourceforge.jp/frs/redir.php?m=jaist&f=/tomoyo/53357/tomoyo-tools-2.5.0-20140105.tar.gz'
+    wget -O $SRC_DIR/tomoyo-tools-2.5.0-20140601.tar.gz 'http://sourceforge.jp/frs/redir.php?m=jaist&f=/tomoyo/53357/tomoyo-tools-2.5.0-20140601.tar.gz'
 
-    __decord tomoyo-tools-2.5.0-20140105
+    __decord tomoyo-tools-2.5.0-20140601
     __cd tomoyo-tools
     __mk USRLIBDIR=/lib
     __mkinst USRLIBDIR=/lib install
