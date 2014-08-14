@@ -2543,10 +2543,13 @@ __systemd()
     sudo rm /var/run -rf
     sudo ln -s /run /var/run
 
-    ### --enable-compat-libs オプションを付けるとビルドが通らないので、現状ではsystemd-*.so群は
-    ### 別ディストリから手動でコピーしてくる必要がある。（現在ビルド方法を調査中）
-    __bld-common --config-cache --enable-split-usr --enable-shared \
-        --disable-tests --enable-gtk-doc-html=no
+    __bld-common --localstatedir=/var --config-cache --with-rootprefix= --with-rootlibdir=/lib \
+	--enable-split-usr --enable-shared --disable-tests --disable-gudev --without-python \
+        --docdir=/usr/share/doc/systemd-215 --enable-gtk-doc-html=no \
+        --with-dbuspolicydir=/etc/dbus-1/system.d --with-dbusinterfacedir=/usr/share/dbus-1/interfaces \
+        --with-dbussessionservicedir=/usr/share/dbus-1/services \
+        --with-dbussystemservicedir=/usr/share/dbus-1/system-services \
+        --disable-manpages
 
     sudo systemd-machine-id-setup
 }
