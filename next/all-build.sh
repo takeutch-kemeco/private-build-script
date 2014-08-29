@@ -1014,12 +1014,12 @@ __gcr()
     __common gcr
 }
 
-__gdb-7.7()
+__gdb-7.8()
 {
     __dep python2
 
-    __wget http://ftp.gnu.org/gnu/gdb/gdb-7.7.tar.bz2
-    __dcd gdb-7.7
+    __wget http://ftp.gnu.org/gnu/gdb/gdb-7.8.tar.xz
+    __dcd gdb-7.8
     __cfg --prefix=/usr --disable-werror
     __mk
     __mkinst -C gdb install
@@ -1027,7 +1027,7 @@ __gdb-7.7()
 
 __gdb()
 {
-    __gdb-7.7
+    __gdb-7.8
 }
 
 __geany()
