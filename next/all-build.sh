@@ -1191,13 +1191,27 @@ __gnome-themes-standard()
     __common gnome-themes-standard
 }
 
-__gnupg()
+__gnupg.git()
 {
-    __dep pth libassuan libgcript libksda
+    __dep pth libassuan libgcript libksba
 
-    __git-clone git clone git://git.gnupg.org/gnupg.git
+    __git-clone git://git.gnupg.org/gnupg.git
     __cd gnupg
     __bld-common --enable-maintainer-mode
+}
+
+__gnupg-2.0.26()
+{
+    __dep pth libassuan libgcript libksba
+
+    __wget ftp://ftp.gnupg.org/gcrypt/gnupg/gnupg-2.0.26.tar.bz2
+    __dcd gnupg-2.0.26
+    __bld-common --enable-symcryptrun
+}
+
+__gnupg()
+{
+    __gnupg-2.0.26
 }
 
 __gnutls.git()
@@ -1601,6 +1615,20 @@ __libarchive()
     __bld-common
 }
 
+__libassuan-2.12()
+{
+    __dep "?"
+
+    __wget ftp://ftp.gnupg.org/gcrypt/libassuan/libassuan-2.1.2.tar.bz2
+    __dcd libassuan-2.1.2
+    __bld-common
+}
+
+__libassuan()
+{
+    __libassuan-2.12
+}
+
 __libcap()
 {
     __dep attr linux-pam
@@ -1637,7 +1665,7 @@ __libffi()
     __common libffi
 }
 
-__libgcrypt()
+__libgcrypt.git()
 {
     __dep libgpg-error libcap pth
 
@@ -1655,6 +1683,20 @@ __libgcrypt()
 
     cp configure.ac{.orig,}
     cp Makefile.am{.orig,}
+}
+
+__libgcrypt-1.6.2()
+{
+    __dep libgpg-error libcap pth
+
+    __wget ftp://ftp.gnupg.org/gcrypt/libgcrypt/libgcrypt-1.6.2.tar.bz2
+    __dcd libgcrypt-1.6.2
+    __bld-common --enable-maintainer-mode
+}
+
+__libgcrypt()
+{
+    __libgcrypt-1.6.2
 }
 
 __libgee-git()
@@ -1691,6 +1733,20 @@ __libgpg-error()
     __cd libgpg-error
     __self-autogen
     __bld-common --enable-maintainer-mode
+}
+
+__libksba-1.3.0()
+{
+    __dep libgpg-error
+
+    __wget ftp://ftp.gnupg.org/gcrypt/libksba/libksba-1.3.0.tar.bz2
+    __dcd libksba-1.3.0
+    __bld-common
+}
+
+__libksba()
+{
+    __libksba-1.3.0
 }
 
 __libmnl()
