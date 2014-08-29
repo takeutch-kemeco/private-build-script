@@ -2662,12 +2662,12 @@ __talloc()
     __talloc-2.1.0
 }
 
-__tar-1.27()
+__tar-1.28()
 {
     __dep acl attr
 
-    __wget http://ftp.gnu.org/gnu/tar/tar-1.27.tar.xz
-    __dcd tar-1.27
+    __wget http://ftp.gnu.org/gnu/tar/tar-1.28.tar.xz
+    __dcd tar-1.28
     __bld-common
 }
 
@@ -2681,7 +2681,7 @@ __tar-git()
 
 __tar()
 {
-    __tar-1.27
+    __tar-1.28
 }
 
 __texinfo-5.2()
