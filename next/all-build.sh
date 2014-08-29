@@ -1986,7 +1986,7 @@ __llvm()
     __llvm-3.4
 }
 
-__lvm2-2.02.105()
+__lvm2-2.02.109()
 {
     ### Use kernel configuration
     ### Device Drivers --->
@@ -1998,15 +1998,15 @@ __lvm2-2.02.105()
 
     __dep ""
 
-    __wget ftp://sources.redhat.com/pub/lvm2/LVM2.2.02.105.tgz
-    __dcd LVM2.2.02.105
+    __wget ftp://sources.redhat.com/pub/lvm2/LVM2.2.02.109.tgz
+    __dcd LVM2.2.02.109
     __bld-common --exec-prefix= --with-confdir=/etc \
         --enable-applib --enable-cmdlib --enable-pkgconfig --enable-udev_sync
 }
 
 __lvm2()
 {
-    __lvm2-2.02.105
+    __lvm2-2.02.109
 }
 
 __libvpx()
