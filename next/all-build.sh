@@ -1287,11 +1287,10 @@ __gtk+2()
 {
     __dep atk gdk-pixbuf pango gobject-introspection
 
-    __git-clone git://git.gnome.org/gtk+
-    __git-clone gtk+ gtk+-2.24.git
+    __git-clone git://git.gnome.org/gtk+ gtk+-2.24.git
     __cd gtk+-2.24.git
 
-    GTK2VERSION=2.24.22
+    GTK2VERSION=2.24.24
     make distclean
     git checkout master
     git pull
@@ -2600,13 +2599,13 @@ __systemd()
     sudo ln -s /run /var/run
 
     __bld-common --localstatedir=/var --config-cache --with-rootprefix= --with-rootlibdir=/lib \
-	--enable-split-usr --enable-shared --disable-tests --disable-gudev --without-python \
-        --docdir=/usr/share/doc/systemd-215 --enable-gtk-doc-html=no \
+    	--enable-split-usr --enable-shared --disable-tests --disable-gudev --without-python \
+        --docdir=/usr/share/doc/systemd-216 --enable-gtk-doc-html=no \
         --with-dbuspolicydir=/etc/dbus-1/system.d --with-dbusinterfacedir=/usr/share/dbus-1/interfaces \
         --with-dbussessionservicedir=/usr/share/dbus-1/services \
         --with-dbussystemservicedir=/usr/share/dbus-1/system-services \
-        --disable-manpages
-
+        --disable-manpages --disable-audit --disable-firstboot --disable-sysusers --disable-dbus \
+        --disable-tmpfiles --disable-gudev --disable-networkd
     sudo systemd-machine-id-setup
 }
 
