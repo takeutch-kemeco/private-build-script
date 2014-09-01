@@ -797,12 +797,12 @@ __flex-2.5.37()
     __bld-common
 }
 
-__firefox-30.0()
+__firefox-31.0()
 {
     __dep alsa-lib gtk+2 zip nzip
 
-    __wget http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/30.0/source/firefox-30.0.source.tar.bz2
-    __decord firefox-30.0.source
+    __wget http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/31.0/source/firefox-31.0.source.tar.bz2
+    __decord firefox-31.0.source
     __cd mozilla-release
     cat > mozconfig << .
 # If you have a multicore machine, firefox will now use all the cores by
@@ -886,10 +886,10 @@ mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/firefox-build-dir
 .
     __mk -f client.mk
     __mkinst -C firefox-build-dir install
-    sudo ln -sfv ../lib/firefox-30.0/firefox /usr/bin
-    sudo ln -sfv ../xulrunner-30.0 /usr/lib/firefox-30.0/xulrunner
+    sudo ln -sfv ../lib/firefox-31.0/firefox /usr/bin
+    sudo ln -sfv ../xulrunner-31.0 /usr/lib/firefox-31.0/xulrunner
     sudo mkdir -pv /usr/lib/mozilla/plugins
-    sudo ln -sfv ../mozilla/plugins /usr/lib/firefox-30.0
+    sudo ln -sfv ../mozilla/plugins /usr/lib/firefox-31.0
 }
 
 __firefox-hg()
@@ -910,7 +910,7 @@ __firefox-hg()
 
 __firefox()
 {
-    __firefox-30.0
+    __firefox-31.0
 }
 
 __flex()
