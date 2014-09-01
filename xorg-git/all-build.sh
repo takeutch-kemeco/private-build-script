@@ -736,7 +736,8 @@ __libdrm()
 	  --enable-udev	        \
 	  --disable-radeon	\
 	  --disable-nouveau	\
-	  --disable-vmwgfx
+	  --disable-vmwgfx      \
+	  --disable-manpages
 
     $MAKE_CLEAN
     __mk
