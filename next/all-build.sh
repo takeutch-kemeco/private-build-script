@@ -203,6 +203,22 @@ __bzip2()
     __bzip2-1.0.6
 }
 
+__boost-1.56.0()
+{
+    __dep icu python2
+
+    __wget http://downloads.sourceforge.net/boost/boost_1_56_0.tar.bz2
+    __dcd boost_1_56_0
+    ./bootstrap.sh --prefix=/usr
+    ./b2 stage threading=multi link=shared
+    sudo ./b2 install threading=multi link=shared
+}
+
+__boost()
+{
+    __boost-1.56.0
+}
+
 __cairo()
 {
     __dep libpng glib pixman fontconfig
@@ -242,6 +258,25 @@ __certificate-authority-certificates()
     rm -r certs BLFS-ca-bundle*
 
     sudo c_rehash
+}
+
+__clucene-2.3.3.4()
+{
+    __dep cmake
+
+    __wget http://downloads.sourceforge.net/clucene/clucene-core-2.3.3.4.tar.gz
+    __wget http://www.linuxfromscratch.org/patches/blfs/svn/clucene-2.3.3.4-contribs_lib-1.patch
+    __dcd clucene-core-2.3.3.4
+    patch -Np1 -i $SRC_DIR/clucene-2.3.3.4-contribs_lib-1.patch
+    __cdbt
+    cmake -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_CONTRIBS_LIB=ON ../clucene-core-2.3.3.4
+    __mk
+    __mkinst
+}
+
+__clucene()
+{
+    __clucene-2.3.3.4
 }
 
 __cmake()
@@ -343,6 +378,24 @@ __curl()
     __cd curl
     ./buildconf
     __bld-common --enable-threaded-resolver --with-ca-path=/etc/ssl/certs
+}
+
+__cups-1.7.5()
+{
+    __dep 
+    __wget http://www.cups.org/software/1.7.5/cups-1.7.5-source.tar.bz2
+    __decord cups-1.7.5-source
+    __cd cups-1.7.5
+    sudo useradd -c "Print Service User" -d /var/spool/cups -g lp -s /bin/false -u 9 lp
+    sudo groupadd -g 19 lpadmin
+    __bld-common CC=gcc --libdir=/usr/lib --with-rcdir=/tmp/cupsinit --with-docdir=/usr/share/cups/doc \
+	--with-system-groups=lpadmin
+    sudo gtk-update-icon-cache
+}
+
+__cups()
+{
+    __cups-1.7.5
 }
 
 __cython-0.20.1()
@@ -1128,7 +1181,7 @@ __gobject-introspection()
 
     __git-clone git://git.gnome.org/gobject-introspection
     __cd gobject-introspection
-    __bld-common PYTHON=/usr/bin/python2
+    __bld-common --disable-static
 }
 
 __gmp-6.0.0a()
@@ -1230,12 +1283,29 @@ __gnutls-3.3.7()
 
     __wget http://www.ring.gr.jp/pub/net/gnupg/gnutls/v3.3/gnutls-3.3.7.tar.xz
     __dcd gnutls-3.3.7
-    __bld-common --with-default-trust-store-file=/etc/ssl/ca-bundle.crt
+    __bld-common --with-default-trust-store-file=/etc/ssl/ca-bundle.crt --enable-gtk-doc-thml=no
 }
 
 __gnutls()
 {
     __gnutls-3.3.7
+}
+
+__graphite2-1.2.4()
+{
+    __dep cmake
+
+    __wget  http://downloads.sourceforge.net/silgraphite/graphite2-1.2.4.tgz
+    __decord graphite2-1.2.4
+    __cdbt
+    cmake -DCMAKE_INSTALL_PREFIX=/usr ../graphite2-1.2.4
+    __mk
+    __mkinst
+}
+
+__graphite2()
+{
+    __graphite2-1.2.4
 }
 
 __gperf-3.0.4()
@@ -1281,6 +1351,34 @@ __gsettings-desktop-schemas()
     __git-clone git://git.gnome.org/gsettings-desktop-schemas
     __common gsettings-desktop-schemas
     sudo glib-compile-schemas /usr/share/glib-2.0/schemas
+}
+
+__gstreamer-1.4.1()
+{
+    __dep glib
+
+    __wget http://gstreamer.freedesktop.org/src/gstreamer/gstreamer-1.4.1.tar.xz
+    __dcd gstreamer-1.4.1
+    __bld-common
+}
+
+__gstreamer()
+{
+    __gstreamer-1.4.1
+}
+
+__gst-plugins-base-1.4.1()
+{
+    __dep gstreamer
+
+    __wget http://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-1.4.1.tar.xz
+    __dcd gst-plugins-base-1.4.1
+    __bld-common
+}
+
+__gst-plugins-base()
+{
+    __gst-plugins-base-1.4.1
 }
 
 __gtk+2()
@@ -1415,7 +1513,7 @@ __guile-lib()
 
 __harfbuzz()
 {
-    __dep glib icu freetype cairo gobject-introspection
+    __dep glib icu freetype2 cairo gobject-introspection
 
     git clone git://anongit.freedesktop.org/harfbuzz
     __common harfbuzz
@@ -1478,7 +1576,7 @@ __iana-etc()
     __iana-etc-2.30
 }
 
-__icu-52.1()
+__icu-53.1()
 {
     __dep llvm
 
@@ -1490,7 +1588,7 @@ __icu-52.1()
 
 __icu()
 {
-    __icu-52.1
+    __icu-53.1
 }
 
 __inetutils()
@@ -1556,6 +1654,21 @@ __itstool-2.0.2()
 __itstool()
 {
     __itstool-2.0.2
+}
+
+__json-c-0.12()
+{
+    __dep ""
+
+    __wget https://s3.amazonaws.com/json-c_releases/releases/json-c-0.12.tar.gz
+    __dcd json-c-0.12
+    sed -i s/-Werror// Makefile.in
+    __bld-common
+}
+
+__json-c()
+{
+    __json-c-0.12
 }
 
 __mozjs()
@@ -1654,6 +1767,20 @@ __libcroco()
 
     __git-clone git://git.gnome.org/libcroco
     __common libcroco
+}
+
+__libcrypt-1.6.2()
+{
+    __dep libpgp-error
+
+    __wget ftp://ftp.gnupg.org/gcrypt/libgcrypt/libgcrypt-1.6.2.tar.bz2
+    __dcd libgcrypt-1.6.2
+    __bld_common
+}
+
+__libcrypt()
+{
+    __libcrypt-1.6.2
 }
 
 __libffi()
@@ -1808,6 +1935,97 @@ __libjpeg()
     __libjpeg-9a
 }
 
+__libjpeg-turbo-1.3.1()
+{
+    __dep yasm
+
+    __wget http://downloads.sourceforge.net/libjpeg-turbo/libjpeg-turbo-1.3.1.tar.gz
+    __dcd libjpeg-turbo-1.3.1
+    __bld-common --mandir=/usr/share/man --with-jpeg8 --disable-static
+}
+
+__libjpeg-turbo()
+{
+    __libjpeg-turbo-1.3.1
+}
+
+__libreoffice-4.3.1()
+{
+    __dep boost clucene cups curl dbus-glib libjpeg-turbo glu graphite2 gst-plugins-base gtk+2 harfbuzz icu littlecms librsvg libxml2 libxslt mesalib neon npapi-sdk nss openldap openssl poppler python-3 redland unixodbc
+
+    __wget http://download.documentfoundation.org/libreoffice/src/4.3.1/libreoffice-4.3.1.2.tar.xz
+    __wget http://download.documentfoundation.org/libreoffice/src/4.3.1/libreoffice-dictionaries-4.3.1.2.tar.xz
+    __wget http://download.documentfoundation.org/libreoffice/src/4.3.1/libreoffice-help-4.3.1.2.tar.xz
+    __wget http://download.documentfoundation.org/libreoffice/src/4.3.1/libreoffice-translations-4.3.1.2.tar.xz
+    __wget http://www.linuxfromscratch.org/patches/blfs/svn/libreoffice-4.3.1.2-boost_1_56_0-1.patch
+    __wget http://www.linuxfromscratch.org/patches/blfs/svn/libreoffice-4.3.1.2-gcc_4_9_0-1.patch
+    __dcd libreoffice-4.3.1.2
+    tar -xf $SRC_DIR/libreoffice-dictionaries-4.3.1.2.tar.xz --no-overwrite-dir --strip-components=1
+    ln -sv $SRC_DIR/libreoffice-dictionaries-4.3.1.2.tar.xz external/tarballs/
+    ln -sv $SRC_DIR/libreoffice-help-4.3.1.2.tar.xz external/tarballs/
+    ln -sv $SRC_DIR/libreoffice-translations-4.3.1.2.tar.xz external/tarballs/
+    LO_PREFIX=/usr
+    patch -Np1 -i $SRC_DIR/libreoffice-4.3.1.2-gcc_4_9_0-1.patch
+    
+    patch -Np1 -i $SRC_DIR/libreoffice-4.3.1.2-boost_1_56_0-1.patch
+
+    sed -e "/gzip -f/d" -e "s|.1.gz|.1|g" -i bin/distro-install-desktop-integration
+    sed -e "/distro-install-file-lists/d" -i Makefile.in
+
+    chmod -v +x bin/unpack-sources
+    sed -e "s/target\.mk/langlist\.mk/" \
+	-e "s/tar -xf/tar -x --strip-components=1 -f/" \
+	-e "/tar -x/s/lo_src_dir/start_dir/" \
+	-i bin/unpack-sources
+
+    ./autogen.sh --prefix=$LO_PREFIX         \
+        --sysconfdir=/etc           \
+        --with-vendor="BLFS"        \
+        --with-lang="ja"            \
+        --with-help                 \
+        --with-alloc=system         \
+        --without-java              \
+        --disable-gconf             \
+        --disable-odk               \
+        --disable-postgresql-sdbc   \
+        --enable-release-build=yes  \
+        --enable-python=system      \
+        --with-system-boost         \
+        --with-system-clucene       \
+        --with-system-cairo         \
+        --with-system-curl          \
+        --with-system-expat         \
+        --with-system-graphite      \
+        --with-system-harfbuzz      \
+        --with-system-icu           \
+        --with-system-jpeg          \
+        --with-system-lcms2         \
+        --with-system-libpng        \
+        --with-system-libxml        \
+        --with-system-mesa-headers  \
+        --with-system-neon          \
+        --with-system-npapi-headers \
+        --with-system-nss           \
+        --with-system-odbc          \
+        --with-system-openldap      \
+        --with-system-openssl       \
+        --with-system-poppler       \
+        --with-system-redland       \
+        --with-system-zlib          \
+	--disable-gstreamer-0-10    \
+        --with-parallelism=$(getconf _NPROCESSORS_ONLN)
+
+    __mk build
+    sudo make distro-pack-install
+    install -v -m755 -d $LO_PREFIX/share/appdata
+    install -v -m644 sysui/desktop/appstream-appdata/*.xml $LO_PREFIX/share/appdata
+}
+
+__libreoffice()
+{
+    __libreoffice-4.3.1
+}
+
 __librsvg()
 {
     __dep gdk-pixbuf libcroco pango gtk+3 gobject-introspection vala
@@ -1831,6 +2049,20 @@ __libsecret()
 
     __git-clone git://git.gnome.org/libsecret
     __common libsecret
+}
+
+__libsndfile-1.2.25()
+{
+    __dep alsa-lib flac libogg sqlite
+
+    __wget http://www.mega-nerd.com/libsndfile/files/libsndfile-1.0.25.tar.gz
+    __dcd libsndfile-1.0.25
+    __bld-common
+}
+
+__libsndfile()
+{
+    __libsndfile-1.2.25
 }
 
 __libsoup()
@@ -2108,6 +2340,20 @@ __ncurses()
     __ncurses-5.9
 }
 
+__neon-0.30.0()
+{
+    __dep opnessl gnutls
+
+    __wget http://www.webdav.org/neon/neon-0.30.0.tar.gz
+    __dcd neon-0.30.0
+    __bld-common --enable-shared --with-ssl
+}
+
+__neon()
+{
+    __neon-0.30.0
+}
+
 __nettle-2.7.1()
 {
     __dep "?"
@@ -2140,29 +2386,43 @@ __nilfs-utils()
     __common nilfs-utils
 }
 
-__nspr-4.10.3()
+__npapi-sdk-0.27.2()
 {
     __dep ""
 
-    __wget http://ftp.mozilla.org/pub/mozilla.org/nspr/releases/v4.10.3/src/nspr-4.10.3.tar.gz
-    __dcd nspr-4.10.3
+    __wget https://bitbucket.org/mgorny/npapi-sdk/downloads/npapi-sdk-0.27.2.tar.bz2
+    __dcd npapi-sdk-0.27.2
+    __bld-common
+}
+
+__npapi-sdk()
+{
+    __npapi-sdk-0.27.2
+}
+
+__nspr-4.10.7()
+{
+    __dep ""
+
+    __wget http://ftp.mozilla.org/pub/mozilla.org/nspr/releases/v4.10.7/src/nspr-4.10.7.tar.gz
+    __dcd nspr-4.10.7
     cd nspr
     __bld-common --with-mozilla --with-pthreads --enable-64bit
 }
 
 __nspr()
 {
-    __nspr-4.10.3
+    __nspr-4.10.7
 }
 
-__nss-3.15.4()
+__nss-3.17()
 {
     __dep nspr sqlite
 
-    __wget http://ftp.mozilla.org/pub/mozilla.org/security/nss/releases/NSS_3_15_4_RTM/src/nss-3.15.4.tar.gz
-    __wget http://www.linuxfromscratch.org/patches/blfs/svn/nss-3.15.4-standalone-1.patch
-    __dcd nss-3.15.4
-    patch -Np1 -i $SRC_DIR/nss-3.15.4-standalone-1.patch
+    __wget http://ftp.mozilla.org/pub/mozilla.org/security/nss/releases/NSS_3_17_RTM/src/nss-3.17.tar.gz
+    __wget http://www.linuxfromscratch.org/patches/blfs/svn/nss-3.17-standalone-1.patch
+    __dcd nss-3.17
+    patch -Np1 -i $SRC_DIR/nss-3.17-standalone-1.patch
     cd nss
     make BUILD_OPT=1 NSPR_INCLUDE_DIR=/usr/include/nspr USE_SYSTEM_ZLIB=1 ZLIB_LIBS=-lz USE_64=1 NSS_USE_SYSTEM_SQLITE=1
 
@@ -2178,7 +2438,22 @@ __nss-3.15.4()
 
 __nss()
 {
-    __nss-3.15.4
+    __nss-3.17
+}
+
+__openldap-2.4.39()
+{
+    __dep berkeley-db
+
+    __wget ftp://ftp.openldap.org/pub/OpenLDAP/openldap-release/openldap-2.4.39.tgz
+    __dcd openldap-2.4.39
+    autoconf
+    __bld-common --disable-static --enable-dynamic --disable-debug --disable-slapd
+}
+
+__openldap()
+{
+    __openldap-2.4.39
 }
 
 __openssh-6.5p1()
@@ -2332,6 +2607,37 @@ session  include        system-session
     sudo install /tmp/polkit-1 /etc/pam.d/
 }
 
+__poppler-0.26.4()
+{
+    __dep fontconfig
+
+    __wget http://poppler.freedesktop.org/poppler-0.26.4.tar.xz
+    __wget http://poppler.freedesktop.org/poppler-data-0.4.7.tar.gz
+    __dcd poppler-0.26.4
+    __bld-common --disable-static --enable-xpdf-headers
+    
+}
+
+__poppler()
+{
+    __poppler-0.26.4
+}
+
+__poppler-data-0.4.7()
+{
+    __dep poppler
+
+    __wget http://poppler.freedesktop.org/poppler-data-0.4.7.tar.gz
+    __dcd poppler-data-0.4.7
+    __mk
+    __mkinst
+}
+
+__poppler-data()
+{
+    __poppler-data-0.4.7
+}
+
 __popt-1.16()
 {
     __wget http://rpm5.org/files/popt/popt-1.16.tar.gz
@@ -2359,26 +2665,59 @@ __pth()
     __pth-2.0.7
 }
 
-__python-2.7.6()
+__pulseaudio-5.0()
+{
+    __dep json-c libsndfile
+
+    __wget http://freedesktop.org/software/pulseaudio/releases/pulseaudio-5.0.tar.xz
+    __dcd pulseaudio-5.0
+    find . -name "Makefile.in" | xargs sed -i "s|(libdir)/@PACKAGE@|(libdir)/pulse|"
+    __bld-common --localstatedir=/var --disable-bluez4 --disable-rpath --with-module-dir=/usr/lib/pulse/modules
+}
+
+__pulseaudio()
+{
+    __pulseaudio-5.0
+}
+
+__python-2.7.8()
 {
     __dep expat libffi
+
+    __wget http://www.python.org/ftp/python/2.7.8/Python-2.7.8.tar.xz
+    __dcd Python-2.7.8
+    __bld-common --enable-shared --with-system-expat --with-system-ffi --enable-unicode=ucs4
 }
 
 __python-27()
 {
-    __python-2.7.6
+    __python-2.7.8
 }
 
-__qemu-2.0.0()
+__python-3.4.1()
+{
+    __dep libffi
+
+    __wget http://www.python.org/ftp/python/3.4.1/Python-3.4.1.tar.xz
+    __dcd Python-3.4.1
+    __bld-common CXX="/usr/bin/g++" --enable-shared --with-system-expat --with-system-ffi --without-ensurepip
+}
+
+__python-3()
+{
+    __python-3.4.1
+}
+
+__qemu-2.1.0()
 {
     __dep glib python27 sdl xorg alsa check curl mesalib
 
-    __wget http://wiki.qemu.org/download/qemu-2.0.0.tar.bz2
-    __dcd qemu-2.0.0
+    __wget http://wiki.qemu-project.org/download/qemu-2.1.0.tar.bz2
+    __dcd qemu-2.1.0
     sed -e '/#include <sys\/capability.h>/ d' \
 	-e '/#include "virtio-9p-marshal.h"/ i#include <sys\/capability.h>' \
 	-i fsdev/virtfs-proxy-helper.c
-    __bld-common --docdir=/usr/share/doc/qemu-2.0.0 --target-list=x86_64-softmmu
+    __bld-common --docdir=/usr/share/doc/qemu-2.1.0 --target-list=x86_64-linuxuser
     sudo chmod -v 755 /usr/lib/libcacard.so
     sudo groupadd -g 61 kvm
 
@@ -2397,7 +2736,35 @@ KERNEL=="kvm", NAME="%k", GROUP="kvm", MODE="0660"
 
 __qemu()
 {
-    __qemu-2.0.0
+    __qemu-2.1.0
+}
+
+__raptor-2.0.14()
+{
+    __dep curl libxslt
+
+    __wget http://download.librdf.org/source/raptor2-2.0.14.tar.gz
+    __dcd raptor2-2.0.14
+    __bld-common --disable-static
+}
+
+__raptor()
+{
+    __raptor-2.0.14
+}
+
+__rasqal-0.9.32()
+{
+    __dep raptor
+
+    __wget http://download.librdf.org/source/rasqal-0.9.32.tar.gz
+    __dcd rasqal-0.9.32
+    __bld-common --disable-static
+}
+
+__rasqal()
+{
+    __rasqal-0.9.32
 }
 
 __readline()
@@ -2406,6 +2773,20 @@ __readline()
 
     __git-clone git://git.savannah.gnu.org/readline.git
     __common readline
+}
+
+__redland-1.0.17()
+{
+    __dep rasqal
+
+    __wget http://download.librdf.org/source/redland-1.0.17.tar.gz
+    __dcd redland-1.0.17
+    __bld-common --disable-static
+}
+
+__redland()
+{
+    __redland-1.0.17
 }
 
 __sane-backends-1.0.24()
@@ -2440,6 +2821,34 @@ __sane-frontends-1.0.14()
 __sane-frontends()
 {
     __sane-frontends-1.0.14
+}
+
+__sdl-1.2.15()
+{
+    __dep "?"
+
+    __wget https://www.libsdl.org/release/SDL-1.2.15.tar.gz
+    __dcd SDL-1.2.15
+    __bld-common
+}
+
+__sdl1()
+{
+    __sdl-1.2.15
+}
+
+__sdl-2.0.3()
+{
+    __dep "?"
+
+    __wget https://www.libsdl.org/release/SDL2-2.0.3.tar.gz
+    __dcd SDL2-2.0.3
+    __bld-common
+}
+
+__sdl2()
+{
+    __sdl-2.0.3
 }
 
 __sed-4.2.2()
@@ -2617,22 +3026,22 @@ __systemd-ui()
     __common systemd-ui
 }
 
-__sqlite-3.8.3.1()
+__sqlite-3.8.6()
 {
     __dep unzip
 
-    __wget http://sqlite.org/2014/sqlite-autoconf-3080301.tar.gz
-    __dcd sqlite-autoconf-3080301
+    __wget http://sqlite.org/2014/sqlite-autoconf-3080600.tar.gz
+    __dcd sqlite-autoconf-3080600
     ./configure --prefix=/usr --sysconfdir=/etc \
-                CFLAGS="-DSQLITE_ENABLE_FTS3=1 -DSQLITE_ENABLE_COLUMN_METADATA=1 \
-                        -DSQLITE_ENABLE_UNLOCK_NOTIFY=1 -DSQLITE_SECURE_DELETE=1"
+	CFLAGS="-DSQLITE_ENABLE_FTS3=1 -DSQLITE_ENABLE_COLUMN_METADATA=1 \
+                -DSQLITE_ENABLE_UNLOCK_NOTIFY=1 -DSQLITE_SECURE_DELETE=1"
     __mk
     __mkinst
 }
 
 __sqlite()
 {
-    __sqlite-3.8.3.1
+    __sqlite-3.8.6
 }
 
 __svn-1.8.8()
@@ -2729,6 +3138,22 @@ __tomoyo-tools-2.5.0()
 __tomoyo-tools()
 {
     __tomoyo-tools-2.5.0
+}
+
+__unixodbc-2.3.2()
+{
+    __dep ""
+
+    __wget http://www.unixodbc.org/unixODBC-2.3.2.tar.gz
+    __dcd unixODBC-2.3.2
+    ./configure --prefix=/usr --sysconfdir=/etc/unixODBC
+    __mk
+    __mkinst
+}
+
+__unixodbc()
+{
+    __unixodbc-2.3.2
 }
 
 __unzip()
