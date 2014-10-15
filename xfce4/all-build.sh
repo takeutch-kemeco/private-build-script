@@ -112,9 +112,9 @@ __xfce4-taskmanager()
     __xfce-common xfce4-taskmanager
 }
 
-__terminal()
+__xfce4-terminal()
 {
-    __xfce-common terminal
+    __xfce-common xfce4-terminal
 }
 
 __ristretto()
@@ -147,7 +147,7 @@ __base-system()
 __extra-apps()
 {
     __xfce4-taskmanager
-    __terminal
+    __xfce4-terminal
     __ristretto
 }
 
