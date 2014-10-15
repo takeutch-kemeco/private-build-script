@@ -1143,16 +1143,17 @@ __glib()
     __bld-common --with-pcre=system --enable-debug=no --disable-compile-warnings
 }
 
-__glibc-2.19()
+__glibc-2.20()
 {
     __dep ""
-    
-    __decord glibc-2.19
+
+    __wget http://ftp.gnu.org/gnu/libc/glibc-2.20.tar.xz   
+    __decord glibc-2.20
     __cdbt
     cat > configparms << .
 ASFLAGS-config=-O4 -march=native -mtune=native -msse4.1
 .
-    $BASE_DIR/glibc-2.19/configure --prefix=/usr --disable-profile --enable-kernel=3.13 \
+    $BASE_DIR/glibc-2.20/configure --prefix=/usr --disable-profile --enable-kernel=3.13 \
         --libexecdir=/usr/lib/glibc --enable-obsolete-rpc
     __mk
     __mkinst
@@ -1168,7 +1169,7 @@ __glib-networking()
 
 __glibc()
 {
-    __glibc-2.19
+    __glibc-2.20
 }
 
 __gobject-introspection()
