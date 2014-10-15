@@ -3523,18 +3523,18 @@ __xz()
     __xz.git
 }
 
-__yasm-1.2.0()
+__yasm-1.3.0()
 {
     __dep python2 cython
 
-    __wget http://www.tortall.net/projects/yasm/releases/yasm-1.2.0.tar.gz
-    __dcd yasm-1.2.0
+    __wget http://www.tortall.net/projects/yasm/releases/yasm-1.3.0.tar.gz
+    __dcd yasm-1.3.0
     __bld-common
 }
 
 __yasm()
 {
-    __yasm-1.2.0
+    __yasm-1.3.0
 }
 
 __zlib-1.2.8()
