@@ -1780,6 +1780,19 @@ __libcrypt()
     __libcrypt-1.6.2
 }
 
+__libevent-git()
+{
+    __dep openssl
+
+    __git-clone https://github.com/libevent/libevent.git
+    __common libevent
+}
+
+__libevent()
+{
+    __libevent-git
+}
+
 __libffi()
 {
     __dep ""
