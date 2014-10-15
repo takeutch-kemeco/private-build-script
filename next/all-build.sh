@@ -3198,7 +3198,7 @@ __systemd()
 
     __bld-common --localstatedir=/var --config-cache --with-rootprefix= --with-rootlibdir=/lib \
     	--enable-split-usr --enable-shared --disable-tests --disable-gudev --without-python \
-        --docdir=/usr/share/doc/systemd-216 --enable-gtk-doc-html=no \
+        --docdir=/usr/share/doc/systemd-217 --enable-gtk-doc-html=no \
         --with-dbuspolicydir=/etc/dbus-1/system.d --with-dbusinterfacedir=/usr/share/dbus-1/interfaces \
         --with-dbussessionservicedir=/usr/share/dbus-1/services \
         --with-dbussystemservicedir=/usr/share/dbus-1/system-services \
