@@ -2175,7 +2175,8 @@ __libxml2-git()
     __dep python2
 
     __git-clone git://git.gnome.org/libxml2
-    __common libxml2
+    __cd libxml2
+    __bld-common --disable-static --with-history --with-python=/usr/lib/python2.7/
 }
 
 __libxml2-2.9.1()
@@ -2186,7 +2187,7 @@ __libxml2-2.9.1()
     __wget http://www.w3.org/XML/Test/xmlts20130923.tar.gz
     __dcd libxml2-2.9.1
     tar xf $SRC_DIR/xmlts20130923.tar.gz
-    __bld-common --disable-static --with-history
+    __bld-common --disable-static --with-history --with-python=/usr/lib/python2.7/
 }
 
 __libxml2()
