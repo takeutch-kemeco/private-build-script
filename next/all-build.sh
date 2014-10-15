@@ -1668,6 +1668,15 @@ __json-c()
     __json-c-0.12
 }
 
+__make()
+{
+    __dep ""
+
+    __wget http://ftp.gnu.org/gnu/make/make-4.1.tar.bz2
+    __dcd make-4.1
+    __bld-common
+}
+
 __mozjs()
 {
     __dep libffi nspr python2 zip
