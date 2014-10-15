@@ -1577,8 +1577,8 @@ __icu-53.1()
 {
     __dep llvm
 
-    __wget http://download.icu-project.org/files/icu4c/52.1/icu4c-52_1-src.tgz
-    __decord icu4c-52_1-src
+    __wget http://download.icu-project.org/files/icu4c/53.1/icu4c-53_1-src.tgz
+    __decord icu4c-53_1-src
     __cd icu/source
     __bld-common-simple CXX=g++
 }
@@ -1701,7 +1701,7 @@ __linux-pam()
 
     __git-clone https://git.fedorahosted.org/git/linux-pam.git
     __cd linux-pam
-    __bld-common --enable-securedir=/lib/security
+    __bld-common --enable-securedir=/lib/security --disable-regenerate-docu --enable-debug=no
 }
 
 __lcms2()
