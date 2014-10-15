@@ -55,8 +55,8 @@ __clisp()
 
 __maxima()
 {
-	__wget http://downloads.sourceforge.net/project/maxima/Maxima-source/5.29.1-source/maxima-5.29.1.tar.gz
-	__common maxima-5.29.1
+	__wget http://downloads.sourceforge.net/project/maxima/Maxima-source/5.34.1-source/maxima-5.34.1.tar.gz
+	__common maxima-5.34.1
 }
 
 __all()
