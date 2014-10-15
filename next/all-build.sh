@@ -2161,7 +2161,7 @@ __libxkbcommon()
     __common libxkbcommon
 }
 
-__libxml2.git()
+__libxml2-git()
 {
     __dep python2
 
@@ -2182,7 +2182,7 @@ __libxml2-2.9.1()
 
 __libxml2()
 {
-    __libxml2-2.9.1
+    __libxml2-git
 }
 
 __libxslt-1.1.28()
@@ -2194,9 +2194,18 @@ __libxslt-1.1.28()
     __bld-common
 }
 
+__libxslt-git()
+{
+    __dep libxml2
+
+    __git-clone git://git.gnome.org/libxslt
+    __cd libxslt
+    __bld-common
+}
+
 __libxslt()
 {
-    __libxslt-1.1.28
+    __libxslt-git
 }
 
 __libva()
