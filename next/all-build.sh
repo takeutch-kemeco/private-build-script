@@ -2704,8 +2704,14 @@ __python-2.7.8()
     __dep expat libffi
 
     __wget http://www.python.org/ftp/python/2.7.8/Python-2.7.8.tar.xz
+    __wget http://docs.python.org/ftp/python/doc/2.7.8/python-2.7.8-docs-html.tar.bz2
     __dcd Python-2.7.8
     __bld-common --enable-shared --with-system-expat --with-system-ffi --enable-unicode=ucs4
+    sudo chmod -v 755 /usr/lib/libpython2.7.so.1.0
+    sudo install -v -dm755 /usr/share/doc/python-2.7.8
+    sudo tar --strip-components=1 -C /usr/share/doc/python-2.7.8 --no-same-owner -xvf $SRC_DIR/python-2.7.8-docs-html.tar.bz2
+    sudo find /usr/share/doc/python-2.7.8 -type d -exec chmod 0755 {} \;
+    sudo find /usr/share/doc/python-2.7.8 -type f -exec chmod 0644 {} \;
 }
 
 __python-27()
@@ -2713,18 +2719,182 @@ __python-27()
     __python-2.7.8
 }
 
-__python-3.4.1()
+__python-3.4.2()
 {
     __dep libffi
 
-    __wget http://www.python.org/ftp/python/3.4.1/Python-3.4.1.tar.xz
-    __dcd Python-3.4.1
+    __wget http://www.python.org/ftp/python/3.4.2/Python-3.4.2.tar.xz
+    __wget http://docs.python.org/3/archives/python-3.4.2-docs-html.tar.bz2
+    __dcd Python-3.4.2
     __bld-common CXX="/usr/bin/g++" --enable-shared --with-system-expat --with-system-ffi --without-ensurepip
+    sudo chmod -v 755 /usr/lib/libpython3.4m.so
+    sudo chmod -v 755 /usr/lib/libpython3.so
+    sudo install -v -dm755 /usr/share/doc/python-3.4.2/html
+    sudo tar --strip-components=1 --no-same-owner --no-same-permissions -C /usr/share/doc/python-3.4.2/html -xvf $SRC_DIR/python-3.4.2-docs-html.tar.bz2
 }
 
 __python-3()
 {
-    __python-3.4.1
+    __python-3.4.2
+}
+
+__dbus-python-1.2.0()
+{
+    __dep dbus-glib python-27 python-3
+
+    __wget http://dbus.freedesktop.org/releases/dbus-python/dbus-python-1.2.0.tar.gz
+    __dcd dbus-python-1.2.0
+
+    mkdir python2
+    pushd python2
+    PYTHON=/usr/bin/python2 ../configure --prefix=/usr --docdir=/usr/share/doc/dbus-python-1.2.0
+    make
+    popd
+
+    mkdir python3
+    pushd python3
+    PYTHON=/usr/bin/python3 ../configure --prefix=/usr --docdir=/usr/share/doc/dbus-python-1.2.0
+    make
+    popd
+
+    sudo make -C python2 install
+    sudo make -C python3 install
+}
+
+__dbus-python()
+{
+    __dbus-python-1.2.0
+}
+
+__py2cairo-1.10.0()
+{
+    __dep python-27 cairo
+
+    __wget http://cairographics.org/releases/py2cairo-1.10.0.tar.bz2
+    __dcd py2cairo-1.10.0
+    ./waf configure --prefix=/usr
+    ./waf build
+    sudo ./waf install
+}
+
+__py2cairo()
+{
+    __py2cairo-1.10.0
+}
+
+__pycairo-1.10.0()
+{
+    __dep python-3 cairo
+
+    __wget http://cairographics.org/releases/pycairo-1.10.0.tar.bz2
+    __wget http://www.linuxfromscratch.org/patches/blfs/svn/pycairo-1.10.0-waf_unpack-1.patch
+    __wget http://www.linuxfromscratch.org/patches/blfs/svn/pycairo-1.10.0-waf_python_3_4-1.patch
+    __dcd pycairo-1.10.0
+    patch -Np1 -i $SRC_DIR/pycairo-1.10.0-waf_unpack-1.patch
+    wafdir=$(./waf unpack)
+    pushd $wafdir
+    patch -Np1 -i $SRC_DIR/pycairo-1.10.0-waf_python_3_4-1.patch
+    popd
+    unset wafdir
+    PYTHON=/usr/bin/python3 ./waf configure --prefix=/usr
+    ./waf build
+    sudo ./waf install
+}
+
+__pycairo()
+{
+    __pycairo-1.10.0
+}
+
+__pygobject-2.28.5()
+{
+    __dep glib py2cairo gobject-introspection libxslt
+
+    __wget http://ftp.gnome.org/pub/gnome/sources/pygobject/2.28/pygobject-2.28.6.tar.xz
+    __wget http://www.linuxfromscratch.org/patches/blfs/svn/pygobject-2.28.6-fixes-1.patch
+    __dcd pygobject-2.28.6
+    patch -Np1 -i $SRC_DIR/pygobject-2.28.6-fixes-1.patch
+    ./configure --prefix=/usr
+    make
+    sudo make install
+}
+
+__pygobject-2()
+{
+    __pygobject-2.28.5
+}
+
+__pygobject-3.14.0()
+{
+    __dep gobject-introspection py2cairo pycairo
+
+    __wget http://ftp.gnome.org/pub/gnome/sources/pygobject/3.14/pygobject-3.14.0.tar.xz
+    __dcd pygobject-3.14.0
+    sed -i '/test_out_glist/ i\    @unittest.expectedFailure' tests/test_atoms.py
+
+    mkdir python2
+    pushd python2
+    ../configure --prefix=/usr --with-python=/usr/bin/python2
+    make
+    popd
+
+    mkdir python3
+    pushd python3
+    ../configure --prefix=/usr --with-python=/usr/bin/python3
+    make
+    popd
+
+    sudo make -C python2 install
+    sudo make -C python3 install
+}
+
+__pygobject-3()
+{
+    __pygobject-3.14.0
+}
+
+__pygtk-2.24.0()
+{
+    __dep pygobject atk pango py2cairo gtk-2 libglade numpy libxslt
+
+    __wget http://ftp.gnome.org/pub/gnome/sources/pygtk/2.24/pygtk-2.24.0.tar.bz2
+    __dcd pygtk-2.24.0
+    ./configure --prefix=/usr
+    make
+    sudo make install
+}
+
+__pygtk()
+{
+    __pygtk-2.24.0
+}
+
+__pyxdg-0.25()
+{
+    __dep python-27 python-3
+
+    __wget http://people.freedesktop.org/~takluyver/pyxdg-0.25.tar.gz
+    __dcd pyxdg-0.25
+    sudo python2 setup.py install --optimize=1
+    sudo python3 setup.py install --optimize=1
+}
+
+__pyxdg()
+{
+    __pyxdg-0.25
+}
+
+__python-modules()
+{
+rem(){
+    __dbus-python
+    __py2ciro
+    __pycairo
+    __pygobject-2
+    __pygobject-3
+    __pygtk
+}
+    __pyxdg
 }
 
 __qemu-2.1.0()
