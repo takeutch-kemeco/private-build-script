@@ -3212,10 +3212,6 @@ user.* -/var/log/user.log
 
 __systemd()
 {
-    ### 予めArchLinx等のディストリからバイナリーのsystemd-*.so群を/usr/lib/へ手動コピーしておく必要がある。
-    ### その上で dbus, linux-pam などの依存パッケージのビルドを行わなければビルドが通らない。
-
-    ### It is necessary to validate some Linux kernel options (i.e. cgroup, fnotify, module).
     __dep libcap dbus kmod libseccomp lvm2 cryptsetup linux-pam
 
     __git-clone git://anongit.freedesktop.org/systemd/systemd
@@ -3234,14 +3230,19 @@ __systemd()
     sudo rm /var/run -rf
     sudo ln -s /run /var/run
 
-    __bld-common --localstatedir=/var --config-cache --with-rootprefix= --with-rootlibdir=/lib \
-    	--enable-split-usr --enable-shared --disable-tests --disable-gudev --without-python \
-        --docdir=/usr/share/doc/systemd-217 --enable-gtk-doc-html=no \
-        --with-dbuspolicydir=/etc/dbus-1/system.d --with-dbusinterfacedir=/usr/share/dbus-1/interfaces \
-        --with-dbussessionservicedir=/usr/share/dbus-1/services \
-        --with-dbussystemservicedir=/usr/share/dbus-1/system-services \
-        --disable-manpages --disable-audit --disable-firstboot --disable-sysusers --disable-dbus \
-        --disable-tmpfiles --disable-gudev --disable-networkd
+    ./configure --prefix=/usr                                       \
+            --sysconfdir=/etc                                       \
+            --localstatedir=/var                                    \
+            --config-cache                                          \
+            --with-rootprefix=                                      \
+            --with-rootlibdir=/usr/lib                              \
+            --docdir=/usr/share/doc/systemd-213                     \
+            --with-dbuspolicydir=/etc/dbus-1/system.d               \
+            --with-dbusinterfacedir=/usr/share/dbus-1/interfaces    \
+            --with-dbussessionservicedir=/usr/share/dbus-1/services \
+            --with-dbussystemservicedir=/usr/share/dbus-1/system-services
+    __mk
+    __mkinst
     sudo systemd-machine-id-setup
 }
 
