@@ -528,7 +528,7 @@ __docbook-xml-4.3()
     __dep libxml2 unzip
 
     __wget http://www.docbook.org/xml/4.3/docbook-xml-4.3.zip
-    mkdir docbook-xml-4.3
+    mkdir $BASE_DIR/docbook-xml-4.3
     cd $BASE_DIR/docbook-xml-4.3
     sudo cp $SRC_DIR/docbook-xml-4.3.zip $BASE_DIR/docbook-xml-4.3
     sudo unzip docbook-xml-4.3.zip
@@ -616,7 +616,7 @@ __docbook-xml-4.5()
     __dep libxml2 unzip
 
     __wget http://www.docbook.org/xml/4.5/docbook-xml-4.5.zip
-    mkdir docbook-xml-4.5
+    mkdir $BASE_DIR/docbook-xml-4.5
     cd $BASE_DIR/docbook-xml-4.5
     sudo cp $SRC_DIR/docbook-xml-4.5.zip $BASE_DIR/docbook-xml-4.5
     sudo unzip docbook-xml-4.5.zip
@@ -697,6 +697,30 @@ __docbook-xml-4.5()
 	"http://www.oasis-open.org/docbook/" \
 	"file:///etc/xml/docbook" \
 	/etc/xml/catalog
+
+    for DTDVERSION in 4.1.2 4.2 4.3 4.4
+    do
+	sudo xmlcatalog --noout --add "public" \
+	    "-//OASIS//DTD DocBook XML V$DTDVERSION//EN" \
+	    "http://www.oasis-open.org/docbook/xml/$DTDVERSION/docbookx.dtd" \
+	    /etc/xml/docbook
+	sudo xmlcatalog --noout --add "rewriteSystem" \
+	    "http://www.oasis-open.org/docbook/xml/$DTDVERSION" \
+	    "file:///usr/share/xml/docbook/xml-dtd-4.5" \
+	    /etc/xml/docbook
+	sudo xmlcatalog --noout --add "rewriteURI" \
+	    "http://www.oasis-open.org/docbook/xml/$DTDVERSION" \
+	    "file:///usr/share/xml/docbook/xml-dtd-4.5" \
+	    /etc/xml/docbook
+	sudo xmlcatalog --noout --add "delegateSystem" \
+	    "http://www.oasis-open.org/docbook/xml/$DTDVERSION/" \
+	    "file:///etc/xml/docbook" \
+	    /etc/xml/catalog
+	sudo xmlcatalog --noout --add "delegateURI" \
+	    "http://www.oasis-open.org/docbook/xml/$DTDVERSION/" \
+	    "file:///etc/xml/docbook" \
+	    /etc/xml/catalog
+    done
 }
 
 __docbook-xml()
