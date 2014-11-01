@@ -2225,7 +2225,9 @@ __libxslt-1.1.28()
 
     __wget http://xmlsoft.org/sources/libxslt-1.1.28.tar.gz
     __dcd libxslt-1.1.28
-    __bld-common
+    PYTHON=/usr/bin/python2 ./configure --prefix=/usr --disable-static --with-python=/usr/lib/python2.7/
+    __mk
+    __mkinst
 }
 
 __libxslt-git()
@@ -2234,7 +2236,9 @@ __libxslt-git()
 
     __git-clone git://git.gnome.org/libxslt
     __cd libxslt
-    __bld-common
+    PYTHON=/usr/bin/python2 ./configure --prefix=/usr  --disable-static --with-python=/usr/lib/python2.7/
+    __mk
+    __mkinst
 }
 
 __libxslt()
