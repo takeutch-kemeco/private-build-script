@@ -1451,18 +1451,18 @@ __gtk-doc.git()
     __common gtk-doc
 }
 
-__gtk-doc-1.19()
+__gtk-doc-1.21()
 {
     __dep docbook-xml docbook-xsl Itstool libxslt
 
-    __wget http://ftp.gnome.org/pub/gnome/sources/gtk-doc/1.19/gtk-doc-1.19.tar.xz
-    __dcd gtk-doc-1.19
+    __wget http://ftp.gnome.org/pub/gnome/sources/gtk-doc/1.21/gtk-doc-1.21.tar.xz
+    __dcd gtk-doc-1.21
     __bld-common
 }
 
 __gtk-doc()
 {
-    __gtk-doc-1.19
+    __gtk-doc-1.21
 }
 
 __gtk-engines2()
