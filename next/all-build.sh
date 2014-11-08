@@ -3050,6 +3050,20 @@ __sane-frontends()
     __sane-frontends-1.0.14
 }
 
+__screen-4.2.1()
+{
+    __dep "?"
+
+    __wget http://ftp.gnu.org/gnu/screen/screen-4.2.1.tar.gz
+    __dcd screen-4.2.1
+    __bld-common
+}
+
+__screen()
+{
+    __screen-4.2.1
+}
+
 __sdl-1.2.15()
 {
     __dep "?"
