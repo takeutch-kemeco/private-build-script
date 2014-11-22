@@ -2164,18 +2164,18 @@ __libtool.git()
     __bld-common
 }
 
-__libtool-2.4.2()
+__libtool-2.4.3()
 {
     __dep ""
 
-    __wget http://ftp.jaist.ac.jp/pub/GNU/libtool/libtool-2.4.2.tar.xz
-    __dcd libtool-2.4.2
+    __wget http://ftp.jaist.ac.jp/pub/GNU/libtool/libtool-2.4.3.tar.xz
+    __dcd libtool-2.4.3
     __bld-common
 }
 
 __libtool()
 {
-    __libtool-2.4.2
+    __libtool-2.4.3
 }
 
 __libunistring()
