@@ -3244,17 +3244,8 @@ __systemd()
     sudo rm /var/run -rf
     sudo ln -s /run /var/run
 
-    ./configure --prefix=/usr                                       \
-            --sysconfdir=/etc                                       \
-            --localstatedir=/var                                    \
-            --config-cache                                          \
-            --with-rootprefix=                                      \
-            --with-rootlibdir=/usr/lib                              \
-            --docdir=/usr/share/doc/systemd-213                     \
-            --with-dbuspolicydir=/etc/dbus-1/system.d               \
-            --with-dbusinterfacedir=/usr/share/dbus-1/interfaces    \
-            --with-dbussessionservicedir=/usr/share/dbus-1/services \
-            --with-dbussystemservicedir=/usr/share/dbus-1/system-services
+    ./configure CFLAGS='-O0 -ftrapv' --enable-compat-libs --enable-kdbus --sysconfdir=/etc \
+        --localstatedir=/var --libdir=/usr/lib64 --enable-gtk-doc --enable-terminal
     __mk
     __mkinst
     sudo systemd-machine-id-setup
