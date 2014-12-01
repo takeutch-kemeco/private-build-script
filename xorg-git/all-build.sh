@@ -757,7 +757,6 @@ __mesa-lib()
           --enable-texture-float         	\
           --enable-gles1                 	\
           --enable-gles2                 	\
-          --enable-openvg                	\
           --enable-xa                    	\
           --enable-gbm                   	\
           --enable-gallium-egl           	\
