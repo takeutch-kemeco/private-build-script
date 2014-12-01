@@ -1904,18 +1904,18 @@ __libgpg-error()
     __bld-common --enable-maintainer-mode
 }
 
-__libksba-1.3.0()
+__libksba-1.3.2()
 {
     __dep libgpg-error
 
-    __wget ftp://ftp.gnupg.org/gcrypt/libksba/libksba-1.3.0.tar.bz2
-    __dcd libksba-1.3.0
+    __wget ftp://ftp.gnupg.org/gcrypt/libksba/libksba-1.3.2.tar.bz2
+    __dcd libksba-1.3.2
     __bld-common
 }
 
 __libksba()
 {
-    __libksba-1.3.0
+    __libksba-1.3.2
 }
 
 __libmnl()
