@@ -1351,18 +1351,18 @@ __gperf()
     __gperf-3.0.4
 }
 
-__grep-2.18()
+__grep-2.21()
 {
     __dep ""
 
-    __wget http://ftp.gnu.org/gnu/grep/grep-2.18.tar.xz
-    __dcd grep-2.18
+    __wget http://ftp.gnu.org/gnu/grep/grep-2.21.tar.xz
+    __dcd grep-2.21
     __bld-common
 }
 
 __grep()
 {
-    __grep-2.18
+    __grep-2.21
 }
 
 __gsettings-desktop-schemas()
