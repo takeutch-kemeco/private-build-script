@@ -2302,6 +2302,20 @@ __libvpx()
     __bld-common-simple
 }
 
+__ls2ch-git()
+{
+    __dep bison flex wget
+
+    __git-clone https://github.com/takeutch-kemeco/ls2ch.git
+    __cd ls2ch
+    __bld-common
+}
+
+__ls2ch()
+{
+    __ls2ch-git
+}
+
 __m4-1.4.17()
 {
     __dep ""
