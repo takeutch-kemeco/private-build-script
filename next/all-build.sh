@@ -171,7 +171,9 @@ __bison-3.0.2()
 
     __wget http://ftp.gnu.org/gnu/bison/bison-3.0.2.tar.xz
     __dcd bison-3.0.2
-    __bld-common
+    ./configure --prefix=/usr --sysconfdir=/etc
+    __mk
+    __mkinst
 }
 
 __bison()
