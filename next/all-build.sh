@@ -859,21 +859,21 @@ __flex-git()
     echo
 }
 
-__flex-2.5.37()
+__flex-2.5.39()
 {
 ### __dep "texlive"
     __dep ""
 
-    __wget http://downloads.sourceforge.net/project/flex/flex-2.5.37.tar.bz2
-    __dcd flex-2.5.37
+    __wget http://downloads.sourceforge.net/project/flex/flex-2.5.39.tar.bz2
+    __dcd flex-2.5.39
+    ./configure --prefix=/usr --sysconfdir=/etc
+    __mk
+    __mkinst
+}
 
-    ### texliveが無くてもビルドできるようにMakefileを修正
-    cp configure.in{,.orig}
-    cat configure.in.orig | sed -e "s/^doc\/Makefile.*$//g" > configure.in
-    cp Makefile.am{,.orig}
-    cat Makefile.am.orig | sed -e "s/^[ \t]*doc /\t/g" > Makefile.am
-
-    __bld-common
+__flex()
+{
+    __flex-2.5.39
 }
 
 __firefox-34.0.5()
@@ -985,11 +985,6 @@ __firefox-hg()
 __firefox()
 {
     __firefox-34.0.5
-}
-
-__flex()
-{
-    __flex-2.5.37
 }
 
 __fontconfig()
