@@ -874,12 +874,12 @@ __flex-2.5.37()
     __bld-common
 }
 
-__firefox-32.0()
+__firefox-34.0.5()
 {
     __dep alsa-lib gtk+2 zip unzip
 
-    __wget http://ftp.mozilla.org/pub/mozilla.org/firefox/releases/32.0/source/firefox-32.0.source.tar.bz2
-    __decord firefox-32.0.source
+    __wget https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/34.0.5/source/firefox-34.0.5.source.tar.bz2
+    __decord firefox-34.0.5.source
     __cd mozilla-release
 
     cat > mozconfig << "EOF"
@@ -934,7 +934,7 @@ ac_add_options --disable-updater
 ac_add_options --disable-tests
 ac_add_options --disable-gstreamer
 
-ac_add_options --enable-optimize
+ac_add_options --enable-optimize="-O4 -msse4.1 -march=native -mtune=native"
 ac_add_options --enable-strip
 ac_add_options --enable-install-strip
 
@@ -957,12 +957,11 @@ ac_add_options --with-system-zlib
 mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/firefox-build-dir
 EOF
 
-        test $(uname -m) = "i686" && sed -i 's/enable-optimize/disable-optimize/' mozconfig || true
         make -f client.mk
 
         sudo make -f client.mk install INSTALL_SDK=
         sudo mkdir -pv /usr/lib/mozilla/plugins
-        sudo ln -sfv ../mozilla/plugins /usr/lib/firefox-32.0
+        sudo ln -sfv ../mozilla/plugins /usr/lib/firefox-34.0.5
 }
 
 __firefox-hg()
@@ -983,7 +982,7 @@ __firefox-hg()
 
 __firefox()
 {
-    __firefox-32.0
+    __firefox-34.0.5
 }
 
 __flex()
