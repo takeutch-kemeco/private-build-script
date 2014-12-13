@@ -301,7 +301,7 @@ __libxml2()
 
     $DIST_CLEAN
     ./autogen.sh
-    __cfg --prefix=/usr --disable-static
+    __cfg --prefix=/usr --disable-static --with-history --with-python=/usr/lib/python2.7/
 
     $MAKE_CLEAN
     __mk
