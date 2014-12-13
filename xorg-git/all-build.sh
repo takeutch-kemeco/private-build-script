@@ -1308,11 +1308,11 @@ __twm()
 
 __xterm()
 {
-    __wget ftp://invisible-island.net/xterm/xterm-300.tgz
+    __wget ftp://invisible-island.net/xterm/xterm-313.tgz
 
     cd ${BASE_DIR}
-    gzip -dc ${SRC_DIR}/xterm-300.tgz | tar xvf -
-    __cd xterm-300
+    gzip -dc ${SRC_DIR}/xterm-313.tgz | tar xvf -
+    __cd xterm-313
 
     sed -i '/v0/,+1s/new:/new:kb=^?:/' termcap
     echo -e '\tkbs=\\177,' >> terminfo
