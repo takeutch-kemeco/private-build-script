@@ -1142,6 +1142,28 @@ __gdk-pixbuf()
     sudo gdk-pixbuf-query-loaders --update-cache
 }
 
+__ghostscript-git()
+{
+    __dep lcms ipafont
+
+    __git-clone git://git.ghostscript.com/ghostpdl.git
+    __cd ghostpdl/gs
+cat > $BASE_DIR/ghostpdl/gs/Resource/Init/cidfmap << "EOF"
+/Adobe-Japan1 << /FileType /TrueType /Path (ipag.ttf) /CSI [(Japan1) 6] >> ;
+EOF
+    __bld-common
+    __mk so
+    sudo make soinstall
+    sudo ldconfig
+    sudo mkdir -p /usr/share/ghostscript/fonts
+    sudo cp /usr/share/fonts/IPAfont00303/*.ttf /usr/share/ghostscript/fonts
+}
+
+__ghostscript()
+{
+    __ghostscript-git
+}
+
 __git()
 {
     __dep "?"
