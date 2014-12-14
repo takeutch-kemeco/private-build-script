@@ -1330,6 +1330,22 @@ __gnutls()
     __gnutls-3.3.7
 }
 
+__grub-git()
+{
+    __dep ""
+
+    __git-clone git://git.savannah.gnu.org/grub.git
+    __cd grub
+    __bld-common --sbindir=/sbin --disable-werror
+    echo "grub2-install を手動で行ってください"
+    echo "例: sudo ln -sf /dev/sda6 /dev/root && sudo /usr/sbin/grub2-install /dev/sda"
+}
+
+__grub()
+{
+    __grub-git
+}
+
 __graphite2-1.2.4()
 {
     __dep cmake
