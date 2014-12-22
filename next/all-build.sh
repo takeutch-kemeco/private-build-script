@@ -3292,6 +3292,7 @@ __systemd()
     sudo rm /var/run -rf
     sudo ln -s /run /var/run
 
+    ./autogen.sh
     ./configure CFLAGS='-O0 -ftrapv' --enable-compat-libs --enable-kdbus --sysconfdir=/etc \
         --localstatedir=/var --libdir=/usr/lib64 --enable-gtk-doc --enable-terminal
     __mk
