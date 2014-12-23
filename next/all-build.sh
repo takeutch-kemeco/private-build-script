@@ -1122,14 +1122,28 @@ __gettext()
     __gettext-0.19.3
 }
 
-__gdbm()
+__gdbm-git()
 {
     __dep "?"
 
-    git clone git://git.gnu.org.ua/gdbm.git
+    __git-clone git://git.gnu.org.ua/gdbm.git
     __cd gdbm
     ./bootstrap
-    __bld-common
+    __bld-common --enable-libgdbm-compat
+}
+
+__gdbm-1.11()
+{
+    __dep "?"
+
+    __wget http://ftp.gnu.org/gnu/gdbm/gdbm-1.11.tar.gz
+    __dcd gdbm-1.11
+    __bld-common --enable-libgdbm-compat
+}
+
+__gdbm()
+{
+    __gdbm-1.11
 }
 
 __gdk-pixbuf()
