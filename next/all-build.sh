@@ -23,13 +23,18 @@ __attr()
     __bld-common INSTALL_USER=root INSTALL_GROUP=root
 }
 
-__acl()
+__acl-git()
 {
     __dep attr
 
     __git-clone git://git.savannah.nongnu.org/acl.git
     __cd acl
-    __bld-common INSTALL_USER=root INSTALL_GROUP=root
+    __bld-common INSTALL_USER=root INSTALL_GROUP=root --disable-static
+}
+
+__acl()
+{
+    __acl-git
 }
 
 __apr-1.5.0()
