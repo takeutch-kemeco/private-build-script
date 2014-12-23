@@ -2267,6 +2267,18 @@ __libunistring()
     __common libunistring
 }
 
+__libusb-1.0.19()
+{
+    __wget http://downloads.sourceforge.net/libusb/libusb-1.0.19.tar.bz2
+    __dcd libusb-1.0.19
+    __bld-common --disable-static
+}
+
+__libusb()
+{
+    __libusb-1.0.19
+}
+
 __libxkbcommon()
 {
     __dep "?"
