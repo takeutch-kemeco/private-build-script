@@ -1754,18 +1754,6 @@ __make()
     __bld-common
 }
 
-__mozjs()
-{
-    __dep libffi nspr python2 zip
-
-    __wget http://ftp.mozilla.org/pub/mozilla.org/js/mozjs17.0.0.tar.gz
-    __dcd mozjs17.0.0
-    cd js/src
-    __bld-common --enable-readline --enable-threadsafe --with-system-ffi --with-system-nspr
-    __mk
-    __mkinst
-}
-
 __kmod()
 {
     __dep ""
@@ -1779,6 +1767,22 @@ __kmod()
     done
 
     sudo ln -sv kmod /bin/lsmod
+}
+
+__mozjs-24.2.0()
+{
+    __dep libffi nspr python27 zip
+
+    __wget http://ftp.mozilla.org/pub/mozilla.org/js/mozjs-24.2.0.tar.bz2
+    __dcd mozjs-24.2.0
+    cd js/src
+    __bld-common --enable-threadsafe --with-system-ffi --with-system-nspr
+    sudo find /usr/include/mozjs-24/ /usr/lib/libmozjs-24.a /usr/lib/pkgconfig/mozjs-24.pc -type f -exec chmod -v 644 {} \;
+}
+
+__mozjs()
+{
+    __mozjs-24.2.0
 }
 
 __linux-pam()
