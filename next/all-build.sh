@@ -2207,18 +2207,18 @@ __libtasn1-git()
     __bld-common-simple
 }
 
-__libtasn1-4.0()
+__libtasn1-4.2()
 {
     __dep ""
 
-    __wget http://ftp.gnu.org/gnu/libtasn1/libtasn1-4.0.tar.gz
-    __dcd libtasn1-4.0
+    __wget http://ftp.gnu.org/gnu/libtasn1/libtasn1-4.2.tar.gz
+    __dcd libtasn1-4.2
     __bld-common
 }
 
 __libtasn1()
 {
-    __libtasn1-4.0
+    __libtasn1-4.2
 }
 
 __libtiff-4.0.3()
