@@ -1952,6 +1952,20 @@ __libgpg-error()
     __bld-common --enable-maintainer-mode
 }
 
+__libidn-1.29()
+{
+    __dep pth
+
+    __wget http://ftp.gnu.org/gnu/libidn/libidn-1.29.tar.gz
+    __dcd libidn-1.29
+    __bld-common --disable-static
+}
+
+__libidn()
+{
+    __libidn-1.29
+}
+
 __libksba-1.3.2()
 {
     __dep libgpg-error
