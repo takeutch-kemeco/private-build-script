@@ -1957,6 +1957,20 @@ __libgpg-error()
     __bld-common --enable-maintainer-mode
 }
 
+__libgusb-0.2.3()
+{
+    __dep libusb
+
+    __wget http://people.freedesktop.org/~hughsient/releases/libgusb-0.2.3.tar.xz
+    __dcd libgusb-0.2.3
+    __bld-common --disable-static
+}
+
+__libgusb()
+{
+    __libgusb-0.2.3
+}
+
 __libidn-1.29()
 {
     __dep pth
