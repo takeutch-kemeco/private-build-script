@@ -2204,7 +2204,7 @@ __libtasn1-git()
     __git-clone git://git.savannah.gnu.org/libtasn1.git
     __cd libtasn1
     __self-autogen
-    __bld-common-simple
+    __bld-common-simple --enable-static=no
 }
 
 __libtasn1-4.2()
@@ -2213,7 +2213,7 @@ __libtasn1-4.2()
 
     __wget http://ftp.gnu.org/gnu/libtasn1/libtasn1-4.2.tar.gz
     __dcd libtasn1-4.2
-    __bld-common
+    __bld-common --enable-static=no
 }
 
 __libtasn1()
