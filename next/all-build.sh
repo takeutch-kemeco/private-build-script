@@ -3209,7 +3209,8 @@ __sdl-1.2.15()
 
     __wget https://www.libsdl.org/release/SDL-1.2.15.tar.gz
     __dcd SDL-1.2.15
-    __bld-common
+    sed -i '/_XData32/s:register long:register _Xconst long:' src/video/x11/SDL_x11sym.h &&
+    __bld-common --disable-static
 }
 
 __sdl1()
