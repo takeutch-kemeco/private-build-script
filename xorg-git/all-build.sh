@@ -776,23 +776,21 @@ __mesa-lib()
 
     sudo install -v -dm755 /usr/share/doc/MesaLib
     sudo cp -rfv docs/* /usr/share/doc/MesaLib
+}
 
-    __mesa-glu()
-    {
-	__git-clone git://anongit.freedesktop.org/mesa/glu mesa-glu
-	__cd mesa-glu
-	git pull
+__mesa-glu()
+{
+    __git-clone git://anongit.freedesktop.org/mesa/glu mesa-glu
+    __cd mesa-glu
+    git pull
 
-	$DIST_CLEAN
-	./autogen.sh
-	__cfg --prefix=/usr --disable-static
+    $DIST_CLEAN
+    ./autogen.sh
+    __cfg --prefix=/usr --disable-static
 
-	$MAKE_CLEAN
-	__mk
-	__mkinst
-    }
-
-    __mesa-glu
+    $MAKE_CLEAN
+    __mk
+    __mkinst
 }
 
 __xbitmaps()
@@ -1499,6 +1497,7 @@ __all()
     __libxshmfence
     __libdrm
     __mesa-lib
+    __mesa-glu
     __xbitmaps
 ### __libpng
     __xorg-apps
