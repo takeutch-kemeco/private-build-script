@@ -2506,6 +2506,20 @@ __mplayer()
     __mplayer-1.1.1
 }
 
+__mtdev-git()
+{
+    __dep "?"
+
+    __git-clone http://bitmath.org/git/mtdev.git
+    __cd mtdev
+    __bld-common
+}
+
+__mtdev()
+{
+    __mtdev-git
+}
+
 __ncurses-5.9()
 {
     __dep "?"
