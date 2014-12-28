@@ -2385,6 +2385,21 @@ __llvm()
     __llvm-3.4
 }
 
+__lm-sensors-svn()
+{
+    __dep ""
+
+    __svn-clone http://lm-sensors.org/svn/lm-sensors/trunk lm-sensors
+    __cd lm-sensors
+    make PREFIX=/usr
+    sudo make PREFIX=/usr install
+}
+
+__lm-sensors()
+{
+    __lm-sensors-svn
+}
+
 __lvm2-2.02.109()
 {
     ### Use kernel configuration
