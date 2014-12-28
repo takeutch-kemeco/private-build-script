@@ -3580,6 +3580,20 @@ __vte()
     __bld-common --enable-introspection --enable-maintainer-mode
 }
 
+__wayland-git()
+{
+    __dep libffi libinput
+
+    __git-clone git://anongit.freedesktop.org/wayland/wayland
+    __cd wayland
+    __bld-common --disable-static
+}
+
+__wayland()
+{
+    __wayland-git
+}
+
 __webkitgtk-2.4.7()
 {
     __dep gperf gst-plugin-base gtk+3 icu libsecret libsoup libwebp mesalib ruby sqlite gudev which gobject-introspection
