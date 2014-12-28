@@ -3155,6 +3155,22 @@ __redland()
     __redland-1.0.17
 }
 
+__ruby-2.2.0()
+{
+    __dep ""
+
+    __wget http://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.0.tar.xz
+    __dcd ruby-2.2.0
+    ./configure --prefix=/usr --enable-shared --docdir=/usr/share/doc/ruby-2.2.0
+    __mk
+    __mkinst
+}
+
+__ruby()
+{
+    __ruby-2.2.0
+}
+
 __sane-backends-1.0.24()
 {
     __dep libusb
