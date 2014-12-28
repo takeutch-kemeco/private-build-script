@@ -1016,14 +1016,14 @@ __freeglut-svn()
 
     __svn-clone http://svn.code.sf.net/p/freeglut/code/trunk/freeglut/freeglut freeglut
     __cd freeglut
-    cmake -DCMAKE_INSTALL_PREFIX=/usr .
+    cmake -DCMAKE_INSTALL_PREFIX=/usr -DFREEGLUT_BUILD_STATIC_LIBS=OFF .
     __mk
     __mkinst
 }
 
 __freeglut()
 {
-    __freeglut-2.8.1
+    __freeglut-svn
 }
 
 __freetype2()
