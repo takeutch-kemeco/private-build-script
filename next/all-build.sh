@@ -3608,6 +3608,20 @@ __webkitgtk()
     __webkitgtk-2.4.7
 }
 
+__weston-git()
+{
+    __dep wayland
+
+    __git-clone git://anongit.freedesktop.org/wayland/weston
+    __cd weston
+    __bld-common --disable-static
+}
+
+__weston()
+{
+    __weston-git
+}
+
 __wget-1.16.1()
 {
     __dep openssl
