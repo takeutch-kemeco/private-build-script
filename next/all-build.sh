@@ -1249,11 +1249,11 @@ __gmp-6.0.0a()
     __wget http://ftp.gnu.org/gnu/gmp/gmp-6.0.0a.tar.xz
     __decord gmp-6.0.0a
     __cd gmp-6.0.0
-    ABI=64 ./configure --prefix=/usr --enable-cxx
+    ABI=64 ./configure --prefix=/usr --enable-cxx --docdir=/usr/share/doc/gmp-6.0.0a
     __mk
     __mkinst
-    sudo mkdir -v /usr/share/doc/gmp-6.0.0a
-    sudo cp -v doc/{isa_abi_headache,configuration} doc/*.html /usr/share/doc/gmp-6.0.0a
+    __mk html
+    sudo make install-html
 }
 
 __gmp()
