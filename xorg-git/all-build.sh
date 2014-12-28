@@ -735,7 +735,7 @@ __libdrm()
     __cfg --prefix=/usr	        \
 	  --enable-udev	        \
 	  --disable-radeon	\
-	  --disable-nouveau	\
+	  --enable-nouveau	\
 	  --disable-vmwgfx      \
 	  --disable-manpages
 
