@@ -763,10 +763,9 @@ __mesa-lib()
           --enable-gallium-gbm           	\
           --enable-glx-tls               	\
           --enable-dri                          \
-	  --with-llvm-shared-libs		\
-          --with-egl-platforms="drm,x11" 	\
-          --with-gallium-drivers="i915,swrast"	\
-          --with-dri-drivers="i965,i915,swrast"
+          --with-egl-platforms="drm,x11,wayland" \
+          --with-gallium-drivers="i915,nouveau,swrast"  \
+          --with-dri-drivers="i965,nouveau,swrast"
 
     $MAKE_CLEAN
     __mk
