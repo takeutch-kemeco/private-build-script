@@ -1989,6 +1989,20 @@ __libidn()
     __libidn-1.29
 }
 
+__libinput-git()
+{
+    __dep mtdev
+
+    __git-clone git://anongit.freedesktop.org/wayland/libinput
+    __cd libinput
+    __bld-common --disable-static
+}
+
+__libinput()
+{
+    __libinput-git
+}
+
 __libksba-1.3.2()
 {
     __dep libgpg-error
