@@ -1810,8 +1810,14 @@ __libarchive()
 
     __git-clone https://github.com/libarchive/libarchive.git
     __cd libarchive
-    __autogen
-    __bld-common
+    aclocal
+    libtoolize
+    autoconf
+    autoheader
+    automake -acf
+    ./configure --prefix=/usr --disable-static
+    __mk DEV_CFLAGS=""
+    __mkinst
 }
 
 __libassuan-2.12()
