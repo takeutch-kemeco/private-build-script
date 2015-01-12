@@ -1222,7 +1222,7 @@ ASFLAGS-config=-O4 -march=native -mtune=native -msse4.1
 
 __glib-networking()
 {
-    __dep gnutls gsettings desktop-schemas p11-kit
+    __dep gnutls gsettings-desktop-schemas p11-kit
 
     __git-clone git://git.gnome.org/glib-networking
     __common glib-networking
@@ -1335,18 +1335,18 @@ __gnutls.git()
     __bld-common --with-default-trust-store-file=/etc/ssl/ca-bundle.crt
 }
 
-__gnutls-3.3.7()
+__gnutls-3.3.11()
 {
     __dep nettle
 
-    __wget http://www.ring.gr.jp/pub/net/gnupg/gnutls/v3.3/gnutls-3.3.7.tar.xz
-    __dcd gnutls-3.3.7
+    __wget http://www.ring.gr.jp/pub/net/gnupg/gnutls/v3.3/gnutls-3.3.11.tar.xz
+    __dcd gnutls-3.3.11
     __bld-common --with-default-trust-store-file=/etc/ssl/ca-bundle.crt --enable-gtk-doc-thml=no
 }
 
 __gnutls()
 {
-    __gnutls-3.3.7
+    __gnutls-3.3.11
 }
 
 __grub-git()
