@@ -3082,17 +3082,30 @@ __pyxdg()
     __pyxdg-0.25
 }
 
+__pyxml-0.84()
+{
+    __dep python-27
+
+    __wget http://downloads.sourceforge.net/pyxml/PyXML-0.8.4.tar.gz
+    __dcd  PyXML-0.8.4
+    sudo python2 setup.py install --optimize=1
+}
+
+__pyxml()
+{
+    __pyxml-0.84
+}
+
 __python-modules()
 {
-rem(){
     __dbus-python
     __py2ciro
     __pycairo
     __pygobject-2
     __pygobject-3
     __pygtk
-}
     __pyxdg
+    __pyxml
 }
 
 __qemu-2.1.0()
