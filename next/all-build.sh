@@ -2897,24 +2897,24 @@ __pulseaudio()
     __pulseaudio-5.0
 }
 
-__python-2.7.8()
+__python-2.7.9()
 {
     __dep expat libffi
 
-    __wget http://www.python.org/ftp/python/2.7.8/Python-2.7.8.tar.xz
-    __wget http://docs.python.org/ftp/python/doc/2.7.8/python-2.7.8-docs-html.tar.bz2
-    __dcd Python-2.7.8
+    __wget http://www.python.org/ftp/python/2.7.9/Python-2.7.9.tar.xz
+    __wget http://docs.python.org/ftp/python/doc/2.7.9/python-2.7.9-docs-html.tar.bz2
+    __dcd Python-2.7.9
     __bld-common --enable-shared --with-system-expat --with-system-ffi --enable-unicode=ucs4
     sudo chmod -v 755 /usr/lib/libpython2.7.so.1.0
-    sudo install -v -dm755 /usr/share/doc/python-2.7.8
-    sudo tar --strip-components=1 -C /usr/share/doc/python-2.7.8 --no-same-owner -xvf $SRC_DIR/python-2.7.8-docs-html.tar.bz2
-    sudo find /usr/share/doc/python-2.7.8 -type d -exec chmod 0755 {} \;
-    sudo find /usr/share/doc/python-2.7.8 -type f -exec chmod 0644 {} \;
+    sudo install -v -dm755 /usr/share/doc/python-2.7.9
+    sudo tar --strip-components=1 -C /usr/share/doc/python-2.7.8 --no-same-owner -xvf $SRC_DIR/python-2.7.9-docs-html.tar.bz2
+    sudo find /usr/share/doc/python-2.7.9 -type d -exec chmod 0755 {} \;
+    sudo find /usr/share/doc/python-2.7.9 -type f -exec chmod 0644 {} \;
 }
 
 __python-27()
 {
-    __python-2.7.8
+    __python-2.7.9
 }
 
 __python-3.4.2()
