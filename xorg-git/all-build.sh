@@ -735,7 +735,7 @@ __libdrm()
     __cfg --prefix=/usr	        \
 	  --enable-udev	        \
 	  --disable-radeon	\
-	  --enable-nouveau	\
+	  --disable-nouveau	\
 	  --disable-vmwgfx      \
 	  --disable-manpages
 
@@ -764,8 +764,8 @@ __mesa-lib()
           --enable-glx-tls               	\
           --enable-dri                          \
           --with-egl-platforms="drm,x11,wayland" \
-          --with-gallium-drivers="i915,nouveau,swrast"  \
-          --with-dri-drivers="i965,nouveau,swrast"
+          --with-gallium-drivers="nouveau,swrast"  \
+          --with-dri-drivers="nouveau,swrast"
 
     $MAKE_CLEAN
     __mk
@@ -1193,15 +1193,8 @@ __xorg-server()
 
     $DIST_CLEAN
     ./autogen.sh
-    __cfg $XORG_CONFIG 			\
-        --with-xkb-output=/var/lib/xkb 	\
-        --enable-install-setuid		\
-	--enable-config-dbus		\
-	--enable-tcp-transport=no	\
-	--enable-ipv6=no		\
-	--with-default-xkb-model=pc105	\
-	--with-default-xkb-layout=jp
-
+    __cfg $XORG_CONFIG --with-xkb-output=/var/lib/xkb --enable-install-setuid --enable-tcp-transport=no \
+        --enable-ipv6=no --with-default-xkb-model=pc105 --with-default-xk-layout=jp --disable-selective-werror
     $MAKE_CLEAN
     __mk
     __mkinst
@@ -1265,6 +1258,12 @@ __xf86-video-intel()
     __x-common xf86-video-intel 
 }
 
+__xf86-video-nouveau()
+{
+    __git-clone git://anongit.freedesktop.org/nouveau/xf86-video-nouveau
+    __x-common xf86-video-nouveau
+}
+
 __xf86-video-modesetting()
 {
     __git-clone git://anongit.freedesktop.org/xorg/driver/xf86-video-modesetting
@@ -1280,6 +1279,7 @@ __xorg-drivers()
     __xf86-input-mouse
     __xf86-input-wacom
     __xf86-video-intel
+    __xf86-video-nouveau
     __xf86-video-modesetting
 }
 
