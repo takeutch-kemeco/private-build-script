@@ -2748,13 +2748,13 @@ __pangox-compat()
     __common pangox-compat
 }
 
-__pcre-8.35()
+__pcre-8.36()
 {
     __dep ""
 
-    __wget http://downloads.sourceforge.net/pcre/pcre-8.35.tar.bz2
-    __dcd  pcre-8.35
-    __bld-common --docdir=/usr/share/doc/pcre-8.35 --enable-unicode-properties \
+    __wget http://downloads.sourceforge.net/pcre/pcre-8.36.tar.bz2
+    __dcd  pcre-8.36
+    __bld-common --docdir=/usr/share/doc/pcre-8.36 --enable-unicode-properties \
                  --enable-pcre16 --enable-pcre32 \
                  --enable-pcregrep-libz --enable-pcregrep-libbz2 \
                  --enable-pcretest-libreadline
@@ -2762,7 +2762,7 @@ __pcre-8.35()
 
 __pcre()
 {
-    __pcre-8.35
+    __pcre-8.36
 }
 
 __perl-5.20.0()
