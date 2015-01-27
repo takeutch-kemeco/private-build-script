@@ -147,21 +147,21 @@ __bash()
     __common bash
 }
 
-__binutils-2.24()
+__binutils-2.25()
 {
     __dep ""
 
-    __wget http://ftp.gnu.org/gnu/binutils/binutils-2.24.tar.bz2
-    __decord binutils-2.24
+    __wget http://ftp.gnu.org/gnu/binutils/binutils-2.25.tar.bz2
+    __decord binutils-2.25
     __cdbt
-    ../binutils-2.24/configure --prefix=/usr --enable-shared --enable-werror=no
+    ../binutils-2.25/configure --prefix=/usr --enable-shared --enable-werror=no
     __mk tooldir=/usr
     __mkinst tooldir=/usr install
 }
 
 __binutils()
 {
-    __binutils-2.24
+    __binutils-2.25
 }
 
 __bison-git()
