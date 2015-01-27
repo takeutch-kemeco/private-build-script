@@ -170,12 +170,12 @@ __bison-git()
     echo
 }
 
-__bison-3.0.2()
+__bison-3.0.4()
 {
     __dep ""
 
-    __wget http://ftp.gnu.org/gnu/bison/bison-3.0.2.tar.xz
-    __dcd bison-3.0.2
+    __wget http://ftp.gnu.org/gnu/bison/bison-3.0.4.tar.xz
+    __dcd bison-3.0.4
     ./configure --prefix=/usr --sysconfdir=/etc
     __mk
     __mkinst
@@ -183,7 +183,7 @@ __bison-3.0.2()
 
 __bison()
 {
-    __bison-3.0.2
+    __bison-3.0.4
 }
 
 __bzip2-1.0.6()
