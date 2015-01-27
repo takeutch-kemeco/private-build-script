@@ -1088,12 +1088,12 @@ __gcr()
     __common gcr
 }
 
-__gdb-7.8.1()
+__gdb-7.8.2()
 {
     __dep python2
 
-    __wget http://ftp.gnu.org/gnu/gdb/gdb-7.8.1.tar.xz
-    __dcd gdb-7.8.1
+    __wget http://ftp.gnu.org/gnu/gdb/gdb-7.8.2.tar.xz
+    __dcd gdb-7.8.2
     __cfg --prefix=/usr --disable-werror
     __mk
     __mkinst -C gdb install
@@ -1101,7 +1101,7 @@ __gdb-7.8.1()
 
 __gdb()
 {
-    __gdb-7.8.1
+    __gdb-7.8.2
 }
 
 __geany()
