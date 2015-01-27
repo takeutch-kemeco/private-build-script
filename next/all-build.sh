@@ -1957,7 +1957,7 @@ __libgee()
     __libgee-git
 }
 
-__libgpg-error()
+__libgpg-error-git()
 {
     __dep ""
 
@@ -1965,6 +1965,20 @@ __libgpg-error()
     __cd libgpg-error
     __self-autogen
     __bld-common --enable-maintainer-mode
+}
+
+__libgpg-error-1.17()
+{
+    __dep ""
+
+    __wget ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.17.tar.bz2
+    __dcd libgpg-error-1.17
+    __bld-common --enable-maintainer-mode
+}
+
+__libgpg-error()
+{
+    __libgpg-error-1.17
 }
 
 __libgusb-0.2.3()
