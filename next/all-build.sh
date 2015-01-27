@@ -1113,18 +1113,18 @@ __geany()
     __bld-common --enable-gtk3
 }
 
-__gettext-0.19.3()
+__gettext-0.19.4()
 {
     __dep ""
 
-    __wget http://ftp.gnu.org/gnu/gettext/gettext-0.19.3.tar.gz
-    __dcd gettext-0.19.3
+    __wget http://ftp.gnu.org/gnu/gettext/gettext-0.19.4.tar.gz
+    __dcd gettext-0.19.4
     __bld-common
 }
 
 __gettext()
 {
-    __gettext-0.19.3
+    __gettext-0.19.4
 }
 
 __gdbm-git()
