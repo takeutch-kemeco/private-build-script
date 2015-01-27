@@ -117,18 +117,18 @@ __autoconf-archive()
     __autoconf-archive-2014.10.15
 }
 
-__automake-1.14.1()
+__automake-1.15()
 {
     __dep autoconf
 
-    __wget http://ftp.gnu.org/gnu/automake/automake-1.14.1.tar.xz
-    __dcd automake-1.14.1
+    __wget http://ftp.gnu.org/gnu/automake/automake-1.15.tar.xz
+    __dcd automake-1.15
     __bld-common
 }
 
 __automake()
 {
-    __automake-1.14.1
+    __automake-1.15
 }
 
 __gawk()
