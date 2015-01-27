@@ -1311,18 +1311,18 @@ __gnupg.git()
     __bld-common --enable-maintainer-mode
 }
 
-__gnupg-2.0.26()
+__gnupg-2.1.1()
 {
     __dep pth libassuan libgcript libksba
 
-    __wget ftp://ftp.gnupg.org/gcrypt/gnupg/gnupg-2.0.26.tar.bz2
-    __dcd gnupg-2.0.26
+    __wget ftp://ftp.gnupg.org/gcrypt/gnupg/gnupg-2.1.1.tar.bz2
+    __dcd gnupg-2.1.1
     __bld-common --enable-symcryptrun
 }
 
 __gnupg()
 {
-    __gnupg-2.0.26
+    __gnupg-2.1.1
 }
 
 __gnutls.git()
