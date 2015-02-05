@@ -1665,6 +1665,22 @@ __icu()
     __icu-53.1
 }
 
+__imagemagick-6.9.0.0()
+{
+    __dep "?"
+
+    __wget http://anduin.linuxfromscratch.org/sources/BLFS/svn/i/ImageMagick-6.9.0-0.tar.xz
+    __dcd ImageMagick-6.9.0-0
+    __cfg --enable-hdri --with-modules --with-perl --disable-static
+    __mk
+    __mkinst DOCUMENTATION_PATH=/usr/share/doc/imagemagick-6.9.0
+}
+
+__imagemagick()
+{
+    __imagemagick-6.9.0.0
+}
+
 __inetutils()
 {
     __dep syslog.conf
