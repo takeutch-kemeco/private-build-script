@@ -1671,8 +1671,7 @@ __imagemagick-6.9.0.0()
 
     __wget http://anduin.linuxfromscratch.org/sources/BLFS/svn/i/ImageMagick-6.9.0-0.tar.xz
     __dcd ImageMagick-6.9.0-0
-    __cfg --enable-hdri --with-modules --with-perl --disable-static
-    __mk
+    __bld-common --enable-hdri --with-modules --with-perl --disable-static
     __mkinst DOCUMENTATION_PATH=/usr/share/doc/imagemagick-6.9.0
 }
 
