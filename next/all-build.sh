@@ -2734,22 +2734,25 @@ __openssh()
     __openssh-6.7p1
 }
 
-__openssl-1.0.1k()
+__openssl-1.0.2()
 {
     __dep ""
 
-    __wget http://www.openssl.org/source/openssl-1.0.1k.tar.gz
-#   __wget http://www.linuxfromscratch.org/patches/blfs/svn/openssl-1.0.1j-fix_parallel_build-1.patch
-    __dcd openssl-1.0.1k
-#   patch -p1 < $SRC_DIR/openssl-1.0.1j-fix_parallel_build-1.patch
+    __wget http://www.openssl.org/source/openssl-1.0.2.tar.gz
+    __dcd openssl-1.0.2
     ./config --prefix=/usr --openssldir=/etc/ssl --libdir=lib shared zlib-dynamic
-    __mk
-    __mkinst
+    make -j1
+    sudo make uninstall
+    sudo make install
+    sudo rm /usr/lib/libssl.a
+
+    sudo rm /usr/lib/libssl3.so
+    sudo ln -s /usr/lib/libssl.so /usr/lib/libssl3.so
 }
 
 __openssl()
 {
-    __openssl-1.0.1k
+    __openssl-1.0.2
 }
 
 __p11-kit()
