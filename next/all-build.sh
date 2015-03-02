@@ -103,18 +103,18 @@ __autoconf()
     __autoconf-2.69
 }
 
-__autoconf-archive-2014.10.15()
+__autoconf-archive-2015.02.24()
 {
     __dep autoonf
 
-    __wget http://ftp.gnu.org/gnu/autoconf-archive/autoconf-archive-2014.10.15.tar.xz
-    __dcd autoconf-archive-2014.10.15
+    __wget http://ftp.gnu.org/gnu/autoconf-archive/autoconf-archive-2015.02.24.tar.xz
+    __dcd autoconf-archive-2015.02.24
     __bld-common
 }
 
 __autoconf-archive()
 {
-    __autoconf-archive-2014.10.15
+    __autoconf-archive-2015.02.24
 }
 
 __automake-1.15()
