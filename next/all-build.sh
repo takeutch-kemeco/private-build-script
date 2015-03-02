@@ -1932,18 +1932,18 @@ __libgcrypt.git()
     cp Makefile.am{.orig,}
 }
 
-__libgcrypt-1.6.2()
+__libgcrypt-1.6.3()
 {
     __dep libgpg-error libcap pth
 
-    __wget ftp://ftp.gnupg.org/gcrypt/libgcrypt/libgcrypt-1.6.2.tar.bz2
-    __dcd libgcrypt-1.6.2
+    __wget ftp://ftp.gnupg.org/gcrypt/libgcrypt/libgcrypt-1.6.3.tar.bz2
+    __dcd libgcrypt-1.6.3
     __bld-common --enable-maintainer-mode
 }
 
 __libgcrypt()
 {
-    __libgcrypt-1.6.2
+    __libgcrypt-1.6.3
 }
 
 __libgee-git()
