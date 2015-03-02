@@ -2510,12 +2510,12 @@ __midori()
     __midori-0.5.7
 }
 
-__mpc-1.0.2()
+__mpc-1.0.3()
 {
     __dep mpfr
 
-    __wget http://www.multiprecision.org/mpc/download/mpc-1.0.2.tar.gz
-    __dcd mpc-1.0.2
+    __wget http://www.multiprecision.org/mpc/download/mpc-1.0.3.tar.gz
+    __dcd mpc-1.0.3
     __cfg --prefix=/usr
     __mk
     __mkinst
@@ -2523,7 +2523,7 @@ __mpc-1.0.2()
 
 __mpc()
 {
-    __mpc-1.0.2
+    __mpc-1.0.3
 }
 
 __mpfr-3.1.2()
