@@ -399,20 +399,21 @@ __cryptsetup()
 
 __curl()
 {
-    __dep "?"
+    __dep openssl certificate-authority-certificates
 
     __git-clone git://github.com/bagder/curl.git
     __cd curl
     ./buildconf
-    __bld-common --enable-threaded-resolver --with-ca-path=/etc/ssl/certs
+    __bld-common --disable-static --enable-threaded-resolver --with-ca-path=/etc/ssl/certs
 }
 
-__cups-1.7.5()
+__cups-2.0.2()
 {
-    __dep 
-    __wget http://www.cups.org/software/1.7.5/cups-1.7.5-source.tar.bz2
-    __decord cups-1.7.5-source
-    __cd cups-1.7.5
+    __dep gnutls colord dbus libusb
+
+    __wget http://www.cups.org/software/2.0.2/cups-2.0.2-source.tar.bz2
+    __decord cups-2.0.2-source
+    __cd cups-2.0.2
     sudo useradd -c "Print Service User" -d /var/spool/cups -g lp -s /bin/false -u 9 lp
     sudo groupadd -g 19 lpadmin
     __bld-common CC=gcc --libdir=/usr/lib --with-rcdir=/tmp/cupsinit --with-docdir=/usr/share/cups/doc \
@@ -422,7 +423,7 @@ __cups-1.7.5()
 
 __cups()
 {
-    __cups-1.7.5
+    __cups-2.0.2
 }
 
 __cython-0.20.1()
