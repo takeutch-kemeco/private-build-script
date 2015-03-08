@@ -385,7 +385,8 @@ __colord()
     sudo groupadd -g 71 colord
     sudo useradd -c "Color Daemon Owner" -d /var/lib/colord -u 71 -g colord -s /bin/false colord
     __bld-common --localstatedir=/var --with-daemon-user=colord --enable-vala \
-                 --disable-bash-completion --enable-systemd-login
+                 --disable-argyllcms-sensor --disable-bash-completion \
+                 --enable-systemd-login --disable-static
 }
 
 __cryptsetup()
