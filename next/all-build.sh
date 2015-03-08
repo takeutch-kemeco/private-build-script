@@ -2697,14 +2697,14 @@ __nspr()
     __nspr-4.10.7
 }
 
-__nss-3.17()
+__nss-3.17.4()
 {
     __dep nspr sqlite
 
-    __wget http://ftp.mozilla.org/pub/mozilla.org/security/nss/releases/NSS_3_17_RTM/src/nss-3.17.tar.gz
-    __wget http://www.linuxfromscratch.org/patches/blfs/svn/nss-3.17-standalone-1.patch
-    __dcd nss-3.17
-    patch -Np1 -i $SRC_DIR/nss-3.17-standalone-1.patch
+    __wget http://ftp.mozilla.org/pub/mozilla.org/security/nss/releases/NSS_3_17_4_RTM/src/nss-3.17.4.tar.gz
+    __wget http://www.linuxfromscratch.org/patches/blfs/svn/nss-3.17.4-standalone-1.patch
+    __dcd nss-3.17.4
+    patch -Np1 -i $SRC_DIR/nss-3.17.4-standalone-1.patch
     cd nss
     make BUILD_OPT=1 NSPR_INCLUDE_DIR=/usr/include/nspr USE_SYSTEM_ZLIB=1 ZLIB_LIBS=-lz USE_64=1 NSS_USE_SYSTEM_SQLITE=1
 
