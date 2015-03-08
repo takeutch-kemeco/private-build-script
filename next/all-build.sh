@@ -2152,95 +2152,91 @@ __libjpeg()
     __libjpeg-9a
 }
 
-__libjpeg-turbo-1.3.1()
+__libjpeg-turbo-1.4.0()
 {
     __dep yasm
 
-    __wget http://downloads.sourceforge.net/libjpeg-turbo/libjpeg-turbo-1.3.1.tar.gz
-    __dcd libjpeg-turbo-1.3.1
+    __wget http://downloads.sourceforge.net/libjpeg-turbo/libjpeg-turbo-1.4.0.tar.gz
+    __dcd libjpeg-turbo-1.4.0
     __bld-common --mandir=/usr/share/man --with-jpeg8 --disable-static
 }
 
 __libjpeg-turbo()
 {
-    __libjpeg-turbo-1.3.1
+    __libjpeg-turbo-1.4.0
 }
 
-__libreoffice-4.3.1()
+__libreoffice-4.4.0.3()
 {
     __dep boost clucene cups curl dbus-glib libjpeg-turbo glu graphite2 gst-plugins-base gtk+2 harfbuzz icu littlecms librsvg libxml2 libxslt mesalib neon npapi-sdk nss openldap openssl poppler python-3 redland unixodbc
 
-    __wget http://download.documentfoundation.org/libreoffice/src/4.3.1/libreoffice-4.3.1.2.tar.xz
-    __wget http://download.documentfoundation.org/libreoffice/src/4.3.1/libreoffice-dictionaries-4.3.1.2.tar.xz
-    __wget http://download.documentfoundation.org/libreoffice/src/4.3.1/libreoffice-help-4.3.1.2.tar.xz
-    __wget http://download.documentfoundation.org/libreoffice/src/4.3.1/libreoffice-translations-4.3.1.2.tar.xz
-    __wget http://www.linuxfromscratch.org/patches/blfs/svn/libreoffice-4.3.1.2-boost_1_56_0-1.patch
-    __wget http://www.linuxfromscratch.org/patches/blfs/svn/libreoffice-4.3.1.2-gcc_4_9_0-1.patch
-    __dcd libreoffice-4.3.1.2
-    tar -xf $SRC_DIR/libreoffice-dictionaries-4.3.1.2.tar.xz --no-overwrite-dir --strip-components=1
-    ln -sv $SRC_DIR/libreoffice-dictionaries-4.3.1.2.tar.xz external/tarballs/
-    ln -sv $SRC_DIR/libreoffice-help-4.3.1.2.tar.xz external/tarballs/
-    ln -sv $SRC_DIR/libreoffice-translations-4.3.1.2.tar.xz external/tarballs/
+    __wget http://download.documentfoundation.org/libreoffice/src/4.4.0/libreoffice-4.4.0.3.tar.xz
+    __wget http://download.documentfoundation.org/libreoffice/src/4.4.0/libreoffice-dictionaries-4.4.0.3.tar.xz
+    __wget http://download.documentfoundation.org/libreoffice/src/4.4.0/libreoffice-help-4.4.0.3.tar.xz
+    __wget http://download.documentfoundation.org/libreoffice/src/4.4.0/libreoffice-translations-4.4.0.3.tar.xz
+    __dcd libreoffice-4.4.0.3
+    tar -xf $SRC_DIR/libreoffice-dictionaries-4.4.0.3.tar.xz --no-overwrite-dir --strip-components=1
+    ln -sv $SRC_DIR/libreoffice-dictionaries-4.4.0.3.tar.xz external/tarballs/
+    ln -sv $SRC_DIR/libreoffice-help-4.4.0.3.tar.xz external/tarballs/
+    ln -sv $SRC_DIR/libreoffice-translations-4.4.0.3.tar.xz external/tarballs/
     LO_PREFIX=/usr
-    patch -Np1 -i $SRC_DIR/libreoffice-4.3.1.2-gcc_4_9_0-1.patch
-    
-    patch -Np1 -i $SRC_DIR/libreoffice-4.3.1.2-boost_1_56_0-1.patch
 
     sed -e "/gzip -f/d" -e "s|.1.gz|.1|g" -i bin/distro-install-desktop-integration
     sed -e "/distro-install-file-lists/d" -i Makefile.in
 
-    chmod -v +x bin/unpack-sources
-    sed -e "s/target\.mk/langlist\.mk/" \
-	-e "s/tar -xf/tar -x --strip-components=1 -f/" \
-	-e "/tar -x/s/lo_src_dir/start_dir/" \
-	-i bin/unpack-sources
+    sed -e "/ustrbuf/a #include <algorithm>" -i svl/source/misc/gridprinter.cxx
 
-    ./autogen.sh --prefix=$LO_PREFIX         \
-        --sysconfdir=/etc           \
-        --with-vendor="BLFS"        \
-        --with-lang="ja"            \
-        --with-help                 \
-        --with-alloc=system         \
-        --without-java              \
-        --disable-gconf             \
-        --disable-odk               \
-        --disable-postgresql-sdbc   \
-        --enable-release-build=yes  \
-        --enable-python=system      \
-        --with-system-boost         \
-        --with-system-clucene       \
-        --with-system-cairo         \
-        --with-system-curl          \
-        --with-system-expat         \
-        --with-system-graphite      \
-        --with-system-harfbuzz      \
-        --with-system-icu           \
-        --with-system-jpeg          \
-        --with-system-lcms2         \
-        --with-system-libpng        \
-        --with-system-libxml        \
-        --with-system-mesa-headers  \
-        --with-system-neon          \
-        --with-system-npapi-headers \
-        --with-system-nss           \
-        --with-system-odbc          \
-        --with-system-openldap      \
-        --with-system-openssl       \
-        --with-system-poppler       \
-        --with-system-redland       \
-        --with-system-zlib          \
-	--disable-gstreamer-0-10    \
-        --with-parallelism=$(getconf _NPROCESSORS_ONLN)
+    chmod -v +x bin/unpack-sources
+
+    ./autogen.sh --prefix=$LO_PREFIX     \
+             --sysconfdir=/etc           \
+             --with-vendor="BLFS"        \
+             --with-lang="en-US pt-BR"   \
+             --with-help                 \
+             --with-myspell-dicts        \
+             --with-alloc=system         \
+             --without-java              \
+             --without-system-dicts      \
+             --disable-gconf             \
+             --disable-odk               \
+             --disable-postgresql-sdbc   \
+             --enable-release-build=yes  \
+             --enable-python=system      \
+             --with-system-boost         \
+             --with-system-clucene       \
+             --with-system-cairo         \
+             --with-system-curl          \
+             --with-system-expat         \
+             --with-system-graphite      \
+             --with-system-harfbuzz      \
+             --with-system-icu           \
+             --with-system-jpeg          \
+             --with-system-lcms2         \
+             --with-system-libpng        \
+             --with-system-libxml        \
+             --with-system-mesa-headers  \
+             --with-system-neon          \
+             --with-system-npapi-headers \
+             --with-system-nss           \
+             --with-system-odbc          \
+             --with-system-openldap      \
+             --with-system-openssl       \
+             --with-system-poppler       \
+             --with-system-redland       \
+             --with-system-zlib          \
+             --with-parallelism=$(getconf _NPROCESSORS_ONLN)
 
     __mk build
     sudo make distro-pack-install
-    install -v -m755 -d $LO_PREFIX/share/appdata
-    install -v -m644 sysui/desktop/appstream-appdata/*.xml $LO_PREFIX/share/appdata
+    sudo install -v -m755 -d $LO_PREFIX/share/appdata
+    sudo install -v -m644    sysui/desktop/appstream-appdata/*.xml $LO_PREFIX/share/appdata
+
+    update-desktop-database
 }
 
 __libreoffice()
 {
-    __libreoffice-4.3.1
+    __libreoffice-4.4.0.3
 }
 
 __librsvg()
