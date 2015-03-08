@@ -1467,32 +1467,32 @@ __gsettings-desktop-schemas()
     sudo glib-compile-schemas /usr/share/glib-2.0/schemas
 }
 
-__gstreamer-1.4.1()
+__gstreamer-1.4.5()
 {
     __dep glib
 
-    __wget http://gstreamer.freedesktop.org/src/gstreamer/gstreamer-1.4.1.tar.xz
-    __dcd gstreamer-1.4.1
+    __wget http://gstreamer.freedesktop.org/src/gstreamer/gstreamer-1.4.5.tar.xz
+    __dcd gstreamer-1.4.5
     __bld-common
 }
 
 __gstreamer()
 {
-    __gstreamer-1.4.1
+    __gstreamer-1.4.5
 }
 
-__gst-plugins-base-1.4.1()
+__gst-plugins-base-1.4.5()
 {
     __dep gstreamer
 
-    __wget http://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-1.4.1.tar.xz
-    __dcd gst-plugins-base-1.4.1
+    __wget http://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-1.4.5.tar.xz
+    __dcd gst-plugins-base-1.4.5
     __bld-common
 }
 
 __gst-plugins-base()
 {
-    __gst-plugins-base-1.4.1
+    __gst-plugins-base-1.4.5
 }
 
 __gtk+2()
