@@ -1367,7 +1367,7 @@ __gnupg()
 
 __gnutls.git()
 {
-    __dep nettle
+    __dep nettle libtasn1 certificate-authority-certificates
 
     __git-clone git://git.savannah.gnu.org/gnutls.git
     __cd gnutls
@@ -1375,18 +1375,18 @@ __gnutls.git()
     __bld-common --with-default-trust-store-file=/etc/ssl/ca-bundle.crt
 }
 
-__gnutls-3.3.11()
+__gnutls-3.3.12()
 {
-    __dep nettle
+    __dep nettle libtasn1 certificate-authority-certificates
 
-    __wget http://www.ring.gr.jp/pub/net/gnupg/gnutls/v3.3/gnutls-3.3.11.tar.xz
-    __dcd gnutls-3.3.11
+    __wget ftp://ftp.gnutls.org/gcrypt/gnutls/v3.3/gnutls-3.3.12.tar.xz
+    __dcd gnutls-3.3.12
     __bld-common --with-default-trust-store-file=/etc/ssl/ca-bundle.crt --enable-gtk-doc-thml=no
 }
 
 __gnutls()
 {
-    __gnutls-3.3.11
+    __gnutls-3.3.12
 }
 
 __grub-git()
