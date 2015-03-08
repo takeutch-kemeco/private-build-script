@@ -2622,18 +2622,18 @@ __ncurses()
     __ncurses-5.9
 }
 
-__neon-0.30.0()
+__neon-0.30.1()
 {
     __dep opnessl gnutls
 
-    __wget http://www.webdav.org/neon/neon-0.30.0.tar.gz
-    __dcd neon-0.30.0
+    __wget http://www.webdav.org/neon/neon-0.30.1.tar.gz
+    __dcd neon-0.30.1
     __bld-common --enable-shared --with-ssl
 }
 
 __neon()
 {
-    __neon-0.30.0
+    __neon-0.30.1
 }
 
 __nettle-2.7.1()
