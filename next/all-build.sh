@@ -3882,6 +3882,21 @@ __yasm()
     __yasm-1.3.0
 }
 
+__zip-3.0()
+{
+    __dep ""
+
+    __wget http://downloads.sourceforge.net/infozip/zip30.tar.gz
+    __dcd  zip30
+    __mk -f unix/Makefile generic_gcc
+    sudo make prefix=/usr MANDIR=/usr/share/man/man1 -f unix/Makefile install
+}
+
+__zip()
+{
+    __zip-3.0
+}
+
 __zlib-1.2.8()
 {
     __dep ""
