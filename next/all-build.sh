@@ -1690,19 +1690,19 @@ __iana-etc()
     __iana-etc-2.30
 }
 
-__icu-53.1()
+__icu-54.1()
 {
     __dep llvm
 
-    __wget http://download.icu-project.org/files/icu4c/53.1/icu4c-53_1-src.tgz
-    __decord icu4c-53_1-src
+    __wget http://download.icu-project.org/files/icu4c/54.1/icu4c-54_1-src.tgz
+    __decord icu4c-54_1-src
     __cd icu/source
     __bld-common-simple CXX=g++
 }
 
 __icu()
 {
-    __icu-53.1
+    __icu-54.1
 }
 
 __imagemagick-6.9.0.0()
