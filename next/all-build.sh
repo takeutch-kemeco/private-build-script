@@ -1259,6 +1259,20 @@ __glibc()
     __glibc-2.21
 }
 
+__glu-9.0.0()
+{
+    __dep masa
+
+    __wget ftp://ftp.freedesktop.org/pub/mesa/glu/glu-9.0.0.tar.bz2
+    __dcd glu-9.0.0
+    __bld-common --disable-static
+}
+
+__glu()
+{
+    __glu-9.0.0
+}
+
 __gobject-introspection()
 {
     __dep "?"
