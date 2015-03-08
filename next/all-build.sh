@@ -2720,22 +2720,37 @@ __nss-3.17.4()
 
 __nss()
 {
-    __nss-3.17
+    __nss-3.17.4
 }
 
-__openldap-2.4.39()
+__openjpeg-1.5.2()
+{
+    __dep ""
+
+    __wget http://downloads.sourceforge.net/openjpeg.mirror/openjpeg-1.5.2.tar.gz
+    __dcd openjpeg-1.5.2
+    autoreconf -f -i
+    __bld-common --disable-static
+}
+
+__openjpeg()
+{
+    __openjpeg-1.5.2
+}
+
+__openldap-2.4.40()
 {
     __dep berkeley-db
 
-    __wget ftp://ftp.openldap.org/pub/OpenLDAP/openldap-release/openldap-2.4.39.tgz
-    __dcd openldap-2.4.39
+    __wget ftp://ftp.openldap.org/pub/OpenLDAP/openldap-release/openldap-2.4.40.tgz
+    __dcd openldap-2.4.40
     autoconf
     __bld-common --disable-static --enable-dynamic --disable-debug --disable-slapd
 }
 
 __openldap()
 {
-    __openldap-2.4.39
+    __openldap-2.4.40
 }
 
 __openssh-6.7p1()
