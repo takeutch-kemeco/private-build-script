@@ -2907,20 +2907,19 @@ session  include        system-session
     sudo install /tmp/polkit-1 /etc/pam.d/
 }
 
-__poppler-0.26.4()
+__poppler-0.31.0()
 {
-    __dep fontconfig
+    __dep fontconfig openjpeg
 
-    __wget http://poppler.freedesktop.org/poppler-0.26.4.tar.xz
+    __wget http://poppler.freedesktop.org/poppler-0.31.0.tar.xz
     __wget http://poppler.freedesktop.org/poppler-data-0.4.7.tar.gz
-    __dcd poppler-0.26.4
-    __bld-common --disable-static --enable-xpdf-headers
-    
+    __dcd poppler-0.31.0
+    __bld-common --disable-static --enable-xpdf-headers --with-testdatadir=$PWD/testfiles
 }
 
 __poppler()
 {
-    __poppler-0.26.4
+    __poppler-0.31.0
 }
 
 __poppler-data-0.4.7()
