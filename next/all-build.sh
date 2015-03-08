@@ -147,6 +147,25 @@ __bash()
     __common bash
 }
 
+__berkeley-db-6.1.19()
+{
+    __dep ""
+
+    __wget http://download.oracle.com/berkeley-db/db-6.1.19.tar.gz
+    __dcd db-6.1.19
+    cd build_unix
+    ../dist/configure --prefix=/usr --enable-compat185 --enable-dbm --disable-static --enable-cxx
+    __mk
+    sudo make docdir=/usr/share/doc/db-6.1.19 install
+    sudo chown -v -R root:root /usr/bin/db_* /usr/include/db{,_185,_cxx}.h /usr/lib/libdb*.{so.la} /usr/share/doc/db-6.1.19
+    sudo ldconfig
+}
+
+__berkeley-db()
+{
+    __berkeley-db-6.1.19
+}
+
 __binutils-2.25()
 {
     __dep ""
