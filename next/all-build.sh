@@ -1502,7 +1502,7 @@ __gtk+2()
     __git-clone git://git.gnome.org/gtk+ gtk+-2.24.git
     __cd gtk+-2.24.git
 
-    GTK2VERSION=2.24.25
+    GTK2VERSION=2.24.27
     make distclean
     git checkout master
     git pull
