@@ -817,15 +817,20 @@ __docbook-xsl()
     __docbook-xsl-1.78.1
 }
 
-__doxygen()
+__doxygen-1.8.9.1()
 {
     __dep ghostscript python2
 
-    __wget http://ftp.stack.nl/pub/doxygen/doxygen-1.8.6.src.tar.gz
-    __dcd doxygen-1.8.6
-    ./configure --prefix /usr --docdir /usr/share/doc/doxygen-1.8.6
+    __wget http://ftp.stack.nl/pub/doxygen/doxygen-1.8.9.1.src.tar.gz
+    __dcd doxygen-1.8.9.1
+    ./configure --prefix /usr --docdir /usr/share/doc/doxygen-1.8.9.1
     __mk
     __mkinst
+}
+
+__doxygen()
+{
+    __doxygen-1.8.9.1
 }
 
 __emacs-24.3()
