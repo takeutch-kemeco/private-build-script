@@ -2436,24 +2436,24 @@ __libva()
     __common libva
 }
 
-__llvm-3.4()
+__llvm-3.5.1()
 {
-    __dep libffi python2
+    __dep libffi python2 zip libxml2
 
-    __wget http://llvm.org/releases/3.4/llvm-3.4.src.tar.gz
-    __wget http://llvm.org/releases/3.4/clang-3.4.src.tar.gz
-    __wget http://llvm.org/releases/3.4/compiler-rt-3.4.src.tar.gz
-    __dcd llvm-3.4
-    tar -xf $SRC_DIR/clang-3.4.src.tar.gz -C tools
-    tar -xf $SRC_DIR/compiler-rt-3.4.src.tar.gz -C projects
-    mv tools/clang-3.4 tools/clang &&
-    mv projects/compiler-rt-3.4 projects/compiler-rt
+    __wget http://llvm.org/releases/3.5.1/llvm-3.5.1.src.tar.xz
+    __wget http://llvm.org/releases/3.5.1/clang-3.5.1.src.tar.xz
+    __wget http://llvm.org/releases/3.5.1/compiler-rt-3.5.1.src.tar.xz
+    __dcd llvm-3.5.1.src
+    tar -xf $SRC_DIR/clang-3.5.1.src.tar.gz -C tools
+    tar -xf $SRC_DIR/compiler-rt-3.5.1.src.tar.gz -C projects
+    mv tools/clang-3.5.1 tools/clang &&
+    mv projects/compiler-rt-3.5.1 projects/compiler-rt
     __bld-common CC=gcc CXX=g++ --enable-libffi --enable-optimized --enable-shared --disable-assertions
 }
 
 __llvm()
 {
-    __llvm-3.4
+    __llvm-3.5.1
 }
 
 __lm-sensors-svn()
