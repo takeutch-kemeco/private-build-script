@@ -3754,12 +3754,12 @@ __weston()
     __weston-git
 }
 
-__wget-1.16.2()
+__wget-1.16.3()
 {
     __dep openssl
 
-    __wget http://ftp.gnu.org/gnu/wget/wget-1.16.2.tar.xz
-    __dcd wget-1.16.2
+    __wget http://ftp.gnu.org/gnu/wget/wget-1.16.3.tar.xz
+    __dcd wget-1.16.3
     __bld-common --with-ssl=openssl --with-openssl --disable-ipv6
 }
 
@@ -3767,7 +3767,7 @@ __wget-1.16.2()
 ### 名前が __wget() だと common-func-2.sh 内定義の間数名と重複してしまい、誤動作してしまうため
 __wget-install()
 {
-    __wget-1.16.2
+    __wget-1.16.3
 }
 
 __which-2.20()
