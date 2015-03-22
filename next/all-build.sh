@@ -2166,19 +2166,19 @@ __libjpeg-turbo()
     __libjpeg-turbo-1.4.0
 }
 
-__libreoffice-4.4.0.3()
+__libreoffice-4.4.1.2()
 {
     __dep boost clucene cups curl dbus-glib libjpeg-turbo glu graphite2 gst-plugins-base gtk+2 harfbuzz icu littlecms librsvg libxml2 libxslt mesalib neon npapi-sdk nss openldap openssl poppler python-3 redland unixodbc
 
-    __wget http://download.documentfoundation.org/libreoffice/src/4.4.0/libreoffice-4.4.0.3.tar.xz
-    __wget http://download.documentfoundation.org/libreoffice/src/4.4.0/libreoffice-dictionaries-4.4.0.3.tar.xz
-    __wget http://download.documentfoundation.org/libreoffice/src/4.4.0/libreoffice-help-4.4.0.3.tar.xz
-    __wget http://download.documentfoundation.org/libreoffice/src/4.4.0/libreoffice-translations-4.4.0.3.tar.xz
-    __dcd libreoffice-4.4.0.3
-    tar -xf $SRC_DIR/libreoffice-dictionaries-4.4.0.3.tar.xz --no-overwrite-dir --strip-components=1
-    ln -sv $SRC_DIR/libreoffice-dictionaries-4.4.0.3.tar.xz external/tarballs/
-    ln -sv $SRC_DIR/libreoffice-help-4.4.0.3.tar.xz external/tarballs/
-    ln -sv $SRC_DIR/libreoffice-translations-4.4.0.3.tar.xz external/tarballs/
+    __wget http://download.documentfoundation.org/libreoffice/src/4.4.1/libreoffice-4.4.1.2.tar.xz
+    __wget http://download.documentfoundation.org/libreoffice/src/4.4.1/libreoffice-dictionaries-4.4.1.2.tar.xz
+    __wget http://download.documentfoundation.org/libreoffice/src/4.4.1/libreoffice-help-4.4.1.2.tar.xz
+    __wget http://download.documentfoundation.org/libreoffice/src/4.4.1/libreoffice-translations-4.4.1.2.tar.xz
+    __dcd libreoffice-4.4.1.2
+    tar -xf $SRC_DIR/libreoffice-dictionaries-4.4.1.2.tar.xz --no-overwrite-dir --strip-components=1
+    ln -sv $SRC_DIR/libreoffice-dictionaries-4.4.1.2.tar.xz external/tarballs/
+    ln -sv $SRC_DIR/libreoffice-help-4.4.1.2.tar.xz external/tarballs/
+    ln -sv $SRC_DIR/libreoffice-translations-4.4.1.2.tar.xz external/tarballs/
     LO_PREFIX=/usr
 
     sed -e "/gzip -f/d" -e "s|.1.gz|.1|g" -i bin/distro-install-desktop-integration
@@ -2236,7 +2236,7 @@ __libreoffice-4.4.0.3()
 
 __libreoffice()
 {
-    __libreoffice-4.4.0.3
+    __libreoffice-4.4.1.2
 }
 
 __librsvg()
