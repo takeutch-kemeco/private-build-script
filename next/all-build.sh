@@ -2058,18 +2058,18 @@ __libgusb()
     __libgusb-0.2.3
 }
 
-__libidn-1.29()
+__libidn-1.30()
 {
     __dep pth
 
-    __wget http://ftp.gnu.org/gnu/libidn/libidn-1.29.tar.gz
-    __dcd libidn-1.29
+    __wget http://ftp.gnu.org/gnu/libidn/libidn-1.30.tar.gz
+    __dcd libidn-1.30
     __bld-common --disable-static
 }
 
 __libidn()
 {
-    __libidn-1.29
+    __libidn-1.30
 }
 
 __libinput-git()
