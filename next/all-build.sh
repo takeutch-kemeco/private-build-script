@@ -3190,35 +3190,25 @@ __python-modules()
     __pyxml
 }
 
-__qemu-2.1.0()
+__qemu-2.2.0()
 {
     __dep glib python27 sdl xorg alsa check curl mesalib
 
-    __wget http://wiki.qemu-project.org/download/qemu-2.1.0.tar.bz2
-    __dcd qemu-2.1.0
-    sed -e '/#include <sys\/capability.h>/ d' \
-	-e '/#include "virtio-9p-marshal.h"/ i#include <sys\/capability.h>' \
-	-i fsdev/virtfs-proxy-helper.c
-    __bld-common --docdir=/usr/share/doc/qemu-2.1.0 --target-list=x86_64-linuxuser
-    sudo chmod -v 755 /usr/lib/libcacard.so
-    sudo groupadd -g 61 kvm
-
-    __mes "Please enter your user name to be used when kvm"
-    KVM_USER_NAME=""
-    read KVM_USER_NAME
-    sudo usermod -a -G kvm ${KVM_USER_NAME}
-
-    cat > /tmp/a << .
-KERNEL=="kvm", NAME="%k", GROUP="kvm", MODE="0660"
-.
-    sudo mv /tmp/a /lib/udev/rules.d/65-kvm.rules
-
-    sudo ln -sv qemu-system-x86_64 /usr/bin/qemu
+    __wget http://wiki.qemu-project.org/download/qemu-2.2.0.tar.bz2
+    __dcd qemu-2.2.0
+    sed -i '/resource/ i#include <sys/xattr.h>' fsdev/virtfs-proxy-helper.c
+./configure --prefix=/usr \
+            --sysconfdir=/etc \
+            --docdir=/usr/share/doc/qemu-2.2.0 \
+            --target-list=x86_64-softmmu
+    __mk
+    __mkinst
+    [ -e  /usr/lib/libcacard.so ] && chmod -v 755 /usr/lib/libcacard.so
 }
 
 __qemu()
 {
-    __qemu-2.1.0
+    __qemu-2.2.0
 }
 
 __raptor-2.0.14()
