@@ -3189,22 +3189,6 @@ __python-modules()
     __pyxml
 }
 
-__qemu-2.2.0()
-{
-    __dep glib python27 sdl xorg alsa check curl mesalib
-
-    __wget http://wiki.qemu-project.org/download/qemu-2.2.0.tar.bz2
-    __dcd qemu-2.2.0
-    sed -i '/resource/ i#include <sys/xattr.h>' fsdev/virtfs-proxy-helper.c
-./configure --prefix=/usr \
-            --sysconfdir=/etc \
-            --docdir=/usr/share/doc/qemu-2.2.0 \
-            --target-list=x86_64-softmmu
-    __mk
-    __mkinst
-    [ -e  /usr/lib/libcacard.so ] && chmod -v 755 /usr/lib/libcacard.so
-}
-
 __qemu-2.3.0-rc4()
 {
     __dep glib python27 sdl xorg alsa check curl mesalib
