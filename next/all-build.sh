@@ -3670,12 +3670,12 @@ __util-linux()
     __common util-linux
 }
 
-__vala-0.22.1()
+__vala-0.28.0()
 {
     __dep glib dbus libxslt
 
-    __wget http://ftp.gnome.org/pub/gnome/sources/vala/0.22/vala-0.22.1.tar.xz
-    __dcd vala-0.22.1
+    __wget http://ftp.gnome.org/pub/gnome/sources/vala/0.28/vala-0.28.0.tar.xz
+    __dcd vala-0.28.0
     __bld-common
 }
 
@@ -3689,7 +3689,7 @@ __vala-git()
 
 __vala()
 {
-    __vala-git
+    __vala-0.28.0
 }
 
 __vte()
