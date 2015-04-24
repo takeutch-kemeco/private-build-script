@@ -842,9 +842,18 @@ __emacs-24.3()
     __bld-common --localstatedir=/var --libexecdir=/usr/lib --without-gif --with-x-toolkit=yes
 }
 
+__emacs-24.5()
+{
+    __dep "?"
+
+    __wget http://core.ring.gr.jp/pub/GNU/emacs/emacs-24.5.tar.xz
+    __dcd emacs-24.5
+    __bld-common --localstatedir=/var --libexecdir=/usr/lib --without-gif --with-x-toolkit=yes
+}
+
 __emacs()
 {
-    __emacs-24.3
+    __emacs-24.5
 }
 
 __eudev()
