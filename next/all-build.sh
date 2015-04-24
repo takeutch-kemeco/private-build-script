@@ -1082,18 +1082,17 @@ __gc()
     __bld-common
 }
 
-__gcc-4.9.2()
+__gcc-5.1.0()
 {
     __dep gmp mpfr mpc
 
-    __wget http://ftp.tsukuba.wide.ad.jp/software/gcc/releases/gcc-4.9.2/gcc-4.9.2.tar.bz2
-    __decord gcc-4.9.2
+    __wget http://ftp.tsukuba.wide.ad.jp/software/gcc/releases/gcc-5.1.0/gcc-5.1.0.tar.bz2
+    __decord gcc-5.1.0
     __cdbt
-    ../gcc-4.9.2/configure --prefix=/usr --libexecdir=/usr/lib --enable-shared \
+    ../gcc-5.1.0/configure --prefix=/usr --libexecdir=/usr/lib --enable-shared \
         --enable-threads=posix --enable-__cxa_atexit --enable-clocale=gnu \
         --enable-languages=c,c++,fortran --disable-multilib \
-        --disable-bootstrap --with-system-zlib --enable-c99 \
-        --enable-long-long
+        --disable-bootstrap --with-system-zlib --enable-long-long
     __mk
     __mkinst
     sudo mkdir -pv /usr/share/gdb/auto-load/usr/lib
@@ -1103,7 +1102,7 @@ __gcc-4.9.2()
 
 __gcc()
 {
-    __gcc-4.9.2
+    __gcc-5.1.0
 }
 
 __gcr()
