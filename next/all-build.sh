@@ -2784,12 +2784,12 @@ __openssh()
     __openssh-6.7p1
 }
 
-__openssl-1.0.2()
+__openssl-1.0.2a()
 {
     __dep ""
 
-    __wget http://www.openssl.org/source/openssl-1.0.2.tar.gz
-    __dcd openssl-1.0.2
+    __wget http://www.openssl.org/source/openssl-1.0.2a.tar.gz
+    __dcd openssl-1.0.2a
     ./config --prefix=/usr --openssldir=/etc/ssl --libdir=lib shared zlib-dynamic
     make -j1
     sudo make uninstall
@@ -2802,7 +2802,7 @@ __openssl-1.0.2()
 
 __openssl()
 {
-    __openssl-1.0.2
+    __openssl-1.0.2a
 }
 
 __p11-kit()
