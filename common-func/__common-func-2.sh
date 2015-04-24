@@ -155,24 +155,6 @@ __patch()
     fi
 }
 
-__git-clone()
-{
-    cd $BASE_DIR
-    git clone $@
-}
-
-__hg-clone()
-{
-    cd $BASE_DIR
-    hg clone $@
-}
-
-__svn-clone()
-{
-    cd $BASE_DIR
-    svn co $@
-}
-
 __git-pull()
 {
     ls .git 2>& 1>& /dev/null
@@ -212,11 +194,31 @@ __cvs-pull()
     fi
 }
 
-__vcs-pull()
+__git-clone()
 {
+    cd $BASE_DIR
+    git clone $@
     __git-pull
-    __svn-pull
+}
+
+__hg-clone()
+{
+    cd $BASE_DIR
+    hg clone $@
     __hg-pull
+}
+
+__svn-clone()
+{
+    cd $BASE_DIR
+    svn co $@
+    __svn-pull
+}
+
+__cvs-clone()
+{
+    cd $BASE_DIR
+    cvs $@
     __cvs-pull
 }
 
@@ -257,8 +259,6 @@ __cfg()
 
 __bld-common-simple()
 {
-    __vcs-pull
-
     $DIST_CLEAN
     __cfg --prefix=/usr $@
 
