@@ -1077,6 +1077,7 @@ __freetype2()
 
     __git-clone git://git.sv.gnu.org/freetype/freetype2.git
     __cd freetype2
+    __git-pull
     cp include/config/{ftoption.h,ftoption.h.orig}
     sed -i -r 's:.*(#.*SUBPIXEL.*) .*:\1:' include/config/ftoption.h
     __bld-common
