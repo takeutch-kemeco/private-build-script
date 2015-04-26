@@ -1823,6 +1823,17 @@ __kmod()
     sudo ln -sv kmod /bin/lsmod
 }
 
+__mozjs-17.0.0()
+{
+    __dep libffi nspr python27 zip
+
+    __wget http://ftp.mozilla.org/pub/mozilla.org/js/mozjs17.0.0.tar.bz2
+    __dcd mozjs17.0.0
+    cd js/src
+    __bld-common --enable-threadsafe --with-system-ffi --with-system-nspr
+    sudo find /usr/include/mozjs-17.0/ /usr/lib/libmozjs-17.0.a /usr/lib/pkgconfig/mozjs-17.0.pc -type f -exec chmod -v 644 {} \;
+}
+
 __mozjs-24.2.0()
 {
     __dep libffi nspr python27 zip
