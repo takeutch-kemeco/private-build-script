@@ -1610,6 +1610,7 @@ __gtk-engines3()
 
     __git-clone git://git.gnome.org/gtk-engines
     __cd gtk-engines
+    __git-pull
     __autogen.sh
     __cfg --prefix=/usr --sysconfdir=/etc
     # 必ずエラーとなるので
