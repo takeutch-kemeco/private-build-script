@@ -1179,6 +1179,7 @@ __gdbm-git()
 
     __git-clone git://git.gnu.org.ua/gdbm.git
     __cd gdbm
+    __git-pull
     ./bootstrap
     __bld-common --enable-libgdbm-compat
 }
