@@ -3009,23 +3009,23 @@ __python-27()
     __python-2.7.9
 }
 
-__python-3.4.2()
+__python-3.4.3()
 {
     __dep libffi
 
-    __wget http://www.python.org/ftp/python/3.4.2/Python-3.4.2.tar.xz
-    __wget http://docs.python.org/3/archives/python-3.4.2-docs-html.tar.bz2
-    __dcd Python-3.4.2
+    __wget http://www.python.org/ftp/python/3.4.3/Python-3.4.3.tar.xz
+    __wget http://docs.python.org/3/archives/python-3.4.3-docs-html.tar.bz2
+    __dcd Python-3.4.3
     __bld-common CXX="/usr/bin/g++" --enable-shared --with-system-expat --with-system-ffi --without-ensurepip
     sudo chmod -v 755 /usr/lib/libpython3.4m.so
     sudo chmod -v 755 /usr/lib/libpython3.so
-    sudo install -v -dm755 /usr/share/doc/python-3.4.2/html
-    sudo tar --strip-components=1 --no-same-owner --no-same-permissions -C /usr/share/doc/python-3.4.2/html -xvf $SRC_DIR/python-3.4.2-docs-html.tar.bz2
+    sudo install -v -dm755 /usr/share/doc/python-3.4.3/html
+    sudo tar --strip-components=1 --no-same-owner --no-same-permissions -C /usr/share/doc/python-3.4.3/html -xvf $SRC_DIR/python-3.4.3-docs-html.tar.bz2
 }
 
 __python-3()
 {
-    __python-3.4.2
+    __python-3.4.3
 }
 
 __dbus-python-1.2.0()
