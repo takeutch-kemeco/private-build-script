@@ -1394,6 +1394,7 @@ __gnutls.git()
 
     __git-clone git://git.savannah.gnu.org/gnutls.git
     __cd gnutls
+    __git-pull
     __self-autogen
     __bld-common --with-default-trust-store-file=/etc/ssl/ca-bundle.crt
 }
