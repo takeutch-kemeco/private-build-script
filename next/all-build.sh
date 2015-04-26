@@ -2002,6 +2002,7 @@ __libgcrypt.git()
 
     __git-clone git://git.gnupg.org/libgcrypt.git
     __cd libgcrypt
+    __git-pull
 
     ### fig2dev が無くてもビルドできるように
     cp configure.ac{,.orig}
