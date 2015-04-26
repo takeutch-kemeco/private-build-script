@@ -1895,6 +1895,7 @@ __lcms2()
 
     __git-clone https://github.com/mm2/Little-CMS.git lcms2
     __cd lcms2
+    __git-pull
     __self-autogen
     __bld-common
 }
