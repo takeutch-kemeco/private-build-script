@@ -2508,6 +2508,7 @@ __lm-sensors-svn()
 
     __svn-clone http://lm-sensors.org/svn/lm-sensors/trunk lm-sensors
     __cd lm-sensors
+    __svn-pull
     make PREFIX=/usr
     sudo make PREFIX=/usr install
 }
