@@ -1152,7 +1152,7 @@ __gdb()
 
 __geany()
 {
-    __dep gtk+2
+    __dep gtk+3
 
     __git-clone git://github.com/geany/geany.git
     __cd geany
