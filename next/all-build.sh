@@ -14,13 +14,29 @@ MAKE_CLEAN="make clean"
 ### ビルド時にシステムメモリーを使いきらないように制限する
 __init-build-group
 
-__attr()
+__attr-git()
+{
+    echo attrは開発版を入れるべきではない
+}
+
+### /mnt へインストールされます。それを手動で慎重に /usr/lib へ移植してください。
+### ArchLinux 等別システムと連携して上手くやる必要があります。（現システム上で完結しようとしても難しいです）
+__attr-2.4.47()
 {
     __dep ""
 
-    __git-clone git://git.savannah.nongnu.org/attr.git
-    __cd attr
-    __bld-common INSTALL_USER=root INSTALL_GROUP=root
+    __wget http://download.savannah.gnu.org/releases/attr/attr-2.4.47.src.tar.gz
+    __dcd attr-2.4.47
+    INSTALL_USER=root INSTALL_GROUP=root ./configure --prefix=/mnt/usr --disable-static
+    __mk
+    __mkinst install-dev install-lib
+    sudo chmod 755 /mnt/usr/lib/libattr.so.*
+    sudo ldconfig -r /mnt
+}
+
+__attr()
+{
+    __attr-2.4.47
 }
 
 __acl-git()
