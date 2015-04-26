@@ -419,6 +419,7 @@ __curl()
 
     __git-clone git://github.com/bagder/curl.git
     __cd curl
+    __git-pull
     ./buildconf
     __bld-common --disable-static --enable-threaded-resolver --with-ca-path=/etc/ssl/certs
 }
