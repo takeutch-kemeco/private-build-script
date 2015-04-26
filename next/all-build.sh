@@ -1795,6 +1795,7 @@ __iproute2()
 
     __git-clone git://git.kernel.org/pub/scm/linux/kernel/git/shemminger/iproute2.git
     __cd iproute2
+    __git-pull
     __mk DESTDIR=
     __mkinst DESTDIR= SBINDIR=/sbin MANDIR=/usr/share/man DOCDIR=/usr/share/doc/iproute2
 }
