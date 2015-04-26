@@ -870,6 +870,7 @@ __eudev()
 
     __git-clone git://github.com/gentoo/eudev.git
     __cd eudev
+    __git-pull
     ./autogen.sh
     ./configure --prefix=/usr --exec-prefix= --sysconfdir=/etc --enable-libkmod \
 	--with-rootprefix= --with-rootlibdir=/lib --enable-legacylib
