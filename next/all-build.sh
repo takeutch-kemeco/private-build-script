@@ -2578,19 +2578,21 @@ __m4()
     __m4-1.4.17
 }
 
-__midori-0.5.7()
+### .tar.bz2 がディレクトリにパックされてない（各ファイルが直に展開される）ので注意
+__midori-0.5.10()
 {
     __dep cmake libnotify webkitgtk vala
 
-    __wget http://www.midori-browser.org/downloads/midori_0.5.7_all_.tar.bz2
-    __decord midori_0.5.7_all_
-    __cd midori-0.5.7
+    __wget http://www.midori-browser.org/downloads/midori_0.5.10_all_.tar.bz2
+    mkdir $BASE_DIR/midori-0.5.10
+    __cd midori-0.5.10
+    bzip2 -dc $SRC_DIR/midori_0.5.10_all_.tar.bz2 | tar xvf -
     __bld-common-simple --enable-gtk3 --disable-zeitgeist --enable-granite=no --enable-apidocs=no
 }
 
 __midori()
 {
-    __midori-0.5.7
+    __midori-0.5.10
 }
 
 __mpc-1.0.3()
