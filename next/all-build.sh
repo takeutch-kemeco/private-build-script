@@ -53,32 +53,32 @@ __acl()
     __acl-git
 }
 
-__apr-1.5.0()
+__apr-1.5.1()
 {
     __dep ""
 
-    __wget http://archive.apache.org/dist/apr/apr-1.5.0.tar.bz2
-    __dcd apr-1.5.0
-    __bld-common
+    __wget http://archive.apache.org/dist/apr/apr-1.5.1.tar.bz2
+    __dcd apr-1.5.1
+    __bld-common --disable-static
 }
 
 __apr()
 {
-    __apr-1.5.0
+    __apr-1.5.1
 }
 
-__apr-util-1.5.3()
+__apr-util-1.5.4()
 {
     __dep apr openssl sqlite
 
-    __wget http://archive.apache.org/dist/apr/apr-util-1.5.3.tar.bz2
-    __dcd apr-util-1.5.3
+    __wget http://archive.apache.org/dist/apr/apr-util-1.5.4.tar.bz2
+    __dcd apr-util-1.5.4
     __bld-common --with-apr=/usr --with-gdbm=/usr --with-openssl=/usr --with-crypto
 }
 
 __apr-util()
 {
-    __apr-util-1.5.3
+    __apr-util-1.5.4
 }
 
 __at-spi2-atk()
