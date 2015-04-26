@@ -2692,19 +2692,19 @@ __npapi-sdk()
     __npapi-sdk-0.27.2
 }
 
-__nspr-4.10.7()
+__nspr-4.10.8()
 {
     __dep ""
 
-    __wget http://ftp.mozilla.org/pub/mozilla.org/nspr/releases/v4.10.7/src/nspr-4.10.7.tar.gz
-    __dcd nspr-4.10.7
+    __wget http://ftp.mozilla.org/pub/mozilla.org/nspr/releases/v4.10.8/src/nspr-4.10.8.tar.gz
+    __dcd nspr-4.10.8
     cd nspr
     __bld-common --with-mozilla --with-pthreads --enable-64bit
 }
 
 __nspr()
 {
-    __nspr-4.10.7
+    __nspr-4.10.8
 }
 
 __nss-3.17.4()
