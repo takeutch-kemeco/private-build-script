@@ -1948,6 +1948,7 @@ __libcg()
 
     __git-clone git://git.code.sf.net/p/libcg/libcg
     __cd libcg
+    __git-pull
     ./bootstrap.sh
     __bld-common
 }
