@@ -1906,6 +1906,7 @@ __libarchive()
 
     __git-clone https://github.com/libarchive/libarchive.git
     __cd libarchive
+    __git-pull
     aclocal
     libtoolize
     autoconf
