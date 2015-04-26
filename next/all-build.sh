@@ -1590,6 +1590,7 @@ __gtk-engines2()
     __git-clone git://git.gnome.org/gtk-engines
     __git-clone gtk-engines gtk-engines2
     __cd gtk-engines2
+    __git-pull
     git checkout GTK_ENGINES_2_20_2
     git checkout -b 2.20.2
 
