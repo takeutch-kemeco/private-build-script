@@ -1213,6 +1213,8 @@ __ghostscript-git()
     __dep lcms ipafont
 
     __git-clone git://git.ghostscript.com/ghostpdl.git
+    __cd ghostpdl
+    __git-pull
     __cd ghostpdl/gs
 cat > $BASE_DIR/ghostpdl/gs/Resource/Init/cidfmap << "EOF"
 /Adobe-Japan1 << /FileType /TrueType /Path (ipag.ttf) /CSI [(Japan1) 6] >> ;
