@@ -1090,12 +1090,13 @@ __gc()
     {
         __git-clone git://github.com/ivmai/libatomic_ops.git
         __cd libatomic_ops
-        git pull
+        __git-pull
     }
 
     __libatomic_ops
     __git-clone git://github.com/ivmai/bdwgc.git
     __cd bdwgc
+    __git-pull
     ln -sf ${BASE_DIR}/libatomic_ops ${BASE_DIR}/bdwgc/libatomic_ops
     ./autoreconf -vif
     ./automake --add-missing
