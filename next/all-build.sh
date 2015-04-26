@@ -2660,7 +2660,9 @@ __ncurses-5.9()
     __dep "?"
 
     __wget ftp://invisible-island.net/ncurses/ncurses-5.9.tar.gz
+    __wget http://www.linuxfromscratch.org/patches/lfs/development/ncurses-5.9-gcc5_buildfixes-1.patch
     __dcd ncurses-5.9
+    patch -Np1 -i $SRC_DIR/ncurses-5.9-gcc5_buildfixes-1.patch
     __bld-common --mandir=/usr/share/man --with-shared --enable-widec
     sudo ln -s /usr/lib/{libncursesw.so,libcurses.so}
     sudo ldconfig
