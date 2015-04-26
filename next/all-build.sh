@@ -245,12 +245,12 @@ __bzip2()
     __bzip2-1.0.6
 }
 
-__boost-1.57.0()
+__boost-1.58.0()
 {
     __dep icu python2
 
-    __wget http://downloads.sourceforge.net/boost/boost_1_57_0.tar.bz2
-    __dcd boost_1_57_0
+    __wget http://downloads.sourceforge.net/boost/boost_1_58_0.tar.bz2
+    __dcd boost_1_58_0
     ./bootstrap.sh --prefix=/usr
     ./b2 stage threading=multi link=shared
     sudo ./b2 install threading=multi link=shared
@@ -258,7 +258,7 @@ __boost-1.57.0()
 
 __boost()
 {
-    __boost-1.57.0
+    __boost-1.58.0
 }
 
 __cairo()
