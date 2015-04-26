@@ -1753,6 +1753,7 @@ __inetutils()
 
     __git-clone git://git.savannah.gnu.org/inetutils.git
     __cd inetutils
+    __git-pull
     ./bootstrap
     ### ping, traceroute, telnet, inetd, logger, whois, syslogd 以外は全て無効。
     ### syslogd は、sysklogd でも同名のバイナリーがインストールされるので注意。
