@@ -3248,10 +3248,14 @@ __qemu-2.3.0-rc4()
     __wget http://wiki.qemu-project.org/download/qemu-2.3.0-rc4.tar.bz2
     __dcd qemu-2.3.0-rc4
     sed -i '/resource/ i#include <sys/xattr.h>' fsdev/virtfs-proxy-helper.c
-./configure --prefix=/usr \
-            --sysconfdir=/etc \
-            --docdir=/usr/share/doc/qemu-2.3.0-rc4 \
-            --target-list=x86_64-softmmu
+    ./configure --prefix=/usr \
+        --sysconfdir=/etc \
+        --docdir=/usr/share/doc/qemu-2.3.0-rc4 \
+	--audio-drv-list="alsa sdl" \
+        --target-list="x86_64-softmmu arm-softmmu x86_64-linux-user arm-linux-user armeb-linux-user" \
+	--disable-xen \
+	--disable-werror \
+	--enable-sdl
     __mk
     __mkinst
     [ -e  /usr/lib/libcacard.so ] && chmod -v 755 /usr/lib/libcacard.so
