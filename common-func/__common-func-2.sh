@@ -66,6 +66,8 @@ __cd()
 	__err "not directory error!!"
     fi
 
+    __git-pull
+
     __wait
 }
 
@@ -194,32 +196,36 @@ __cvs-pull()
     fi
 }
 
+__vcs-pull()
+{
+    __git-pull
+    __hg-pull
+    __svn-pull
+    __cvs-pull
+}
+
 __git-clone()
 {
     cd $BASE_DIR
     git clone $@
-    __git-pull
 }
 
 __hg-clone()
 {
     cd $BASE_DIR
     hg clone $@
-    __hg-pull
 }
 
 __svn-clone()
 {
     cd $BASE_DIR
     svn co $@
-    __svn-pull
 }
 
 __cvs-clone()
 {
     cd $BASE_DIR
     cvs $@
-    __cvs-pull
 }
 
 __autogen()
