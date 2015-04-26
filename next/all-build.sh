@@ -1421,7 +1421,8 @@ __grub-git()
     __cd grub
     __bld-common --sbindir=/sbin --disable-werror
     echo "grub2-install を手動で行ってください"
-    echo "例: sudo ln -sf /dev/sda6 /dev/root && sudo /usr/sbin/grub2-install /dev/sda"
+    echo "例: sudo ln -sf /dev/sda6 /dev/root"
+    echo "    sudo /usr/sbin/grub2-install /dev/sda"
 }
 
 __grub()
