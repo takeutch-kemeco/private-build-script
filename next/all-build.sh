@@ -2375,6 +2375,7 @@ __libtool.git()
 
     __git-clone git://git.savannah.gnu.org/libtool.git
     __cd libtool
+    __git-pull
     ./bootstrap
     __bld-common
 }
