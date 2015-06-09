@@ -2591,6 +2591,21 @@ __m4()
     __m4-1.4.17
 }
 
+__maco-1.0.1()
+{
+    __dep "?"
+
+    __wget http://
+    __dcd Mako-1.0.1
+    python2.7 setup.py build
+    sudo python2.7 setup.py install
+}
+
+__maco()
+{
+    __maco-1.0.1
+}
+
 ### .tar.bz2 がディレクトリにパックされてない（各ファイルが直に展開される）ので注意
 __midori-0.5.10()
 {
