@@ -3267,6 +3267,7 @@ __python-modules()
     __pygtk
     __pyxdg
     __pyxml
+    __mako
 }
 
 __qemu-2.3.0-rc4()
