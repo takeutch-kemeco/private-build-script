@@ -2500,13 +2500,13 @@ __llvm-3.6.0()
     __dep libffi python2 zip libxml2
 
     __wget http://llvm.org/releases/3.6.0/llvm-3.6.0.src.tar.xz
-    __wget http://llvm.org/releases/3.6.0/clang-3.6.0.src.tar.xz
+    __wget http://llvm.org/releases/3.6.0/cfe-3.6.0.src.tar.xz
     __wget http://llvm.org/releases/3.6.0/compiler-rt-3.6.0.src.tar.xz
+    __decord cfe-3.6.0.src
+    __decord compiler-rt-3.6.0.src
     __dcd llvm-3.6.0.src
-    tar -xf $SRC_DIR/clang-3.6.0.src.tar.gz -C tools
-    tar -xf $SRC_DIR/compiler-rt-3.6.0.src.tar.gz -C projects
-    mv tools/clang-3.6.0 tools/clang &&
-    mv projects/compiler-rt-3.6.0 projects/compiler-rt
+    mv $BASE_DIR/cfe-3.6.0.src tools/clang &&
+    mv $BASE_DIR/compiler-rt-3.6.0.src projects/compiler-rt
     __bld-common CC=gcc CXX=g++ --enable-libffi --enable-optimized --enable-shared --disable-assertions
 }
 
