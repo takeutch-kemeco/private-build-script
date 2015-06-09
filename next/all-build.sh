@@ -1975,6 +1975,19 @@ __libcrypt()
     __libcrypt-1.6.2
 }
 
+__libepoxy-git()
+{
+    __dep mesa-lib
+
+    __git-clone https://github.com/anholt/libepoxy.git
+    __common libepoxy
+}
+
+__libepoxy()
+{
+    __libepoxy-git
+}
+
 __libevent-git()
 {
     __dep openssl
