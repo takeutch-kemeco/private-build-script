@@ -3165,7 +3165,7 @@ __pycairo()
     __pycairo-1.10.0
 }
 
-__pygobject-2.28.5()
+__pygobject-2.28.6()
 {
     __dep glib py2cairo gobject-introspection libxslt
 
@@ -3180,15 +3180,15 @@ __pygobject-2.28.5()
 
 __pygobject-2()
 {
-    __pygobject-2.28.5
+    __pygobject-2.28.6
 }
 
-__pygobject-3.14.0()
+__pygobject-3.16.1()
 {
     __dep gobject-introspection py2cairo pycairo
 
-    __wget http://ftp.gnome.org/pub/gnome/sources/pygobject/3.14/pygobject-3.14.0.tar.xz
-    __dcd pygobject-3.14.0
+    __wget http://ftp.gnome.org/pub/gnome/sources/pygobject/3.16/pygobject-3.16.1.tar.xz
+    __dcd pygobject-3.16.1
     sed -i '/test_out_glist/ i\    @unittest.expectedFailure' tests/test_atoms.py
 
     mkdir python2
@@ -3209,7 +3209,7 @@ __pygobject-3.14.0()
 
 __pygobject-3()
 {
-    __pygobject-3.14.0
+    __pygobject-3.16.1
 }
 
 __pygtk-2.24.0()
