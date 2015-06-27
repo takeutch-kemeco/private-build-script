@@ -2425,6 +2425,20 @@ __libtool()
     __libtool-2.4.6
 }
 
+__libunbound-1.5.3()
+{
+    __dep ""
+
+    __wget http://unbound.net/downloads/unbound-1.5.3.tar.gz
+    __dcd unbound-1.5.3
+    __bld-common
+}
+
+__libunbound()
+{
+    __libunbound-1.5.3
+}
+
 __libunistring()
 {
     __dep ""
