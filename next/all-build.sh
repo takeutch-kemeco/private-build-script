@@ -2145,18 +2145,18 @@ __libinput()
     __libinput-git
 }
 
-__libksba-1.3.2()
+__libksba-1.3.3()
 {
     __dep libgpg-error
 
-    __wget ftp://ftp.gnupg.org/gcrypt/libksba/libksba-1.3.2.tar.bz2
-    __dcd libksba-1.3.2
+    __wget ftp://ftp.gnupg.org/gcrypt/libksba/libksba-1.3.3.tar.bz2
+    __dcd libksba-1.3.3
     __bld-common
 }
 
 __libksba()
 {
-    __libksba-1.3.2
+    __libksba-1.3.3
 }
 
 __libmnl()
