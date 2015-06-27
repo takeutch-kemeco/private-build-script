@@ -90,6 +90,12 @@ __fontsproto()
     __x-common fontsproto
 }
 
+__glamor()
+{
+    __git-clone git://anongit.freedesktop.org/xorg/driver/glamor
+    __x-common glamor
+}
+
 __glproto()
 {
     __git-clone git://people.freedesktop.org/xorg/proto/glproto
