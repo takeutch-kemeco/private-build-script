@@ -3080,7 +3080,7 @@ __pth-2.0.7()
 {
     __dep ""
 
-    __wget ftp://ftp.ossp.org/pkg/lib/pth/pth-2.0.7.tar.gz
+    __wget ftp://ftp.gnu.org/gnu/pth/pth-2.0.7.tar.gz
     __dcd pth-2.0.7
     sed -i 's#$(LOBJS): Makefile#$(LOBJS): pth_p.h Makefile#' Makefile.in
     __bld-common
