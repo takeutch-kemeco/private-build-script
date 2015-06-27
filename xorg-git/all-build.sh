@@ -255,6 +255,18 @@ __libxau()
     __x-common libXau
 }
 
+__libva()
+{
+    __git-clone git://anongit.freedesktop.org/libva
+    __x-common libva
+}
+
+__libvdpau()
+{
+    __git-clone git://people.freedesktop.org/~aplattner/libvdpau
+    __x-common libvdpau
+}
+
 __libxdmcp()
 {
     __git-clone git://anongit.freedesktop.org/xorg/lib/libXdmcp
