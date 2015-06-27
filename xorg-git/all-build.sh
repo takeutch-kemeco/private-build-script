@@ -661,6 +661,8 @@ __xorg-libs()
     __libdmx
     __libpciaccess
     __libxkbfile
+    __libva
+    __libvdpau
 }
 
 __gperf()
@@ -1068,8 +1070,7 @@ __xorg-apps()
     __setxkbmap
     __smproxy
     __x11perf
-    ### リモートデスクトップは使わない
-### __xauth
+    __xauth
     __xbacklight
     __xcmsdb
     __xcursorgen
@@ -1077,8 +1078,7 @@ __xorg-apps()
     __xdriinfo
     __xev
     __xgamma
-    ### リモートデスクトップは使わない
-### __xhost
+    __xhost
     __xinput
     __xkbcomp
     __xkbevd
@@ -1275,7 +1275,8 @@ __xf86-input-wacom()
     __git-clone git://people.freedesktop.org/~whot/xf86-input-wacom
     __cd xf86-input-wacom
     git pull
-    __x-bld-common --enable-maintainer-mode --disable-selective-werror
+    __x-bld-common --enable-maintainer-mode --disable-selective-werror \
+        --with-udev-rules-dir=/lib/udev/rules.d --with-systemd-unit-dir=/lib/systemd/system
 }
 
 __xf86-video-intel()
@@ -1300,6 +1301,7 @@ __xf86-video-modesetting()
 
 __xorg-drivers()
 {
+    __glamor
     __xf86-input-evdev
     __xf86-input-keyboard
     __xf86-input-mouse
