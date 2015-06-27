@@ -3950,6 +3950,17 @@ __wpa_supplicant()
     __wpa_supplicant-2.2
 }
 
+__xf86-input-wacom-git()
+{
+    __git-clone git://git.code.sf.net/p/linuxwacom/xf86-input-wacom
+    __common xf86-input-wacom
+}
+
+__xf86-input-wacom()
+{
+    __xf86-input-wacom-git
+}
+
 __xsane-0.999()
 {
     __dep sane-frontends sane-backends gimp
