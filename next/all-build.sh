@@ -1917,18 +1917,18 @@ __libarchive()
     __mkinst
 }
 
-__libassuan-2.2.0()
+__libassuan-2.2.1()
 {
     __dep "?"
 
-    __wget ftp://ftp.gnupg.org/gcrypt/libassuan/libassuan-2.2.0.tar.bz2
-    __dcd libassuan-2.2.0
+    __wget ftp://ftp.gnupg.org/gcrypt/libassuan/libassuan-2.2.1.tar.bz2
+    __dcd libassuan-2.2.1
     __bld-common
 }
 
 __libassuan()
 {
-    __libassuan-2.2.0
+    __libassuan-2.2.1
 }
 
 __libcap()
