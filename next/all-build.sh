@@ -2108,6 +2108,15 @@ __libgusb()
     __libgusb-0.2.3
 }
 
+__libidn-git()
+{
+    __dep pth
+
+    __git-clone git clone git://git.savannah.gnu.org/libidn.git
+    __cd libidn
+    __bld-common --disable-static
+}
+
 __libidn-1.30()
 {
     __dep pth
