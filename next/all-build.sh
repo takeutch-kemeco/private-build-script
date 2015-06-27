@@ -2928,12 +2928,17 @@ __openssl()
     __openssl-1.0.2a
 }
 
-__p11-kit()
+__p11-kit-git()
 {
     __dep certificate-authority-certificates libtasn1 libffi
 
     __git-clone git://anongit.freedesktop.org/p11-glue/p11-kit
     __common p11-kit
+}
+
+__p11-kit()
+{
+    __p11-kit-git
 }
 
 __pango()
