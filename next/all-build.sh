@@ -2363,18 +2363,27 @@ __libtasn1-git()
     __bld-common-simple --enable-static=no
 }
 
-__libtasn1-4.2()
+__libtasn1-4.5()
 {
     __dep ""
 
-    __wget http://ftp.gnu.org/gnu/libtasn1/libtasn1-4.2.tar.gz
-    __dcd libtasn1-4.2
+    __wget http://ftp.gnu.org/gnu/libtasn1/libtasn1-4.5.tar.gz
+    __dcd libtasn1-4.5
+    __bld-common --enable-static=no
+}
+
+__libtasn1-4.3()
+{
+    __dep ""
+
+    __wget http://ftp.gnu.org/gnu/libtasn1/libtasn1-4.3.tar.gz
+    __dcd libtasn1-4.3
     __bld-common --enable-static=no
 }
 
 __libtasn1()
 {
-    __libtasn1-4.2
+    __libtasn1-4.5
 }
 
 __libtiff-4.0.3()
