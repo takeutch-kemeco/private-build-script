@@ -2459,6 +2459,17 @@ __libusb()
     __libusb-1.0.19
 }
 
+__libwacom-git()
+{
+    __git-clone git://git.code.sf.net/p/linuxwacom/libwacom
+    __common libwacom
+}
+
+__libwacom()
+{
+    __libwacom-git
+}
+
 __libxkbcommon()
 {
     __dep "?"
