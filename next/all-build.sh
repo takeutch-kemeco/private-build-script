@@ -1367,25 +1367,25 @@ __gnome-themes-standard()
 
 __gnupg.git()
 {
-    __dep pth libassuan libgcript libksba
+    __dep pth libassuan libgcrypt libksba
 
     __git-clone git://git.gnupg.org/gnupg.git
     __cd gnupg
-    __bld-common --enable-maintainer-mode
+    __bld-common --enable-maintainer-mode  --with-readline=/usr/lib
 }
 
-__gnupg-2.1.3()
+__gnupg-2.1.5()
 {
-    __dep pth libassuan libgcript libksba
+    __dep pth libassuan libgcrypt libksba
 
-    __wget ftp://ftp.gnupg.org/gcrypt/gnupg/gnupg-2.1.3.tar.bz2
-    __dcd gnupg-2.1.3
-    __bld-common --enable-symcryptrun
+    __wget ftp://ftp.gnupg.org/gcrypt/gnupg/gnupg-2.1.5.tar.bz2
+    __dcd gnupg-2.1.5
+    __bld-common --enable-symcryptrun --with-readline=/usr/lib
 }
 
 __gnupg()
 {
-    __gnupg-2.1.3
+    __gnupg-2.1.5
 }
 
 __gnutls.git()

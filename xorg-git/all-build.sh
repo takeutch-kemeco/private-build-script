@@ -364,6 +364,12 @@ __freetype2()
     cp -f include/freetype/config/{ftoption.h.orig,ftoption.h}
 }
 
+__lxml()
+{
+    __git-clone git://github.com/lxml/lxml.git
+    __cd lxml
+}
+
 __fontconfig()
 {
     __git-clone git://anongit.freedesktop.org/fontconfig
@@ -735,8 +741,9 @@ __libdrm()
     __cfg --prefix=/usr	        \
 	  --enable-udev	        \
 	  --disable-radeon	\
-	  --disable-nouveau	\
 	  --disable-vmwgfx      \
+          --disable-intel       \
+          --enable-cairo-tests=no \
 	  --disable-manpages
 
     $MAKE_CLEAN
@@ -763,9 +770,9 @@ __mesa-lib()
           --enable-gallium-gbm           	\
           --enable-glx-tls               	\
           --enable-dri                          \
-          --with-egl-platforms="drm,x11,wayland" \
-          --with-gallium-drivers="nouveau,swrast"  \
-          --with-dri-drivers="nouveau,swrast"
+          --with-egl-platforms="drm,x11" \
+          --with-gallium-drivers="nouveau"  \
+          --with-dri-drivers="nouveau"
 
     $MAKE_CLEAN
     __mk
@@ -1194,7 +1201,8 @@ __xorg-server()
     $DIST_CLEAN
     ./autogen.sh
     __cfg $XORG_CONFIG --with-xkb-output=/var/lib/xkb --enable-install-setuid --enable-tcp-transport=no \
-        --enable-ipv6=no --with-default-xkb-model=pc105 --with-default-xk-layout=jp --disable-selective-werror
+          --enable-ipv6=no --with-default-xkb-model=pc105 --with-default-xk-layout=jp --disable-selective-werror \
+	  --enable-glamor --enable-suid-wrapper
     $MAKE_CLEAN
     __mk
     __mkinst
