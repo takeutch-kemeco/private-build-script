@@ -2080,18 +2080,18 @@ __libgpg-error-git()
     __bld-common --enable-maintainer-mode
 }
 
-__libgpg-error-1.17()
+__libgpg-error-1.19()
 {
     __dep ""
 
-    __wget ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.17.tar.bz2
-    __dcd libgpg-error-1.17
+    __wget ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.19.tar.bz2
+    __dcd libgpg-error-1.19
     __bld-common --enable-maintainer-mode
 }
 
 __libgpg-error()
 {
-    __libgpg-error-1.17
+    __libgpg-error-1.19
 }
 
 __libgusb-0.2.3()
