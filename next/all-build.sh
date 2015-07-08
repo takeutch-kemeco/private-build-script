@@ -148,12 +148,31 @@ __automake()
     __automake-1.15
 }
 
-__gawk()
+__garcon-0.5.0()
+{
+    __dep libxfce4ui libxfce4util gtk+2 gtk+3 gtk-doc
+
+    __wget http://archive.xfce.org/src/xfce/garcon/0.5/garcon-0.5.0.tar.bz2
+    __dcd garcon-0.5.0
+    __bld-common
+}
+
+__garcon()
+{
+    __garcon-0.5.0
+}
+
+__gawk-git()
 {
     __dep readline
 
     __git-clone git://git.savannah.gnu.org/gawk.git
     __common gawk
+}
+
+__gawk()
+{
+    __gawk-git
 }
 
 __bash()
@@ -879,6 +898,20 @@ __eudev()
     __mkinst
 }
 
+__exo-0.10.6()
+{
+    __dep libxfce4ui libxfce4util uri gtk-doc
+
+    __wget http://archive.xfce.org/src/xfce/exo/0.10/exo-0.10.6.tar.bz2
+    __dcd exo-0.10.6
+    __bld-common
+}
+
+__exo()
+{
+    __exo-0.10.6
+}
+
 __expect-5.45()
 {
     __dep tcl tk
@@ -1528,7 +1561,7 @@ __gtk+2()
     __git-clone git://git.gnome.org/gtk+ gtk+-2.24.git
     __cd gtk+-2.24.git
 
-    GTK2VERSION=2.24.27
+    GTK2VERSION=2.24.28
     make distclean
     git checkout master
     git pull
@@ -1617,6 +1650,20 @@ __gtk-engines3()
     # 必ずエラーとなるので
     make
     __mkinst
+}
+
+__gtk-xfce-engine-3.2.0()
+{
+    __dep gtk+2 gtk+3
+
+    __wget http://archive.xfce.org/src/xfce/gtk-xfce-engine/3.2/gtk-xfce-engine-3.2.0.tar.bz2
+    __dcd gtk-xfce-engine-3.2.0
+    __bld-common --enable-gtk3
+}
+
+__gtk-xfce-engine()
+{
+    __gtk-xfce-engine-3.2.0
 }
 
 __guile-git()
@@ -1930,6 +1977,20 @@ __libassuan-2.2.1()
 __libassuan()
 {
     __libassuan-2.2.1
+}
+
+__libcanberra-git()
+{
+    __dep "?"
+
+    __git-clone git://git.0pointer.de/libcanberra
+    __cd libcanberra
+    __bld-common --disable-oss
+}
+
+__libcanberra()
+{
+    __libcanberra-git
 }
 
 __libcap()
@@ -2471,12 +2532,54 @@ __libwacom()
     __libwacom-git
 }
 
+__libwnck-2.30.7()
+{
+    __dep gtk+2 startup-notification gobject-introspection gtk-doc
+
+    __wget http://ftp.gnome.org/pub/gnome/sources/libwnck/2.30/libwnck-2.30.7.tar.xz
+    __dcd libwnck-2.30.7
+    __bld-common --disable-static --program-suffix=-1
+}
+
+__libwnck()
+{
+    __libwnck-2.30.7
+}
+
 __libxkbcommon()
 {
     __dep "?"
 
     __git-clone https://github.com/xkbcommon/libxkbcommon.git
     __common libxkbcommon
+}
+
+__libxfce4ui-4.12.1()
+{
+    __dep gtk+2 gtk+3 xfconf gdk-doc
+
+    __wget http://archive.xfce.org/src/xfce/libxfce4ui/4.12/libxfce4ui-4.12.1.tar.bz2
+    __dcd libxfce4ui-4.12.1
+    __bld-common
+}
+
+__libxfce4ui()
+{
+    __libxfce4ui-4.12.1
+}
+
+__libxfce4util-4.12.1()
+{
+    __dep glib gtk-doc
+
+    __wget http://archive.xfce.org/src/xfce/libxfce4util/4.12/libxfce4util-4.12.1.tar.bz2
+    __dcd libxfce4util-4.12.1
+    __bld-common
+}
+
+__libxfce4util()
+{
+    __libxfce4util-4.12.1
 }
 
 __libxml2-git()
@@ -3736,6 +3839,48 @@ __texinfo()
     __texinfo-5.2
 }
 
+__thunar-1.6.10()
+{
+    __dep exo libxfce4ui gnome-icon-theme libgudev libnotify xfce4-panel libexif tumbler
+
+    __wget http://archive.xfce.org/src/xfce/thunar/1.6/Thunar-1.6.10.tar.bz2
+    __dcd Thunar-1.6.10
+    __bld-common
+}
+
+__thunar()
+{
+    __thunar-1.6.10
+}
+
+__thunar-volman-0.8.1()
+{
+    __dep exo libgudev libxfce4ui libnotify startup-notification polkit-gnome
+
+    __wget http://archive.xfce.org/src/xfce/thunar-volman/0.8/thunar-volman-0.8.1.tar.bz2
+    __dcd thunar-volman-0.8.1
+    __bld-common
+}
+
+__thunar-volman()
+{
+    __thunar-volman-0.8.1
+}
+
+__tumbler-0.1.31()
+{
+    __dep dbus-glib curl ffmpegthumbnailer freetype gdk-pixbuf gst-plugins-base gtk-doc libjpeg-turbo libgsf libopewnraw libpng poppler
+
+    __wget http://archive.xfce.org/src/xfce/tumbler/0.1/tumbler-0.1.31.tar.bz2
+    __dcd tumbler-0.1.31
+    __bld-common
+}
+
+__tumbler()
+{
+    __tumbler-0.1.31
+}
+
 __install-tl()
 {
     __install-tl-20140225
@@ -3960,6 +4105,155 @@ __xf86-input-wacom-git()
 __xf86-input-wacom()
 {
     __xf86-input-wacom-git
+}
+
+__xfce()
+{
+    rem(){
+    __libxfce4util
+    __xfconf
+    __libxfce4ui
+    __exo
+    __garcon
+    __gtk-xfce-engine
+    __libwnck
+    __xfce4-panel
+    __xfce4-xkb-plugin
+    __thunar
+    __thunar-volman
+    __tumbler
+    __xfce4-appfinder
+    __xfce4-power-manager
+    __xfce4-settings
+    __xfdesktop
+    __xfwm4
+    __xfce4-session
+}
+
+__xfce4-appfinder-4.12.0()
+{
+    __dep garcon libxfce4ui
+
+    __wget http://archive.xfce.org/src/xfce/xfce4-appfinder/4.12/xfce4-appfinder-4.12.0.tar.bz2
+    __dcd xfce4-appfinder-4.12.0
+    __bld-common
+}
+
+__xfce4-appfinder()
+{
+    __xfce4-appfinder-4.12.0
+}
+
+__xfce4-panel-4.12.0()
+{
+    __dep exo garacon libwnck libxfce4ui gtk-doc
+
+    __wget http://archive.xfce.org/src/xfce/xfce4-panel/4.12/xfce4-panel-4.12.0.tar.bz2
+    __dcd xfce4-panel-4.12.0
+    __bld-common --enable-gtk3
+}
+
+__xfce4-panel()
+{
+    __xfce4-panel-4.12.0
+}
+
+__xfce4-power-manager-1.4.4()
+{
+    __dep libnotify upower xfce4-panel udisks
+
+    __wget http://archive.xfce.org/src/xfce/xfce4-power-manager/1.4/xfce4-power-manager-1.4.4.tar.bz2
+    __dcd xfce4-appfinder-4.12.0
+    __bld-common
+}
+
+__xfce4-power-manager()
+{
+    __xfce4-power-manager-1.4.4
+}
+
+__xfce4-session-4.12.1()
+{
+    __dep libwnck libxfce4ui which desktop-file-utils shared-mime-info xfdesktop
+
+    __wget http://archive.xfce.org/src/xfce/xfce4-session/4.12/xfce4-session-4.12.1.tar.bz2
+    __dcd xfce4-session-4.12.1
+    __bld-common --disable-legacy-sm
+}
+
+__xfce4-session()
+{
+    __xfce4-session-4.12.1
+}
+
+__xfce4-settings-4.12.0()
+{
+    __dep exo garcon libxfce4ui gnome-icon-theme libcanberra libnotify libxklavier
+
+    __wget http://archive.xfce.org/src/xfce/xfce4-settings/4.12/xfce4-settings-4.12.0.tar.bz2
+    __dcd xfce4-settings-4.12.0
+    __bld-common
+}
+
+__xfce4-settings()
+{
+    __xfce4-settings-4.12.0
+}
+
+__xfce4-xkb-plugin-0.7.1()
+{
+    __dep librsvg libxklavier xfce4-panel
+
+    __wget http://archive.xfce.org/src/panel-plugins/xfce4-xkb-plugin/0.7/xfce4-xkb-plugin-0.7.1.tar.bz2
+    __dcd xfce4-xkb-plugin-0.7.1
+    __bld-common --disable-debug
+}
+
+__xfce4-xkb-plugin()
+{
+    __xfce4-xkb-plugin-0.7.1
+}
+
+__xfconf-4.12.0()
+{
+    __dep dbus-glib libxfce4util gtk-doc
+
+    __wget http://archive.xfce.org/src/xfce/xfconf/4.12/xfconf-4.12.0.tar.bz2
+    __dcd xfconf-4.12.0
+    __bld-common
+}
+
+__xfconf()
+{
+    __xfconf-4.12.0
+}
+
+__xfdesktop-4.12.2()
+{
+    __dep exo libwnck libxfce4ui libnotify startup-notification thunar
+
+    __wget http://archive.xfce.org/src/xfce/xfdesktop/4.12/xfdesktop-4.12.2.tar.bz2
+    __dcd xfdesktop-4.12.2
+    __bld-common
+}
+
+__xfdesktop()
+{
+    __xfdesktop-4.12.2
+}
+
+__xfwm4-4.12.3()
+{
+    __dep libwnck libxfce4ui libxfce4util startup-notification
+
+    __wget http://archive.xfce.org/src/xfce/xfwm4/4.12/xfwm4-4.12.3.tar.bz2
+    __dcd xfwm4-4.12.3
+    __bld-common
+}
+
+__xfwm4()
+{
+    __xfwm4-4.12.3
 }
 
 __xsane-0.999()
