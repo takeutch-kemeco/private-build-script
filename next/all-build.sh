@@ -4127,6 +4127,7 @@ __xfce()
     __xfdesktop
     __xfwm4
     __xfce4-session
+    __xfce4-screenshooter
 }
 
 __xfce4-appfinder-4.12.0()
@@ -4169,6 +4170,20 @@ __xfce4-power-manager-1.4.4()
 __xfce4-power-manager()
 {
     __xfce4-power-manager-1.4.4
+}
+
+__xfce4-screenshooter-1.8.2()
+{
+    __dep "?"
+
+    __wget http://archive.xfce.org/src/apps/xfce4-screenshooter/1.8/xfce4-screenshooter-1.8.2.tar.bz2
+    __dcd xfce4-screenshooter-1.8.2
+    __bld-common
+}
+
+__xfce4-screenshooter()
+{
+    __xfce4-screenshooter-1.8.2
 }
 
 __xfce4-session-4.12.1()
