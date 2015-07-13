@@ -4109,7 +4109,6 @@ __xf86-input-wacom()
 
 __xfce()
 {
-    rem(){
     __libxfce4util
     __xfconf
     __libxfce4ui
