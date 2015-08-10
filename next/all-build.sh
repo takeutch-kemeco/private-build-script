@@ -3799,12 +3799,12 @@ __systemd-ui()
     __common systemd-ui
 }
 
-__sqlite-3.8.8.2()
+__sqlite-3.8.10.2()
 {
     __dep unzip
 
-    __wget http://sqlite.org/2015/sqlite-autoconf-3080802.tar.gz
-    __dcd sqlite-autoconf-3080802
+    __wget http://sqlite.org/2015/sqlite-autoconf-3081002.tar.gz
+    __dcd sqlite-autoconf-3081002
     ./configure --prefix=/usr --sysconfdir=/etc \
 	CFLAGS="-DSQLITE_ENABLE_FTS3=1 -DSQLITE_ENABLE_COLUMN_METADATA=1 \
                 -DSQLITE_ENABLE_UNLOCK_NOTIFY=1 -DSQLITE_SECURE_DELETE=1"
@@ -3814,7 +3814,7 @@ __sqlite-3.8.8.2()
 
 __sqlite()
 {
-    __sqlite-3.8.8.2
+    __sqlite-3.8.10.2
 }
 
 __svn-1.8.8()
