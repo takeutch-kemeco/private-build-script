@@ -2547,6 +2547,32 @@ __libwacom()
     __libwacom-git
 }
 
+__libwebp-git()
+{
+    __dep libjpeg-turbo libpng libtiff freeglut giflib
+
+    __git-clone https://chromium.googlesource.com/webm/libwebp
+    __cd libwebp
+    __autogen
+    __bld-common --disable-static --enable-experimental --enable-libwebpdecoder \
+		 --enable-libwebpdemux --enable-libwebpmux
+}
+
+__libwebp-0.4.3()
+{
+    __dep libjpeg-turbo libpng libtiff freeglut giflib
+
+    __wget http://downloads.webmproject.org/releases/webp/libwebp-0.4.3.tar.gz
+    __dcd libwebp
+    __bld-common --disable-static --enable-experimental --enable-libwebpdecoder \
+		 --enable-libwebpdemux --enable-libwebpmux
+}
+
+__libwebp()
+{
+    __libwebp-0.4.3
+}
+
 __libwnck-2.30.7()
 {
     __dep gtk+2 startup-notification gobject-introspection gtk-doc
