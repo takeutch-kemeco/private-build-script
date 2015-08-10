@@ -2296,33 +2296,33 @@ __libjpeg()
     __libjpeg-9a
 }
 
-__libjpeg-turbo-1.4.0()
+__libjpeg-turbo-1.4.1()
 {
     __dep yasm
 
-    __wget http://downloads.sourceforge.net/libjpeg-turbo/libjpeg-turbo-1.4.0.tar.gz
-    __dcd libjpeg-turbo-1.4.0
+    __wget http://downloads.sourceforge.net/libjpeg-turbo/libjpeg-turbo-1.4.1.tar.gz
+    __dcd libjpeg-turbo-1.4.1
     __bld-common --mandir=/usr/share/man --with-jpeg8 --disable-static
 }
 
 __libjpeg-turbo()
 {
-    __libjpeg-turbo-1.4.0
+    __libjpeg-turbo-1.4.1
 }
 
-__libreoffice-4.4.2.2()
+__libreoffice-5.0.0.5()
 {
     __dep boost clucene cups curl dbus-glib libjpeg-turbo glu graphite2 gst-plugins-base gtk+2 harfbuzz icu littlecms librsvg libxml2 libxslt mesalib neon npapi-sdk nss openldap openssl poppler python-3 redland unixodbc
 
-    __wget http://download.documentfoundation.org/libreoffice/src/4.4.2/libreoffice-4.4.2.2.tar.xz
-    __wget http://download.documentfoundation.org/libreoffice/src/4.4.2/libreoffice-dictionaries-4.4.2.2.tar.xz
-    __wget http://download.documentfoundation.org/libreoffice/src/4.4.2/libreoffice-help-4.4.2.2.tar.xz
-    __wget http://download.documentfoundation.org/libreoffice/src/4.4.2/libreoffice-translations-4.4.2.2.tar.xz
-    __dcd libreoffice-4.4.2.2
-    tar -xf $SRC_DIR/libreoffice-dictionaries-4.4.2.2.tar.xz --no-overwrite-dir --strip-components=1
-    ln -sv $SRC_DIR/libreoffice-dictionaries-4.4.2.2.tar.xz external/tarballs/
-    ln -sv $SRC_DIR/libreoffice-help-4.4.2.2.tar.xz external/tarballs/
-    ln -sv $SRC_DIR/libreoffice-translations-4.4.2.2.tar.xz external/tarballs/
+    __wget http://download.documentfoundation.org/libreoffice/src/5.0.0/libreoffice-5.0.0.5.tar.xz
+    __wget http://download.documentfoundation.org/libreoffice/src/5.0.0/libreoffice-dictionaries-5.0.0.5.tar.xz
+    __wget http://download.documentfoundation.org/libreoffice/src/5.0.0/libreoffice-help-5.0.0.5.tar.xz
+    __wget http://download.documentfoundation.org/libreoffice/src/5.0.0/libreoffice-translations-5.0.0.5.tar.xz
+    __dcd libreoffice-5.0.0.5
+    install -dm755 external/tarballs
+    ln -sv $SRC_DIR/libreoffice-dictionaries-5.0.0.5.tar.xz external/tarballs/
+    ln -sv $SRC_DIR/libreoffice-help-5.0.0.5.tar.xz         external/tarballs/
+    ln -sv $SRC_DIR/libreoffice-translations-5.0.0.5.tar.xz external/tarballs/
     LO_PREFIX=/usr
 
     sed -e "/gzip -f/d" -e "s|.1.gz|.1|g" -i bin/distro-install-desktop-integration
@@ -2335,7 +2335,7 @@ __libreoffice-4.4.2.2()
     ./autogen.sh --prefix=$LO_PREFIX     \
              --sysconfdir=/etc           \
              --with-vendor="BLFS"        \
-             --with-lang="en-US pt-BR"   \
+             --with-lang="ja-JP"         \
              --with-help                 \
              --with-myspell-dicts        \
              --with-alloc=system         \
@@ -2380,7 +2380,7 @@ __libreoffice-4.4.2.2()
 
 __libreoffice()
 {
-    __libreoffice-4.4.2.2
+    __libreoffice-5.0.0.5
 }
 
 __librsvg()
