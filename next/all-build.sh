@@ -2156,6 +2156,21 @@ __libgpg-error()
     __libgpg-error-1.19
 }
 
+__libgudev-git()
+{
+    __dep glib gobject-introspection gtk-doc
+
+    __git-clone git://git.gnome.org/libgudev
+    __cd libgudev
+    __autogen
+    __bld-common-simple
+}
+
+__libgudev()
+{
+    __libgudev-git
+}
+
 __libgusb-0.2.3()
 {
     __dep libusb
