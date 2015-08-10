@@ -4084,16 +4084,16 @@ __wget-install()
     __wget-1.16.3
 }
 
-__which-2.20()
+__which-2.21()
 {
-    __wget ftp://ftp.gnu.org/gnu/which/which-2.20.tar.gz
-    __dcd which-2.20
+    __wget ftp://ftp.gnu.org/gnu/which/which-2.21.tar.gz
+    __dcd which-2.21
     __bld-common
 }
 
 __which()
 {
-    __which-2.20
+    __which-2.21
 }
 
 __wpa_supplicant-2.2()
