@@ -2463,18 +2463,18 @@ __libtasn1()
     __libtasn1-4.5
 }
 
-__libtiff-4.0.3()
+__libtiff-4.0.4()
 {
     __dep libjpeg-8
 
-    __wget ftp://ftp.remotesensing.org/libtiff/tiff-4.0.3.tar.gz
-    __dcd tiff-4.0.3
+    __wget ftp://ftp.remotesensing.org/libtiff/tiff-4.0.4.tar.gz
+    __dcd tiff-4.0.4
     __bld-common
 }
 
 __libtiff()
 {
-    __libtiff-4.0.3
+    __libtiff-4.0.4
 }
 
 __libtool.git()
