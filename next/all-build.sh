@@ -4035,18 +4035,23 @@ __wayland()
     __wayland-git
 }
 
-__webkitgtk-2.4.7()
+__webkitgtk-2.8.3()
 {
-    __dep gperf gst-plugin-base gtk+3 icu libsecret libsoup libwebp mesalib ruby sqlite gudev which gobject-introspection
+    __dep cmake gst-plugin-base gtk+3 icu libgudev libsecret libsoup libwebp mesa ruby sqlite which gobject-introspection
 
-    __wget http://webkitgtk.org/releases/webkitgtk-2.4.7.tar.xz
-    __dcd webkitgtk-2.4.7
-    __bld-common --enable-introspection --disable-geolocation --enable-webkit1=no
+    __wget http://webkitgtk.org/releases/webkitgtk-2.8.3.tar.xz
+    __dcd webkitgtk-2.8.3
+    mkdir build
+    cd build
+    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_SKIP_RPATH=ON \
+	  -DPORT=GTK -DLIB_INSTALL_DIR=/usr/lib -Wno-dev ..
+    __mk
+    __mkinst
 }
 
 __webkitgtk()
 {
-    __webkitgtk-2.4.7
+    __webkitgtk-2.8.3
 }
 
 __weston-git()
