@@ -346,7 +346,7 @@ __cmake()
     __git-clone git://cmake.org/cmake.git
     __cd cmake
     ./bootstrap
-    __bld-common-simple --system-libs --mandir=/share/man --docdir=/share/doc/cmake
+    __bld-common-simple --system-libs --mandir=/share/man --no-system-jsoncpp --docdir=/share/doc/cmake
 }
 
 __cogl()
