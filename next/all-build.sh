@@ -1134,16 +1134,16 @@ __gc()
     __bld-common
 }
 
-__gcc-5.1.0()
+__gcc-5.2.0()
 {
     __dep gmp mpfr mpc
 
-    __wget http://ftp.tsukuba.wide.ad.jp/software/gcc/releases/gcc-5.1.0/gcc-5.1.0.tar.bz2
-    __decord gcc-5.1.0
+    __wget http://ftp.tsukuba.wide.ad.jp/software/gcc/releases/gcc-5.2.0/gcc-5.2.0.tar.bz2
+    __decord gcc-5.2.0
     __cdbt
-    ../gcc-5.1.0/configure --prefix=/usr --libexecdir=/usr/lib --enable-shared \
+    ../gcc-5.2.0/configure --prefix=/usr --libexecdir=/usr/lib --enable-shared \
         --enable-threads=posix --enable-__cxa_atexit --enable-clocale=gnu \
-        --enable-languages=c,c++,fortran --disable-multilib \
+        --enable-languages=c,c++,fortran,go,objc,obj-c++ --disable-multilib \
         --disable-bootstrap --with-system-zlib --enable-long-long
     __mk
     __mkinst
@@ -1154,7 +1154,7 @@ __gcc-5.1.0()
 
 __gcc()
 {
-    __gcc-5.1.0
+    __gcc-5.2.0
 }
 
 __gcr()
