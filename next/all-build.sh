@@ -959,18 +959,18 @@ __flex()
     __flex-2.5.39
 }
 
-__firefox-34.0.5()
+__firefox-39.0.3()
 {
-    __dep alsa-lib gtk+2 zip unzip
+    __dep alsa-lib gtk+2 nss yasm zip unzip icu libevent libvpx sqlite
 
-    __wget https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/34.0.5/source/firefox-34.0.5.source.tar.bz2
-    __decord firefox-34.0.5.source
+    __wget https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/39.0.3/source/firefox-39.0.3.source.tar.bz2
+    __decord firefox-39.0.3.source
     __cd mozilla-release
-
+    
     cat > mozconfig << "EOF"
-# If you have a multicore machine, firefox will now use all the cores by
-# default. Exceptionally, you can reduce the number of cores, e.g. to 1,
-# by uncommenting the next line and setting a valid number of CPU cores.
+# If you have a multicore machine, all cores will be used by default.
+# If desired, you can reduce the number of cores used, e.g. to 1, by
+# uncommenting the next line and setting a valid number of CPU cores.
 #mk_add_options MOZ_MAKE_FLAGS="-j1"
 
 # If you have installed DBus-Glib comment out this line:
@@ -986,9 +986,9 @@ ac_add_options --disable-libnotify
 
 # GStreamer is necessary for H.264 video playback in HTML5 Video Player;
 # to be enabled, also remember to set "media.gstreamer.enabled" to "true"
-# in about:config. If you have GStreamer 0.x.y, uncomment this line:
-#ac_add_options --enable-gstreamer
-# or uncomment this line, if you have GStreamer 1.x.y
+# in about:config. If you have GStreamer 1.x.y, comment out this line and
+# uncomment the following one:
+ac_add_options --disable-gstreamer
 #ac_add_options --enable-gstreamer=1.0
 
 # Uncomment these lines if you have installed optional dependencies:
@@ -998,16 +998,13 @@ ac_add_options --disable-libnotify
 # Comment out following option if you have PulseAudio installed
 ac_add_options --disable-pulseaudio
 
-# If you have not installed Yasm then uncomment this line:
-#ac_add_options --disable-webm
-
 # Comment out following options if you have not installed
 # recommended dependencies:
 ac_add_options --enable-system-sqlite
 ac_add_options --with-system-libevent
 ac_add_options --with-system-libvpx
 ac_add_options --with-system-nspr
-#ac_add_options --with-system-nss
+ac_add_options --with-system-nss
 ac_add_options --with-system-icu
 
 # The BLFS editors recommend not changing anything below this line:
@@ -1017,9 +1014,8 @@ ac_add_options --enable-application=browser
 ac_add_options --disable-crashreporter
 ac_add_options --disable-updater
 ac_add_options --disable-tests
-ac_add_options --disable-gstreamer
 
-ac_add_options --enable-optimize="-O4 -msse4.1 -march=native -mtune=native"
+ac_add_options --enable-optimize
 ac_add_options --enable-strip
 ac_add_options --enable-install-strip
 
@@ -1035,8 +1031,8 @@ ac_add_options --enable-system-pixman
 ac_add_options --with-pthreads
 
 ac_add_options --with-system-bz2
-#ac_add_options --with-system-jpeg
-#ac_add_options --with-system-png
+ac_add_options --with-system-jpeg
+# ac_add_options --with-system-png
 ac_add_options --with-system-zlib
 
 mk_add_options MOZ_OBJDIR=@TOPSRCDIR@/firefox-build-dir
@@ -1045,8 +1041,9 @@ EOF
         make -f client.mk
 
         sudo make -f client.mk install INSTALL_SDK=
+	sudo chown -R 0:0 /usr/lib/firefox-39.0.3
         sudo mkdir -pv /usr/lib/mozilla/plugins
-        sudo ln -sfv ../mozilla/plugins /usr/lib/firefox-34.0.5
+        sudo ln -sfv ../../mozilla/plugins /usr/lib/firefox-39.0.3/browser
 }
 
 __firefox-hg()
@@ -1067,7 +1064,7 @@ __firefox-hg()
 
 __firefox()
 {
-    __firefox-34.0.5
+    __firefox-39.0.3
 }
 
 __fontconfig()
