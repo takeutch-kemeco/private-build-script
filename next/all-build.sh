@@ -2334,7 +2334,7 @@ __libreoffice-5.0.0.5()
     ./autogen.sh --prefix=$LO_PREFIX     \
              --sysconfdir=/etc           \
              --with-vendor="BLFS"        \
-             --with-lang="ja-JP"         \
+             --with-lang="ja"            \
              --with-help                 \
              --with-myspell-dicts        \
              --with-alloc=system         \
