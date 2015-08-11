@@ -3235,19 +3235,19 @@ __pth()
     __pth-2.0.7
 }
 
-__pulseaudio-5.0()
+__pulseaudio-6.0()
 {
     __dep json-c libsndfile
 
-    __wget http://freedesktop.org/software/pulseaudio/releases/pulseaudio-5.0.tar.xz
-    __dcd pulseaudio-5.0
+    __wget http://freedesktop.org/software/pulseaudio/releases/pulseaudio-6.0.tar.xz
+    __dcd pulseaudio-6.0
     find . -name "Makefile.in" | xargs sed -i "s|(libdir)/@PACKAGE@|(libdir)/pulse|"
     __bld-common --localstatedir=/var --disable-bluez4 --disable-rpath --with-module-dir=/usr/lib/pulse/modules
 }
 
 __pulseaudio()
 {
-    __pulseaudio-5.0
+    __pulseaudio-6.0
 }
 
 __python-2.7.9()
