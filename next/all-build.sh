@@ -1866,7 +1866,9 @@ __json-c-0.12()
     __wget https://s3.amazonaws.com/json-c_releases/releases/json-c-0.12.tar.gz
     __dcd json-c-0.12
     sed -i s/-Werror// Makefile.in
-    __bld-common
+    ./configure --prefix=/usr --disable-static
+    __mk
+    __mkinst
 }
 
 __json-c()
