@@ -1554,18 +1554,18 @@ __gnutls.git()
     __bld-common --with-default-trust-store-file=/etc/ssl/ca-bundle.crt
 }
 
-__gnutls-3.4.2()
+__gnutls-3.4.4.1()
 {
     __dep nettle gmp libtasn1 p11-kit libidn libunbound zlib certificate-authority-certificates
 
-    __wget ftp://ftp.gnutls.org/gcrypt/gnutls/v3.4/gnutls-3.4.2.tar.xz
-    __dcd gnutls-3.4.2
+    __wget ftp://ftp.gnutls.org/gcrypt/gnutls/v3.4/gnutls-3.4.4.1.tar.xz
+    __dcd gnutls-3.4.4.1
     __bld-common --with-default-trust-store-file=/etc/ssl/ca-bundle.crt --enable-gtk-doc-thml=no
 }
 
 __gnutls()
 {
-    __gnutls-3.4.2
+    __gnutls-3.4.4.1
 }
 
 __grub-git()
