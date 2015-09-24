@@ -341,12 +341,29 @@ __clucene()
     __clucene-2.3.3.4
 }
 
-__cmake()
+__cmake-git()
 {
     __git-clone git://cmake.org/cmake.git
     __cd cmake
     ./bootstrap
     __bld-common-simple --system-libs --mandir=/share/man --no-system-jsoncpp --docdir=/share/doc/cmake
+}
+
+__cmake-3.3.1()
+{
+    __dep curl libarchive
+
+    __wget http://www.cmake.org/files/v3.3/cmake-3.3.1.tar.gz
+    __dcd cmake-3.3.1
+    ./bootstrap --prefix=/usr --system-libs --mandir=/share/man \
+		--no-system-jsoncpp --docdir=/share/doc/cmake-3.3.1
+    __mk
+    __mkinst
+}
+
+__cmake()
+{
+    __cmake-3.3.1
 }
 
 __cogl()
