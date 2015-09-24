@@ -1661,6 +1661,32 @@ __gstreamer()
     __gstreamer-1.4.5
 }
 
+__gst-libav-1.4.5()
+{
+    __wget http://gstreamer.freedesktop.org/src/gst-libav/gst-libav-1.4.5.tar.xz
+    __dcd gst-libav-1.4.5
+    __bld-common
+}
+
+__gst-libav()
+{
+    __gst-libav-1.4.5
+}
+
+__gst-plugins-bad-1.4.5()
+{
+    __dep gst-plugins-base libdvdread libdvdnav llvm soundtouch
+
+    __wget http://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.4.5.tar.xz
+    __dcd gst-plugins-bad-1.4.5
+    __bld-common
+}
+
+__gst-plugins-bad()
+{
+    __gst-plugins-bad-1.4.5
+}
+
 __gst-plugins-base-1.4.5()
 {
     __dep gstreamer
