@@ -1237,7 +1237,7 @@ __gcc-5.2.0()
     __cdbt
     ../gcc-5.2.0/configure --prefix=/usr --libexecdir=/usr/lib --enable-shared \
         --enable-threads=posix --enable-__cxa_atexit --enable-clocale=gnu \
-        --enable-languages=c,c++,fortran,go,objc,obj-c++ --disable-multilib \
+        --enable-languages=c,c++,fortran --disable-multilib \
         --disable-bootstrap --with-system-zlib --enable-long-long
     __mk
     __mkinst
