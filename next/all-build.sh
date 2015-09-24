@@ -908,6 +908,34 @@ __emacs()
     __emacs-24.5
 }
 
+__enchant-1.6.0()
+{
+    __dep glib
+
+    __wget http://www.abisource.com/downloads/enchant/1.6.0/enchant-1.6.0.tar.gz
+    __dcd enchant-1.6.0
+    __bld-common
+}
+
+__enchant()
+{
+    __enchant-1.6.0
+}
+
+__epoxy-git()
+{
+    __dep mesa-lib
+
+    __git-clone https://github.com/anholt/libepoxy.git
+    __cd libepoxy
+    __bld-common
+}
+
+__epoxy()
+{
+    __epoxy-git
+}
+
 __eudev()
 {
     __dep "?"
