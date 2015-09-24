@@ -871,20 +871,27 @@ __docbook-xsl()
     __docbook-xsl-1.78.1
 }
 
-__doxygen-1.8.9.1()
+__doxygen-1.8.10()
 {
-    __dep ghostscript python2
+    __dep cmake ghostscript python2
 
-    __wget http://ftp.stack.nl/pub/doxygen/doxygen-1.8.9.1.src.tar.gz
-    __dcd doxygen-1.8.9.1
-    ./configure --prefix /usr --docdir /usr/share/doc/doxygen-1.8.9.1
+    __wget http://ftp.stack.nl/pub/doxygen/doxygen-1.8.10.src.tar.gz
+    __dcd doxygen-1.8.10
+    mkdir -v build
+    cd build
+
+    cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr ..
     __mk
+    sed -i 's:man/man1:share/&:' ../doc/CMakeLists.txt &&
+    cmake -DDOC_INSTALL_DIR=share/doc/doxygen-1.8.10 -Dbuild_doc=ON ..
+    __mk docs
     __mkinst
+    sudo install -vm644 ../doc/*.1 /usr/share/man/man1
 }
 
 __doxygen()
 {
-    __doxygen-1.8.9.1
+    __doxygen-1.8.10
 }
 
 __emacs-24.5()
