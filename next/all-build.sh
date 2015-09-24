@@ -1195,6 +1195,20 @@ __freetype2()
     cp include/config/{ftoption.h.orig,ftoption.h}
 }
 
+__fribidi-0.19.7()
+{
+    __dep glib
+
+    __wget http://fribidi.org/download/fribidi-0.19.7.tar.bz2
+    __dcd fribidi-0.19.7
+    __bld-common
+}
+
+__fribidi()
+{
+    __fribidi-0.19.7
+}
+
 __gc()
 {
     __libatomic_ops()
