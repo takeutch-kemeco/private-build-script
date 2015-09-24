@@ -480,18 +480,18 @@ __cups()
     __cups-2.0.2
 }
 
-__cython-0.20.1()
+__cython-0.23.2()
 {
     __dep python2
 
-    __wget http://cython.org/release/Cython-0.20.1.tar.gz
-    __dcd Cython-0.20.1
+    __wget http://cython.org/release/Cython-0.23.2.tar.gz
+    __dcd Cython-0.23.2
     sudo python2 ./setup.py install
 }
 
 __cython()
 {
-    __cython-0.20.1
+    __cython-0.23.2
 }
 
 __dbus()
