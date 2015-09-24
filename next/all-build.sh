@@ -1877,7 +1877,7 @@ __guile-lib()
 
 __harfbuzz()
 {
-    __dep glib icu freetype2 cairo gobject-introspection
+    __dep ragel glib icu freetype2 cairo gobject-introspection
 
     git clone git://anongit.freedesktop.org/harfbuzz
     __common harfbuzz
