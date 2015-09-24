@@ -1467,7 +1467,7 @@ __gmp-6.0.0a()
     __wget http://ftp.gnu.org/gnu/gmp/gmp-6.0.0a.tar.xz
     __decord gmp-6.0.0a
     __cd gmp-6.0.0
-    ABI=64 ./configure --prefix=/usr --enable-cxx --docdir=/usr/share/doc/gmp-6.0.0a
+    ABI=32 ./configure --prefix=/usr --enable-cxx --docdir=/usr/share/doc/gmp-6.0.0a
     __mk
     __mkinst
     __mk html
