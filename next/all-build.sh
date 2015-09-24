@@ -978,6 +978,34 @@ __expect()
     __expect-5.45
 }
 
+__fdk-aac-0.1.4()
+{
+    __dep ""
+
+    __wget http://downloads.sourceforge.net/opencore-amr/fdk-aac-0.1.4.tar.gz
+    __dcd fdk-aac-0.1.4
+    __bld-common
+}
+
+__fdk-aac()
+{
+    __fdk-aac-0.1.4
+}
+
+__ffmpeg-2.7.2()
+{
+    __dep libass fdk-aac freetype lame libtheora libvorbis libvpx opus x264 yasm
+
+    __wget http://ffmpeg.org/releases/ffmpeg-2.7.2.tar.bz2
+    __dcd ffmpeg-2.7.2
+    __bld-common-simple --enable-gpl --enable-version3 --enable-nonfree --disable-static --enable-shared --disable-debug --enable-libass --enable-libfdk-aac --enable-libfreetype --enable-libmp3lame --enable-libopus --enable-libtheora --enable-libvorbis --enable-libvpx --enable-libx264 --enable-x11grab --docdir=/usr/share/doc/ffmpeg-2.7.2
+}
+
+__ffmpeg()
+{
+    __ffmpeg-2.7.2
+}
+
 __file()
 {
     __dep ""
