@@ -1701,6 +1701,34 @@ __gst-plugins-base()
     __gst-plugins-base-1.4.5
 }
 
+__gst-plugins-good-1.4.5()
+{
+    __dep gst-plugins-base cairo flac gdk-pixbuf libjpeg-turbo libpng libsoup libvpx xorg
+
+    __wget http://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-1.4.5.tar.xz
+    __dcd gst-plugins-good-1.4.5
+    __bld-common
+}
+
+__gst-plugins-good()
+{
+    __gst-plugins-good-1.4.5
+}
+
+__gst-plugins-ugly-1.4.5()
+{
+    __dep gst-plugins-base lame libdvdread x264
+
+    __wget http://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-1.4.5.tar.xz
+    __dcd gst-plugins-ugly-1.4.5
+    __bld-common
+}
+
+__gst-plugins-ugly()
+{
+    __gst-plugins-ugly-1.4.5
+}
+
 __gtk+2()
 {
     __dep atk gdk-pixbuf pango gobject-introspection
