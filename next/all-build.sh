@@ -2148,13 +2148,41 @@ __mozjs()
     __mozjs-24.2.0
 }
 
-__linux-pam()
+__lame-3.99.5()
+{
+    __dep dmalloc electric-fence libsndfile nasm
+
+    __wget http://downloads.sourceforge.net/lame/lame-3.99.5.tar.gz
+    __dcd lame-3.99.5
+    __bld-common --enable-mp3rtp --disable-static
+}
+
+__lame()
+{
+    __lame-3.99.5
+}
+
+__linux-pam-git()
 {
     __dep ""
 
     __git-clone https://git.fedorahosted.org/git/linux-pam.git
     __cd linux-pam
     __bld-common --enable-securedir=/lib/security --disable-regenerate-docu --enable-debug=no
+}
+
+__linux-pam-1.2.1()
+{
+    __dep ""
+
+    __wget http://linux-pam.org/library/Linux-PAM-1.2.1.tar.bz2
+    __dcd Linux-PAM-1.2.1
+    __bld-common --libdir=/usr/lib --enable-securedir=/lib/security
+}
+
+__linux-pam()
+{
+    __linux-pam-1.2.1
 }
 
 __lcms2()
