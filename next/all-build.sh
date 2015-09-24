@@ -2063,6 +2063,49 @@ __make()
     __bld-common
 }
 
+__mako()
+{
+    __dep python
+
+    __wget https://pypi.python.org/packages/source/M/Mako/Mako-1.0.2.tar.gz
+    __dcd Mako-1.0.2
+    sudo python2 setup.py install --optimize=1
+    sudo python3 setup.py install --optimize=1
+}
+
+__mesalib-10.6.6()
+{
+    __dep xorg-lib libdrm
+
+    __wget ftp://ftp.freedesktop.org/pub/mesa/10.6.6/mesa-10.6.6.tar.xz
+    __wget http://www.linuxfromscratch.org/patches/blfs/svn/mesa-10.6.6-llvm_3_7-1.patch
+    __wget http://www.linuxfromscratch.org/patches/blfs/svn/mesa-10.6.6-add_xdemos-1.patch
+    __dcd mesa-10.6.6
+    patch -Np1 -i $SRC_DIR/mesa-10.6.6-add_xdemos-1.patch
+    patch -Np1 -i $SRC_DIR/mesa-10.6.6-llvm_3_7-1.patch
+    GLL_DRV="nouveau,swrast"
+    ./autogen.sh CFLAGS='-O4' CXXFLAGS='-O4'     \
+		 --prefix=/usr                   \
+		 --sysconfdir=/etc               \
+		 --enable-texture-float          \
+		 --enable-gles1                  \
+		 --enable-gles2                  \
+		 --enable-osmesa                 \
+		 --enable-xa                     \
+		 --enable-gbm                    \
+		 --enable-glx-tls                \
+		 --with-egl-platforms="drm,x11"  \
+		 --with-gallium-drivers=$GLL_DRV
+    unset GLL_DRV
+    __mk
+    __mkinst
+}
+
+__mesalib()
+{
+    __mesalib-10.6.6
+}
+
 __kmod()
 {
     __dep ""
