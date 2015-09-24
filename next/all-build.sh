@@ -1998,18 +1998,18 @@ __intel-driver()
     __common intel-driver
 }
 
-__intltool-0.50.2()
+__intltool-0.51.0()
 {
     __dep perl-module-xml-parser
 
-    __wget http://launchpad.net/intltool/trunk/0.50.2/+download/intltool-0.50.2.tar.gz
-    __dcd intltool-0.50.2
+    __wget http://launchpad.net/intltool/trunk/0.51.0/+download/intltool-0.51.0.tar.gz
+    __dcd intltool-0.51.0
     __bld-common
 }
 
 __intltool()
 {
-    __intltool-0.50.2
+    __intltool-0.51.0
 }
 
 __iproute2()
