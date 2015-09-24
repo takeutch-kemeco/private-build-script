@@ -1284,6 +1284,36 @@ __geany()
     __bld-common --enable-gtk3
 }
 
+__geoclue-git()
+{
+    __git-clone git://anongit.freedesktop.org/git/geoclue
+    __cd geoclue
+    __bld-common
+}
+
+__geoclue-0.12.0()
+{
+    __wget https://launchpad.net/geoclue/trunk/0.12/+download/geoclue-0.12.0.tar.gz
+    __wget http://www.linuxfromscratch.org/patches/blfs/svn/geoclue-0.12.0-gpsd_fix-1.patch
+
+    __dcd geoclue-0.12.0
+    __patch -Np1 -i $SRC_DIR/geoclue-0.12.0-gpsd_fix-1.patch
+    sed -i "s@ -Werror@@" configure
+    sed -i "s@libnm_glib@libnm-glib@g" configure
+    sed -i "s@geoclue/libgeoclue.la@& -lgthread-2.0@g" providers/skyhook/Makefile.in
+    __bld-common
+}
+
+__geoclue()
+{
+    __geoclue-0.12.0
+}
+
+__geoclue2()
+{
+    __geoclue-git
+}
+
 __gettext-0.19.4()
 {
     __dep ""
