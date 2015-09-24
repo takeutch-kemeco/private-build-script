@@ -415,18 +415,18 @@ __coreutils-git()
     __common coreutils
 }
 
-__coreutils-8.23()
+__coreutils-8.24()
 {
     __dep acl attr
 
-    __wget http://ftp.gnu.org/gnu/coreutils/coreutils-8.23.tar.xz
-    __dcd coreutils-8.23
+    __wget http://ftp.gnu.org/gnu/coreutils/coreutils-8.24.tar.xz
+    __dcd coreutils-8.24
     __bld-common
 }
 
 __coreutils()
 {
-    __coreutils-8.23
+    __coreutils-8.24
 }
 
 __colord()
