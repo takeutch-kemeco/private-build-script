@@ -33,7 +33,7 @@ __bld-x-common()
 
     $MAKE_CLEAN
     __mk
-    __mk install
+    __mkinst
     ldconfig
 }
 
@@ -251,8 +251,8 @@ __xcb-proto()
 {
     __wget http://xcb.freedesktop.org/dist/xcb-proto-1.11.tar.bz2
     __x-common xcb-proto-1.11
-    install -dv -m755 /usr/share/doc/xcb-proto-1.11
-    install -v -m644 doc/* /usr/share/doc/xcb-proto-1.11
+    sudo install -dv -m755 /usr/share/doc/xcb-proto-1.11
+    sudo install -v -m644 doc/* /usr/share/doc/xcb-proto-1.11
 }
 
 __libxcb()
@@ -525,8 +525,8 @@ __xcb-util-wm()
 
 __libdrm()
 {
-    __wget http://dri.freedesktop.org/libdrm/libdrm-2.4.46.tar.bz2
-    __dcd libdrm-2.4.46
+    __wget http://dri.freedesktop.org/libdrm/libdrm-2.4.64.tar.bz2
+    __dcd libdrm-2.4.64
     sed -e "/pthread-stubs/d" -i configure.ac
     autoreconf -fiv
     __bld-common --enable-udev --disable-valgrind
@@ -536,23 +536,23 @@ __mesalib()
 {
     __wget http://www.linuxfromscratch.org/patches/blfs/svn/mesa-10.6.6-llvm_3_7-1.patch
     __wget http://www.linuxfromscratch.org/patches/blfs/svn/mesa-10.6.6-add_xdemos-1.patch
-    __wget ftp://ftp.freedesktop.org/pub/mesa/10.6.6/MesaLib-10.6.6.tar.bz2
-    __dcd MesaLib-10.6.6
+    __wget ftp://ftp.freedesktop.org/pub/mesa/10.6.6/mesa-10.6.6.tar.xz
+    __dcd mesa-10.6.6
     patch -Np1 -i ../mesa-10.6.6-add_xdemos-1.patch
     patch -Np1 -i ../mesa-10.6.6-llvm_3_7-1.patch
     GLL_DRV="nouveau,swrast"
-    ./autogen.sh
-    --prefix=$XORG_PREFIX           \
-            --sysconfdir=/etc               \
-            --enable-texture-float          \
-            --enable-gles1                  \
-            --enable-gles2                  \
-            --enable-osmesa                 \
-            --enable-xa                     \
-            --enable-gbm                    \
-            --enable-glx-tls                \
-            --with-egl-platforms="drm,x11"  \
-            --with-gallium-drivers=$GLL_DRV
+    ./autogen.sh CFLAGS='-O4' CXXFLAGS='-O4' \
+	--prefix=/usr                   \
+        --sysconfdir=/etc               \
+        --enable-texture-float          \
+        --enable-gles1                  \
+        --enable-gles2                  \
+        --enable-osmesa                 \
+        --enable-xa                     \
+        --enable-gbm                    \
+        --enable-glx-tls                \
+        --with-egl-platforms="drm,x11"  \
+        --with-gallium-drivers=$GLL_DRV
     unset GLL_DRV
     __mk
     __mkinst
@@ -561,7 +561,7 @@ __mesalib()
 __glu()
 {
     __wget ftp://ftp.freedesktop.org/pub/mesa/glu/glu-9.0.0.tar.bz2
-    __common glu-9.0.0
+    __x-common glu-9.0.0
 }
 
 __xbitmaps()
@@ -801,7 +801,7 @@ __xorg-apps()
     __luit
     __mkfontdir
     __mkfontscale
-    __sessreg
+#   __sessreg
     __setxkbmap
     __smproxy
     __x11perf
@@ -893,8 +893,8 @@ __xkeyboard-config()
     __wget ftp://ftp.x.org/pub/individual/data/xkeyboard-config/xkeyboard-config-2.15.tar.bz2
     __dcd xkeyboard-config-2.15
     __bld-x-common --with-xkb-rules-symlink=xorg
-    install -dv -m755 $XORG_PREFIX/share/doc/xkeyboard-config-2.15
-    install -v -m644 docs/{README,HOWTO}* $XORG_PREFIX/share/doc/xkeyboard-config-2.15
+    sudo install -dv -m755 $XORG_PREFIX/share/doc/xkeyboard-config-2.15
+    sudo install -v -m644 docs/{README,HOWTO}* $XORG_PREFIX/share/doc/xkeyboard-config-2.15
 }
 
 __xorg-server()
@@ -913,8 +913,9 @@ __xorg-server()
 	--enable-tcp-transport=no \
 	--enable-ipv6=no \
 	--with-default-xkb-model=pc105 \
-	--with-default-xkb-layout=jp
-
+	--with-default-xkb-layout=jp \
+        --enable-xvfb \
+        --enable-xfbdev
     mkdir -pv /etc/X11/xorg.conf.d
     grep "/tmp/.ICE-unix dir 1777 root root" /etc/sysconfig/createfiles
     if [ $? -ne 0 ]
@@ -1024,7 +1025,6 @@ __xorg-drivers()
     __xf86-video-nouveau
     __libva
     __libvdpau-va-gl
-    __xf86-video-modesetting
 }
 
 __twm()
@@ -1032,7 +1032,7 @@ __twm()
     __wget ftp://ftp.x.org/pub/individual/app/twm-1.0.9.tar.bz2
     __dcd twm-1.0.9
     sed -i -e '/^rcdir =/s,^\(rcdir = \).*,\1/etc/X11/app-defaults,' src/Makefile.in
-    __bld-x-xommon
+    __bld-x-common
 }
 
 __xterm()
@@ -1063,7 +1063,7 @@ __xterm()
 __xclock()
 {
     __wget ftp://ftp.x.org/pub/individual/app/xclock-1.0.7.tar.bz2
-    __x-common xclock-1.0.6
+    __x-common xclock-1.0.7
 }
 
 __xinit()
@@ -1083,7 +1083,7 @@ __xorg-config()
     usermod -a -G video ${XORG_USER_NAME}
     usermod -a -G audio ${XORG_USER_NAME}
 
-    ln -vsf $XORG_PREFIX /usr/X11R6
+    ln -vsf $XORG_PREFIX /usr/X11R7
 
     __dejavu-fonts-ttf()
     {
@@ -1091,8 +1091,8 @@ __xorg-config()
 	     http://sourceforge.net/projects/dejavu/files/dejavu/2.33/dejavu-fonts-ttf-2.33.tar.bz2
 	__dcd dejavu-fonts-ttf-2.33
 	cd ttf
-	install -v -d -m755 /usr/share/fonts/dejavu
-	install -v -m644 *.ttf /usr/share/fonts/dejavu
+	sudo install -v -d -m755 /usr/share/fonts/dejavu
+	sudo install -v -m644 *.ttf /usr/share/fonts/dejavu
 	fc-cache
     }
 

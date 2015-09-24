@@ -2213,6 +2213,21 @@ __libarchive()
     __mkinst
 }
 
+__libass-0.12.3()
+{
+    __dep freetype fribidi fontconfig harfbuzz enca
+
+    __wget http://anduin.linuxfromscratch.org/sources/other/libass-0.12.3.tar.gz
+    __dcd libass-0.12.3
+    sh autogen.sh
+    __bld-common
+}
+
+__libass()
+{
+    __libass-0.12.3
+}
+
 __libassuan-2.2.1()
 {
     __dep "?"
@@ -2283,6 +2298,22 @@ __libcrypt-1.6.2()
 __libcrypt()
 {
     __libcrypt-1.6.2
+}
+
+__libdrm-2.4.64()
+{
+    __dep ""
+
+    __wget http://dri.freedesktop.org/libdrm/libdrm-2.4.64.tar.bz2
+    __dcd libdrm-2.4.64
+    sed -e "/pthread-stubs/d" -i configure.ac
+    autoreconf -fiv
+    __bld-common --enable-udev --disable-valgrind
+}
+
+__libdrm()
+{
+    __libdrm-2.4.64
 }
 
 __libepoxy-git()
@@ -2442,18 +2473,18 @@ __libidn-git()
     __bld-common --disable-static
 }
 
-__libidn-1.30()
+__libidn-1.32()
 {
     __dep pth
 
-    __wget http://ftp.gnu.org/gnu/libidn/libidn-1.30.tar.gz
-    __dcd libidn-1.30
+    __wget http://ftp.gnu.org/gnu/libidn/libidn-1.32.tar.gz
+    __dcd libidn-1.32
     __bld-common --disable-static
 }
 
 __libidn()
 {
-    __libidn-1.30
+    __libidn-1.32
 }
 
 __libinput-git()
@@ -2556,6 +2587,20 @@ __libjpeg-turbo-1.4.1()
 __libjpeg-turbo()
 {
     __libjpeg-turbo-1.4.1
+}
+
+__libogg-1.3.2()
+{
+    __dep ""
+
+    __wget http://downloads.xiph.org/releases/ogg/libogg-1.3.2.tar.xz
+    __dcd libogg-1.3.2
+    __bld-common --docdir=/usr/share/doc/libogg-1.3.2 --disable-static
+}
+
+__libogg()
+{
+    __libogg-1.3.2
 }
 
 __libreoffice-5.0.0.5()
@@ -2688,27 +2733,33 @@ __libtasn1-git()
     __bld-common-simple --enable-static=no
 }
 
-__libtasn1-4.5()
+__libtasn1-4.6()
 {
-    __dep ""
+    __dep "libidn"
 
-    __wget http://ftp.gnu.org/gnu/libtasn1/libtasn1-4.5.tar.gz
-    __dcd libtasn1-4.5
-    __bld-common --enable-static=no
-}
-
-__libtasn1-4.3()
-{
-    __dep ""
-
-    __wget http://ftp.gnu.org/gnu/libtasn1/libtasn1-4.3.tar.gz
-    __dcd libtasn1-4.3
+    __wget http://ftp.gnu.org/gnu/libtasn1/libtasn1-4.6.tar.gz
+    __dcd libtasn1-4.6
     __bld-common --enable-static=no
 }
 
 __libtasn1()
 {
-    __libtasn1-4.5
+    __libtasn1-4.6
+}
+
+__libtheora-1.1.1()
+{
+    __dep libogg libvorbis sdl1 libpng doxygen texlive bidtex transfig valgrind
+
+    __wget http://downloads.xiph.org/releases/theora/libtheora-1.1.1.tar.xz
+    __dcd libtheora-1.1.1
+    sed -i 's/png_\(sizeof\)/\1/g' examples/png2theora.c
+    __bld-common --disable-static
+}
+
+__libtheora()
+{
+    __libtheora-1.1.1
 }
 
 __libtiff-4.0.4()
@@ -2843,6 +2894,20 @@ __libxkbcommon()
     __common libxkbcommon
 }
 
+__libxklavier-git()
+{
+    __dep iso-codes
+
+    __git-clone git://anongit.freedesktop.org/libxklavier
+    __cd libxklavier
+    __bld-common
+}
+
+__libxklavier()
+{
+    __libxklavier-git
+}
+
 __libxfce4ui-4.12.1()
 {
     __dep gtk+2 gtk+3 xfconf gdk-doc
@@ -2877,7 +2942,7 @@ __libxml2-git()
 
     __git-clone git://git.gnome.org/libxml2
     __cd libxml2
-    __bld-common --disable-static --with-history --with-python=/usr/lib/python2.7/
+    __bld-common --disable-static --with-history
 }
 
 __libxml2-2.9.2()
@@ -2888,7 +2953,12 @@ __libxml2-2.9.2()
     __wget http://www.w3.org/XML/Test/xmlts20130923.tar.gz
     __dcd libxml2-2.9.2
     tar xf $SRC_DIR/xmlts20130923.tar.gz
-    __bld-common --disable-static --with-history --with-python=/usr/lib/python2.7/
+    sed \
+	-e /xmlInitializeCatalog/d \
+	-e 's/((ent->checked =.*&&/(((ent->checked == 0) ||\
+          ((ent->children == NULL) \&\& (ctxt->options \& XML_PARSE_NOENT))) \&\&/' \
+	-i parser.c
+    __bld-common --disable-static --with-history
 }
 
 __libxml2()
@@ -2931,24 +3001,56 @@ __libva()
     __common libva
 }
 
-__llvm-3.6.0()
+__libvorbis-1.3.5()
+{
+    __dep libogg doxygen texlive
+
+    __wget http://downloads.xiph.org/releases/vorbis/libvorbis-1.3.5.tar.xz
+    __dcd libvorbis-1.3.5
+    __bld-common --disable-static
+    sudo install -v -m644 doc/Vorbis* /usr/share/doc/libvorbis-1.3.5
+}
+
+__libvorbis()
+{
+    __libvorbis-1.3.5
+}
+
+__llvm-3.7.0()
 {
     __dep libffi python2 zip libxml2
 
-    __wget http://llvm.org/releases/3.6.0/llvm-3.6.0.src.tar.xz
-    __wget http://llvm.org/releases/3.6.0/cfe-3.6.0.src.tar.xz
-    __wget http://llvm.org/releases/3.6.0/compiler-rt-3.6.0.src.tar.xz
-    __decord cfe-3.6.0.src
-    __decord compiler-rt-3.6.0.src
-    __dcd llvm-3.6.0.src
-    mv $BASE_DIR/cfe-3.6.0.src tools/clang &&
-    mv $BASE_DIR/compiler-rt-3.6.0.src projects/compiler-rt
-    __bld-common CC=gcc CXX=g++ --enable-libffi --enable-optimized --enable-shared --disable-assertions
+    __wget http://llvm.org/releases/3.7.0/llvm-3.7.0.src.tar.xz
+    __wget http://llvm.org/releases/3.7.0/cfe-3.7.0.src.tar.xz
+    __wget http://llvm.org/releases/3.7.0/compiler-rt-3.7.0.src.tar.xz
+    __dcd llvm-3.7.0.src
+    tar -xf $SRC_DIR/cfe-3.7.0.src.tar.xz -C tools
+    tar -xf $SRC_DIR/compiler-rt-3.7.0.src.tar.xz -C projects
+
+    mv tools/cfe-3.7.0.src tools/clang
+    mv projects/compiler-rt-3.7.0.src projects/compiler-rt
+    sed -r "/ifeq.*CompilerTargetArch/s#i386#i686#g" \
+	-i projects/compiler-rt/make/platform/clang_linux.mk
+    sed -e "s:/docs/llvm:/share/doc/llvm-3.7.0:" -i Makefile.config.in
+
+    mkdir -v build
+    cd build
+
+    CC=gcc CXX=g++ ../configure --prefix=/usr              \
+      --datarootdir=/usr/share   \
+      --sysconfdir=/etc          \
+      --enable-libffi            \
+      --enable-optimized         \
+      --enable-shared            \
+      --disable-assertions       \
+      --docdir=/usr/share/doc/llvm-3.7.0
+    __mk
+    __mkinst
 }
 
 __llvm()
 {
-    __llvm-3.6.0
+    __llvm-3.7.0
 }
 
 __lm-sensors-svn()
@@ -2990,13 +3092,22 @@ __lvm2()
     __lvm2-2.02.109
 }
 
-__libvpx()
+__libvpx-git()
 {
-    __dep "?"
+    __dep yasm which doxygen php
 
     __git-clone https://chromium.googlesource.com/webm/libvpx
     __cd libvpx
-    __bld-common-simple
+    mkdir ../libvpx-build
+    cd ../libvpx-build
+    ../configure --prefix=/usr --enable-shared --disable-static
+    __mk
+    __mkinst
+}
+
+__libvpx()
+{
+    __libvpx-git
 }
 
 __ls2ch-git()
@@ -3011,6 +3122,21 @@ __ls2ch-git()
 __ls2ch()
 {
     __ls2ch-git
+}
+
+__lxml-git()
+{
+    __dep python
+
+    __git-clone https://github.com/lxml/lxml.git
+    __cd lxml    
+    sudo python2 setup.py install
+    sudo python3 setup.py install
+}
+
+__lxml()
+{
+    __lxml-git
 }
 
 __m4-1.4.17()
@@ -3081,7 +3207,7 @@ __mpfr-3.1.2()
 
     __wget http://www.mpfr.org/mpfr-current/mpfr-3.1.2.tar.xz
     __dcd mpfr-3.1.2
-    ABI=64 ./configure --prefix=/usr --enable-thread-safe --docdir=/usr/share/doc/mpfr-3.1.2
+    ABI=32 ./configure --prefix=/usr --enable-thread-safe --docdir=/usr/share/doc/mpfr-3.1.2
     __mk
     __mkinst
 }
@@ -3119,22 +3245,56 @@ __mtdev()
     __mtdev-git
 }
 
-__ncurses-5.9()
+__ncurses-6.0()
 {
     __dep "?"
 
-    __wget ftp://invisible-island.net/ncurses/ncurses-5.9.tar.gz
-    __wget http://www.linuxfromscratch.org/patches/lfs/development/ncurses-5.9-gcc5_buildfixes-1.patch
-    __dcd ncurses-5.9
-    patch -Np1 -i $SRC_DIR/ncurses-5.9-gcc5_buildfixes-1.patch
-    __bld-common --mandir=/usr/share/man --with-shared --enable-widec
-    sudo ln -s /usr/lib/{libncursesw.so,libcurses.so}
+    __wget http://ftp.gnu.org/gnu//ncurses/ncurses-6.0.tar.gz
+    __dcd ncurses-6.0
+    sed -i '/LIBTOOL_INSTALL/d' c++/Makefile.in
+    __bld-common --mandir=/usr/share/man --with-shared --without-debug --without-normal --enable-pc-files --enable-widec --with-termlib --enable-termcap
+    sudo mv -v /usr/lib/libncursesw.so.6* /lib
+    sudo ln -sfv ../../lib/$(readlink /usr/lib/libncursesw.so) /usr/lib/libncursesw.so
+    for lib in ncurses form panel menu ; do
+	sudo rm -vf                    /usr/lib/lib${lib}.so
+	sudo echo "INPUT(-l${lib}w)" > /usr/lib/lib${lib}.so
+	sudo ln -sfv ${lib}w.pc        /usr/lib/pkgconfig/${lib}.pc
+    done
+    sudo rm -vf                     /usr/lib/libcursesw.so
+    sudo echo "INPUT(-lncursesw)" > /usr/lib/libcursesw.so
+    sudo ln -sfv libncurses.so      /usr/lib/libcurses.so
+    sudo mkdir -v       /usr/share/doc/ncurses-6.0
+    sudo cp -v -R doc/* /usr/share/doc/ncurses-6.0
     sudo ldconfig
+}
+
+__ncurses-5.7()
+{
+    __dep ""
+
+    __wget ftp://ftp.gnu.org/gnu/ncurses/ncurses-5.7.tar.gz
+    __dcd ncurses-5.7
+    __bld-common --with-shared --without-debug --enable-widec
+    sudo mv -v /usr/lib/libncursesw.so.5* /lib
+    sudo ln -sfv ../../lib/libncursesw.so.5 /usr/lib/libncursesw.so
+    for lib in ncurses form panel menu ; do \
+	sudo rm -vf /usr/lib/lib${lib}.so ; \
+	sudo echo "INPUT(-l${lib}w)" >/usr/lib/lib${lib}.so ; \
+	sudo ln -sfv lib${lib}w.a /usr/lib/lib${lib}.a ; \
+    done
+    sudo ln -sfv libncurses++w.a /usr/lib/libncurses++.a
+    sudo rm -vf /usr/lib/libcursesw.so
+    sudo echo "INPUT(-lncursesw)" >/usr/lib/libcursesw.so
+    sudo ln -sfv libncurses.so /usr/lib/libcurses.so
+    sudo ln -sfv libncursesw.a /usr/lib/libcursesw.a
+    sudo ln -sfv libncurses.a /usr/lib/libcurses.a
+    sudo mkdir -v       /usr/share/doc/ncurses-5.7
+    sudo cp -v -R doc/* /usr/share/doc/ncurses-5.7
 }
 
 __ncurses()
 {
-    __ncurses-5.9
+    __ncurses-6.0
 }
 
 __neon-0.30.1()
@@ -3197,29 +3357,29 @@ __npapi-sdk()
     __npapi-sdk-0.27.2
 }
 
-__nspr-4.10.8()
+__nspr-4.10.9()
 {
     __dep ""
-
-    __wget http://ftp.mozilla.org/pub/mozilla.org/nspr/releases/v4.10.8/src/nspr-4.10.8.tar.gz
-    __dcd nspr-4.10.8
+    
+    __wget http://ftp.mozilla.org/pub/mozilla.org/nspr/releases/v4.10.9/src/nspr-4.10.9.tar.gz
+    __dcd nspr-4.10.9
     cd nspr
-    __bld-common --with-mozilla --with-pthreads --enable-64bit
+    __bld-common --with-mozilla --with-pthreads
 }
 
 __nspr()
 {
-    __nspr-4.10.8
+    __nspr-4.10.9
 }
 
-__nss-3.19.3()
+__nss-3.20()
 {
     __dep nspr sqlite
 
-    __wget http://ftp.mozilla.org/pub/mozilla.org/security/nss/releases/NSS_3_19_3_RTM/src/nss-3.19.3.tar.gz
-    __wget http://www.linuxfromscratch.org/patches/blfs/svn/nss-3.19.3-standalone-1.patch
-    __dcd nss-3.19.3
-    patch -Np1 -i $SRC_DIR/nss-3.19.3-standalone-1.patch
+    __wget http://ftp.mozilla.org/pub/mozilla.org/security/nss/releases/NSS_3_20_RTM/src/nss-3.20.tar.gz
+    __wget http://www.linuxfromscratch.org/patches/blfs/svn/nss-3.20-standalone-1.patch
+    __dcd nss-3.20
+    patch -Np1 -i $SRC_DIR/nss-3.20-standalone-1.patch
     cd nss
     make BUILD_OPT=1 NSPR_INCLUDE_DIR=/usr/include/nspr USE_SYSTEM_ZLIB=1 ZLIB_LIBS=-lz USE_64=1 NSS_USE_SYSTEM_SQLITE=1
 
@@ -3235,7 +3395,7 @@ __nss-3.19.3()
 
 __nss()
 {
-    __nss-3.19.3
+    __nss-3.20
 }
 
 __openjpeg-1.5.2()
@@ -3321,6 +3481,20 @@ __openssl()
     __openssl-1.0.2d
 }
 
+__opus-1.1()
+{
+    __dep ""
+    
+    __wget http://downloads.xiph.org/releases/opus/opus-1.1.tar.gz
+    __dcd opus-1.1
+    __bld-common --disable-static
+}
+
+__opus()
+{
+    __opus-1.1
+}
+
 __p11-kit-git()
 {
     __dep certificate-authority-certificates libtasn1 libffi
@@ -3351,13 +3525,13 @@ __pangox-compat()
     __common pangox-compat
 }
 
-__pcre-8.36()
+__pcre-8.37()
 {
     __dep ""
 
-    __wget http://downloads.sourceforge.net/pcre/pcre-8.36.tar.bz2
-    __dcd  pcre-8.36
-    __bld-common --docdir=/usr/share/doc/pcre-8.36 --enable-unicode-properties \
+    __wget http://downloads.sourceforge.net/pcre/pcre-8.37.tar.bz2
+    __dcd  pcre-8.37
+    __bld-common --docdir=/usr/share/doc/pcre-8.37 --enable-unicode-properties \
                  --enable-pcre16 --enable-pcre32 \
                  --enable-pcregrep-libz --enable-pcregrep-libbz2 \
                  --enable-pcretest-libreadline
@@ -3365,15 +3539,15 @@ __pcre-8.36()
 
 __pcre()
 {
-    __pcre-8.36
+    __pcre-8.37
 }
 
-__perl-5.20.0()
+__perl-5.22.0()
 {
     __dep ""
 
-    __wget http://www.cpan.org/src/5.0/perl-5.20.0.tar.gz
-    __dcd perl-5.20.0
+    __wget http://www.cpan.org/src/5.0/perl-5.22.0.tar.gz
+    __dcd perl-5.22.0
     sed -i -e "s|BUILD_ZLIB\s*= True|BUILD_ZLIB = False|" \
 	-e "s|INCLUDE\s*= ./zlib-src|INCLUDE    = /usr/include|" \
 	    -e "s|LIB\s*= ./zlib-src|LIB        = /usr/lib|" \
@@ -3386,7 +3560,7 @@ __perl-5.20.0()
 
 __perl()
 {
-    __perl-5.20.0
+    __perl-5.22.0
 }
 
 __pixman()
@@ -3499,24 +3673,24 @@ __pulseaudio()
     __pulseaudio-6.0
 }
 
-__python-2.7.9()
+__python-2.7.10()
 {
     __dep expat libffi
 
-    __wget http://www.python.org/ftp/python/2.7.9/Python-2.7.9.tar.xz
-    __wget http://docs.python.org/ftp/python/doc/2.7.9/python-2.7.9-docs-html.tar.bz2
-    __dcd Python-2.7.9
+    __wget http://www.python.org/ftp/python/2.7.10/Python-2.7.10.tar.xz
+    __wget http://docs.python.org/ftp/python/doc/2.7.10/python-2.7.10-docs-html.tar.bz2
+    __dcd Python-2.7.10
     __bld-common --enable-shared --with-system-expat --with-system-ffi --enable-unicode=ucs4
     sudo chmod -v 755 /usr/lib/libpython2.7.so.1.0
-    sudo install -v -dm755 /usr/share/doc/python-2.7.9
-    sudo tar --strip-components=1 -C /usr/share/doc/python-2.7.8 --no-same-owner -xvf $SRC_DIR/python-2.7.9-docs-html.tar.bz2
-    sudo find /usr/share/doc/python-2.7.9 -type d -exec chmod 0755 {} \;
-    sudo find /usr/share/doc/python-2.7.9 -type f -exec chmod 0644 {} \;
+    sudo install -v -dm755 /usr/share/doc/python-2.7.10
+    sudo tar --strip-components=1 -C /usr/share/doc/python-2.7.10 --no-same-owner -xvf $SRC_DIR/python-2.7.10-docs-html.tar.bz2
+    sudo find /usr/share/doc/python-2.7.10 -type d -exec chmod 0755 {} \;
+    sudo find /usr/share/doc/python-2.7.10 -type f -exec chmod 0644 {} \;
 }
 
 __python-27()
 {
-    __python-2.7.9
+    __python-2.7.10
 }
 
 __python-3.4.3()
@@ -3709,6 +3883,7 @@ __python-modules()
     __pyxdg
     __pyxml
     __mako
+    __lxml
 }
 
 __qemu-2.3.0-rc4()
@@ -3762,6 +3937,20 @@ __rasqal-0.9.32()
 __rasqal()
 {
     __rasqal-0.9.32
+}
+
+__ragel-6.9()
+{
+    __dep ""
+
+    __wget http://www.colm.net/files/ragel/ragel-6.9.tar.gz
+    __dcd ragel-6.9
+    __bld-common
+}
+
+__ragel()
+{
+    __ragel-6.9
 }
 
 __readline()
@@ -4185,6 +4374,20 @@ __install-tl-20140225()
     sudo TEXLIVE_INSTALL_PREFIX=/opt/texlive ./install-tl
 }
 
+__iso-codes-3.59()
+{
+    __dep ""
+
+    __wget http://pkg-isocodes.alioth.debian.org/downloads/iso-codes-3.59.tar.xz
+    __dcd iso-codes-3.59
+    __bld-common
+}
+
+__iso-codes()
+{
+    __iso-codes-3.59
+}
+
 __tomoyo-tools-2.5.0()
 {
     __dep "?"
@@ -4230,6 +4433,22 @@ __unzip()
     __mkinst prefix=/usr MANDIR=/usr/share/man/man1
 }
 
+__uri-1.69()
+{
+    __dep perl
+
+    __wget http://www.cpan.org/authors/id/E/ET/ETHER/URI-1.69.tar.gz
+    __dcd URI-1.69
+    perl Makefile.PL
+    __mk
+    __mkinst
+}
+
+__uri()
+{
+    __uri-1.69
+}
+
 __util-linux()
 {
     __dep "?"
@@ -4260,6 +4479,22 @@ __vala()
     __vala-0.28.0
 }
 
+__valgrind-3.10.1()
+{
+    __dep boost llvm gdb openmp libxslt texlive
+    
+    __wget http://valgrind.org/downloads/valgrind-3.10.1.tar.bz2
+    __dcd valgrind-3.10.1
+    sed -e 's#|3.\*#&|4.\*#' -e 's/-mt//g' -e 's/2\.20)/2.2[0-9])/' -i configure
+    sed -i 's|/doc/valgrind||' docs/Makefile.in
+    __bld-common --datadir=/usr/share/doc/valgrind-3.10.1
+}
+
+__valgrind()
+{
+    __valgrind-3.10.1
+}
+
 __vte()
 {
     __dep gtk-introspection
@@ -4275,7 +4510,7 @@ __wayland-git()
 
     __git-clone git://anongit.freedesktop.org/wayland/wayland
     __cd wayland
-    __bld-common --disable-static
+    __bld-common --disable-static --disable-documentation
 }
 
 __wayland()
@@ -4283,23 +4518,24 @@ __wayland()
     __wayland-git
 }
 
-__webkitgtk-2.8.3()
+__webkitgtk-2.8.5()
 {
     __dep cmake gst-plugin-base gtk+3 icu libgudev libsecret libsoup libwebp mesa ruby sqlite which gobject-introspection
 
-    __wget http://webkitgtk.org/releases/webkitgtk-2.8.3.tar.xz
-    __dcd webkitgtk-2.8.3
+    __wget http://webkitgtk.org/releases/webkitgtk-2.8.5.tar.xz
+    __dcd webkitgtk-2.8.5
+    sed -e 's/“/\"/' -e 's/”/\"/' \ -i Source/WebCore/xml/XMLViewer.{css,js}
     mkdir build
     cd build
     cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_SKIP_RPATH=ON \
-	  -DPORT=GTK -DLIB_INSTALL_DIR=/usr/lib -Wno-dev ..
+	  -DPORT=GTK -DLIB_INSTALL_DIR=/usr/lib -DENABLE_MINIBROWSER=ON -Wno-dev ..
     __mk
     __mkinst
 }
 
 __webkitgtk()
 {
-    __webkitgtk-2.8.3
+    __webkitgtk-2.8.5
 }
 
 __weston-git()
@@ -4388,6 +4624,20 @@ CFLAGS += -I/usr/include/libnl3
 __wpa_supplicant()
 {
     __wpa_supplicant-2.2
+}
+
+__x264-20150908-2245()
+{
+    __dep yasm
+
+    __wget http://download.videolan.org/pub/videolan/x264/snapshots/x264-snapshot-20150908-2245-stable.tar.bz2
+    __dcd x264-snapshot-20150908-2245-stable
+    __bld-common --enable-shared --disable-cli
+}
+
+__x264()
+{
+    __x264-20150908-2245
 }
 
 __xf86-input-wacom-git()
@@ -4564,6 +4814,22 @@ __xfwm4()
     __xfwm4-4.12.3
 }
 
+__xml-parser-2.44()
+{
+    __dep ""
+
+    __wget http://cpan.metacpan.org/authors/id/T/TO/TODDR/XML-Parser-2.44.tar.gz
+    __dcd XML-Parser-2.44
+    perl Makefile.PL
+    make
+    __mkinst
+}
+
+__xml-parser()
+{
+    __xml-parser-2.44
+}
+
 __xsane-0.999()
 {
     __dep sane-frontends sane-backends gimp
@@ -4606,7 +4872,7 @@ __xz()
 
 __yasm-1.3.0()
 {
-    __dep python2 cython
+    __dep python2 python3 cython
 
     __wget http://www.tortall.net/projects/yasm/releases/yasm-1.3.0.tar.gz
     __dcd yasm-1.3.0
