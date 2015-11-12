@@ -297,6 +297,6 @@ __pl-common()
 __init-build-group()
 {
     sudo cgcreate -g memory,cpu:/build-group
-    sudo sh -c "echo 1G >  /sys/fs/cgroup/memory/build-group/memory.limit_in_bytes"
+    sudo sh -c "echo 3G >  /sys/fs/cgroup/memory/build-group/memory.limit_in_bytes"
     sudo sh -c "echo $$ >> /sys/fs/cgroup/memory/build-group/tasks"
 }

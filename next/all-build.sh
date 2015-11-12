@@ -183,23 +183,23 @@ __bash()
     __common bash
 }
 
-__berkeley-db-6.1.23()
+__berkeley-db-6.1.26()
 {
     __dep ""
 
-    __wget http://download.oracle.com/berkeley-db/db-6.1.23.tar.gz
-    __dcd db-6.1.23
+    __wget http://download.oracle.com/berkeley-db/db-6.1.26.tar.gz
+    __dcd db-6.1.26
     cd build_unix
     ../dist/configure --prefix=/usr --enable-compat185 --enable-dbm --disable-static --enable-cxx
     __mk
-    sudo make docdir=/usr/share/doc/db-6.1.23 install
-    sudo chown -v -R root:root /usr/bin/db_* /usr/include/db{,_185,_cxx}.h /usr/lib/libdb*.{so.la} /usr/share/doc/db-6.1.23
+    sudo make docdir=/usr/share/doc/db-6.1.26 install
+    sudo chown -v -R root:root /usr/bin/db_* /usr/include/db{,_185,_cxx}.h /usr/lib/libdb*.{so.la} /usr/share/doc/db-6.1.26
     sudo ldconfig
 }
 
 __berkeley-db()
 {
-    __berkeley-db-6.1.23
+    __berkeley-db-6.1.26
 }
 
 __binutils-2.25.1()
@@ -260,17 +260,31 @@ __bzip2-1.0.6()
     sudo ldconfig
 }
 
+__blfs-boot-scripts-20150924()
+{
+    __dep ""
+
+    __wget http://www.linuxfromscratch.org/blfs/downloads/svn/blfs-bootscripts-20150924.tar.bz2
+    __dcd blfs-bootscripts-20150924
+    sudo make $@
+}
+
+__blfs-boot-scripts()
+{
+    __blfs-boot-scripts-20150924 $@
+}
+
 __bzip2()
 {
     __bzip2-1.0.6
 }
 
-__boost-1.58.0()
+__boost-1.59.0()
 {
     __dep icu python2
 
-    __wget http://downloads.sourceforge.net/boost/boost_1_58_0.tar.bz2
-    __dcd boost_1_58_0
+    __wget http://downloads.sourceforge.net/boost/boost_1_59_0.tar.bz2
+    __dcd boost_1_59_0
     ./bootstrap.sh --prefix=/usr
     ./b2 stage threading=multi link=shared
     sudo ./b2 install threading=multi link=shared
@@ -278,7 +292,7 @@ __boost-1.58.0()
 
 __boost()
 {
-    __boost-1.58.0
+    __boost-1.59.0
 }
 
 __cairo()
@@ -349,12 +363,12 @@ __cmake-git()
     __bld-common-simple --system-libs --mandir=/share/man --no-system-jsoncpp --docdir=/share/doc/cmake
 }
 
-__cmake-3.3.1()
+__cmake-3.3.2()
 {
     __dep curl libarchive
 
-    __wget http://www.cmake.org/files/v3.3/cmake-3.3.1.tar.gz
-    __dcd cmake-3.3.1
+    __wget http://www.cmake.org/files/v3.3/cmake-3.3.2.tar.gz
+    __dcd cmake-3.3.2
     ./bootstrap --prefix=/usr --system-libs --mandir=/share/man \
 		--no-system-jsoncpp --docdir=/share/doc/cmake-3.3.1
     __mk
@@ -363,7 +377,7 @@ __cmake-3.3.1()
 
 __cmake()
 {
-    __cmake-3.3.1
+    __cmake-3.3.2
 }
 
 __cogl()
@@ -439,7 +453,31 @@ __colord()
     sudo useradd -c "Color Daemon Owner" -d /var/lib/colord -u 71 -g colord -s /bin/false colord
     __bld-common --localstatedir=/var --with-daemon-user=colord --enable-vala \
                  --disable-argyllcms-sensor --disable-bash-completion \
-                 --enable-systemd-login --disable-static
+                 --enable-systemd-login=no --disable-static --enable-gusb=no
+}
+
+__cpio-git()
+{
+    __dep ""
+
+    __git-clone git://git.savannah.gnu.org/cpio.git
+    __cd cpio
+    ./bootstrap
+    __bld-common --bindir=/bin --enable-mt --with-rmt=/usr/libexec/rmt
+}
+
+__cpio-2.12()
+{
+    __dep ""
+
+    __wget http://ftp.gnu.org/pub/gnu/cpio/cpio-2.12.tar.bz2
+    __dcd cpio-2.12
+    __bld-common --bindir=/bin --enable-mt --with-rmt=/usr/libexec/rmt
+}
+
+__cpio()
+{
+    __cpio-2.12
 }
 
 __cryptsetup()
@@ -465,19 +503,56 @@ __cups-2.0.2()
 {
     __dep gnutls colord dbus libusb
 
-    __wget http://www.cups.org/software/2.0.2/cups-2.0.2-source.tar.bz2
-    __decord cups-2.0.2-source
-    __cd cups-2.0.2
+    __wget http://www.cups.org/software/2.1.0/cups-2.1.0-source.tar.bz2
+    __decord cups-2.1.0-source
+    __cd cups-2.1.0
     sudo useradd -c "Print Service User" -d /var/spool/cups -g lp -s /bin/false -u 9 lp
     sudo groupadd -g 19 lpadmin
-    __bld-common CC=gcc --libdir=/usr/lib --with-rcdir=/tmp/cupsinit --with-docdir=/usr/share/cups/doc \
-	--with-system-groups=lpadmin
+    __bld-common CC=gcc --libdir=/usr/lib --disable-systemd --with-rcdir=/tmp/cupsinit --with-docdir=/usr/share/cups/doc-2.1.0 --with-system-groups=lpadmin
+    sudo rm -rf /tmp/cupsinit
+    sudo ln -svnf ../cups/doc-2.1.0 /usr/share/doc/cups-2.1.0
+    echo "ServerName /var/run/cups/cups.sock" > /tmp/client.conf
+    sudo mv /tmp/client.conf /etc/cups/
+    sudo rm -rf /usr/share/cups/banners
+    sudo rm -rf /usr/share/cups/date/testprint
     sudo gtk-update-icon-cache
+    cat > /tmp/cups << "EOF"
+# Begin /etc/pam.d/cups
+
+auth    include system-auth
+account include system-account
+session include system-session
+
+# End /etc/pam.d/cups
+EOF
+    sudo mv /tmp/cups /etc/pam.d/cups
+
+    __blfs-boot-scripts install-cups
 }
 
 __cups()
 {
     __cups-2.0.2
+}
+
+__cyrus-sasl-2.1.26()
+{
+    __dep openssl berkeley-db
+
+    __wget ftp://ftp.cyrusimap.org/cyrus-sasl/cyrus-sasl-2.1.26.tar.gz
+    __wget  http://www.linuxfromscratch.org/patches/blfs/svn/cyrus-sasl-2.1.26-fixes-3.patch
+    __dcd cyrus-sasl-2.1.26
+    patch -Np1 -i $SRC_DIR/cyrus-sasl-2.1.26-fixes-3.patch
+    autoreconf -fi
+    __bld-common --enable-auth-sasldb --with-dbpath=/var/lib/sasl/sasldb2 --with-saslauthd=/var/run/saslauthd
+    install -v -dm755 /usr/share/doc/cyrus-sasl-2.1.26
+    install -v -m644  doc/{*.{html,txt,fig},ONEWS,TODO} saslauthd/LDAP_SASLAUTHD /usr/share/doc/cyrus-sasl-2.1.26
+    install -v -dm700 /var/lib/sasl
+}
+
+__cyrus-sasl()
+{
+    __cyrus-sasl-2.1.26
 }
 
 __cython-0.23.2()
@@ -506,7 +581,7 @@ __dbus()
     __bld-common --localstatedir=/var                   \
                  --libexecdir=/usr/lib/dbus-1.0         \
                  --with-console-auth-dir=/run/console/  \
-                 --enable-systemd                       \
+                 --enable-systemd=no                       \
                  --disable-Werror                       \
                  --disable-tests                        \
                  --enable-xml-docs=no
@@ -992,18 +1067,18 @@ __fdk-aac()
     __fdk-aac-0.1.4
 }
 
-__ffmpeg-2.7.2()
+__ffmpeg-2.8.1()
 {
     __dep libass fdk-aac freetype lame libtheora libvorbis libvpx opus x264 yasm
 
-    __wget http://ffmpeg.org/releases/ffmpeg-2.7.2.tar.bz2
-    __dcd ffmpeg-2.7.2
-    __bld-common-simple --enable-gpl --enable-version3 --enable-nonfree --disable-static --enable-shared --disable-debug --enable-libass --enable-libfdk-aac --enable-libfreetype --enable-libmp3lame --enable-libopus --enable-libtheora --enable-libvorbis --enable-libvpx --enable-libx264 --enable-x11grab --docdir=/usr/share/doc/ffmpeg-2.7.2
+    __wget http://ffmpeg.org/releases/ffmpeg-2.8.1.tar.bz2
+    __dcd ffmpeg-2.8.1
+    __bld-common-simple --enable-gpl --enable-version3 --enable-nonfree --disable-static --enable-shared --disable-debug --enable-libass --enable-libfdk-aac --enable-libfreetype --enable-libmp3lame --enable-libopus --enable-libtheora --enable-libvorbis --enable-libvpx --enable-libx264 --enable-x11grab --docdir=/usr/share/doc/ffmpeg-2.8.1
 }
 
 __ffmpeg()
 {
-    __ffmpeg-2.7.2
+    __ffmpeg-2.8.1
 }
 
 __file()
@@ -1039,12 +1114,12 @@ __flex()
     __flex-2.5.39
 }
 
-__firefox-39.0.3()
+__firefox-41.0.2()
 {
     __dep alsa-lib gtk+2 nss yasm zip unzip icu libevent libvpx sqlite
 
-    __wget https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/39.0.3/source/firefox-39.0.3.source.tar.bz2
-    __decord firefox-39.0.3.source
+    __wget https://ftp.mozilla.org/pub/mozilla.org/firefox/releases/41.0.2/source/firefox-41.0.2.source.tar.xz
+    __decord firefox-41.0.2.source
     __cd mozilla-release
     
     cat > mozconfig << "EOF"
@@ -1121,9 +1196,9 @@ EOF
         make -f client.mk
 
         sudo make -f client.mk install INSTALL_SDK=
-	sudo chown -R 0:0 /usr/lib/firefox-39.0.3
+	sudo chown -R 0:0 /usr/lib/firefox-41.0.2
         sudo mkdir -pv /usr/lib/mozilla/plugins
-        sudo ln -sfv ../../mozilla/plugins /usr/lib/firefox-39.0.3/browser
+        sudo ln -sfv ../../mozilla/plugins /usr/lib/firefox-41.0.2/browser
 }
 
 __firefox-hg()
@@ -1144,7 +1219,7 @@ __firefox-hg()
 
 __firefox()
 {
-    __firefox-39.0.3
+    __firefox-41.0.2
 }
 
 __fontconfig()
@@ -1259,12 +1334,12 @@ __gcr()
     __common gcr
 }
 
-__gdb-7.9()
+__gdb-7.10()
 {
     __dep python2
 
-    __wget http://ftp.gnu.org/gnu/gdb/gdb-7.9.tar.xz
-    __dcd gdb-7.9
+    __wget http://ftp.gnu.org/gnu/gdb/gdb-7.10.tar.xz
+    __dcd gdb-7.10
     __cfg --prefix=/usr --disable-werror
     __mk
     __mkinst -C gdb install
@@ -1272,7 +1347,7 @@ __gdb-7.9()
 
 __gdb()
 {
-    __gdb-7.9
+    __gdb-7.10
 }
 
 __geany()
@@ -1554,18 +1629,18 @@ __gnutls.git()
     __bld-common --with-default-trust-store-file=/etc/ssl/ca-bundle.crt
 }
 
-__gnutls-3.4.4.1()
+__gnutls-3.4.6()
 {
     __dep nettle gmp libtasn1 p11-kit libidn libunbound zlib certificate-authority-certificates
 
-    __wget ftp://ftp.gnutls.org/gcrypt/gnutls/v3.4/gnutls-3.4.4.1.tar.xz
-    __dcd gnutls-3.4.4.1
+    __wget ftp://ftp.gnutls.org/gcrypt/gnutls/v3.4/gnutls-3.4.6.tar.xz
+    __dcd gnutls-3.4.6
     __bld-common --with-default-trust-store-file=/etc/ssl/ca-bundle.crt --enable-gtk-doc-thml=no
 }
 
 __gnutls()
 {
-    __gnutls-3.4.4.1
+    __gnutls-3.4.6
 }
 
 __grub-git()
@@ -1585,21 +1660,21 @@ __grub()
     __grub-git
 }
 
-__graphite2-1.2.4()
+__graphite2-1.3.3()
 {
     __dep cmake
 
-    __wget  http://downloads.sourceforge.net/silgraphite/graphite2-1.2.4.tgz
-    __decord graphite2-1.2.4
+    __wget  http://downloads.sourceforge.net/silgraphite/graphite2-1.3.3.tgz
+    __decord graphite2-1.3.3
     __cdbt
-    cmake -DCMAKE_INSTALL_PREFIX=/usr ../graphite2-1.2.4
+    cmake -DCMAKE_INSTALL_PREFIX=/usr ../graphite2-1.3.3
     __mk
     __mkinst
 }
 
 __graphite2()
 {
-    __graphite2-1.2.4
+    __graphite2-1.3.3
 }
 
 __gperf-3.0.4()
@@ -1647,86 +1722,86 @@ __gsettings-desktop-schemas()
     sudo glib-compile-schemas /usr/share/glib-2.0/schemas
 }
 
-__gstreamer-1.4.5()
+__gstreamer-1.6.0()
 {
     __dep glib
 
-    __wget http://gstreamer.freedesktop.org/src/gstreamer/gstreamer-1.4.5.tar.xz
-    __dcd gstreamer-1.4.5
+    __wget http://gstreamer.freedesktop.org/src/gstreamer/gstreamer-1.6.0.tar.xz
+    __dcd gstreamer-1.6.0
     __bld-common
 }
 
 __gstreamer()
 {
-    __gstreamer-1.4.5
+    __gstreamer-1.6.0
 }
 
-__gst-libav-1.4.5()
+__gst-libav-1.6.0()
 {
-    __wget http://gstreamer.freedesktop.org/src/gst-libav/gst-libav-1.4.5.tar.xz
-    __dcd gst-libav-1.4.5
+    __wget http://gstreamer.freedesktop.org/src/gst-libav/gst-libav-1.6.0.tar.xz
+    __dcd gst-libav-1.6.0
     __bld-common
 }
 
 __gst-libav()
 {
-    __gst-libav-1.4.5
+    __gst-libav-1.6.0
 }
 
-__gst-plugins-bad-1.4.5()
+__gst-plugins-bad-1.6.0()
 {
     __dep gst-plugins-base libdvdread libdvdnav llvm soundtouch
 
-    __wget http://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.4.5.tar.xz
-    __dcd gst-plugins-bad-1.4.5
+    __wget http://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.6.0.tar.xz
+    __dcd gst-plugins-bad-1.6.0
     __bld-common
 }
 
 __gst-plugins-bad()
 {
-    __gst-plugins-bad-1.4.5
+    __gst-plugins-bad-1.6.0
 }
 
-__gst-plugins-base-1.4.5()
+__gst-plugins-base-1.6.0()
 {
     __dep gstreamer
 
-    __wget http://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-1.4.5.tar.xz
-    __dcd gst-plugins-base-1.4.5
+    __wget http://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-1.6.0.tar.xz
+    __dcd gst-plugins-base-1.6.0
     __bld-common
 }
 
 __gst-plugins-base()
 {
-    __gst-plugins-base-1.4.5
+    __gst-plugins-base-1.6.0
 }
 
-__gst-plugins-good-1.4.5()
+__gst-plugins-good-1.6.0()
 {
     __dep gst-plugins-base cairo flac gdk-pixbuf libjpeg-turbo libpng libsoup libvpx xorg
 
-    __wget http://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-1.4.5.tar.xz
-    __dcd gst-plugins-good-1.4.5
+    __wget http://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-1.6.0.tar.xz
+    __dcd gst-plugins-good-1.6.0
     __bld-common
 }
 
 __gst-plugins-good()
 {
-    __gst-plugins-good-1.4.5
+    __gst-plugins-good-1.6.0
 }
 
-__gst-plugins-ugly-1.4.5()
+__gst-plugins-ugly-1.6.0()
 {
     __dep gst-plugins-base lame libdvdread x264
 
-    __wget http://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-1.4.5.tar.xz
-    __dcd gst-plugins-ugly-1.4.5
+    __wget http://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-1.6.0.tar.xz
+    __dcd gst-plugins-ugly-1.6.0
     __bld-common
 }
 
 __gst-plugins-ugly()
 {
-    __gst-plugins-ugly-1.4.5
+    __gst-plugins-ugly-1.6.0
 }
 
 __gtk+2()
@@ -1890,7 +1965,7 @@ __haskell-mode()
     __git-clone git://github.com/haskell/haskell-mode.git
     __cd haskell-mode
     __git-pull
-    sudo cp ../haskell-mode /usr/lib/emacs/ -rf
+    sudo cp ../haskell-mode /usr/share/emacs/site-lisp/ -rf
 }
 
 __haskell-mode-config()
@@ -1940,34 +2015,34 @@ __iana-etc()
     __iana-etc-2.30
 }
 
-__icu-55.1()
+__icu-56.1()
 {
     __dep llvm
 
-    __wget http://download.icu-project.org/files/icu4c/55.1/icu4c-55_1-src.tgz
-    __decord icu4c-55_1-src
+    __wget http://download.icu-project.org/files/icu4c/56.1/icu4c-56_1-src.tgz
+    __decord icu4c-56_1-src
     __cd icu/source
     __bld-common-simple
 }
 
 __icu()
 {
-    __icu-55.1
+    __icu-56.1
 }
 
-__imagemagick-6.9.0.0()
+__imagemagick-6.9.2.5()
 {
     __dep "?"
 
-    __wget http://anduin.linuxfromscratch.org/sources/BLFS/svn/i/ImageMagick-6.9.0-0.tar.xz
-    __dcd ImageMagick-6.9.0-0
+    __wget http://www.imagemagick.org/download/ImageMagick-6.9.2-5.tar.xz
+    __dcd ImageMagick-6.9.2-5
     __bld-common --enable-hdri --with-modules --with-perl --disable-static
-    __mkinst DOCUMENTATION_PATH=/usr/share/doc/imagemagick-6.9.0
+    __mkinst DOCUMENTATION_PATH=/usr/share/doc/imagemagick-6.9.2.5
 }
 
 __imagemagick()
 {
-    __imagemagick-6.9.0.0
+    __imagemagick-6.9.2.5
 }
 
 __inetutils()
@@ -2162,6 +2237,52 @@ __lame()
     __lame-3.99.5
 }
 
+__linux-pam-config()
+{
+    __dep ""
+
+    cat > /tmp/other << "EOF"
+# Begin /etc/pam.d/other
+
+auth            required        pam_unix.so     nullok
+account         required        pam_unix.so
+session         required        pam_unix.so
+password        required        pam_unix.so     nullok
+
+# End /etc/pam.d/other
+EOF
+
+    cat > /tmp/system-account << "EOF"
+# Begin /etc/pam.d/system-account
+
+account   required    pam_unix.so
+
+# End /etc/pam.d/system-account
+EOF
+
+    cat > /tmp/system-auth << "EOF"
+# Begin /etc/pam.d/system-auth
+
+auth      required    pam_unix.so
+
+# End /etc/pam.d/system-auth
+EOF
+
+    cat > /tmp/system-session << "EOF"
+# Begin /etc/pam.d/system-session
+
+session   required    pam_unix.so
+
+# End /etc/pam.d/system-session
+EOF
+
+    sudo mkdir /etc/pam.d
+    sudo cp /tmp/{other,system-account,system-auth,system-session} /etc/pam.d/
+
+    sudo cat /etc/pam.d/*
+}
+
+
 __linux-pam-git()
 {
     __dep ""
@@ -2177,7 +2298,13 @@ __linux-pam-1.2.1()
 
     __wget http://linux-pam.org/library/Linux-PAM-1.2.1.tar.bz2
     __dcd Linux-PAM-1.2.1
-    __bld-common --libdir=/usr/lib --enable-securedir=/lib/security
+    __bld-common --libdir=/usr/lib --enable-securedir=/lib/security --docdir=/usr/share/doc/Linux-PAM-1.2.1
+    sudo chmod -v 4755 /sbin/unix/chkpwd
+    for file in pam pam_misc pamc
+    do
+        sudo mv -v /usr/lib/lib${file}.so.* /lib
+        sudo ln -sfv ../../lib/$(readlink /usr/lib/lib${file}.so) /usr/lib/lib${file}.so
+    done
 }
 
 __linux-pam()
@@ -2314,6 +2441,20 @@ __libdrm-2.4.64()
 __libdrm()
 {
     __libdrm-2.4.64
+}
+
+__libdvdread-5.0.3()
+{
+    __dep ""
+
+    __wget http://download.videolan.org/videolan/libdvdread/5.0.3/libdvdread-5.0.3.tar.bz2
+    __dcd libdvdread-5.0.3
+    __bld-common --disable-static --docdir=/usr/share/doc/libdvdread-5.0.3
+}
+
+__libdvdread()
+{
+    __libdvdread-5.0.3
 }
 
 __libepoxy-git()
@@ -2575,18 +2716,18 @@ __libjpeg()
     __libjpeg-9a
 }
 
-__libjpeg-turbo-1.4.1()
+__libjpeg-turbo-1.4.2()
 {
     __dep yasm
 
-    __wget http://downloads.sourceforge.net/libjpeg-turbo/libjpeg-turbo-1.4.1.tar.gz
-    __dcd libjpeg-turbo-1.4.1
+    __wget http://downloads.sourceforge.net/libjpeg-turbo/libjpeg-turbo-1.4.2.tar.gz
+    __dcd libjpeg-turbo-1.4.2
     __bld-common --mandir=/usr/share/man --with-jpeg8 --disable-static
 }
 
 __libjpeg-turbo()
 {
-    __libjpeg-turbo-1.4.1
+    __libjpeg-turbo-1.4.2
 }
 
 __libogg-1.3.2()
@@ -2598,24 +2739,33 @@ __libogg-1.3.2()
     __bld-common --docdir=/usr/share/doc/libogg-1.3.2 --disable-static
 }
 
-__libogg()
+__libogg-git()
 {
-    __libogg-1.3.2
+    __dep ""
+
+    __git-clone https://git.xiph.org/ogg.git
+    __cd ogg
+    __bld-common --docdir=/usr/share/doc/libogg-1.3.2 --disable-static
 }
 
-__libreoffice-5.0.0.5()
+__libogg()
+{
+    __libogg-git
+}
+
+__libreoffice-5.0.2()
 {
     __dep boost clucene cups curl dbus-glib libjpeg-turbo glu graphite2 gst-plugins-base gtk+2 harfbuzz icu littlecms librsvg libxml2 libxslt mesalib neon npapi-sdk nss openldap openssl poppler python-3 redland unixodbc
 
-    __wget http://download.documentfoundation.org/libreoffice/src/5.0.0/libreoffice-5.0.0.5.tar.xz
-    __wget http://download.documentfoundation.org/libreoffice/src/5.0.0/libreoffice-dictionaries-5.0.0.5.tar.xz
-    __wget http://download.documentfoundation.org/libreoffice/src/5.0.0/libreoffice-help-5.0.0.5.tar.xz
-    __wget http://download.documentfoundation.org/libreoffice/src/5.0.0/libreoffice-translations-5.0.0.5.tar.xz
-    __dcd libreoffice-5.0.0.5
+    __wget http://download.documentfoundation.org/libreoffice/src/5.0.2/libreoffice-5.0.2.2.tar.xz
+    __wget http://download.documentfoundation.org/libreoffice/src/5.0.2/libreoffice-dictionaries-5.0.2.2.tar.xz
+    __wget http://download.documentfoundation.org/libreoffice/src/5.0.2/libreoffice-help-5.0.2.2.tar.xz
+    __wget http://download.documentfoundation.org/libreoffice/src/5.0.2/libreoffice-translations-5.0.2.2.tar.xz
+    __dcd libreoffice-5.0.2.2
     install -dm755 external/tarballs
-    ln -sv $SRC_DIR/libreoffice-dictionaries-5.0.0.5.tar.xz external/tarballs/
-    ln -sv $SRC_DIR/libreoffice-help-5.0.0.5.tar.xz         external/tarballs/
-    ln -sv $SRC_DIR/libreoffice-translations-5.0.0.5.tar.xz external/tarballs/
+    ln -sv $SRC_DIR/libreoffice-dictionaries-5.0.2.2.tar.xz external/tarballs/
+    ln -sv $SRC_DIR/libreoffice-help-5.0.2.2.tar.xz         external/tarballs/
+    ln -sv $SRC_DIR/libreoffice-translations-5.0.2.2.tar.xz external/tarballs/
     LO_PREFIX=/usr
 
     sed -e "/gzip -f/d" -e "s|.1.gz|.1|g" -i bin/distro-install-desktop-integration
@@ -2639,7 +2789,7 @@ __libreoffice-5.0.0.5()
              --disable-postgresql-sdbc   \
              --enable-release-build=yes  \
              --enable-python=system      \
-             --with-system-boost         \
+             --without-system-boost         \
              --with-system-clucene       \
              --with-system-cairo         \
              --with-system-curl          \
@@ -2673,7 +2823,7 @@ __libreoffice-5.0.0.5()
 
 __libreoffice()
 {
-    __libreoffice-5.0.0.5
+    __libreoffice-5.0.2
 }
 
 __librsvg()
@@ -2757,9 +2907,19 @@ __libtheora-1.1.1()
     __bld-common --disable-static
 }
 
+__libtheora-git()
+{
+    __dep libogg libvorbis sdl1 libpng doxygen texlive bidtex transfig valgrind
+
+    __git-clone https://git.xiph.org/theora.git
+    __cd theora
+    sed -i 's/png_\(sizeof\)/\1/g' examples/png2theora.c
+    __bld-common --disable-static
+}
+
 __libtheora()
 {
-    __libtheora-1.1.1
+    __libtheora-git
 }
 
 __libtiff-4.0.4()
@@ -2886,6 +3046,34 @@ __libwnck()
     __libwnck-2.30.7
 }
 
+__libwpd-0.9.9()
+{
+    __dep ""
+
+    __wget http://downloads.sourceforge.net/libwpd/libwpd-0.9.9.tar.xz
+    __dcd libwpd-0.9.9
+    __bld-common
+}
+
+__libwpd()
+{
+    __libwpd-0.9.9
+}
+
+__libwpg-0.2.2()
+{
+    __dep ""
+
+    __wget http://downloads.sourceforge.net/libwpg/libwpg-0.2.2.tar.xz
+    __dcd libwpg-0.2.2
+    __bld-common --disable-static
+}
+
+__libwpg()
+{
+    __libwpg-0.2.2
+}
+
 __libxkbcommon()
 {
     __dep "?"
@@ -2942,7 +3130,7 @@ __libxml2-git()
 
     __git-clone git://git.gnome.org/libxml2
     __cd libxml2
-    __bld-common --disable-static --with-history
+    __bld-common --disable-static --with-history --with-python=/usr/bin/python3
 }
 
 __libxml2-2.9.2()
@@ -2958,7 +3146,7 @@ __libxml2-2.9.2()
 	-e 's/((ent->checked =.*&&/(((ent->checked == 0) ||\
           ((ent->children == NULL) \&\& (ctxt->options \& XML_PARSE_NOENT))) \&\&/' \
 	-i parser.c
-    __bld-common --disable-static --with-history
+    __bld-common --disable-static --with-history --with-python=/usr/bin/python3
 }
 
 __libxml2()
@@ -3011,9 +3199,19 @@ __libvorbis-1.3.5()
     sudo install -v -m644 doc/Vorbis* /usr/share/doc/libvorbis-1.3.5
 }
 
+__libvorbis-git()
+{
+    __dep libogg doxygen texlive
+
+    __git-clone https://git.xiph.org/vorbis.git
+    __cd vorbis
+    __bld-common --disable-static
+    sudo install -v -m644 doc/Vorbis* /usr/share/doc/libvorbis
+}
+
 __libvorbis()
 {
-    __libvorbis-1.3.5
+    __libvorbis-git
 }
 
 __llvm-3.7.0()
@@ -3042,6 +3240,7 @@ __llvm-3.7.0()
       --enable-libffi            \
       --enable-optimized         \
       --enable-shared            \
+      --enable-targets=host      \
       --disable-assertions       \
       --docdir=/usr/share/doc/llvm-3.7.0
     __mk
@@ -3201,20 +3400,20 @@ __mpc()
     __mpc-1.0.3
 }
 
-__mpfr-3.1.2()
+__mpfr-3.1.3()
 {
     __dep gmp
 
-    __wget http://www.mpfr.org/mpfr-current/mpfr-3.1.2.tar.xz
-    __dcd mpfr-3.1.2
-    ABI=32 ./configure --prefix=/usr --enable-thread-safe --docdir=/usr/share/doc/mpfr-3.1.2
+    __wget http://www.mpfr.org/mpfr-current/mpfr-3.1.3.tar.xz
+    __dcd mpfr-3.1.3
+    ABI=32 ./configure --prefix=/usr --enable-thread-safe --docdir=/usr/share/doc/mpfr-3.1.3
     __mk
     __mkinst
 }
 
 __mpfr()
 {
-    __mpfr-3.1.2
+    __mpfr-3.1.3
 }
 
 __mplayer-1.1.1()
@@ -3357,31 +3556,31 @@ __npapi-sdk()
     __npapi-sdk-0.27.2
 }
 
-__nspr-4.10.9()
+__nspr-4.10.10()
 {
     __dep ""
     
-    __wget http://ftp.mozilla.org/pub/mozilla.org/nspr/releases/v4.10.9/src/nspr-4.10.9.tar.gz
-    __dcd nspr-4.10.9
+    __wget http://ftp.mozilla.org/pub/mozilla.org/nspr/releases/v4.10.10/src/nspr-4.10.10.tar.gz
+    __dcd nspr-4.10.10
     cd nspr
     __bld-common --with-mozilla --with-pthreads
 }
 
 __nspr()
 {
-    __nspr-4.10.9
+    __nspr-4.10.10
 }
 
-__nss-3.20()
+__nss-3.20.1()
 {
     __dep nspr sqlite
 
-    __wget http://ftp.mozilla.org/pub/mozilla.org/security/nss/releases/NSS_3_20_RTM/src/nss-3.20.tar.gz
-    __wget http://www.linuxfromscratch.org/patches/blfs/svn/nss-3.20-standalone-1.patch
-    __dcd nss-3.20
-    patch -Np1 -i $SRC_DIR/nss-3.20-standalone-1.patch
+    __wget http://ftp.mozilla.org/pub/mozilla.org/security/nss/releases/NSS_3_20_1_RTM/src/nss-3.20.1.tar.gz
+    __wget http://www.linuxfromscratch.org/patches/blfs/svn/nss-3.20.1-standalone-1.patch
+    __dcd nss-3.20.1
+    patch -Np1 -i $SRC_DIR/nss-3.20.1-standalone-1.patch
     cd nss
-    make BUILD_OPT=1 NSPR_INCLUDE_DIR=/usr/include/nspr USE_SYSTEM_ZLIB=1 ZLIB_LIBS=-lz USE_64=1 NSS_USE_SYSTEM_SQLITE=1
+    make BUILD_OPT=1 NSPR_INCLUDE_DIR=/usr/include/nspr USE_SYSTEM_ZLIB=1 ZLIB_LIBS=-lz NSS_USE_SYSTEM_SQLITE=1
 
     cd ../dist
     sudo install -v -m755 Linux*/lib/*.so              /usr/lib
@@ -3395,7 +3594,7 @@ __nss-3.20()
 
 __nss()
 {
-    __nss-3.20
+    __nss-3.20.1
 }
 
 __openjpeg-1.5.2()
@@ -3413,20 +3612,35 @@ __openjpeg()
     __openjpeg-1.5.2
 }
 
-__openldap-2.4.40()
+__openldap-2.4.42()
 {
     __dep berkeley-db
 
-    __wget ftp://ftp.openldap.org/pub/OpenLDAP/openldap-release/openldap-2.4.40.tgz
-    __dcd openldap-2.4.40
+    __wget ftp://ftp.openldap.org/pub/OpenLDAP/openldap-release/openldap-2.4.42.tgz
+    __dcd openldap-2.4.42
     autoconf
     __bld-common --disable-static --enable-dynamic --disable-debug --disable-slapd
 }
 
 __openldap()
 {
-    __openldap-2.4.40
+    __openldap-2.4.42
 }
+
+__openmpi-1.10.0()
+{
+    __dep "?"
+
+    __wget https://www.open-mpi.org/software/ompi/v1.10/downloads/openmpi-1.10.0.tar.bz2
+    __dcd openmpi-1.10.0
+    __bld-common
+}
+
+__openmpi()
+{
+    __openmpi-1.10.0
+}
+
 
 __openssh-7.1p1()
 {
@@ -3601,19 +3815,19 @@ session  include        system-session
     sudo install /tmp/polkit-1 /etc/pam.d/
 }
 
-__poppler-0.31.0()
+__poppler-0.37.0()
 {
     __dep fontconfig openjpeg
 
-    __wget http://poppler.freedesktop.org/poppler-0.31.0.tar.xz
-    __wget http://poppler.freedesktop.org/poppler-data-0.4.7.tar.gz
-    __dcd poppler-0.31.0
+    __wget http://poppler.freedesktop.org/poppler-0.37.0.tar.xz
+    __dcd poppler-0.37.0
     __bld-common --disable-static --enable-xpdf-headers --with-testdatadir=$PWD/testfiles
+    __poppler-data
 }
 
 __poppler()
 {
-    __poppler-0.31.0
+    __poppler-0.37.0
 }
 
 __poppler-data-0.4.7()
@@ -3693,23 +3907,23 @@ __python-27()
     __python-2.7.10
 }
 
-__python-3.4.3()
+__python-3.5.0()
 {
     __dep libffi
 
-    __wget http://www.python.org/ftp/python/3.4.3/Python-3.4.3.tar.xz
-    __wget http://docs.python.org/3/archives/python-3.4.3-docs-html.tar.bz2
-    __dcd Python-3.4.3
+    __wget http://www.python.org/ftp/python/3.5.0/Python-3.5.0.tar.xz
+    __wget http://docs.python.org/3/archives/python-3.5.0-docs-html.tar.bz2
+    __dcd Python-3.5.0
     __bld-common CXX="/usr/bin/g++" --enable-shared --with-system-expat --with-system-ffi --without-ensurepip
     sudo chmod -v 755 /usr/lib/libpython3.4m.so
     sudo chmod -v 755 /usr/lib/libpython3.so
-    sudo install -v -dm755 /usr/share/doc/python-3.4.3/html
-    sudo tar --strip-components=1 --no-same-owner --no-same-permissions -C /usr/share/doc/python-3.4.3/html -xvf $SRC_DIR/python-3.4.3-docs-html.tar.bz2
+    sudo install -v -dm755 /usr/share/doc/python-3.5.0/html
+    sudo tar --strip-components=1 --no-same-owner --no-same-permissions -C /usr/share/doc/python-3.5.0/html -xvf $SRC_DIR/python-3.5.0-docs-html.tar.bz2
 }
 
 __python-3()
 {
-    __python-3.4.3
+    __python-3.5.0
 }
 
 __dbus-python-1.2.0()
@@ -3911,32 +4125,32 @@ __qemu()
     __qemu-2.3.0-rc4
 }
 
-__raptor-2.0.14()
+__raptor-2.0.15()
 {
     __dep curl libxslt
 
-    __wget http://download.librdf.org/source/raptor2-2.0.14.tar.gz
-    __dcd raptor2-2.0.14
+    __wget http://download.librdf.org/source/raptor2-2.0.15.tar.gz
+    __dcd raptor2-2.0.15
     __bld-common --disable-static
 }
 
 __raptor()
 {
-    __raptor-2.0.14
+    __raptor-2.0.15
 }
 
-__rasqal-0.9.32()
+__rasqal-0.9.33()
 {
     __dep raptor
 
-    __wget http://download.librdf.org/source/rasqal-0.9.32.tar.gz
-    __dcd rasqal-0.9.32
+    __wget http://download.librdf.org/source/rasqal-0.9.33.tar.gz
+    __dcd rasqal-0.9.33
     __bld-common --disable-static
 }
 
 __rasqal()
 {
-    __rasqal-0.9.32
+    __rasqal-0.9.33
 }
 
 __ragel-6.9()
@@ -4137,6 +4351,45 @@ __sgml-common()
     __sgml-common-0.6.3
 }
 
+__libsigsegv-git()
+{
+    __dep ""
+
+    __git-clone git://git.savannah.gnu.org/libsigsegv.git
+    __cd libsigsegv
+    __bld-common --enable-shared --disable-static
+}
+
+__libsigsegv()
+{
+    __libsigsegv-git
+}
+
+__soundtouch-1.9.2()
+{
+    __dep ""
+
+    __wget http://www.surina.net/soundtouch/soundtouch-1.9.2.tar.gz
+    __dcd soundtouch
+    ./bootstrap
+    __bld-common --docdir=/usr/share/doc/soundtouch-1.9.2
+}
+
+__soundtouch-git()
+{
+    __dep ""
+
+    __svn-clone http://svn.code.sf.net/p/soundtouch/code/trunk soundtouch
+    __cd soundtouch
+    ./bootstrap
+    __bld-common --docdir=/usr/share/doc/soundtouch
+}
+
+__soundtouch()
+{
+    __soundtouch-git
+}
+
 __sudo()
 {
     __dep linux-pam
@@ -4236,12 +4489,12 @@ __systemd-ui()
     __common systemd-ui
 }
 
-__sqlite-3.8.11.1()
+__sqlite-3.9.1()
 {
     __dep unzip
 
-    __wget http://sqlite.org/2015/sqlite-autoconf-3081101.tar.gz
-    __dcd sqlite-autoconf-3081101
+    __wget http://sqlite.org/2015/sqlite-autoconf-3090100.tar.gz
+    __dcd sqlite-autoconf-3090100
     ./configure --prefix=/usr --sysconfdir=/etc \
 	CFLAGS="-DSQLITE_ENABLE_FTS3=1 -DSQLITE_ENABLE_COLUMN_METADATA=1 \
                 -DSQLITE_ENABLE_UNLOCK_NOTIFY=1 -DSQLITE_SECURE_DELETE=1"
@@ -4251,21 +4504,21 @@ __sqlite-3.8.11.1()
 
 __sqlite()
 {
-    __sqlite-3.8.11.1
+    __sqlite-3.9.1
 }
 
-__svn-1.8.8()
+__svn-1.9.2()
 {
     __dep apr-util sqlite openssl serf dbus
 
-    __wget http://ftp.riken.jp/net/apache/subversion/subversion-1.8.8.tar.bz2
-    __dcd subversion-1.8.8
+    __wget http://ftp.riken.jp/net/apache/subversion/subversion-1.9.2.tar.bz2
+    __dcd subversion-1.9.2
     __bld-common --with-serf=/usr
 }
 
 __svn()
 {
-    __svn-1.8.8
+    __svn-1.9.2
 }
 
 __talloc-2.1.0()
@@ -4449,6 +4702,23 @@ __uri()
     __uri-1.69
 }
 
+__usbutils-008()
+{
+    __dep libusb python-2
+
+    __wget http://ftp.kernel.org/pub/linux/utils/usb/usbutils/usbutils-008.tar.xz
+    __dcd usbutils-008
+    sed -i '/^usbids/ s:usb.ids:hwdata/&:' lsusb.py
+    __bld-common --datadir=/usr/share/hwdata
+    sudo install -dm755 /usr/share/hwdata/
+    sudo wget http://www.linux-usb.org/usb.ids -O /usr/share/hwdata/usb.ids
+}
+
+__usbutils()
+{
+    __usbutils-008
+}
+
 __util-linux()
 {
     __dep "?"
@@ -4479,20 +4749,20 @@ __vala()
     __vala-0.28.0
 }
 
-__valgrind-3.10.1()
+__valgrind-3.11.0()
 {
     __dep boost llvm gdb openmp libxslt texlive
     
-    __wget http://valgrind.org/downloads/valgrind-3.10.1.tar.bz2
-    __dcd valgrind-3.10.1
+    __wget http://valgrind.org/downloads/valgrind-3.11.0.tar.bz2
+    __dcd valgrind-3.11.0
     sed -e 's#|3.\*#&|4.\*#' -e 's/-mt//g' -e 's/2\.20)/2.2[0-9])/' -i configure
     sed -i 's|/doc/valgrind||' docs/Makefile.in
-    __bld-common --datadir=/usr/share/doc/valgrind-3.10.1
+    __bld-common --datadir=/usr/share/doc/valgrind-3.11.0
 }
 
 __valgrind()
 {
-    __valgrind-3.10.1
+    __valgrind-3.11.0
 }
 
 __vte()
@@ -4828,6 +5098,20 @@ __xml-parser-2.44()
 __xml-parser()
 {
     __xml-parser-2.44
+}
+
+__xmlto-0.0.26()
+{
+    __dep docbook-xml docbook-xsl libxslt dblatex passivetex fop
+
+    __wget https://fedorahosted.org/releases/x/m/xmlto/xmlto-0.0.26.tar.bz2
+    __dcd xmlto-0.0.26
+    __bld-common
+}
+
+__xmlto()
+{
+    __xmlto-0.0.26
 }
 
 __xsane-0.999()
