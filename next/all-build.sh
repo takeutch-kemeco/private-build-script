@@ -1494,9 +1494,14 @@ __glibc-2.22()
 ASFLAGS-config=-O4 -march=native -mtune=native -msse4.1
 .
     $BASE_DIR/glibc-2.22/configure --prefix=/usr --disable-profile --enable-kernel=3.14 \
-        --libexecdir=/usr/lib/glibc --enable-obsolete-rpc --disable-werror
+        --libexecdir=/usr/lib/glibc --enable-obsolete-rpc --disable-werror --enable-mathvec
     __mk
     __mkinst
+    sudo cp -v ../glibc-2.22/nscd/nscd.conf /etc/nscd.conf
+    sudo mkdir -pv /var/cache/nscd
+    sudo mkdir -pv /usr/lib/locale
+#   sudo localedef -i ja_JP -f UTF-8 ja_JP.UTF-8
+    sudo make localedata/install-locales
 }
 
 __glib-networking()
