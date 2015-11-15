@@ -1303,6 +1303,37 @@ __gc()
     __bld-common
 }
 
+__gcc-java-5.2.0()
+{
+    __dep unzip which zip dejagnu gtk libart
+
+    __wget http://ftp.tsukuba.wide.ad.jp/software/gcc/releases/gcc-5.2.0/gcc-5.2.0.tar.bz2
+    __wget http://www.antlr.org/download/antlr-4.5-complete.jar
+    __wget ftp://sourceware.org/pub/java/ecj-latest.jar
+    __decort gcc-5.2.0
+    __cdbt
+    sed -i 's/\(install.*:\) install-.*recursive/\1/' libffi/Makefile.in
+    sed -i 's/\(install-data-am:\).*/\1/'             libffi/include/Makefile.in
+    cp $SRC_DIR/ecj-latest.jar ./ecj.jar
+    ../gcc-5.2.0/configure --prefix=/usr --disable-multilib --with-system-zlib --disable-bootstrap --enable-java-home --with-jvm-root-dir=/opt/gcj --with-antlr-jar=$SRC_DIR/antlr-4.5-complete.jar --enable-languages=java
+    ulimit -s 32768
+    __mk
+    __mkinst
+
+    sudo mkdir -pv /usr/share/gdb/auto-load/usr/lib
+    sudo mv -v /usr/lib/*gdb.py /usr/share/gdb/auto-load/usr/lib
+
+    sudo chown -v -R root:root /usr/lib/gcc/*linux-gnu/5.2.0/include{,-fixed}
+    sudo gcj -o ecj $SRC_DIR/ecj-latest.jar --main=org.eclipse.jdt.internal.compiler.batch.Main
+    sudo mv ecj /usr/bin
+    sudo ln -sfv /usr/bin/ecj /opt/gcj/bin/javac
+}
+
+__gcc-java()
+{
+    __gcc-java-5.2.0
+}
+
 __gcc-5.2.0()
 {
     __dep gmp mpfr mpc
@@ -2152,13 +2183,18 @@ __json-c()
     __json-c-0.12
 }
 
-__make()
+__make-4.1()
 {
     __dep ""
 
     __wget http://ftp.gnu.org/gnu/make/make-4.1.tar.bz2
     __dcd make-4.1
     __bld-common
+}
+
+__make()
+{
+    __make-4.1
 }
 
 __mako()
@@ -3474,20 +3510,13 @@ __ncurses-6.0()
     __wget http://ftp.gnu.org/gnu//ncurses/ncurses-6.0.tar.gz
     __dcd ncurses-6.0
     sed -i '/LIBTOOL_INSTALL/d' c++/Makefile.in
+
+    __bld-common --mandir=/usr/share/man --with-shared --without-debug --without-normal --enable-pc-files                --with-termlib --enable-termcap
     __bld-common --mandir=/usr/share/man --with-shared --without-debug --without-normal --enable-pc-files --enable-widec --with-termlib --enable-termcap
-    sudo mv -v /usr/lib/libncursesw.so.6* /lib
-    sudo ln -sfv ../../lib/$(readlink /usr/lib/libncursesw.so) /usr/lib/libncursesw.so
-    for lib in ncurses form panel menu ; do
-	sudo rm -vf                    /usr/lib/lib${lib}.so
-	sudo echo "INPUT(-l${lib}w)" > /usr/lib/lib${lib}.so
-	sudo ln -sfv ${lib}w.pc        /usr/lib/pkgconfig/${lib}.pc
+
+    for A in ncurses form panel menu ; do
+	sudo ln -sf /usr/lib/lib$A.so /lib/lib$A.so
     done
-    sudo rm -vf                     /usr/lib/libcursesw.so
-    sudo echo "INPUT(-lncursesw)" > /usr/lib/libcursesw.so
-    sudo ln -sfv libncurses.so      /usr/lib/libcurses.so
-    sudo mkdir -v       /usr/share/doc/ncurses-6.0
-    sudo cp -v -R doc/* /usr/share/doc/ncurses-6.0
-    sudo ldconfig
 }
 
 __ncurses-5.7()
@@ -3630,6 +3659,7 @@ __openjdk-1.8.0.66()
     __decord jdk8u66-b17
     __cd jdk8u-jdk8u66-b17
 
+rem(){
     cat > subprojects.md5 << EOF
 c99a63dfaf2b2f8cc549e65b790a2e7a  corba.tar.bz2
 d15561707ce64419f36c18e4fba6cbbe  hotspot.tar.bz2
@@ -3645,6 +3675,7 @@ EOF
     done
 
     md5sum -c subprojects.md5
+}
 
     for subproject in corba hotspot jaxp jaxws langtools jdk nashorn; do
 	mkdir -pv ${subproject}
