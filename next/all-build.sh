@@ -2166,6 +2166,23 @@ __itstool()
     __itstool-2.0.2
 }
 
+__java-1.8.0.66()
+{
+    __dep ""
+
+    __wget http://anduin.linuxfromscratch.org/BLFS/OpenJDK/OpenJDK-1.8.0.66/OpenJDK-1.8.0.66-i686-bin.tar.xz
+    __dcd OpenJDK-1.8.0.66-i686-bin
+    sudo install -vdm755 /opt/OpenJDK-1.8.0.66-bin
+    sudo mv -v * /opt/OpenJDK-1.8.0.66-bin
+    sudo chown -R root:root /opt/OpenJDK-1.8.0.66-bin
+    sudo ln -sfn OpenJDK-1.8.0.66-bin /opt/jdk
+}
+
+__java()
+{
+    __java-1.8.0.66
+}
+
 __json-c-0.12()
 {
     __dep ""
