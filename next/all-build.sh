@@ -2200,6 +2200,30 @@ __json-c()
     __json-c-0.12
 }
 
+__junit-4.11()
+{
+    __dep apache-ant unzip
+
+    __wget https://launchpad.net/debian/+archive/primary/+files/junit4_4.11.orig.tar.gz
+    __wget http://hamcrest.googlecode.com/files/hamcrest-1.3.tgz
+    __decord junit4_4.11.orig
+    __cd junit4-4.11
+    sed -i '\@/docs/@a<arg value="-Xdoclint:none"/>' build.xml
+    tar -xf $SRC_DIR/hamcrest-1.3.tgz
+    cp -v hamcrest-1.3/hamcrest-core-1.3{,-sources}.jar lib/
+    ant populate-dist
+    sudo install -v -m755 -d /usr/share/{doc,java}/junit-4.11
+    sudo chown -R root:root .
+    sudo cp -v -R junit*/javadoc/*             /usr/share/doc/junit-4.11
+    sudo cp -v junit*/junit*.jar               /usr/share/java/junit-4.11
+    sudo cp -v hamcrest-1.3/hamcrest-core*.jar /usr/share/java/junit-4.11
+}
+
+__junit()
+{
+    __junit-4.11
+}
+
 __make-4.1()
 {
     __dep ""
@@ -2829,20 +2853,25 @@ __libogg()
     __libogg-git
 }
 
-__libreoffice-5.0.2()
+__libreoffice-5.0.3()
 {
     __dep boost clucene cups curl dbus-glib libjpeg-turbo glu graphite2 gst-plugins-base gtk+2 harfbuzz icu littlecms librsvg libxml2 libxslt mesalib neon npapi-sdk nss openldap openssl poppler python-3 redland unixodbc
 
-    __wget http://download.documentfoundation.org/libreoffice/src/5.0.2/libreoffice-5.0.2.2.tar.xz
-    __wget http://download.documentfoundation.org/libreoffice/src/5.0.2/libreoffice-dictionaries-5.0.2.2.tar.xz
-    __wget http://download.documentfoundation.org/libreoffice/src/5.0.2/libreoffice-help-5.0.2.2.tar.xz
-    __wget http://download.documentfoundation.org/libreoffice/src/5.0.2/libreoffice-translations-5.0.2.2.tar.xz
-    __dcd libreoffice-5.0.2.2
+    __wget http://download.documentfoundation.org/libreoffice/src/5.0.3/libreoffice-5.0.3.2.tar.xz
+    __wget http://download.documentfoundation.org/libreoffice/src/5.0.3/libreoffice-dictionaries-5.0.3.2.tar.xz
+    __wget http://download.documentfoundation.org/libreoffice/src/5.0.3/libreoffice-help-5.0.3.2.tar.xz
+    __wget http://download.documentfoundation.org/libreoffice/src/5.0.3/libreoffice-translations-5.0.3.2.tar.xz
+    __wget http://www.linuxfromscratch.org/patches/blfs/svn/libreoffice-5.0.3.2-boost_1_59_0-1.patch
+    __dcd libreoffice-5.0.3.2
     install -dm755 external/tarballs
-    ln -sv $SRC_DIR/libreoffice-dictionaries-5.0.2.2.tar.xz external/tarballs/
-    ln -sv $SRC_DIR/libreoffice-help-5.0.2.2.tar.xz         external/tarballs/
-    ln -sv $SRC_DIR/libreoffice-translations-5.0.2.2.tar.xz external/tarballs/
+    ln -sv $SRC_DIR/libreoffice-dictionaries-5.0.3.2.tar.xz external/tarballs/
+    ln -sv $SRC_DIR/libreoffice-help-5.0.3.2.tar.xz         external/tarballs/
+    ln -sv $SRC_DIR/libreoffice-translations-5.0.3.2.tar.xz external/tarballs/
     LO_PREFIX=/usr
+
+    CPPUNITTRACE="gdb --args"    # for interactive debugging on Linux
+
+    patch -Np1 -i $SRC_DIR/libreoffice-5.0.3.2-boost_1_59_0-1.patch
 
     sed -e "/gzip -f/d" -e "s|.1.gz|.1|g" -i bin/distro-install-desktop-integration
     sed -e "/distro-install-file-lists/d" -i Makefile.in
@@ -2865,7 +2894,7 @@ __libreoffice-5.0.2()
              --disable-postgresql-sdbc   \
              --enable-release-build=yes  \
              --enable-python=system      \
-             --without-system-boost         \
+             --with-system-boost         \
              --with-system-clucene       \
              --with-system-cairo         \
              --with-system-curl          \
@@ -2899,7 +2928,7 @@ __libreoffice-5.0.2()
 
 __libreoffice()
 {
-    __libreoffice-5.0.2
+    __libreoffice-5.0.3
 }
 
 __librsvg()
