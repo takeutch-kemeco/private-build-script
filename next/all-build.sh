@@ -1310,7 +1310,7 @@ __gcc-java-5.2.0()
     __wget http://ftp.tsukuba.wide.ad.jp/software/gcc/releases/gcc-5.2.0/gcc-5.2.0.tar.bz2
     __wget http://www.antlr.org/download/antlr-4.5-complete.jar
     __wget ftp://sourceware.org/pub/java/ecj-latest.jar
-    __decort gcc-5.2.0
+    __decord gcc-5.2.0
     __cdbt
     sed -i 's/\(install.*:\) install-.*recursive/\1/' libffi/Makefile.in
     sed -i 's/\(install-data-am:\).*/\1/'             libffi/include/Makefile.in
@@ -3556,13 +3556,19 @@ __ncurses-6.0()
     __wget http://ftp.gnu.org/gnu//ncurses/ncurses-6.0.tar.gz
     __dcd ncurses-6.0
     sed -i '/LIBTOOL_INSTALL/d' c++/Makefile.in
-
-    __bld-common --mandir=/usr/share/man --with-shared --without-debug --without-normal --enable-pc-files                --with-termlib --enable-termcap
-    __bld-common --mandir=/usr/share/man --with-shared --without-debug --without-normal --enable-pc-files --enable-widec --with-termlib --enable-termcap
-
+    __bld-common --mandir=/usr/share/man --with-shared --without-debug --without-normal --enable-pc-files --enable-widec
+    sudo mv -v /usr/lib/libncursesw.so.6* /lib
+    sudo ln -sfv ../../lib/$(readlink /usr/lib/libncursesw.so) /usr/lib/libncursesw.so
     for A in ncurses form panel menu ; do
-	sudo ln -sf /usr/lib/lib$A.so /lib/lib$A.so
+        sudo rm -vf /usr/lib/lib${lib}.so
+        sudo sh -C 'echo "INPUT(-l${lib}w)" > /usr/lib/lib${lib}.so'
+        sudo ln -sfv ${lib}w.pc /usr/lib/pkgconfig/${lib}.pc
     done
+    sudo rm -vf /usr/lib/libcursesw.so
+    sudo sh -C 'echo "INPUT(-lncursesw)" > /usr/lib/libcursesw.so'
+    sudo ln -sfv libncurses.so /usr/lib/libcurses.so
+    sudo mkdir -v /usr/share/doc/ncurses-6.0
+    sudo cp -v -R doc/* /usr/share/doc/ncurses-6.0
 }
 
 __ncurses-5.7()
@@ -3705,7 +3711,7 @@ __openjdk-1.8.0.66()
     __decord jdk8u66-b17
     __cd jdk8u-jdk8u66-b17
 
-rem(){
+#rem(){
     cat > subprojects.md5 << EOF
 c99a63dfaf2b2f8cc549e65b790a2e7a  corba.tar.bz2
 d15561707ce64419f36c18e4fba6cbbe  hotspot.tar.bz2
@@ -3721,7 +3727,7 @@ EOF
     done
 
     md5sum -c subprojects.md5
-}
+#}
 
     for subproject in corba hotspot jaxp jaxws langtools jdk nashorn; do
 	mkdir -pv ${subproject}
@@ -3731,7 +3737,7 @@ EOF
     tar -xf $SRC_DIR/jtreg-4.1-b12-420.tar.gz
     unset JAVA_HOME
     chmod 755 configure
-    ./configure --with-update-version=66 --with-build-number=b17 --with-milestone=BLFS --enable-unlimited-crypto --with-zlib=system --with-giflib=system --with-boot-jdk
+    ./configure --with-update-version=66 --with-build-number=b17 --with-milestone=BLFS --enable-unlimited-crypto --with-zlib=system --with-giflib=system --with-boot-jdk=/opt/gcj
     __mk DEBUG_BINARIES=true all
     find build/*/images/j2sdk-image -iname \*.diz -delete
 
