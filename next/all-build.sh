@@ -1228,7 +1228,7 @@ __fontconfig()
 
     __git-clone git://anongit.freedesktop.org/fontconfig
     __cd fontconfig
-    __bld-common --localstatedir=/var --disable-docs
+    __bld-common --localstatedir=/var --disable-docs PYTHON=/usr/bin/python3
 }
 
 __freeglut-2.8.1()
