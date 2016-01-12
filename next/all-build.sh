@@ -1303,19 +1303,19 @@ __gc()
     __bld-common
 }
 
-__gcc-java-5.2.0()
+__gcc-java-5.3.0()
 {
     __dep unzip which zip dejagnu gtk libart
 
-    __wget http://ftp.tsukuba.wide.ad.jp/software/gcc/releases/gcc-5.2.0/gcc-5.2.0.tar.bz2
+    __wget http://ftp.tsukuba.wide.ad.jp/software/gcc/releases/gcc-5.3.0/gcc-5.3.0.tar.bz2
     __wget http://www.antlr.org/download/antlr-4.5-complete.jar
     __wget ftp://sourceware.org/pub/java/ecj-latest.jar
-    __decord gcc-5.2.0
+    __decord gcc-5.3.0
     __cdbt
     sed -i 's/\(install.*:\) install-.*recursive/\1/' libffi/Makefile.in
     sed -i 's/\(install-data-am:\).*/\1/'             libffi/include/Makefile.in
     cp $SRC_DIR/ecj-latest.jar ./ecj.jar
-    ../gcc-5.2.0/configure --prefix=/usr --disable-multilib --with-system-zlib --disable-bootstrap --enable-java-home --with-jvm-root-dir=/opt/gcj --with-antlr-jar=$SRC_DIR/antlr-4.5-complete.jar --enable-languages=java
+    ../gcc-5.3.0/configure --prefix=/usr --disable-multilib --with-system-zlib --disable-bootstrap --enable-java-home --with-jvm-root-dir=/opt/gcj --with-antlr-jar=$SRC_DIR/antlr-4.5-complete.jar --enable-languages=java
     ulimit -s 32768
     __mk
     __mkinst
@@ -1323,28 +1323,30 @@ __gcc-java-5.2.0()
     sudo mkdir -pv /usr/share/gdb/auto-load/usr/lib
     sudo mv -v /usr/lib/*gdb.py /usr/share/gdb/auto-load/usr/lib
 
-    sudo chown -v -R root:root /usr/lib/gcc/*linux-gnu/5.2.0/include{,-fixed}
+    sudo chown -v -R root:root /usr/lib/gcc/*linux-gnu/5.3.0/include{,-fixed}
     sudo gcj -o ecj $SRC_DIR/ecj-latest.jar --main=org.eclipse.jdt.internal.compiler.batch.Main
     sudo mv ecj /usr/bin
     sudo ln -sfv /usr/bin/ecj /opt/gcj/bin/javac
+
+    echo 'シェルに以下の環境変数を手動で設定してください'
+    echo 'JAVA_HOME="/opt/gcj"'
+    echo 'JAVA_CLASSPATH="/usr/share/java"'
+    echo 'JAVA_PATH=$JAVA_HOME/bin:$JAVA_HOME/man:$JAVA_HOME/include:$JAVA_HOME/include/linux:$JAVA_CLASSPATH'
 }
 
 __gcc-java()
 {
-    __gcc-java-5.2.0
+    __gcc-java-5.3.0
 }
 
-__gcc-5.2.0()
+__gcc-5.3.0()
 {
     __dep gmp mpfr mpc
 
-    __wget http://ftp.tsukuba.wide.ad.jp/software/gcc/releases/gcc-5.2.0/gcc-5.2.0.tar.bz2
-    __decord gcc-5.2.0
+    __wget http://ftp.tsukuba.wide.ad.jp/software/gcc/releases/gcc-5.3.0/gcc-5.3.0.tar.bz2
+    __decord gcc-5.3.0
     __cdbt
-    ../gcc-5.2.0/configure --prefix=/usr --libexecdir=/usr/lib --enable-shared \
-        --enable-threads=posix --enable-__cxa_atexit --enable-clocale=gnu \
-        --enable-languages=c,c++,fortran --disable-multilib \
-        --disable-bootstrap --with-system-zlib --enable-long-long
+    ../gcc-5.3.0/configure --prefix=/usr --enable-languages=c,c++,fortran,go,objc,obj-c++ --disable-multilib --disable-bootstrap --with-system-zlib
     __mk
     __mkinst
     sudo mkdir -pv /usr/share/gdb/auto-load/usr/lib
@@ -1354,7 +1356,7 @@ __gcc-5.2.0()
 
 __gcc()
 {
-    __gcc-5.2.0
+    __gcc-5.3.0
 }
 
 __gcr()
