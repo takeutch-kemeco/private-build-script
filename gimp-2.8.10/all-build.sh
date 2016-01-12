@@ -30,7 +30,7 @@ __gimp()
     __wget http://www.ring.gr.jp/pub/graphics/gimp/v2.8/gimp-2.8.10.tar.bz2
     __dcd gimp-2.8.10
     patch -p1 < ${BASE_DIR}/log_value_mode-gimp-2.8.10.patch
-    __bld-common --without-alsa --without-gvfs --without-libjpeg PYTHON=/usr/bin/python2
+    __bld-common --without-alsa --without-gvfs PYTHON=/usr/bin/python2
 }
 
 __all() {
