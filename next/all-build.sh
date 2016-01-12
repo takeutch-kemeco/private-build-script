@@ -499,18 +499,18 @@ __curl()
     __bld-common --disable-static --enable-threaded-resolver --with-ca-path=/etc/ssl/certs
 }
 
-__cups-2.0.2()
+__cups-2.1.2()
 {
     __dep gnutls colord dbus libusb
 
-    __wget http://www.cups.org/software/2.1.0/cups-2.1.0-source.tar.bz2
-    __decord cups-2.1.0-source
-    __cd cups-2.1.0
+    __wget http://www.cups.org/software/2.1.2/cups-2.1.2-source.tar.bz2
+    __decord cups-2.1.2-source
+    __cd cups-2.1.2
     sudo useradd -c "Print Service User" -d /var/spool/cups -g lp -s /bin/false -u 9 lp
     sudo groupadd -g 19 lpadmin
-    __bld-common CC=gcc --libdir=/usr/lib --disable-systemd --with-rcdir=/tmp/cupsinit --with-docdir=/usr/share/cups/doc-2.1.0 --with-system-groups=lpadmin
+    __bld-common CC=gcc --libdir=/usr/lib --disable-systemd --with-rcdir=/tmp/cupsinit --with-docdir=/usr/share/cups/doc-2.1.2 --with-system-groups=lpadmin
     sudo rm -rf /tmp/cupsinit
-    sudo ln -svnf ../cups/doc-2.1.0 /usr/share/doc/cups-2.1.0
+    sudo ln -svnf ../cups/doc-2.1.2 /usr/share/doc/cups-2.1.2
     echo "ServerName /var/run/cups/cups.sock" > /tmp/client.conf
     sudo mv /tmp/client.conf /etc/cups/
     sudo rm -rf /usr/share/cups/banners
@@ -532,7 +532,7 @@ EOF
 
 __cups()
 {
-    __cups-2.0.2
+    __cups-2.1.2
 }
 
 __cyrus-sasl-2.1.26()
