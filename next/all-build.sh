@@ -1389,7 +1389,7 @@ __geany()
 
     __git-clone git://github.com/geany/geany.git
     __cd geany
-    __bld-common --enable-gtk3
+    __bld-common --enable-gtk3 --enable-html-docs=no --enable-pdf-docs=no --enable-api-docs=no 
 }
 
 __geoclue-git()
