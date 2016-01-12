@@ -2210,6 +2210,11 @@ __java-1.8.0.66()
     sudo mv -v * /opt/OpenJDK-1.8.0.66-bin
     sudo chown -R root:root /opt/OpenJDK-1.8.0.66-bin
     sudo ln -sfn OpenJDK-1.8.0.66-bin /opt/jdk
+
+    echo 'シェルに以下の環境変数を手動で設定してください'
+    echo 'JAVA_HOME="/opt/OpenJDK-1.8.0.66-bin"'
+    echo 'JAVA_CLASSPATH=""'
+    echo 'JAVA_PATH=$JAVA_HOME/bin:$JAVA_HOME/man:$JAVA_HOME/include:$JAVA_HOME/include/linux:$JAVA_CLASSPATH'
 }
 
 __java()
@@ -3769,10 +3774,10 @@ EOF
     done
 
     tar -xf $SRC_DIR/jtreg-4.1-b12-420.tar.gz
-    unset JAVA_HOME
+#   unset JAVA_HOME
     chmod 755 configure
-    ./configure --with-update-version=66 --with-build-number=b17 --with-milestone=BLFS --enable-unlimited-crypto --with-zlib=system --with-giflib=system --with-boot-jdk=/opt/gcj
-    __mk DEBUG_BINARIES=true all
+    ./configure --with-update-version=66 --with-build-number=b17 --with-milestone=BLFS --enable-unlimited-crypto --with-zlib=system --with-giflib=system --disable-ccache --with-boot-jdk="/opt/jdk1.8.0_66"
+    __mk DEBUG_BINARIES=true -j 1 all
     find build/*/images/j2sdk-image -iname \*.diz -delete
 
     if [ -n "$DISPLAY" ]; then
