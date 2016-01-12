@@ -5333,6 +5333,35 @@ __vte()
     __bld-common --enable-introspection --enable-maintainer-mode
 }
 
+__wine-git()
+{
+    __dep "?"
+
+    __git-clone git://source.winehq.org/git/wine.git
+    __cd wine
+    __bld-common
+}
+
+__wine()
+{
+    __wine-git
+}
+
+__winetricks-git()
+{
+    __dep "?"
+
+    __git-clone https://github.com/Winetricks/winetricks.git
+    __cd winetricks
+    __mk
+    __mkinst
+}
+
+__winetricks()
+{
+    __winetricks-git
+}
+
 __wayland-git()
 {
     __dep libffi libinput
