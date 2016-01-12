@@ -1531,28 +1531,51 @@ __glib()
 
     __git-clone git://git.gnome.org/glib
     __cd glib
-    __bld-common --with-pcre=system --enable-debug=no --disable-compile-warnings
+    __bld-common --with-pcre=system --enable-debug=no --disable-compile-warnings --with-python=/usr/bin/python3
 }
 
-__glibc-2.22()
+__glibc-2.22-opt-glibc()
 {
     __dep ""
 
     __wget http://ftp.gnu.org/gnu/libc/glibc-2.22.tar.xz
     __decord glibc-2.22
     __cdbt
-    cat > configparms << .
-ASFLAGS-config=-O4 -march=native -mtune=native -msse4.1
-.
-    $BASE_DIR/glibc-2.22/configure --prefix=/usr --disable-profile --enable-kernel=3.14 \
-        --libexecdir=/usr/lib/glibc --enable-obsolete-rpc --disable-werror --enable-mathvec
+    CFLAGS=
+    CXXFLAGS=
+#    cat > configparms << .
+#ASFLAGS-config=-O4 -march=native -mtune=native -msse4.1
+#.
+    $BASE_DIR/glibc-2.22/configure --prefix=/opt/glibc --sysconfdir=/opt/glibc/etc  --disable-profile --enable-kernel=3.14 --libexecdir=/opt/glibc/usr/lib/glibc --enable-obsolete-rpc --disable-werror --enable-mathvec
     __mk
     __mkinst
-    sudo cp -v ../glibc-2.22/nscd/nscd.conf /etc/nscd.conf
+    sudo cp -v $BASE_DIR/glibc-2.22/nscd/nscd.conf /opt/glibc/etc/nscd.conf
+    sudo mkdir -pv /opt/glibc/var/cache/nscd
+    sudo mkdir -pv /opt/glibc/usr/lib/locale
+    sudo localedef -i ja_JP -f UTF-8 ja_JP.UTF-8
+#   sudo make localedata/install-locales
+}
+
+__glibc-2.22-root()
+{
+    __dep ""
+
+    __wget http://ftp.gnu.org/gnu/libc/glibc-2.22.tar.xz
+    __decord glibc-2.22
+    __cdbt
+    CFLAGS=
+    CXXFLAGS=
+#    cat > configparms << .
+#ASFLAGS-config=-O4 -march=native -mtune=native -msse4.1
+#.
+     $BASE_DIR/glibc-2.22/configure --prefix=/ --sysconfdir=/etc  --disable-profile --enable-kernel=3.14 --libexecdir=/usr/lib/glibc --enable-obsolete-rpc --disable-werror --enable-mathvec
+    __mk
+    __mkinst
+    sudo cp -v $BASE_DIR/glibc-2.22/nscd/nscd.conf /etc/nscd.conf
     sudo mkdir -pv /var/cache/nscd
     sudo mkdir -pv /usr/lib/locale
-#   sudo localedef -i ja_JP -f UTF-8 ja_JP.UTF-8
-    sudo make localedata/install-locales
+    sudo localedef -i ja_JP -f UTF-8 ja_JP.UTF-8
+#   sudo make localedata/install-locales
 }
 
 __glib-networking()
@@ -1565,7 +1588,16 @@ __glib-networking()
 
 __glibc()
 {
-    __glibc-2.22
+    echo "__glibc-2.22-root か __glibc-2.22-opt-glibc を選択してください。"
+    echo "手順:"
+    echo "    1. /etc/ld.so.conf にて、ライブラリ参照の優先度を 『先=/lib 後=/opt/glibc』 となるように設定し、sudo ldconfig にてキャッシュ更新する。"
+    echo "    2. __all-build.sh __glib-2.22-opt にて /opt/glibc へライブラリをインストールする。"
+    echo "    3. /opt/etc/ld.so.conf にて、ライブラリ参照の優先度を 『先=/opt/glibc 後=/lib』 となるように設定し、sudo ldconfig にてキャッシュ更新する。"
+    echo "    4. __all-build.sh __glibc-2.22-root にて /lib へライブラリをインストールする。"
+    echo "    5. /etc/ld.so.conf にて、ライブラリ参照の優先度を 『先=/lib 後=/opt/glibc』 となるように設定し、sudo ldconfig にてキャッシュ更新する。"
+    echo "    6. これで正常に動くようならば、/opt/glibc は消してよい。/etc/ld.so.conf も /opt/glibc を削除してもよい。"
+    echo ""
+    echo "問題が発生した場合は起動不能となります。動きを十分に考えながら慎重に、またいつでもリカバリーできるように準備しながら進めてください。"
 }
 
 __glu-9.0.0()
