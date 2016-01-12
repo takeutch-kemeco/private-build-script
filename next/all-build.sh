@@ -5130,6 +5130,33 @@ __thunar-volman()
     __thunar-volman-0.8.1
 }
 
+__tk-8.6.4()
+{
+    __dep tcl xorg
+
+    __wget http://downloads.sourceforge.net/tcl/tk8.6.4-src.tar.gz
+    __decord tk8.6.4-src
+    __cd tk8.6.4
+
+    cd unix
+    __bld-common --mandir=/usr/share/man $([ $(uname -m) = x86_64 ] && echo --enable-64bit)
+    __mk
+
+    sed -e "s@^\(TK_SRC_DIR='\).*@\1/usr/include'@" \
+    -e "/TK_B/s@='\(-L\)\?.*unix@='\1/usr/lib@" \
+    -i tkConfig.sh
+
+    __mkinst
+    sudo make install-private-headers
+    sudo ln -v -sf wish8.6 /usr/bin/wish
+    sudo chmod -v 755 /usr/lib/libtk8.6.so
+}
+
+__tk()
+{
+    __tk-8.6.4
+}
+
 __tumbler-0.1.31()
 {
     __dep dbus-glib curl ffmpegthumbnailer freetype gdk-pixbuf gst-plugins-base gtk-doc libjpeg-turbo libgsf libopewnraw libpng poppler
