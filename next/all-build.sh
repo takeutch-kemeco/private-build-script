@@ -5041,6 +5041,52 @@ __tar()
     __tar-1.28
 }
 
+__tcl-8.6.4()
+{
+    __dep ""
+
+    __wget http://downloads.sourceforge.net/tcl/tcl8.6.4-src.tar.gz
+    __wget http://downloads.sourceforge.net/tcl/tcl8.6.4-html.tar.gz
+    __decord tcl8.6.4-src
+    __cd tcl8.6.4
+    gzip -dc tcl8.6.4-html.tar.gz | tar xvf -
+
+    export SRCDIR=`pwd`
+
+    cd unix
+
+    __bld-common --mandir=/usr/share/man $([ $(uname -m) = x86_64 ] && echo --enable-64bit)
+    __mk
+
+    sed -e "s#$SRCDIR/unix#/usr/lib#" -e "s#$SRCDIR#/usr/include#" -i tclConfig.sh
+
+    sed -e "s#$SRCDIR/unix/pkgs/tdbc1.0.3#/usr/lib/tdbc1.0.3#" \
+    -e "s#$SRCDIR/pkgs/tdbc1.0.3/generic#/usr/include#"    \
+    -e "s#$SRCDIR/pkgs/tdbc1.0.3/library#/usr/lib/tcl8.6#" \
+    -e "s#$SRCDIR/pkgs/tdbc1.0.3#/usr/include#"            \
+    -i pkgs/tdbc1.0.3/tdbcConfig.sh
+
+    sed -e "s#$SRCDIR/unix/pkgs/itcl4.0.3#/usr/lib/itcl4.0.3#" \
+    -e "s#$SRCDIR/pkgs/itcl4.0.3/generic#/usr/include#"    \
+    -e "s#$SRCDIR/pkgs/itcl4.0.3#/usr/include#"            \
+    -i pkgs/itcl4.0.3/itclConfig.sh
+
+    unset SRCDIR
+
+    __mkinst
+    sudo make install-private-headers
+    sudo ln -v -sf tclsh8.6 /usr/bin/tclsh
+    sudo chmod -v 755 /usr/lib/libtcl8.6.so
+
+    sudo mkdir -v -p /usr/share/doc/tcl-8.6.4
+    sudo cp -v -r  ../html/* /usr/share/doc/tcl-8.6.4
+}
+
+__tcl()
+{
+    __tcl-8.6.4
+}
+
 __texinfo-5.2()
 {
     __dep "?"
