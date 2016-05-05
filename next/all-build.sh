@@ -3,11 +3,22 @@
 BASE_DIR=$(pwd)
 SRC_DIR=$BASE_DIR/src
 
-DIST_CLEAN=
-#DIST_CLEAN="make distclean"
+case $(uname -m) in
+    x86_64) export ABI=64 ;;
+    i686) export ABI=32 ;;
+    *) echo "未サポートのCPUです" && exit ;;
+esac
+
+#DIST_CLEAN=
+DIST_CLEAN="make distclean"
 
 #MAKE_CLEAN=
 MAKE_CLEAN="make clean"
+
+CFLAGS="-O4 -march=native -mtune=native -msse4.2"
+CXXFLAGS=${CFLAGS}
+
+MAKEFLAGS="-j4"
 
 . ../common-func/__common-func-2.sh
 
@@ -202,21 +213,21 @@ __berkeley-db()
     __berkeley-db-6.1.26
 }
 
-__binutils-2.25.1()
+__binutils-2.26()
 {
     __dep ""
 
-    __wget http://ftp.gnu.org/gnu/binutils/binutils-2.25.1.tar.bz2
-    __decord binutils-2.25.1
+    __wget http://ftp.gnu.org/gnu/binutils/binutils-2.26.tar.bz2
+    __decord binutils-2.26
     __cdbt
-    ../binutils-2.25.1/configure --prefix=/usr --enable-shared --enable-werror=no
+    ../binutils-2.26/configure --prefix=/usr --enable-shared --enable-werror=no
     __mk tooldir=/usr
     __mkinst tooldir=/usr install
 }
 
 __binutils()
 {
-    __binutils-2.25.1
+    __binutils-2.26
 }
 
 __bison-git()
@@ -279,12 +290,12 @@ __bzip2()
     __bzip2-1.0.6
 }
 
-__boost-1.59.0()
+__boost-1.60.0()
 {
     __dep icu python2
 
-    __wget http://downloads.sourceforge.net/boost/boost_1_59_0.tar.bz2
-    __dcd boost_1_59_0
+    __wget http://downloads.sourceforge.net/boost/boost_1_60_0.tar.bz2
+    __dcd boost_1_60_0
     ./bootstrap.sh --prefix=/usr
     ./b2 stage threading=multi link=shared
     sudo ./b2 install threading=multi link=shared
@@ -292,7 +303,7 @@ __boost-1.59.0()
 
 __boost()
 {
-    __boost-1.59.0
+    __boost-1.60.0
 }
 
 __cairo()
@@ -363,21 +374,20 @@ __cmake-git()
     __bld-common-simple --system-libs --mandir=/share/man --no-system-jsoncpp --docdir=/share/doc/cmake
 }
 
-__cmake-3.3.2()
+__cmake-3.4.3()
 {
     __dep curl libarchive
 
-    __wget http://www.cmake.org/files/v3.3/cmake-3.3.2.tar.gz
-    __dcd cmake-3.3.2
-    ./bootstrap --prefix=/usr --system-libs --mandir=/share/man \
-		--no-system-jsoncpp --docdir=/share/doc/cmake-3.3.1
+    __wget http://www.cmake.org/files/v3.4/cmake-3.4.3.tar.gz
+    __dcd cmake-3.4.3
+    ./bootstrap --prefix=/usr --system-libs --mandir=/share/man --no-system-jsoncpp --docdir=/share/doc/cmake-3.4.3
     __mk
     __mkinst
 }
 
 __cmake()
 {
-    __cmake-3.3.2
+    __cmake-3.4.3
 }
 
 __cogl()
@@ -603,32 +613,32 @@ __dbus()
     sudo install $T /etc/dbus-1/session-local.conf
 }
 
-__dhcpcd-6.2.1()
+__dhcpcd-6.10.1()
 {
     __dep ""
 
-    __wget http://roy.marples.name/downloads/dhcpcd/dhcpcd-6.2.1.tar.bz2
-    __dcd dhcpcd-6.2.1
+    __wget http://roy.marples.name/downloads/dhcpcd/dhcpcd-6.10.1.tar.xz
+    __dcd dhcpcd-6.10.1
     __bld-common --libexecdir=/lib/dhcpcd --dbdir=/var/tmp
 
-    cat > /tmp/ifconfig.wlan0 << .
-ONBOOT="yes"
-IFACE="wlan0"
-SERVICE="dhcpcd"
-DHCP_START=""
-DHCP_STOP="-k"
-.
-    sudo install /tmp/ifconfig.wlan0 /etc/sysconfig/network-devices/
+#    cat > /tmp/ifconfig.wlan0 << .
+#ONBOOT="yes"
+#IFACE="wlan0"
+#SERVICE="dhcpcd"
+#DHCP_START=""
+#DHCP_STOP="-k"
+#.
+#    sudo install /tmp/ifconfig.wlan0 /etc/sysconfig/network-devices/
 
-    cat > /tmp/resolv.conf << .
-nameserver 192.168.11.1
-.
-    sudo install /tmp/resolv.conf /etc/resolv.conf
+#    cat > /tmp/resolv.conf << .
+#nameserver 192.168.11.1
+#.
+#    sudo install /tmp/resolv.conf /etc/resolv.conf
 }
 
 __dhcpcd()
 {
-    __dhcpcd-6.2.1
+    __dhcpcd-6.10.1
 }
 
 __dbus-glib()
@@ -1053,6 +1063,22 @@ __expect()
     __expect-5.45
 }
 
+__expat-2.1.1()
+{
+    __dep ""
+
+    __wget http://prdownloads.sourceforge.net/expat/expat-2.1.1.tar.bz2
+    __dcd expat-2.1.1
+    __bld-common
+    sudo  install -v -dm755 /usr/share/doc/expat-2.1.1
+    sudo install -v -m644 doc/*.{html,png,css} /usr/share/doc/expat-2.1.1
+}
+
+__expat()
+{
+    __expat-2.1.1
+}
+
 __fdk-aac-0.1.4()
 {
     __dep ""
@@ -1091,19 +1117,33 @@ __file()
     __bld-common
 }
 
+__findutils-4.6.0()
+{
+    __dep ""
+
+    __wget http://ftp.gnu.org/gnu/findutils/findutils-4.6.0.tar.gz
+    __dcd findutils-4.6.0
+    __bld-common --localstatedir=/var/lib/locate
+}
+
+__findutils()
+{
+    __findutils-4.6.0
+}
+
 __flex-git()
 {
     ### flex と bison は開発版を入れるべきではない
     echo
 }
 
-__flex-2.5.39()
+__flex-2.6()
 {
 ### __dep "texlive"
     __dep ""
 
-    __wget http://downloads.sourceforge.net/project/flex/flex-2.5.39.tar.bz2
-    __dcd flex-2.5.39
+    __wget http://downloads.sourceforge.net/project/flex/flex-2.6.tar.bz2
+    __dcd flex-2.6
     ./configure --prefix=/usr --sysconfdir=/etc
     __mk
     __mkinst
@@ -1111,7 +1151,7 @@ __flex-2.5.39()
 
 __flex()
 {
-    __flex-2.5.39
+    __flex-2.6
 }
 
 __firefox-41.0.2()
@@ -1303,6 +1343,35 @@ __gc()
     __bld-common
 }
 
+__gconf-git()
+{
+    __dep libxml2
+
+    __git-clone git://git.gnome.org/gconf
+    __cd gconf
+    __bld-common --disable-orbit
+    sudo ln -s gconf.xml.defaults /etc/gconf.xml.system
+}
+
+__gconf()
+{
+    __gconf-git
+}
+
+__gconf-editor-git()
+{
+    __dep gconf
+
+    __git-clone git://git.gnome.org/gconf-editor
+    __cd gconf-editor
+    __bld-common
+}
+
+__gconf-editor()
+{
+    __gconf-editor-git
+}
+
 __gcc-java-5.3.0()
 {
     __dep unzip which zip dejagnu gtk libart
@@ -1339,14 +1408,14 @@ __gcc-java()
     __gcc-java-5.3.0
 }
 
-__gcc-5.3.0()
+__gcc-6.1.0()
 {
     __dep gmp mpfr mpc
 
-    __wget http://ftp.tsukuba.wide.ad.jp/software/gcc/releases/gcc-5.3.0/gcc-5.3.0.tar.bz2
-    __decord gcc-5.3.0
+    __wget http://ftp.tsukuba.wide.ad.jp/software/gcc/releases/gcc-6.1.0/gcc-6.1.0.tar.bz2
+    __decord gcc-6.1.0
     __cdbt
-    ../gcc-5.3.0/configure --prefix=/usr --enable-languages=c,c++,fortran,go,objc,obj-c++ --disable-multilib --disable-bootstrap --with-system-zlib
+    ../gcc-6.1.0/configure --prefix=/usr --enable-languages=c,c++,fortran,go,objc,obj-c++ --disable-multilib --with-system-zlib
     __mk
     __mkinst
     sudo mkdir -pv /usr/share/gdb/auto-load/usr/lib
@@ -1356,7 +1425,7 @@ __gcc-5.3.0()
 
 __gcc()
 {
-    __gcc-5.3.0
+    __gcc-6.1.0
 }
 
 __gcr()
@@ -1422,18 +1491,18 @@ __geoclue2()
     __geoclue-git
 }
 
-__gettext-0.19.4()
+__gettext-0.19.7()
 {
     __dep ""
 
-    __wget http://ftp.gnu.org/gnu/gettext/gettext-0.19.4.tar.gz
-    __dcd gettext-0.19.4
+    __wget http://ftp.gnu.org/gnu/gettext/gettext-0.19.7.tar.gz
+    __dcd gettext-0.19.7
     __bld-common
 }
 
 __gettext()
 {
-    __gettext-0.19.4
+    __gettext-0.19.7
 }
 
 __gdbm-git()
@@ -1534,44 +1603,40 @@ __glib()
     __bld-common --with-pcre=system --enable-debug=no --disable-compile-warnings --with-python=/usr/bin/python3
 }
 
-__glibc-2.22-opt-glibc()
+__glibc-2.23-opt()
 {
     __dep ""
 
-    __wget http://ftp.gnu.org/gnu/libc/glibc-2.22.tar.xz
-    __decord glibc-2.22
+    __wget http://ftp.gnu.org/gnu/libc/glibc-2.23.tar.xz
+    __decord glibc-2.23
     __cdbt
-    CFLAGS=
-    CXXFLAGS=
-#    cat > configparms << .
-#ASFLAGS-config=-O4 -march=native -mtune=native -msse4.1
-#.
-    $BASE_DIR/glibc-2.22/configure --prefix=/opt/glibc --sysconfdir=/opt/glibc/etc  --disable-profile --enable-kernel=3.14 --libexecdir=/opt/glibc/usr/lib/glibc --enable-obsolete-rpc --disable-werror --enable-mathvec
+    cat > configparms << .
+ASFLAGS-config=-O4 -march=native -mtune=native -msse4.2
+.
+    $BASE_DIR/glibc-2.23/configure --prefix=/opt/glibc --sysconfdir=/opt/glibc/etc  --disable-profile --enable-kernel=3.14 --libexecdir=/opt/glibc/usr/lib/glibc --enable-obsolete-rpc --disable-werror --enable-mathvec
     __mk
     __mkinst
-    sudo cp -v $BASE_DIR/glibc-2.22/nscd/nscd.conf /opt/glibc/etc/nscd.conf
+    sudo cp -v $BASE_DIR/glibc-2.23/nscd/nscd.conf /opt/glibc/etc/nscd.conf
     sudo mkdir -pv /opt/glibc/var/cache/nscd
     sudo mkdir -pv /opt/glibc/usr/lib/locale
     sudo localedef -i ja_JP -f UTF-8 ja_JP.UTF-8
 #   sudo make localedata/install-locales
 }
 
-__glibc-2.22-root()
+__glibc-2.23-root()
 {
     __dep ""
 
-    __wget http://ftp.gnu.org/gnu/libc/glibc-2.22.tar.xz
-    __decord glibc-2.22
+    __wget http://ftp.gnu.org/gnu/libc/glibc-2.23.tar.xz
+    __decord glibc-2.23
     __cdbt
-    CFLAGS=
-    CXXFLAGS=
-#    cat > configparms << .
-#ASFLAGS-config=-O4 -march=native -mtune=native -msse4.1
-#.
-     $BASE_DIR/glibc-2.22/configure --prefix=/ --sysconfdir=/etc  --disable-profile --enable-kernel=3.14 --libexecdir=/usr/lib/glibc --enable-obsolete-rpc --disable-werror --enable-mathvec
+    cat > configparms << .
+ASFLAGS-config=-O4 -march=native -mtune=native -msse4.2
+.
+     $BASE_DIR/glibc-2.23/configure --prefix=/ --sysconfdir=/etc  --disable-profile --enable-kernel=3.14 --libexecdir=/usr/lib/glibc --enable-obsolete-rpc --disable-werror --enable-mathvec
     __mk
     __mkinst
-    sudo cp -v $BASE_DIR/glibc-2.22/nscd/nscd.conf /etc/nscd.conf
+    sudo cp -v $BASE_DIR/glibc-2.23/nscd/nscd.conf /etc/nscd.conf
     sudo mkdir -pv /var/cache/nscd
     sudo mkdir -pv /usr/lib/locale
     sudo localedef -i ja_JP -f UTF-8 ja_JP.UTF-8
@@ -1588,14 +1653,14 @@ __glib-networking()
 
 __glibc()
 {
-    echo "__glibc-2.22-root か __glibc-2.22-opt-glibc を選択してください。"
+    echo "__glibc-2.23-root か __glibc-2.23-opt-glibc を選択してください。"
     echo "手順:"
-    echo "    1. /etc/ld.so.conf にて、ライブラリ参照の優先度を 『先=/lib 後=/opt/glibc』 となるように設定し、sudo ldconfig にてキャッシュ更新する。"
-    echo "    2. __all-build.sh __glib-2.22-opt にて /opt/glibc へライブラリをインストールする。"
-    echo "    3. /opt/etc/ld.so.conf にて、ライブラリ参照の優先度を 『先=/opt/glibc 後=/lib』 となるように設定し、sudo ldconfig にてキャッシュ更新する。"
-    echo "    4. __all-build.sh __glibc-2.22-root にて /lib へライブラリをインストールする。"
-    echo "    5. /etc/ld.so.conf にて、ライブラリ参照の優先度を 『先=/lib 後=/opt/glibc』 となるように設定し、sudo ldconfig にてキャッシュ更新する。"
-    echo "    6. これで正常に動くようならば、/opt/glibc は消してよい。/etc/ld.so.conf も /opt/glibc を削除してもよい。"
+    echo "    1. /etc/ld.so.conf にて、ライブラリ参照の優先度を 『先=/lib 後=/opt/glibc/lib』 となるように設定し、sudo ldconfig にてキャッシュ更新する。"
+    echo "    2. all-build.sh __glibc-2.22-opt にて /opt/glibc/lib へライブラリをインストールする。"
+    echo "    3. /etc/ld.so.conf にて、ライブラリ参照の優先度を 『先=/opt/glibc/lib 後=/lib』 となるように設定し、sudo ldconfig にてキャッシュ更新する。"
+    echo "    4. all-build.sh __glibc-2.22-root にて /lib へライブラリをインストールする。"
+    echo "    5. /etc/ld.so.conf にて、ライブラリ参照の優先度を 『先=/lib 後=/opt/glibc/lib』 となるように設定し、sudo ldconfig にてキャッシュ更新する。"
+    echo "    6. これで正常に動くようならば、/opt/glibc は消してもよい。/etc/ld.so.conf の /opt/glibc/lib 行を削除してもよい。"
     echo ""
     echo "問題が発生した場合は起動不能となります。動きを十分に考えながら慎重に、またいつでもリカバリーできるように準備しながら進めてください。"
 }
@@ -1630,7 +1695,13 @@ __gmp-6.1.0()
     __wget http://ftp.gnu.org/gnu/gmp/gmp-6.1.0.tar.xz
     __decord gmp-6.1.0
     __cd gmp-6.1.0
-    ABI=32 ./configure --prefix=/usr --enable-cxx --docdir=/usr/share/doc/gmp-6.1.0
+
+    case $(uname -m) in
+    x86_64) ./configure --prefix=/usr --enable-cxx --docdir=/usr/share/doc/gmp-6.1.0 --build=x86_64-unknown-linux-gnu ;;
+    i686)      ./configure --prefix=/usr --enable-cxx --docdir=/usr/share/doc/gmp-6.1.0  ;;
+    *) echo "未サポートのCPUです" && exit ;;
+    esac
+
     __mk
     __mkinst
     __mk html
@@ -1692,18 +1763,18 @@ __gnupg.git()
     __bld-common --enable-maintainer-mode  --with-readline=/usr/lib
 }
 
-__gnupg-2.1.5()
+__gnupg-2.1.11()
 {
     __dep pth libassuan libgcrypt libksba
 
-    __wget ftp://ftp.gnupg.org/gcrypt/gnupg/gnupg-2.1.5.tar.bz2
-    __dcd gnupg-2.1.5
+    __wget ftp://ftp.gnupg.org/gcrypt/gnupg/gnupg-2.1.11.tar.bz2
+    __dcd gnupg-2.1.11
     __bld-common --enable-symcryptrun --with-readline=/usr/lib
 }
 
 __gnupg()
 {
-    __gnupg-2.1.5
+    __gnupg-2.1.11
 }
 
 __gnutls.git()
@@ -1787,18 +1858,18 @@ __gperf()
     __gperf-3.0.4
 }
 
-__grep-2.21()
+__grep-2.25()
 {
     __dep ""
 
-    __wget http://ftp.gnu.org/gnu/grep/grep-2.21.tar.xz
-    __dcd grep-2.21
+    __wget http://ftp.gnu.org/gnu/grep/grep-2.25.tar.xz
+    __dcd grep-2.25
     __bld-common
 }
 
 __grep()
 {
-    __grep-2.21
+    __grep-2.25
 }
 
 __gsettings-desktop-schemas()
@@ -1810,86 +1881,86 @@ __gsettings-desktop-schemas()
     sudo glib-compile-schemas /usr/share/glib-2.0/schemas
 }
 
-__gstreamer-1.6.0()
+__gstreamer-1.6.3()
 {
     __dep glib
 
-    __wget http://gstreamer.freedesktop.org/src/gstreamer/gstreamer-1.6.0.tar.xz
-    __dcd gstreamer-1.6.0
+    __wget http://gstreamer.freedesktop.org/src/gstreamer/gstreamer-1.6.3.tar.xz
+    __dcd gstreamer-1.6.3
     __bld-common
 }
 
 __gstreamer()
 {
-    __gstreamer-1.6.0
+    __gstreamer-1.6.3
 }
 
-__gst-libav-1.6.0()
+__gst-libav-1.6.3()
 {
-    __wget http://gstreamer.freedesktop.org/src/gst-libav/gst-libav-1.6.0.tar.xz
-    __dcd gst-libav-1.6.0
+    __wget http://gstreamer.freedesktop.org/src/gst-libav/gst-libav-1.6.3.tar.xz
+    __dcd gst-libav-1.6.3
     __bld-common
 }
 
 __gst-libav()
 {
-    __gst-libav-1.6.0
+    __gst-libav-1.6.3
 }
 
-__gst-plugins-bad-1.6.0()
+__gst-plugins-bad-1.6.3()
 {
     __dep gst-plugins-base libdvdread libdvdnav llvm soundtouch
 
-    __wget http://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.6.0.tar.xz
-    __dcd gst-plugins-bad-1.6.0
+    __wget http://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.6.3.tar.xz
+    __dcd gst-plugins-bad-1.6.3
     __bld-common
 }
 
 __gst-plugins-bad()
 {
-    __gst-plugins-bad-1.6.0
+    __gst-plugins-bad-1.6.3
 }
 
-__gst-plugins-base-1.6.0()
+__gst-plugins-base-1.6.3()
 {
     __dep gstreamer
 
-    __wget http://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-1.6.0.tar.xz
-    __dcd gst-plugins-base-1.6.0
+    __wget http://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-1.6.3.tar.xz
+    __dcd gst-plugins-base-1.6.3
     __bld-common
 }
 
 __gst-plugins-base()
 {
-    __gst-plugins-base-1.6.0
+    __gst-plugins-base-1.6.3
 }
 
-__gst-plugins-good-1.6.0()
+__gst-plugins-good-1.6.3()
 {
     __dep gst-plugins-base cairo flac gdk-pixbuf libjpeg-turbo libpng libsoup libvpx xorg
 
-    __wget http://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-1.6.0.tar.xz
-    __dcd gst-plugins-good-1.6.0
+    __wget http://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-1.6.3.tar.xz
+    __dcd gst-plugins-good-1.6.3
     __bld-common
 }
 
 __gst-plugins-good()
 {
-    __gst-plugins-good-1.6.0
+    __gst-plugins-good-1.6.3
 }
 
-__gst-plugins-ugly-1.6.0()
+__gst-plugins-ugly-1.6.3()
 {
     __dep gst-plugins-base lame libdvdread x264
 
-    __wget http://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-1.6.0.tar.xz
-    __dcd gst-plugins-ugly-1.6.0
+    __wget http://gstreamer.freedesktop.org/src/gst-plugins-ugly/gst-plugins-ugly-1.6.3.tar.xz
+    __dcd gst-plugins-ugly-1.6.3
     __bld-common
 }
 
 __gst-plugins-ugly()
 {
-    __gst-plugins-ugly-1.6.0
+    __gst-plugins-ugly-1.6.3
 }
 
 __gtk+2()
@@ -1899,14 +1970,14 @@ __gtk+2()
     __git-clone git://git.gnome.org/gtk+ gtk+-2.24.git
     __cd gtk+-2.24.git
 
-    GTK2VERSION=2.24.28
+    GTK2VERSION=2.24.29
     make distclean
     git checkout master
     git pull
     git branch -D $GTK2VERSION
     git checkout $GTK2VERSION
     git checkout -b $GTK2VERSION
-    __bld-common --with-xinput --with-gdktarget=x11 --with-x --disable-cups --disable-papi
+    __bld-common --with-xinput --with-gdktarget=x11 --with-x --disable-papi
     sudo gtk-query-immodules-2.0 --update-cache
 
 cat > /tmp/t << "EOF"
@@ -2036,6 +2107,22 @@ __guile-lib-0.2.2()
 __guile-lib()
 {
     __guile-lib-0.2.2
+}
+
+__gzip-git()
+{
+    __dep ""
+
+    __git-clone git://git.savannah.gnu.org/gzip.git
+    __cd gzip
+    ./bootstrap
+    __bld-common
+   sudo  mv /usr/bin/zip /bin/zip
+}
+
+__gzip()
+{
+    __gzip-git
 }
 
 __harfbuzz()
@@ -2239,6 +2326,20 @@ __json-c()
     __json-c-0.12
 }
 
+__json-glib-git()
+{
+    __dep ""
+
+    __git-clone git://git.gnome.org/json-glib
+    __cd json-glib
+    __bld-common
+}
+
+__json-glib()
+{
+    __json-glib-git
+}
+
 __junit-4.11()
 {
     __dep apache-ant unzip
@@ -2287,17 +2388,17 @@ __mako()
     sudo python3 setup.py install --optimize=1
 }
 
-__mesalib-10.6.6()
+__mesalib-11.1.2()
 {
     __dep xorg-lib libdrm
 
-    __wget ftp://ftp.freedesktop.org/pub/mesa/10.6.6/mesa-10.6.6.tar.xz
-    __wget http://www.linuxfromscratch.org/patches/blfs/svn/mesa-10.6.6-llvm_3_7-1.patch
-    __wget http://www.linuxfromscratch.org/patches/blfs/svn/mesa-10.6.6-add_xdemos-1.patch
-    __dcd mesa-10.6.6
-    patch -Np1 -i $SRC_DIR/mesa-10.6.6-add_xdemos-1.patch
-    patch -Np1 -i $SRC_DIR/mesa-10.6.6-llvm_3_7-1.patch
-    GLL_DRV="nouveau,swrast"
+    __wget ftp://ftp.freedesktop.org/pub/mesa/11.1.2/mesa-11.1.2.tar.xz
+    __wget http://www.linuxfromscratch.org/patches/blfs/svn/mesa-11.1.2-llvm_3_7-1.patch
+    __wget http://www.linuxfromscratch.org/patches/blfs/svn/mesa-11.1.2-add_xdemos-1.patch
+    __dcd mesa-11.1.2
+    patch -Np1 -i $SRC_DIR/mesa-11.1.2-add_xdemos-1.patch
+    patch -Np1 -i $SRC_DIR/mesa-11.1.2-llvm_3_7-1.patch
+    GLL_DRV="nouveau,swrast,i915"
     ./autogen.sh CFLAGS='-O4' CXXFLAGS='-O4'     \
 		 --prefix=/usr                   \
 		 --sysconfdir=/etc               \
@@ -2317,7 +2418,7 @@ __mesalib-10.6.6()
 
 __mesalib()
 {
-    __mesalib-10.6.6
+    __mesalib-11.1.2
 }
 
 __kmod()
@@ -2566,12 +2667,12 @@ __libcrypt()
     __libcrypt-1.6.2
 }
 
-__libdrm-2.4.64()
+__libdrm-2.4.66()
 {
     __dep ""
 
-    __wget http://dri.freedesktop.org/libdrm/libdrm-2.4.64.tar.bz2
-    __dcd libdrm-2.4.64
+    __wget http://dri.freedesktop.org/libdrm/libdrm-2.4.66.tar.bz2
+    __dcd libdrm-2.4.66
     sed -e "/pthread-stubs/d" -i configure.ac
     autoreconf -fiv
     __bld-common --enable-udev --disable-valgrind
@@ -2579,7 +2680,7 @@ __libdrm-2.4.64()
 
 __libdrm()
 {
-    __libdrm-2.4.64
+    __libdrm-2.4.66
 }
 
 __libdvdread-5.0.3()
@@ -2651,18 +2752,18 @@ __libgcrypt.git()
     cp Makefile.am{.orig,}
 }
 
-__libgcrypt-1.6.3()
+__libgcrypt-1.6.5()
 {
     __dep libgpg-error libcap pth
 
-    __wget ftp://ftp.gnupg.org/gcrypt/libgcrypt/libgcrypt-1.6.3.tar.bz2
-    __dcd libgcrypt-1.6.3
+    __wget ftp://ftp.gnupg.org/gcrypt/libgcrypt/libgcrypt-1.6.5.tar.bz2
+    __dcd libgcrypt-1.6.5
     __bld-common --enable-maintainer-mode
 }
 
 __libgcrypt()
 {
-    __libgcrypt-1.6.3
+    __libgcrypt-1.6.5
 }
 
 __libgee-git()
@@ -2701,18 +2802,18 @@ __libgpg-error-git()
     __bld-common --enable-maintainer-mode
 }
 
-__libgpg-error-1.19()
+__libgpg-error-1.21()
 {
     __dep ""
 
-    __wget ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.19.tar.bz2
-    __dcd libgpg-error-1.19
+    __wget ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.21.tar.bz2
+    __dcd libgpg-error-1.21
     __bld-common --enable-maintainer-mode
 }
 
 __libgpg-error()
 {
-    __libgpg-error-1.19
+    __libgpg-error-1.21
 }
 
 __libgudev-git()
@@ -2867,6 +2968,20 @@ __libjpeg-turbo-1.4.2()
 __libjpeg-turbo()
 {
     __libjpeg-turbo-1.4.2
+}
+
+__libnotify-git()
+{
+    __dep gtk+3
+
+    __git-clone git://git.gnome.org/libnotify
+    __cd libnotify
+    __bld-common
+}
+
+__libnotify()
+{
+    __libnotify-git
 }
 
 __libogg-1.3.2()
@@ -3161,19 +3276,19 @@ __libwebp-git()
 		 --enable-libwebpdemux --enable-libwebpmux
 }
 
-__libwebp-0.4.3()
+__libwebp-0.5.0()
 {
     __dep libjpeg-turbo libpng libtiff freeglut giflib
 
-    __wget http://downloads.webmproject.org/releases/webp/libwebp-0.4.3.tar.gz
-    __dcd libwebp
+    __wget http://downloads.webmproject.org/releases/webp/libwebp-0.5.0.tar.gz
+    __dcd libwebp-0.5.0
     __bld-common --disable-static --enable-experimental --enable-libwebpdecoder \
 		 --enable-libwebpdemux --enable-libwebpmux
 }
 
 __libwebp()
 {
-    __libwebp-0.4.3
+    __libwebp-0.5.0
 }
 
 __libwnck-2.30.7()
@@ -3277,11 +3392,11 @@ __libxml2-git()
     __bld-common --disable-static --with-history --with-python=/usr/bin/python3
 }
 
-__libxml2-2.9.2()
+__libxml2-2.9.3()
 {
     __dep python2
 
-    __wget http://xmlsoft.org/sources/libxml2-2.9.2.tar.gz
+    __wget http://xmlsoft.org/sources/libxml2-2.9.3.tar.gz
     __wget http://www.w3.org/XML/Test/xmlts20130923.tar.gz
     __dcd libxml2-2.9.2
     tar xf $SRC_DIR/xmlts20130923.tar.gz
@@ -3295,7 +3410,7 @@ __libxml2-2.9.2()
 
 __libxml2()
 {
-    __libxml2-2.9.2
+    __libxml2-2.9.3
 }
 
 __libxslt-1.1.28()
@@ -3358,22 +3473,22 @@ __libvorbis()
     __libvorbis-git
 }
 
-__llvm-3.7.0()
+__llvm-3.7.1()
 {
     __dep libffi python2 zip libxml2
 
-    __wget http://llvm.org/releases/3.7.0/llvm-3.7.0.src.tar.xz
-    __wget http://llvm.org/releases/3.7.0/cfe-3.7.0.src.tar.xz
-    __wget http://llvm.org/releases/3.7.0/compiler-rt-3.7.0.src.tar.xz
-    __dcd llvm-3.7.0.src
-    tar -xf $SRC_DIR/cfe-3.7.0.src.tar.xz -C tools
-    tar -xf $SRC_DIR/compiler-rt-3.7.0.src.tar.xz -C projects
+    __wget http://llvm.org/releases/3.7.1/llvm-3.7.1.src.tar.xz
+    __wget http://llvm.org/releases/3.7.1/cfe-3.7.1.src.tar.xz
+    __wget http://llvm.org/releases/3.7.1/compiler-rt-3.7.1.src.tar.xz
+    __dcd llvm-3.7.1.src
+    tar -xf $SRC_DIR/cfe-3.7.1.src.tar.xz -C tools
+    tar -xf $SRC_DIR/compiler-rt-3.7.1.src.tar.xz -C projects
 
-    mv tools/cfe-3.7.0.src tools/clang
-    mv projects/compiler-rt-3.7.0.src projects/compiler-rt
+    mv tools/cfe-3.7.1.src tools/clang
+    mv projects/compiler-rt-3.7.1.src projects/compiler-rt
     sed -r "/ifeq.*CompilerTargetArch/s#i386#i686#g" \
 	-i projects/compiler-rt/make/platform/clang_linux.mk
-    sed -e "s:/docs/llvm:/share/doc/llvm-3.7.0:" -i Makefile.config.in
+    sed -e "s:/docs/llvm:/share/doc/llvm-3.7.1:" -i Makefile.config.in
 
     mkdir -v build
     cd build
@@ -3386,14 +3501,14 @@ __llvm-3.7.0()
       --enable-shared            \
       --enable-targets=host      \
       --disable-assertions       \
-      --docdir=/usr/share/doc/llvm-3.7.0
+      --docdir=/usr/share/doc/llvm-3.7.1
     __mk
     __mkinst
 }
 
 __llvm()
 {
-    __llvm-3.7.0
+    __llvm-3.7.1
 }
 
 __lm-sensors-svn()
@@ -3544,20 +3659,20 @@ __mpc()
     __mpc-1.0.3
 }
 
-__mpfr-3.1.3()
+__mpfr-3.1.4()
 {
     __dep gmp
 
-    __wget http://www.mpfr.org/mpfr-current/mpfr-3.1.3.tar.xz
-    __dcd mpfr-3.1.3
-    ABI=32 ./configure --prefix=/usr --enable-thread-safe --docdir=/usr/share/doc/mpfr-3.1.3
+    __wget http://www.mpfr.org/mpfr-current/mpfr-3.1.4.tar.xz
+    __dcd mpfr-3.1.4
+    ./configure --prefix=/usr --enable-thread-safe --docdir=/usr/share/doc/mpfr-3.1.4
     __mk
     __mkinst
 }
 
 __mpfr()
 {
-    __mpfr-3.1.3
+    __mpfr-3.1.4
 }
 
 __mplayer-1.1.1()
@@ -4122,13 +4237,13 @@ __openmpi()
 }
 
 
-__openssh-7.1p1()
+__openssh-7.1p2()
 {
     __dep openssl linux-pam
 
-    __wget http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-7.1p1.tar.gz
-    __decord openssh-7.1p1
-    __cd openssh-7.1p1
+    __wget http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-7.1p2.tar.gz
+    __decord openssh-7.1p2
+    __cd openssh-7.1p2
 
     sudo install -v -m700 -d /var/lib/sshd
     sudo chown -v root:sys /var/lib/sshd
@@ -4145,21 +4260,21 @@ __openssh-7.1p1()
 
     sudo install -v -m755 contrib/ssh-copy-id /usr/bin
     sudo install -v -m644 contrib/ssh-copy-id.1 /usr/share/man/man1
-    sudo install -v -m755 -d /usr/share/doc/openssh-7.1p1
-    sudo install -v -m644 INSTALL LICENCE OVERVIEW README* /usr/share/doc/openssh-7.1p1
+    sudo install -v -m755 -d /usr/share/doc/openssh-7.1p2
+    sudo install -v -m644 INSTALL LICENCE OVERVIEW README* /usr/share/doc/openssh-7.1p2
 }
 
 __openssh()
 {
-    __openssh-7.1p1
+    __openssh-7.1p2
 }
 
-__openssl-1.0.2e()
+__openssl-1.0.2h()
 {
     __dep ""
 
-    __wget http://www.openssl.org/source/openssl-1.0.2e.tar.gz
-    __dcd openssl-1.0.2e
+    __wget http://www.openssl.org/source/openssl-1.0.2h.tar.gz
+    __dcd openssl-1.0.2h
     ./config --prefix=/usr --openssldir=/etc/ssl --libdir=lib shared zlib-dynamic
     make -j1
     sudo make uninstall
@@ -4172,7 +4287,7 @@ __openssl-1.0.2e()
 
 __openssl()
 {
-    __openssl-1.0.2e
+    __openssl-1.0.2h
 }
 
 __opus-1.1()
@@ -4219,13 +4334,28 @@ __pangox-compat()
     __common pangox-compat
 }
 
-__pcre-8.37()
+__patch-git-install()
 {
     __dep ""
 
-    __wget http://downloads.sourceforge.net/pcre/pcre-8.37.tar.bz2
-    __dcd  pcre-8.37
-    __bld-common --docdir=/usr/share/doc/pcre-8.37 --enable-unicode-properties \
+    __git-clone git://git.savannah.gnu.org/patch.git
+    __cd patch
+    ./bootstrap
+    __bld-common
+}
+
+__patch-install()
+{
+    __patch-git-install
+}
+
+__pcre-8.38()
+{
+    __dep ""
+
+    __wget http://downloads.sourceforge.net/pcre/pcre-8.38.tar.bz2
+    __dcd  pcre-8.38
+    __bld-common --docdir=/usr/share/doc/pcre-8.38 --enable-unicode-properties \
                  --enable-pcre16 --enable-pcre32 \
                  --enable-pcregrep-libz --enable-pcregrep-libbz2 \
                  --enable-pcretest-libreadline
@@ -4233,15 +4363,15 @@ __pcre-8.37()
 
 __pcre()
 {
-    __pcre-8.37
+    __pcre-8.38
 }
 
-__perl-5.22.0()
+__perl-5.22.1()
 {
     __dep ""
 
-    __wget http://www.cpan.org/src/5.0/perl-5.22.0.tar.gz
-    __dcd perl-5.22.0
+    __wget http://www.cpan.org/src/5.0/perl-5.22.1.tar.gz
+    __dcd perl-5.22.1
     sed -i -e "s|BUILD_ZLIB\s*= True|BUILD_ZLIB = False|" \
 	-e "s|INCLUDE\s*= ./zlib-src|INCLUDE    = /usr/include|" \
 	    -e "s|LIB\s*= ./zlib-src|LIB        = /usr/lib|" \
@@ -4254,7 +4384,7 @@ __perl-5.22.0()
 
 __perl()
 {
-    __perl-5.22.0
+    __perl-5.22.1
 }
 
 __pixman()
@@ -4367,43 +4497,43 @@ __pulseaudio()
     __pulseaudio-6.0
 }
 
-__python-2.7.10()
+__python-2.7.11()
 {
     __dep expat libffi
 
-    __wget http://www.python.org/ftp/python/2.7.10/Python-2.7.10.tar.xz
-    __wget http://docs.python.org/ftp/python/doc/2.7.10/python-2.7.10-docs-html.tar.bz2
-    __dcd Python-2.7.10
+    __wget http://www.python.org/ftp/python/2.7.11/Python-2.7.11.tar.xz
+    __wget http://docs.python.org/ftp/python/doc/2.7.11/python-2.7.11-docs-html.tar.bz2
+    __dcd Python-2.7.11
     __bld-common --enable-shared --with-system-expat --with-system-ffi --enable-unicode=ucs4
     sudo chmod -v 755 /usr/lib/libpython2.7.so.1.0
-    sudo install -v -dm755 /usr/share/doc/python-2.7.10
-    sudo tar --strip-components=1 -C /usr/share/doc/python-2.7.10 --no-same-owner -xvf $SRC_DIR/python-2.7.10-docs-html.tar.bz2
-    sudo find /usr/share/doc/python-2.7.10 -type d -exec chmod 0755 {} \;
-    sudo find /usr/share/doc/python-2.7.10 -type f -exec chmod 0644 {} \;
+    sudo install -v -dm755 /usr/share/doc/python-2.7.11
+    sudo tar --strip-components=1 -C /usr/share/doc/python-2.7.11 --no-same-owner -xvf $SRC_DIR/python-2.7.11-docs-html.tar.bz2
+    sudo find /usr/share/doc/python-2.7.11 -type d -exec chmod 0755 {} \;
+    sudo find /usr/share/doc/python-2.7.11 -type f -exec chmod 0644 {} \;
 }
 
 __python-27()
 {
-    __python-2.7.10
+    __python-2.7.11
 }
 
-__python-3.5.0()
+__python-3.5.1()
 {
     __dep libffi
 
-    __wget http://www.python.org/ftp/python/3.5.0/Python-3.5.0.tar.xz
-    __wget http://docs.python.org/3/archives/python-3.5.0-docs-html.tar.bz2
-    __dcd Python-3.5.0
+    __wget http://www.python.org/ftp/python/3.5.1/Python-3.5.1.tar.xz
+    __wget http://docs.python.org/3/archives/python-3.5.1-docs-html.tar.bz2
+    __dcd Python-3.5.1
     __bld-common CXX="/usr/bin/g++" --enable-shared --with-system-expat --with-system-ffi --without-ensurepip
-    sudo chmod -v 755 /usr/lib/libpython3.4m.so
+    sudo chmod -v 755 /usr/lib/libpython3.5m.so
     sudo chmod -v 755 /usr/lib/libpython3.so
-    sudo install -v -dm755 /usr/share/doc/python-3.5.0/html
-    sudo tar --strip-components=1 --no-same-owner --no-same-permissions -C /usr/share/doc/python-3.5.0/html -xvf $SRC_DIR/python-3.5.0-docs-html.tar.bz2
+    sudo install -v -dm755 /usr/share/doc/python-3.5.1/html
+    sudo tar --strip-components=1 --no-same-owner --no-same-permissions -C /usr/share/doc/python-3.5.1/html -xvf $SRC_DIR/python-3.5.1-docs-html.tar.bz2
 }
 
 __python-3()
 {
-    __python-3.5.0
+    __python-3.5.1
 }
 
 __dbus-python-1.2.0()
@@ -4432,6 +4562,39 @@ __dbus-python-1.2.0()
 __dbus-python()
 {
     __dbus-python-1.2.0
+}
+
+__procps-ng-3.3.11()
+{
+    __dep ""
+
+    __wget http://sourceforge.net/projects/procps-ng/files/Production/procps-ng-3.3.11.tar.xz
+    __dcd procps-ng-3.3.11
+    __cfg --prefix=/usr --exec-prefix= --libdir=/usr/lib --docdir=/usr/share/doc/procps-ng-3.3.11 --disable-static --disable-kill
+    __mk
+    __mkinst
+   sudo  mv -v /usr/lib/libprocps.so.* /lib
+   sudo ln -sfv ../../lib/$(readlink /usr/lib/libprocps.so) /usr/lib/libprocps.so
+}
+__procps-ng()
+{
+    __procps-ng-3.3.11
+}
+
+__psmisc-22.21()
+{
+    __dep ""
+
+    __wget http://downloads.sourceforge.net/project/psmisc/psmisc/psmisc-22.21.tar.gz
+    __dcd psmisc-22.21
+    __bld-common
+   sudo  mv -v /usr/bin/fuser /bin
+   sudo mv -v /usr/bin/killall /bin
+}
+
+__psmisc()
+{
+    __psmisc-22.21
 }
 
 __py2cairo-1.10.0()
@@ -4675,20 +4838,56 @@ __redland()
     __redland-1.0.17
 }
 
-__ruby-2.2.2()
+__rsync-3.1.2()
+{
+    __dep popt
+
+    __wget https://www.samba.org/ftp/rsync/src/rsync-3.1.2.tar.gz
+    __dcd rsync-3.1.2
+    sudo  groupadd -g 48 rsyncd
+    sudo useradd -c "rsyncd Daemon" -d /home/rsync -g rsyncd -s /bin/false -u 48 rsyncd
+    __bld-common --without-included-zlib
+    sudo install -v -m755 -d          /usr/share/doc/rsync-3.1.2/api
+    sudo install -v -m644 dox/html/*  /usr/share/doc/rsync-3.1.2/api
+
+    cat > /tmp/rsyncd.conf << "EOF"
+# This is a basic rsync configuration file
+# It exports a single module without user authentication.
+
+motd file = /home/rsync/welcome.msg
+use chroot = yes
+
+[localhost]
+    path = /home/rsync
+    comment = Default rsync module
+    read only = yes
+    list = yes
+    uid = rsyncd
+    gid = rsyncd
+
+EOF
+    sudo mv {/tmp,/etc}/rsyncd.conf
+}
+
+__rsync()
+{
+    __rsync-3.1.2
+}
+
+__ruby-2.3.0()
 {
     __dep ""
 
-    __wget http://cache.ruby-lang.org/pub/ruby/2.2/ruby-2.2.2.tar.xz
-    __dcd ruby-2.2.2
-    ./configure --prefix=/usr --enable-shared --docdir=/usr/share/doc/ruby-2.2.2
+    __wget http://cache.ruby-lang.org/pub/ruby/2.3/ruby-2.3.0.tar.xz
+    __dcd ruby-2.3.0
+    ./configure --prefix=/usr --enable-shared --docdir=/usr/share/doc/ruby-2.3.0
     __mk
     __mkinst
 }
 
 __ruby()
 {
-    __ruby-2.2.2
+    __ruby-2.3.0
 }
 
 __sane-backends-1.0.24()
@@ -4837,6 +5036,156 @@ __sgml-common()
     __sgml-common-0.6.3
 }
 
+__shadow-4.2.1()
+{
+    __dep linux-pam
+
+    __wget http://pkg-shadow.alioth.debian.org/releases/shadow-4.2.1.tar.xz
+    __dcd shadow-4.2.1
+    
+    sed -i 's/groups$(EXEEXT) //' src/Makefile.in
+    find man -name Makefile.in -exec sed -i 's/groups\.1 / /' {} \;
+    sed -i -e 's@#ENCRYPT_METHOD DES@ENCRYPT_METHOD SHA512@'  -e 's@/var/spool/mail@/var/mail@' etc/login.defs
+    sed -i 's/1000/999/' etc/useradd
+    ./configure --sysconfdir=/etc --with-group-name-max-length=32
+    __mk
+    __mkinst
+    sudo mv -v /usr/bin/passwd /bin
+
+    sudo install -v -m644 /etc/login.defs /etc/login.defs.orig
+    for FUNCTION in FAIL_DELAY               \
+                FAILLOG_ENAB             \
+                LASTLOG_ENAB             \
+                MAIL_CHECK_ENAB          \
+                OBSCURE_CHECKS_ENAB      \
+                PORTTIME_CHECKS_ENAB     \
+                QUOTAS_ENAB              \
+                CONSOLE MOTD_FILE        \
+                FTMP_FILE NOLOGINS_FILE  \
+                ENV_HZ PASS_MIN_LEN      \
+                SU_WHEEL_ONLY            \
+                CRACKLIB_DICTPATH        \
+                PASS_CHANGE_TRIES        \
+                PASS_ALWAYS_WARN         \
+                CHFN_AUTH ENCRYPT_METHOD \
+                ENVIRON_FILE
+    do
+	sudo sed -i "s/^${FUNCTION}/# &/" /etc/login.defs
+    done
+
+    mkdir /tmp/pam.d
+    cat > /tmp/pam.d/login << "EOF"
+# Begin /etc/pam.d/login
+
+# Set failure delay before next prompt to 3 seconds
+auth      optional    pam_faildelay.so  delay=3000000
+
+# Check to make sure that the user is allowed to login
+auth      requisite   pam_nologin.so
+
+# Check to make sure that root is allowed to login
+# Disabled by default. You will need to create /etc/securetty
+# file for this module to function. See man 5 securetty.
+#auth      required    pam_securetty.so
+
+# Additional group memberships - disabled by default
+#auth      optional    pam_group.so
+
+# include the default auth settings
+auth      include     system-auth
+
+# check access for the user
+account   required    pam_access.so
+
+# include the default account settings
+account   include     system-account
+
+# Set default environment variables for the user
+session   required    pam_env.so
+
+# Set resource limits for the user
+session   required    pam_limits.so
+
+# Display date of last login - Disabled by default
+#session   optional    pam_lastlog.so
+
+# Display the message of the day - Disabled by default
+#session   optional    pam_motd.so
+
+# Check user's mail - Disabled by default
+#session   optional    pam_mail.so      standard quiet
+
+# include the default session and password settings
+session   include     system-session
+password  include     system-password
+
+# End /etc/pam.d/login
+EOF
+    sudo mv {/tmp,/etc}/pam.d/login
+    
+
+    cat > /tmp/pam.d/passwd << "EOF"
+# Begin /etc/pam.d/passwd
+
+password  include     system-password
+
+# End /etc/pam.d/passwd
+EOF
+    sudo mv {/tmp,/etc}/pam.d/passwd
+
+    cat > /tmp/pam.d/su << "EOF"
+# Begin /etc/pam.d/su
+
+# always allow root
+auth      sufficient  pam_rootok.so
+auth      include     system-auth
+
+# include the default account settings
+account   include     system-account
+
+# Set default environment variables for the service user
+session   required    pam_env.so
+
+# include system session defaults
+session   include     system-session
+
+# End /etc/pam.d/su
+EOF
+    sudo mv {/tmp,/etc}/pam.d/su
+
+    cat > /tmp/pam.d/chage << "EOF"
+#Begin /etc/pam.d/chage
+
+# always allow root
+auth      sufficient  pam_rootok.so
+
+# include system defaults for auth account and session
+auth      include     system-auth
+account   include     system-account
+session   include     system-session
+
+# Always permit for authentication updates
+password  required    pam_permit.so
+
+# End /etc/pam.d/chage
+EOF
+    sudo mv {/tmp,/etc}/pam.d/chage
+
+    for PROGRAM in chfn chgpasswd chpasswd chsh groupadd groupdel  groupmems groupmod newusers useradd userdel usermod
+    do
+	sudo install -v -m644 /etc/pam.d/chage /etc/pam.d/${PROGRAM}
+	sudo sed -i "s/chage/$PROGRAM/" /etc/pam.d/${PROGRAM}
+    done
+
+    [ -f /etc/login.access ] && sudo mv -v /etc/login.access{,.NOUSE}
+    [ -f /etc/limits ] &&sudo  mv -v /etc/limits{,.NOUSE}
+}
+
+__shadow()
+{
+    __shadow-4.2.1
+}
+
 __libsigsegv-git()
 {
     __dep ""
@@ -4960,11 +5309,41 @@ __systemd()
     sudo ln -s /run /var/run
 
     ./autogen.sh
-    ./configure CFLAGS='-O0 -ftrapv' --enable-compat-libs --enable-kdbus --sysconfdir=/etc \
-        --localstatedir=/var --libdir=/usr/lib64 --enable-gtk-doc --enable-terminal
+    ./configure CFLAGS='-g -O0 -ftrapv' --enable-compat-libs --enable-kdbus --sysconfdir=/etc --localstatedir=/var --libdir=/usr/lib64
+    
     __mk
     __mkinst
+    sudo mv -v /usr/lib/libnss_{myhostname,mymachines,resolve}.so.2 /lib
+    sudo rm -rfv /usr/lib/rpm
     sudo systemd-machine-id-setup
+
+    mkdir /tmp/pam.d
+    cat >> /tmp/pam.d/system-session << "EOF"
+# Begin Systemd addition
+    
+session   required    pam_loginuid.so
+session   optional    pam_systemd.so
+
+# End Systemd addition
+EOF
+    sudo mv {/tmp,/etc}/pam.d/system-session
+    
+    cat > /tmp/pam.d/systemd-user << "EOF"
+# Begin /etc/pam.d/systemd-user
+
+account  required pam_access.so
+account  include  system-account
+
+session  required pam_env.so
+session  required pam_limits.so
+session  include  system-session
+
+auth     required pam_deny.so
+password required pam_deny.so
+
+# End /etc/pam.d/systemd-user
+EOF
+    sudo mv {/tmp,/etc}/pam.d/systemd-user
 }
 
 __systemd-ui()
@@ -4975,12 +5354,12 @@ __systemd-ui()
     __common systemd-ui
 }
 
-__sqlite-3.9.1()
+__sqlite-3.10.2()
 {
     __dep unzip
 
-    __wget http://sqlite.org/2015/sqlite-autoconf-3090100.tar.gz
-    __dcd sqlite-autoconf-3090100
+    __wget http://sqlite.org/2016/sqlite-autoconf-3100200.tar.gz
+    __dcd sqlite-autoconf-3100200
     ./configure --prefix=/usr --sysconfdir=/etc \
 	CFLAGS="-DSQLITE_ENABLE_FTS3=1 -DSQLITE_ENABLE_COLUMN_METADATA=1 \
                 -DSQLITE_ENABLE_UNLOCK_NOTIFY=1 -DSQLITE_SECURE_DELETE=1"
@@ -4990,7 +5369,7 @@ __sqlite-3.9.1()
 
 __sqlite()
 {
-    __sqlite-3.9.1
+    __sqlite-3.10.2
 }
 
 __svn-1.9.2()
@@ -5339,7 +5718,13 @@ __wine-git()
 
     __git-clone git://source.winehq.org/git/wine.git
     __cd wine
-    __bld-common
+    case $(uname -m) in
+	x86_64) PKG_CONFIG_PATH="${PKG_CONFIG_PATH64}" USE_ARCH=64 ./configure --prefix=/usr --sysconfdir=/etc --enable-win64 ;;
+	i686) ./configure --prefix=/usr --sysconfdir=/etc ;;
+	*) echo "未サポートのCPUです" && exit ;;
+    esac
+    __mk
+    __mkinst
 }
 
 __wine()
@@ -5376,24 +5761,24 @@ __wayland()
     __wayland-git
 }
 
-__webkitgtk-2.8.5()
+__webkitgtk-2.10.7()
 {
     __dep cmake gst-plugin-base gtk+3 icu libgudev libsecret libsoup libwebp mesa ruby sqlite which gobject-introspection
 
-    __wget http://webkitgtk.org/releases/webkitgtk-2.8.5.tar.xz
-    __dcd webkitgtk-2.8.5
+    __wget http://webkitgtk.org/releases/webkitgtk-2.10.7.tar.xz
+    __dcd webkitgtk-2.10.7
     sed -e 's/“/\"/' -e 's/”/\"/' \ -i Source/WebCore/xml/XMLViewer.{css,js}
     mkdir build
     cd build
     cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_SKIP_RPATH=ON \
-	  -DPORT=GTK -DLIB_INSTALL_DIR=/usr/lib -DENABLE_MINIBROWSER=ON -Wno-dev ..
+	  -DPORT=GTK -DLIB_INSTALL_DIR=/usr/lib -DUSE_LIBHYPHEN=OFF -DENABLE_MINIBROWSER=ON -Wno-dev ..
     __mk
     __mkinst
 }
 
 __webkitgtk()
 {
-    __webkitgtk-2.8.5
+    __webkitgtk-2.10.7
 }
 
 __weston-git()
