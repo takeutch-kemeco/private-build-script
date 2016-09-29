@@ -213,21 +213,21 @@ __berkeley-db()
     __berkeley-db-6.1.26
 }
 
-__binutils-2.26()
+__binutils-2.27()
 {
     __dep ""
 
-    __wget http://ftp.gnu.org/gnu/binutils/binutils-2.26.tar.bz2
-    __decord binutils-2.26
+    __wget http://ftp.gnu.org/gnu/binutils/binutils-2.27.tar.bz2
+    __decord binutils-2.27
     __cdbt
-    ../binutils-2.26/configure --prefix=/usr --enable-shared --enable-werror=no
+    ../binutils-2.27/configure --prefix=/usr --enable-shared --enable-werror=no
     __mk tooldir=/usr
     __mkinst tooldir=/usr install
 }
 
 __binutils()
 {
-    __binutils-2.26
+    __binutils-2.27
 }
 
 __bison-git()
@@ -374,20 +374,20 @@ __cmake-git()
     __bld-common-simple --system-libs --mandir=/share/man --no-system-jsoncpp --docdir=/share/doc/cmake
 }
 
-__cmake-3.4.3()
+__cmake-3.6.2()
 {
     __dep curl libarchive
 
-    __wget http://www.cmake.org/files/v3.4/cmake-3.4.3.tar.gz
-    __dcd cmake-3.4.3
-    ./bootstrap --prefix=/usr --system-libs --mandir=/share/man --no-system-jsoncpp --docdir=/share/doc/cmake-3.4.3
+    __wget http://www.cmake.org/files/v3.6/cmake-3.6.2.tar.gz
+    __dcd cmake-3.6.2
+    ./bootstrap --prefix=/usr --system-libs --mandir=/share/man --no-system-jsoncpp --docdir=/share/doc/cmake-3.6.2
     __mk
     __mkinst
 }
 
 __cmake()
 {
-    __cmake-3.4.3
+    __cmake-3.6.2
 }
 
 __cogl()
@@ -584,14 +584,14 @@ __dbus()
     __dep expat
 
     __git-clone git://anongit.freedesktop.org/dbus/dbus
-    sudo groupadd -g 27 messagebus
-    sudo useradd -c "D-Bus Message Daemon User" -d /var/run/dbus -u 27 \
+    sudo groupadd -g 18 messagebus
+    sudo useradd -c "D-Bus Message Daemon User" -d /var/run/dbus -u 18 \
                  -g messagebus -s /bin/false messagebus
     __cd dbus
     __bld-common --localstatedir=/var                   \
                  --libexecdir=/usr/lib/dbus-1.0         \
                  --with-console-auth-dir=/run/console/  \
-                 --enable-systemd=no                       \
+                 --enable-systemd=yes                   \
                  --disable-Werror                       \
                  --disable-tests                        \
                  --enable-xml-docs=no
@@ -956,19 +956,19 @@ __docbook-xsl()
     __docbook-xsl-1.78.1
 }
 
-__doxygen-1.8.10()
+__doxygen-1.8.12()
 {
     __dep cmake ghostscript python2
 
-    __wget http://ftp.stack.nl/pub/doxygen/doxygen-1.8.10.src.tar.gz
-    __dcd doxygen-1.8.10
+    __wget http://ftp.stack.nl/pub/doxygen/doxygen-1.8.12.src.tar.gz
+    __dcd doxygen-1.8.12
     mkdir -v build
     cd build
 
     cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr ..
     __mk
     sed -i 's:man/man1:share/&:' ../doc/CMakeLists.txt &&
-    cmake -DDOC_INSTALL_DIR=share/doc/doxygen-1.8.10 -Dbuild_doc=ON ..
+    cmake -DDOC_INSTALL_DIR=share/doc/doxygen-1.8.12 -Dbuild_doc=ON ..
     __mk docs
     __mkinst
     sudo install -vm644 ../doc/*.1 /usr/share/man/man1
@@ -976,7 +976,7 @@ __doxygen-1.8.10()
 
 __doxygen()
 {
-    __doxygen-1.8.10
+    __doxygen-1.8.12
 }
 
 __emacs-24.5()
@@ -1271,13 +1271,16 @@ __fontconfig()
     __bld-common --localstatedir=/var --disable-docs PYTHON=/usr/bin/python3
 }
 
-__freeglut-2.8.1()
+__freeglut-3.0.0()
 {
     __dep "?"
 
-    __wget "?"
-    __dcd freeglut-2.8.1
-    __bld-common
+    __wget http://downloads.sourceforge.net/freeglut/freeglut-3.0.0.tar.gz
+    __dcd freeglut-3.0.0
+    __cdbt
+    cmake -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_BUILD_TYPE=Release -DFREEGLUT_BUILD_DEMOS=OFF -DFREEGLUT_BUILD_STATIC_LIBS=OFF ../freeglut-3.0.0
+    __mk
+    __mkinst
 }
 
 __freeglut-svn()
@@ -1294,7 +1297,7 @@ __freeglut-svn()
 
 __freeglut()
 {
-    __freeglut-svn
+    __freeglut-3.0.0
 }
 
 __freetype2()
@@ -1408,14 +1411,14 @@ __gcc-java()
     __gcc-java-5.3.0
 }
 
-__gcc-6.1.0()
+__gcc-6.2.0()
 {
     __dep gmp mpfr mpc
 
-    __wget http://ftp.tsukuba.wide.ad.jp/software/gcc/releases/gcc-6.1.0/gcc-6.1.0.tar.bz2
-    __decord gcc-6.1.0
+    __wget http://ftp.tsukuba.wide.ad.jp/software/gcc/releases/gcc-6.2.0/gcc-6.2.0.tar.bz2
+    __decord gcc-6.2.0
     __cdbt
-    ../gcc-6.1.0/configure --prefix=/usr --enable-languages=c,c++,fortran,go,objc,obj-c++ --disable-multilib --with-system-zlib
+    ../gcc-6.2.0/configure --prefix=/usr --enable-languages=c,c++,fortran,go,objc,obj-c++ --disable-multilib --with-system-zlib
     __mk
     __mkinst
     sudo mkdir -pv /usr/share/gdb/auto-load/usr/lib
@@ -1425,7 +1428,7 @@ __gcc-6.1.0()
 
 __gcc()
 {
-    __gcc-6.1.0
+    __gcc-6.2.0
 }
 
 __gcr()
@@ -1603,40 +1606,40 @@ __glib()
     __bld-common --with-pcre=system --enable-debug=no --disable-compile-warnings --with-python=/usr/bin/python3
 }
 
-__glibc-2.23-opt()
+__glibc-2.24-opt()
 {
     __dep ""
 
-    __wget http://ftp.gnu.org/gnu/libc/glibc-2.23.tar.xz
-    __decord glibc-2.23
+    __wget http://ftp.gnu.org/gnu/libc/glibc-2.24.tar.xz
+    __decord glibc-2.24
     __cdbt
     cat > configparms << .
 ASFLAGS-config=-O4 -march=native -mtune=native -msse4.2
 .
-    $BASE_DIR/glibc-2.23/configure --prefix=/opt/glibc --sysconfdir=/opt/glibc/etc  --disable-profile --enable-kernel=3.14 --libexecdir=/opt/glibc/usr/lib/glibc --enable-obsolete-rpc --disable-werror --enable-mathvec
+    $BASE_DIR/glibc-2.24/configure --prefix=/opt/glibc --sysconfdir=/opt/glibc/etc  --disable-profile --enable-kernel=3.14 --libexecdir=/opt/glibc/usr/lib/glibc --enable-obsolete-rpc --disable-werror --enable-mathvec
     __mk
     __mkinst
-    sudo cp -v $BASE_DIR/glibc-2.23/nscd/nscd.conf /opt/glibc/etc/nscd.conf
+    sudo cp -v $BASE_DIR/glibc-2.24/nscd/nscd.conf /opt/glibc/etc/nscd.conf
     sudo mkdir -pv /opt/glibc/var/cache/nscd
     sudo mkdir -pv /opt/glibc/usr/lib/locale
     sudo localedef -i ja_JP -f UTF-8 ja_JP.UTF-8
 #   sudo make localedata/install-locales
 }
 
-__glibc-2.23-root()
+__glibc-2.24-root()
 {
     __dep ""
 
-    __wget http://ftp.gnu.org/gnu/libc/glibc-2.23.tar.xz
-    __decord glibc-2.23
+    __wget http://ftp.gnu.org/gnu/libc/glibc-2.24.tar.xz
+    __decord glibc-2.24
     __cdbt
     cat > configparms << .
 ASFLAGS-config=-O4 -march=native -mtune=native -msse4.2
 .
-     $BASE_DIR/glibc-2.23/configure --prefix=/ --sysconfdir=/etc  --disable-profile --enable-kernel=3.14 --libexecdir=/usr/lib/glibc --enable-obsolete-rpc --disable-werror --enable-mathvec
+     $BASE_DIR/glibc-2.24/configure --prefix=/ --sysconfdir=/etc  --disable-profile --enable-kernel=3.14 --libexecdir=/usr/lib/glibc --enable-obsolete-rpc --disable-werror --enable-mathvec
     __mk
     __mkinst
-    sudo cp -v $BASE_DIR/glibc-2.23/nscd/nscd.conf /etc/nscd.conf
+    sudo cp -v $BASE_DIR/glibc-2.24/nscd/nscd.conf /etc/nscd.conf
     sudo mkdir -pv /var/cache/nscd
     sudo mkdir -pv /usr/lib/locale
     sudo localedef -i ja_JP -f UTF-8 ja_JP.UTF-8
@@ -1653,12 +1656,12 @@ __glib-networking()
 
 __glibc()
 {
-    echo "__glibc-2.23-root か __glibc-2.23-opt-glibc を選択してください。"
+    echo "__glibc-2.24-root か __glibc-2.24-opt を選択してください。"
     echo "手順:"
     echo "    1. /etc/ld.so.conf にて、ライブラリ参照の優先度を 『先=/lib 後=/opt/glibc/lib』 となるように設定し、sudo ldconfig にてキャッシュ更新する。"
-    echo "    2. all-build.sh __glibc-2.22-opt にて /opt/glibc/lib へライブラリをインストールする。"
+    echo "    2. all-build.sh __glibc-2.24-opt にて /opt/glibc/lib へライブラリをインストールする。"
     echo "    3. /etc/ld.so.conf にて、ライブラリ参照の優先度を 『先=/opt/glibc/lib 後=/lib』 となるように設定し、sudo ldconfig にてキャッシュ更新する。"
-    echo "    4. all-build.sh __glibc-2.22-root にて /lib へライブラリをインストールする。"
+    echo "    4. all-build.sh __glibc-2.24-root にて /lib へライブラリをインストールする。"
     echo "    5. /etc/ld.so.conf にて、ライブラリ参照の優先度を 『先=/lib 後=/opt/glibc/lib』 となるように設定し、sudo ldconfig にてキャッシュ更新する。"
     echo "    6. これで正常に動くようならば、/opt/glibc は消してもよい。/etc/ld.so.conf の /opt/glibc/lib 行を削除してもよい。"
     echo ""
@@ -1688,17 +1691,17 @@ __gobject-introspection()
     __bld-common --disable-static
 }
 
-__gmp-6.1.0()
+__gmp-6.1.1()
 {
     __dep ""
 
-    __wget http://ftp.gnu.org/gnu/gmp/gmp-6.1.0.tar.xz
-    __decord gmp-6.1.0
-    __cd gmp-6.1.0
+    __wget http://ftp.gnu.org/gnu/gmp/gmp-6.1.1.tar.xz
+    __decord gmp-6.1.1
+    __cd gmp-6.1.1
 
     case $(uname -m) in
-    x86_64) ./configure --prefix=/usr --enable-cxx --docdir=/usr/share/doc/gmp-6.1.0 --build=x86_64-unknown-linux-gnu ;;
-    i686)      ./configure --prefix=/usr --enable-cxx --docdir=/usr/share/doc/gmp-6.1.0  ;;
+    x86_64) ./configure --prefix=/usr --enable-cxx --docdir=/usr/share/doc/gmp-6.1.1 --build=x86_64-unknown-linux-gnu ;;
+    i686)      ./configure --prefix=/usr --enable-cxx --docdir=/usr/share/doc/gmp-6.1.1  ;;
     *) echo "未サポートのCPUです" && exit ;;
     esac
 
@@ -1710,7 +1713,7 @@ __gmp-6.1.0()
 
 __gmp()
 {
-    __gmp-6.1.0
+    __gmp-6.1.1
 }
 
 __gnome-icon-theme()
@@ -1763,18 +1766,18 @@ __gnupg.git()
     __bld-common --enable-maintainer-mode  --with-readline=/usr/lib
 }
 
-__gnupg-2.1.11()
+__gnupg-2.1.15()
 {
     __dep pth libassuan libgcrypt libksba
 
-    __wget ftp://ftp.gnupg.org/gcrypt/gnupg/gnupg-2.1.11.tar.bz2
-    __dcd gnupg-2.1.11
+    __wget ftp://ftp.gnupg.org/gcrypt/gnupg/gnupg-2.1.15.tar.bz2
+    __dcd gnupg-2.1.15
     __bld-common --enable-symcryptrun --with-readline=/usr/lib
 }
 
 __gnupg()
 {
-    __gnupg-2.1.11
+    __gnupg-2.1.15
 }
 
 __gnutls.git()
@@ -1788,18 +1791,18 @@ __gnutls.git()
     __bld-common --with-default-trust-store-file=/etc/ssl/ca-bundle.crt
 }
 
-__gnutls-3.4.6()
+__gnutls-3.4.9()
 {
     __dep nettle gmp libtasn1 p11-kit libidn libunbound zlib certificate-authority-certificates
 
-    __wget ftp://ftp.gnutls.org/gcrypt/gnutls/v3.4/gnutls-3.4.6.tar.xz
-    __dcd gnutls-3.4.6
+    __wget ftp://ftp.gnutls.org/gcrypt/gnutls/v3.4/gnutls-3.4.9.tar.xz
+    __dcd gnutls-3.4.9
     __bld-common --with-default-trust-store-file=/etc/ssl/ca-bundle.crt --enable-gtk-doc-thml=no
 }
 
 __gnutls()
 {
-    __gnutls-3.4.6
+    __gnutls-3.4.9
 }
 
 __grub-git()
@@ -2532,13 +2535,13 @@ __linux-pam-git()
     __bld-common --enable-securedir=/lib/security --disable-regenerate-docu --enable-debug=no
 }
 
-__linux-pam-1.2.1()
+__linux-pam-1.3.0()
 {
     __dep ""
 
-    __wget http://linux-pam.org/library/Linux-PAM-1.2.1.tar.bz2
-    __dcd Linux-PAM-1.2.1
-    __bld-common --libdir=/usr/lib --enable-securedir=/lib/security --docdir=/usr/share/doc/Linux-PAM-1.2.1
+    __wget http://linux-pam.org/library/Linux-PAM-1.3.0.tar.bz2
+    __dcd Linux-PAM-1.3.0
+    __bld-common --libdir=/usr/lib --enable-securedir=/lib/security --docdir=/usr/share/doc/Linux-PAM-1.3.0
     sudo chmod -v 4755 /sbin/unix/chkpwd
     for file in pam pam_misc pamc
     do
@@ -2549,7 +2552,7 @@ __linux-pam-1.2.1()
 
 __linux-pam()
 {
-    __linux-pam-1.2.1
+    __linux-pam-1.3.0
 }
 
 __lcms2()
@@ -2595,18 +2598,18 @@ __libass()
     __libass-0.12.3
 }
 
-__libassuan-2.2.1()
+__libassuan-2.4.3()
 {
     __dep "?"
 
-    __wget ftp://ftp.gnupg.org/gcrypt/libassuan/libassuan-2.2.1.tar.bz2
-    __dcd libassuan-2.2.1
+    __wget ftp://ftp.gnupg.org/gcrypt/libassuan/libassuan-2.4.3.tar.bz2
+    __dcd libassuan-2.4.3
     __bld-common
 }
 
 __libassuan()
 {
-    __libassuan-2.2.1
+    __libassuan-2.4.3
 }
 
 __libcanberra-git()
@@ -2752,18 +2755,18 @@ __libgcrypt.git()
     cp Makefile.am{.orig,}
 }
 
-__libgcrypt-1.6.5()
+__libgcrypt-1.7.3()
 {
     __dep libgpg-error libcap pth
 
-    __wget ftp://ftp.gnupg.org/gcrypt/libgcrypt/libgcrypt-1.6.5.tar.bz2
-    __dcd libgcrypt-1.6.5
+    __wget ftp://ftp.gnupg.org/gcrypt/libgcrypt/libgcrypt-1.7.3.tar.bz2
+    __dcd libgcrypt-1.7.3
     __bld-common --enable-maintainer-mode
 }
 
 __libgcrypt()
 {
-    __libgcrypt-1.6.5
+    __libgcrypt-1.7.3
 }
 
 __libgee-git()
@@ -2802,18 +2805,18 @@ __libgpg-error-git()
     __bld-common --enable-maintainer-mode
 }
 
-__libgpg-error-1.21()
+__libgpg-error-1.24()
 {
     __dep ""
 
-    __wget ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.21.tar.bz2
-    __dcd libgpg-error-1.21
+    __wget ftp://ftp.gnupg.org/gcrypt/libgpg-error/libgpg-error-1.24.tar.bz2
+    __dcd libgpg-error-1.24
     __bld-common --enable-maintainer-mode
 }
 
 __libgpg-error()
 {
-    __libgpg-error-1.21
+    __libgpg-error-1.24
 }
 
 __libgudev-git()
@@ -2882,18 +2885,18 @@ __libinput()
     __libinput-git
 }
 
-__libksba-1.3.3()
+__libksba-1.3.5()
 {
     __dep libgpg-error
 
-    __wget ftp://ftp.gnupg.org/gcrypt/libksba/libksba-1.3.3.tar.bz2
-    __dcd libksba-1.3.3
+    __wget ftp://ftp.gnupg.org/gcrypt/libksba/libksba-1.3.5.tar.bz2
+    __dcd libksba-1.3.5
     __bld-common
 }
 
 __libksba()
 {
-    __libksba-1.3.3
+    __libksba-1.3.5
 }
 
 __libmnl()
@@ -3098,7 +3101,7 @@ __libseccomp()
 {
     __dep ""
 
-    __git-clone git://git.code.sf.net/p/libseccomp/libseccomp
+    __git-clone https://github.com/seccomp/libseccomp.git
     __common libseccomp
 }
 
@@ -3392,13 +3395,13 @@ __libxml2-git()
     __bld-common --disable-static --with-history --with-python=/usr/bin/python3
 }
 
-__libxml2-2.9.3()
+__libxml2-2.9.4()
 {
     __dep python2
 
-    __wget http://xmlsoft.org/sources/libxml2-2.9.3.tar.gz
+    __wget http://xmlsoft.org/sources/libxml2-2.9.4.tar.gz
     __wget http://www.w3.org/XML/Test/xmlts20130923.tar.gz
-    __dcd libxml2-2.9.2
+    __dcd libxml2-2.9.4
     tar xf $SRC_DIR/xmlts20130923.tar.gz
     sed \
 	-e /xmlInitializeCatalog/d \
@@ -3410,7 +3413,7 @@ __libxml2-2.9.3()
 
 __libxml2()
 {
-    __libxml2-2.9.3
+    __libxml2-2.9.4
 }
 
 __libxslt-1.1.28()
@@ -3473,42 +3476,31 @@ __libvorbis()
     __libvorbis-git
 }
 
-__llvm-3.7.1()
+__llvm-3.9.0()
 {
     __dep libffi python2 zip libxml2
 
-    __wget http://llvm.org/releases/3.7.1/llvm-3.7.1.src.tar.xz
-    __wget http://llvm.org/releases/3.7.1/cfe-3.7.1.src.tar.xz
-    __wget http://llvm.org/releases/3.7.1/compiler-rt-3.7.1.src.tar.xz
-    __dcd llvm-3.7.1.src
-    tar -xf $SRC_DIR/cfe-3.7.1.src.tar.xz -C tools
-    tar -xf $SRC_DIR/compiler-rt-3.7.1.src.tar.xz -C projects
+    __wget http://llvm.org/releases/3.9.0/llvm-3.9.0.src.tar.xz
+    __wget http://llvm.org/releases/3.9.0/cfe-3.9.0.src.tar.xz
+    __wget http://llvm.org/releases/3.9.0/compiler-rt-3.9.0.src.tar.xz
+    __dcd llvm-3.9.0.src
+    tar -xf $SRC_DIR/cfe-3.9.0.src.tar.xz -C tools
+    tar -xf $SRC_DIR/compiler-rt-3.9.0.src.tar.xz -C projects
 
-    mv tools/cfe-3.7.1.src tools/clang
-    mv projects/compiler-rt-3.7.1.src projects/compiler-rt
-    sed -r "/ifeq.*CompilerTargetArch/s#i386#i686#g" \
-	-i projects/compiler-rt/make/platform/clang_linux.mk
-    sed -e "s:/docs/llvm:/share/doc/llvm-3.7.1:" -i Makefile.config.in
+    mv tools/cfe-3.9.0.src tools/clang
+    mv projects/compiler-rt-3.9.0.src projects/compiler-rt
 
     mkdir -v build
     cd build
 
-    CC=gcc CXX=g++ ../configure --prefix=/usr              \
-      --datarootdir=/usr/share   \
-      --sysconfdir=/etc          \
-      --enable-libffi            \
-      --enable-optimized         \
-      --enable-shared            \
-      --enable-targets=host      \
-      --disable-assertions       \
-      --docdir=/usr/share/doc/llvm-3.7.1
-    __mk
+    CC=gcc CXX=g++ cmake -DCMAKE_INSTALL_PREFIX=/usr -DLLVM_ENABLE_FFI=ON -DCMAKE_BUILD_TYPE=Release -DLLVM_BUILD_LLVM_DYLIB=ON -DLLVM_TARGETS_TO_BUILD="host;AMDGPU" -Wno-dev ..
+   __mk
     __mkinst
 }
 
 __llvm()
 {
-    __llvm-3.7.1
+    __llvm-3.9.0
 }
 
 __lm-sensors-svn()
@@ -3527,7 +3519,7 @@ __lm-sensors()
     __lm-sensors-svn
 }
 
-__lvm2-2.02.109()
+__lvm2-2.02.152()
 {
     ### Use kernel configuration
     ### Device Drivers --->
@@ -3539,15 +3531,15 @@ __lvm2-2.02.109()
 
     __dep ""
 
-    __wget ftp://sources.redhat.com/pub/lvm2/LVM2.2.02.109.tgz
-    __dcd LVM2.2.02.109
+    __wget ftp://sources.redhat.com/pub/lvm2/LVM2.2.02.152.tgz
+    __dcd LVM2.2.02.152
     __bld-common --exec-prefix= --with-confdir=/etc \
         --enable-applib --enable-cmdlib --enable-pkgconfig --enable-udev_sync
 }
 
 __lvm2()
 {
-    __lvm2-2.02.109
+    __lvm2-2.02.152
 }
 
 __libvpx-git()
@@ -3813,6 +3805,21 @@ __npapi-sdk()
 {
     __npapi-sdk-0.27.2
 }
+
+__npth-1.2()
+{
+    __dep ""
+
+    __wget ftp://ftp.gnupg.org/gcrypt/npth/npth-1.2.tar.bz2
+    __dcd npth-1.2
+    __bld-common
+}
+
+__npth()
+{
+    __npth-1.2
+}
+
 
 __nspr-4.10.10()
 {
@@ -4264,17 +4271,44 @@ __openssh-7.1p2()
     sudo install -v -m644 INSTALL LICENCE OVERVIEW README* /usr/share/doc/openssh-7.1p2
 }
 
-__openssh()
+__openssh-git()
 {
-    __openssh-7.1p2
+    __dep openssl linux-pam
+
+    __git-clone git://anongit.mindrot.org/openssh.git
+    __cd openssh
+
+    sudo install -v -m700 -d /var/lib/sshd
+    sudo chown -v root:sys /var/lib/sshd
+    sudo groupadd -g 50 sshd
+    sudo useradd -c 'sshd PrivSep' -d /var/lib/sshd -g sshd -s /bin/false -u 50 sshd
+
+    __self-autogen
+    $DIST_CLEAN
+    __cfg --prefix=/usr --libexecdir=/usr/lib/openssh --sysconfdir=/etc/ssh --datadir=/usr/share/sshd \
+        --with-md5-passwords --with-privsep-path=/var/lib/sshd
+
+    $MAKE_CLEAN
+    __mk
+    __mkinst
+
+    sudo install -v -m755 contrib/ssh-copy-id /usr/bin
+    sudo install -v -m644 contrib/ssh-copy-id.1 /usr/share/man/man1
+    sudo install -v -m755 -d /usr/share/doc/openssh
+    sudo install -v -m644 INSTALL LICENCE OVERVIEW README* /usr/share/doc/openssh
 }
 
-__openssl-1.0.2h()
+__openssh()
+{
+    __openssh-git
+}
+
+__openssl-1.0.2j()
 {
     __dep ""
 
-    __wget http://www.openssl.org/source/openssl-1.0.2h.tar.gz
-    __dcd openssl-1.0.2h
+    __wget http://www.openssl.org/source/openssl-1.0.2j.tar.gz
+    __dcd openssl-1.0.2j
     ./config --prefix=/usr --openssldir=/etc/ssl --libdir=lib shared zlib-dynamic
     make -j1
     sudo make uninstall
@@ -4287,7 +4321,7 @@ __openssl-1.0.2h()
 
 __openssl()
 {
-    __openssl-1.0.2h
+    __openssl-1.0.2j
 }
 
 __opus-1.1()
@@ -4411,7 +4445,7 @@ __polkit()
     __cd polkit
     sudo groupadd -fg 28 polkitd
     sudo useradd -c "PolicyKit Daemon Owner" -d /etc/polkit-1 -u 28 -g polkitd -s /bin/false polkitd
-    __bld-common --localstatedir=/var --libexecdir=/usr/lib/polkit-1 --with-authfw=shadow
+    __bld-common --localstatedir=/var --disable-static --libexecdir=/usr/lib/polkit-1 --with-authfw=shadow --enable-libsystemd-login=yes
     cat > /tmp/polkit-1 << .
 # Begin /etc/pam.d/polkit-1
 
@@ -4497,24 +4531,24 @@ __pulseaudio()
     __pulseaudio-6.0
 }
 
-__python-2.7.11()
+__python-2.7.12()
 {
     __dep expat libffi
 
-    __wget http://www.python.org/ftp/python/2.7.11/Python-2.7.11.tar.xz
-    __wget http://docs.python.org/ftp/python/doc/2.7.11/python-2.7.11-docs-html.tar.bz2
-    __dcd Python-2.7.11
+    __wget http://www.python.org/ftp/python/2.7.12/Python-2.7.12.tar.xz
+    __wget http://docs.python.org/ftp/python/doc/2.7.11/python-2.7.12-docs-html.tar.bz2
+    __dcd Python-2.7.12
     __bld-common --enable-shared --with-system-expat --with-system-ffi --enable-unicode=ucs4
     sudo chmod -v 755 /usr/lib/libpython2.7.so.1.0
-    sudo install -v -dm755 /usr/share/doc/python-2.7.11
-    sudo tar --strip-components=1 -C /usr/share/doc/python-2.7.11 --no-same-owner -xvf $SRC_DIR/python-2.7.11-docs-html.tar.bz2
-    sudo find /usr/share/doc/python-2.7.11 -type d -exec chmod 0755 {} \;
-    sudo find /usr/share/doc/python-2.7.11 -type f -exec chmod 0644 {} \;
+    sudo install -v -dm755 /usr/share/doc/python-2.7.12
+    sudo tar --strip-components=1 -C /usr/share/doc/python-2.7.12 --no-same-owner -xvf $SRC_DIR/python-2.7.12-docs-html.tar.bz2
+    sudo find /usr/share/doc/python-2.7.12 -type d -exec chmod 0755 {} \;
+    sudo find /usr/share/doc/python-2.7.12 -type f -exec chmod 0644 {} \;
 }
 
 __python-27()
 {
-    __python-2.7.11
+    __python-2.7.12
 }
 
 __python-3.5.1()
@@ -5354,12 +5388,12 @@ __systemd-ui()
     __common systemd-ui
 }
 
-__sqlite-3.10.2()
+__sqlite-3.14.2()
 {
     __dep unzip
 
-    __wget http://sqlite.org/2016/sqlite-autoconf-3100200.tar.gz
-    __dcd sqlite-autoconf-3100200
+    __wget http://sqlite.org/2016/sqlite-autoconf-3140200.tar.gz
+    __dcd sqlite-autoconf-3140200
     ./configure --prefix=/usr --sysconfdir=/etc \
 	CFLAGS="-DSQLITE_ENABLE_FTS3=1 -DSQLITE_ENABLE_COLUMN_METADATA=1 \
                 -DSQLITE_ENABLE_UNLOCK_NOTIFY=1 -DSQLITE_SECURE_DELETE=1"
@@ -5369,7 +5403,7 @@ __sqlite-3.10.2()
 
 __sqlite()
 {
-    __sqlite-3.10.2
+    __sqlite-3.14.2
 }
 
 __svn-1.9.2()
@@ -5420,15 +5454,15 @@ __tar()
     __tar-1.28
 }
 
-__tcl-8.6.4()
+__tcl-8.6.6()
 {
     __dep ""
 
-    __wget http://downloads.sourceforge.net/tcl/tcl8.6.4-src.tar.gz
-    __wget http://downloads.sourceforge.net/tcl/tcl8.6.4-html.tar.gz
-    __decord tcl8.6.4-src
-    __cd tcl8.6.4
-    gzip -dc tcl8.6.4-html.tar.gz | tar xvf -
+    __wget http://downloads.sourceforge.net/tcl/tcl8.6.6-src.tar.gz
+    __wget http://downloads.sourceforge.net/tcl/tcl8.6.6-html.tar.gz
+    __decord tcl8.6.6-src
+    __cd tcl8.6.6
+    gzip -dc tcl8.6.6-html.tar.gz | tar xvf -
 
     export SRCDIR=`pwd`
 
@@ -5439,16 +5473,16 @@ __tcl-8.6.4()
 
     sed -e "s#$SRCDIR/unix#/usr/lib#" -e "s#$SRCDIR#/usr/include#" -i tclConfig.sh
 
-    sed -e "s#$SRCDIR/unix/pkgs/tdbc1.0.3#/usr/lib/tdbc1.0.3#" \
-    -e "s#$SRCDIR/pkgs/tdbc1.0.3/generic#/usr/include#"    \
-    -e "s#$SRCDIR/pkgs/tdbc1.0.3/library#/usr/lib/tcl8.6#" \
-    -e "s#$SRCDIR/pkgs/tdbc1.0.3#/usr/include#"            \
-    -i pkgs/tdbc1.0.3/tdbcConfig.sh
+    sed -e "s#$SRCDIR/unix/pkgs/tdbc1.0.4#/usr/lib/tdbc1.0.4#" \
+    -e "s#$SRCDIR/pkgs/tdbc1.0.4/generic#/usr/include#"    \
+    -e "s#$SRCDIR/pkgs/tdbc1.0.4/library#/usr/lib/tcl8.6#" \
+    -e "s#$SRCDIR/pkgs/tdbc1.0.4#/usr/include#"            \
+    -i pkgs/tdbc1.0.4/tdbcConfig.sh
 
-    sed -e "s#$SRCDIR/unix/pkgs/itcl4.0.3#/usr/lib/itcl4.0.3#" \
-    -e "s#$SRCDIR/pkgs/itcl4.0.3/generic#/usr/include#"    \
-    -e "s#$SRCDIR/pkgs/itcl4.0.3#/usr/include#"            \
-    -i pkgs/itcl4.0.3/itclConfig.sh
+    sed -e "s#$SRCDIR/unix/pkgs/itcl4.0.5#/usr/lib/itcl4.0.5#" \
+    -e "s#$SRCDIR/pkgs/itcl4.0.5/generic#/usr/include#"    \
+    -e "s#$SRCDIR/pkgs/itcl4.0.5#/usr/include#"            \
+    -i pkgs/itcl4.0.5/itclConfig.sh
 
     unset SRCDIR
 
@@ -5457,13 +5491,13 @@ __tcl-8.6.4()
     sudo ln -v -sf tclsh8.6 /usr/bin/tclsh
     sudo chmod -v 755 /usr/lib/libtcl8.6.so
 
-    sudo mkdir -v -p /usr/share/doc/tcl-8.6.4
-    sudo cp -v -r  ../html/* /usr/share/doc/tcl-8.6.4
+    sudo mkdir -v -p /usr/share/doc/tcl-8.6.6
+    sudo cp -v -r  ../html/* /usr/share/doc/tcl-8.6.6
 }
 
 __tcl()
 {
-    __tcl-8.6.4
+    __tcl-8.6.6
 }
 
 __texinfo-5.2()
@@ -5509,13 +5543,13 @@ __thunar-volman()
     __thunar-volman-0.8.1
 }
 
-__tk-8.6.4()
+__tk-8.6.6()
 {
     __dep tcl xorg
 
-    __wget http://downloads.sourceforge.net/tcl/tk8.6.4-src.tar.gz
-    __decord tk8.6.4-src
-    __cd tk8.6.4
+    __wget http://downloads.sourceforge.net/tcl/tk8.6.6-src.tar.gz
+    __decord tk8.6.6-src
+    __cd tk8.6.6
 
     cd unix
     __bld-common --mandir=/usr/share/man $([ $(uname -m) = x86_64 ] && echo --enable-64bit)
@@ -5533,7 +5567,7 @@ __tk-8.6.4()
 
 __tk()
 {
-    __tk-8.6.4
+    __tk-8.6.6
 }
 
 __tumbler-0.1.31()
