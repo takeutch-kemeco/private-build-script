@@ -131,18 +131,28 @@ __autoconf()
     __autoconf-2.69
 }
 
-__autoconf-archive-2015.02.24()
+__autoconf-archive-2016.09.16()
 {
-    __dep autoonf
+    __dep autoconf libtool
 
-    __wget http://ftp.gnu.org/gnu/autoconf-archive/autoconf-archive-2015.02.24.tar.xz
-    __dcd autoconf-archive-2015.02.24
+    __wget http://ftp.gnu.org/gnu/autoconf-archive/autoconf-archive-2016.09.16.tar.xz
+    __dcd autoconf-archive-2016.09.16
+    __bld-common
+}
+
+__autoconf-archive-git()
+{
+    __dep autoconf
+
+    __git-clone git://git.sv.gnu.org/autoconf-archive.git
+    __cd autoconf-archive
+    ./bootstrap.sh
     __bld-common
 }
 
 __autoconf-archive()
 {
-    __autoconf-archive-2015.02.24
+    __autoconf-archive-2016.09.16
 }
 
 __automake-1.15()
@@ -1411,14 +1421,14 @@ __gcc-java()
     __gcc-java-5.3.0
 }
 
-__gcc-6.2.0()
+__gcc-6.3.0()
 {
     __dep gmp mpfr mpc
 
-    __wget http://ftp.tsukuba.wide.ad.jp/software/gcc/releases/gcc-6.2.0/gcc-6.2.0.tar.bz2
-    __decord gcc-6.2.0
+    __wget http://ftp.tsukuba.wide.ad.jp/software/gcc/releases/gcc-6.3.0/gcc-6.3.0.tar.bz2
+    __decord gcc-6.3.0
     __cdbt
-    ../gcc-6.2.0/configure --prefix=/usr --enable-languages=c,c++,fortran,go,objc,obj-c++ --disable-multilib --with-system-zlib
+    ../gcc-6.3.0/configure --prefix=/usr --enable-languages=c,c++,fortran,go,objc,obj-c++ --disable-multilib --with-system-zlib
     __mk
     __mkinst
     sudo mkdir -pv /usr/share/gdb/auto-load/usr/lib
@@ -1428,7 +1438,7 @@ __gcc-6.2.0()
 
 __gcc()
 {
-    __gcc-6.2.0
+    __gcc-6.3.0
 }
 
 __gcr()
@@ -1494,18 +1504,33 @@ __geoclue2()
     __geoclue-git
 }
 
-__gettext-0.19.7()
+__gettext-0.19.8.1()
 {
     __dep ""
 
-    __wget http://ftp.gnu.org/gnu/gettext/gettext-0.19.7.tar.gz
-    __dcd gettext-0.19.7
-    __bld-common
+    __wget http://ftp.gnu.org/gnu/gettext/gettext-0.19.8.1.tar.gz
+    __dcd gettext-0.19.8.1
+    ./autogen.sh
+    ./configure --prefix=/usr
+    __mk
+    __mkinst
+}
+
+__gettext-git()
+{
+    __dep ""
+
+    __git-clone git://git.savannah.gnu.org/gettext.git
+    __cd gettext
+    ./autogen.sh
+    ./configure --prefix=/usr
+    __mk
+    __mkinst
 }
 
 __gettext()
 {
-    __gettext-0.19.7
+    __gettext-0.19.8.1
 }
 
 __gdbm-git()
@@ -1691,17 +1716,17 @@ __gobject-introspection()
     __bld-common --disable-static
 }
 
-__gmp-6.1.1()
+__gmp-6.1.2()
 {
     __dep ""
 
-    __wget http://ftp.gnu.org/gnu/gmp/gmp-6.1.1.tar.xz
-    __decord gmp-6.1.1
-    __cd gmp-6.1.1
+    __wget http://ftp.gnu.org/gnu/gmp/gmp-6.1.2.tar.xz
+    __decord gmp-6.1.2
+    __cd gmp-6.1.2
 
     case $(uname -m) in
-    x86_64) ./configure --prefix=/usr --enable-cxx --docdir=/usr/share/doc/gmp-6.1.1 --build=x86_64-unknown-linux-gnu ;;
-    i686)      ./configure --prefix=/usr --enable-cxx --docdir=/usr/share/doc/gmp-6.1.1  ;;
+    x86_64) ./configure --prefix=/usr --enable-cxx --docdir=/usr/share/doc/gmp-6.1.2 --build=x86_64-unknown-linux-gnu ;;
+    i686)      ./configure --prefix=/usr --enable-cxx --docdir=/usr/share/doc/gmp-6.1.2  ;;
     *) echo "未サポートのCPUです" && exit ;;
     esac
 
@@ -1713,7 +1738,7 @@ __gmp-6.1.1()
 
 __gmp()
 {
-    __gmp-6.1.1
+    __gmp-6.1.2
 }
 
 __gnome-icon-theme()
@@ -1791,18 +1816,18 @@ __gnutls.git()
     __bld-common --with-default-trust-store-file=/etc/ssl/ca-bundle.crt
 }
 
-__gnutls-3.4.9()
+__gnutls-3.5.8()
 {
     __dep nettle gmp libtasn1 p11-kit libidn libunbound zlib certificate-authority-certificates
 
-    __wget ftp://ftp.gnutls.org/gcrypt/gnutls/v3.4/gnutls-3.4.9.tar.xz
-    __dcd gnutls-3.4.9
+    __wget ftp://ftp.gnutls.org/gcrypt/gnutls/v3.5/gnutls-3.5.8.tar.xz
+    __dcd gnutls-3.5.8
     __bld-common --with-default-trust-store-file=/etc/ssl/ca-bundle.crt --enable-gtk-doc-thml=no
 }
 
 __gnutls()
 {
-    __gnutls-3.4.9
+    __gnutls-3.5.8
 }
 
 __grub-git()
@@ -1973,7 +1998,7 @@ __gtk+2()
     __git-clone git://git.gnome.org/gtk+ gtk+-2.24.git
     __cd gtk+-2.24.git
 
-    GTK2VERSION=2.24.29
+    GTK2VERSION=2.24.31
     make distclean
     git checkout master
     git pull
@@ -1992,10 +2017,11 @@ EOF
 
 __gtk+3()
 {
-    __dep at-spi2-atk gdk-pixbuf pango
+    __dep at-spi2-atk gdk-pixbuf pango wayland wayland-protocols
 
     __git-clone git://git.gnome.org/gtk+
-    __common gtk+
+    __cd gtk+
+    __bld-common --enable-broadway-backend --enable-x11-backend --enable-wayland-backend
     sudo gtk-query-immodules-3.0 --update-cache
     sudo glib-compile-schemas /usr/share/glib-2.0/schemas
 
@@ -3145,18 +3171,18 @@ __libtasn1-git()
     __bld-common-simple --enable-static=no
 }
 
-__libtasn1-4.6()
+__libtasn1-4.10()
 {
     __dep "libidn"
 
-    __wget http://ftp.gnu.org/gnu/libtasn1/libtasn1-4.6.tar.gz
-    __dcd libtasn1-4.6
+    __wget http://ftp.gnu.org/gnu/libtasn1/libtasn1-4.10.tar.gz
+    __dcd libtasn1-4.10
     __bld-common --enable-static=no
 }
 
 __libtasn1()
 {
-    __libtasn1-4.6
+    __libtasn1-4.10
 }
 
 __libtheora-1.1.1()
@@ -3589,18 +3615,18 @@ __lxml()
     __lxml-git
 }
 
-__m4-1.4.17()
+__m4-1.4.18()
 {
     __dep ""
 
-    __wget http://ftp.jaist.ac.jp/pub/GNU/m4/m4-1.4.17.tar.xz
-    __dcd m4-1.4.17
+    __wget http://ftp.jaist.ac.jp/pub/GNU/m4/m4-1.4.18.tar.xz
+    __dcd m4-1.4.18
     __bld-common
 }
 
 __m4()
 {
-    __m4-1.4.17
+    __m4-1.4.18
 }
 
 __maco-1.0.1()
@@ -3651,20 +3677,20 @@ __mpc()
     __mpc-1.0.3
 }
 
-__mpfr-3.1.4()
+__mpfr-3.1.5()
 {
     __dep gmp
 
-    __wget http://www.mpfr.org/mpfr-current/mpfr-3.1.4.tar.xz
-    __dcd mpfr-3.1.4
-    ./configure --prefix=/usr --enable-thread-safe --docdir=/usr/share/doc/mpfr-3.1.4
+    __wget http://www.mpfr.org/mpfr-current/mpfr-3.1.5.tar.xz
+    __dcd mpfr-3.1.5
+    ./configure --prefix=/usr --enable-thread-safe --docdir=/usr/share/doc/mpfr-3.1.5
     __mk
     __mkinst
 }
 
 __mpfr()
 {
-    __mpfr-3.1.4
+    __mpfr-3.1.5
 }
 
 __mplayer-1.1.1()
@@ -3760,19 +3786,19 @@ __neon()
     __neon-0.30.1
 }
 
-__nettle-3.1.1()
+__nettle-3.3()
 {
-    __dep "?"
+    __dep openssl
 
-    __wget https://ftp.gnu.org/gnu/nettle/nettle-3.1.1.tar.gz
-    __dcd nettle-3.1.1
+    __wget https://ftp.gnu.org/gnu/nettle/nettle-3.3.tar.gz
+    __dcd nettle-3.3
     __bld-common
     sudo chmod -v 755 /usr/lib/libhogweed.so.* /usr/lib/libnettle.so.*
 }
 
 __nettle()
 {
-    __nettle-3.1.1
+    __nettle-3.3
 }
 
 __nftables()
@@ -4244,13 +4270,13 @@ __openmpi()
 }
 
 
-__openssh-7.1p2()
+__openssh-7.4p1()
 {
     __dep openssl linux-pam
 
-    __wget http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-7.1p2.tar.gz
-    __decord openssh-7.1p2
-    __cd openssh-7.1p2
+    __wget http://ftp.openbsd.org/pub/OpenBSD/OpenSSH/portable/openssh-7.4p1.tar.gz
+    __decord openssh-7.4p1
+    __cd openssh-7.4p1
 
     sudo install -v -m700 -d /var/lib/sshd
     sudo chown -v root:sys /var/lib/sshd
@@ -4267,8 +4293,8 @@ __openssh-7.1p2()
 
     sudo install -v -m755 contrib/ssh-copy-id /usr/bin
     sudo install -v -m644 contrib/ssh-copy-id.1 /usr/share/man/man1
-    sudo install -v -m755 -d /usr/share/doc/openssh-7.1p2
-    sudo install -v -m644 INSTALL LICENCE OVERVIEW README* /usr/share/doc/openssh-7.1p2
+    sudo install -v -m755 -d /usr/share/doc/openssh-7.4p1
+    sudo install -v -m644 INSTALL LICENCE OVERVIEW README* /usr/share/doc/openssh-7.4p1
 }
 
 __openssh-git()
@@ -5618,9 +5644,9 @@ __tomoyo-tools-2.5.0()
     __dep "?"
 
     cd ${BASE_DIR}
-    wget -O $SRC_DIR/tomoyo-tools-2.5.0-20140601.tar.gz 'http://sourceforge.jp/frs/redir.php?m=jaist&f=/tomoyo/53357/tomoyo-tools-2.5.0-20140601.tar.gz'
+    wget -O $SRC_DIR/tomoyo-tools-2.5.0-20170102.tar.gz 'http://sourceforge.jp/frs/redir.php?m=jaist&f=/tomoyo/53357/tomoyo-tools-2.5.0-20170102.tar.gz'
 
-    __decord tomoyo-tools-2.5.0-20140601
+    __decord tomoyo-tools-2.5.0-20170102
     __cd tomoyo-tools
     __mk USRLIBDIR=/lib
     __mkinst USRLIBDIR=/lib install
@@ -5721,20 +5747,20 @@ __vala()
     __vala-0.28.0
 }
 
-__valgrind-3.11.0()
+__valgrind-3.12.0()
 {
     __dep boost llvm gdb openmp libxslt texlive
     
-    __wget http://valgrind.org/downloads/valgrind-3.11.0.tar.bz2
-    __dcd valgrind-3.11.0
+    __wget http://valgrind.org/downloads/valgrind-3.12.0.tar.bz2
+    __dcd valgrind-3.12.0
     sed -e 's#|3.\*#&|4.\*#' -e 's/-mt//g' -e 's/2\.20)/2.2[0-9])/' -i configure
     sed -i 's|/doc/valgrind||' docs/Makefile.in
-    __bld-common --datadir=/usr/share/doc/valgrind-3.11.0
+    __bld-common --datadir=/usr/share/doc/valgrind-3.12.0
 }
 
 __valgrind()
 {
-    __valgrind-3.11.0
+    __valgrind-3.12.0
 }
 
 __vte()
@@ -5793,6 +5819,19 @@ __wayland-git()
 __wayland()
 {
     __wayland-git
+}
+
+__wayland-protocols-git()
+{
+    __dep wayland
+
+    __git-clone git://anongit.freedesktop.org/wayland/wayland-protocols
+    __common wayland-protocols
+}
+
+__wayland-protocols()
+{
+    __wayland-protocols-git
 }
 
 __webkitgtk-2.10.7()
