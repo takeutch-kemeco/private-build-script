@@ -39,11 +39,11 @@ __attr-2.4.47()
 
     __wget http://download.savannah.gnu.org/releases/attr/attr-2.4.47.src.tar.gz
     __dcd attr-2.4.47
-    INSTALL_USER=root INSTALL_GROUP=root ./configure --prefix=/mnt/usr --disable-static
+    INSTALL_USER=root INSTALL_GROUP=root ./configure --prefix=/usr --disable-static
     __mk
     __mkinst install-dev install-lib
-    sudo chmod 755 /mnt/usr/lib/libattr.so.*
-    sudo ldconfig -r /mnt
+    sudo chmod 755 /usr/lib/libattr.so.*
+    sudo ldconfig 
 }
 
 __attr()
@@ -380,24 +380,25 @@ __cmake-git()
 {
     __git-clone git://cmake.org/cmake.git
     __cd cmake
-    ./bootstrap
-    __bld-common-simple --system-libs --mandir=/share/man --no-system-jsoncpp --docdir=/share/doc/cmake
+    ./bootstrap --prefix=/usr --system-libs --mandir=/share/man --no-system-jsoncpp --docdir=/share/doc/cmaek
 }
 
-__cmake-3.6.2()
+__cmake-3.7.2()
 {
     __dep curl libarchive
 
-    __wget http://www.cmake.org/files/v3.6/cmake-3.6.2.tar.gz
-    __dcd cmake-3.6.2
-    ./bootstrap --prefix=/usr --system-libs --mandir=/share/man --no-system-jsoncpp --docdir=/share/doc/cmake-3.6.2
+    __wget http://www.cmake.org/files/v3.7/cmake-3.7.2.tar.gz
+    __dcd cmake-3.7.2
+    sed -i '/CMAKE_USE_LIBUV 1/s/1/0/' CMakeLists.txt     &&
+    sed -i '/"lib64"/s/64//' Modules/GNUInstallDirs.cmake &&
+    ./bootstrap --prefix=/usr --system-libs --mandir=/share/man --no-system-jsoncpp --docdir=/share/doc/cmake-3.7.2
     __mk
     __mkinst
 }
 
 __cmake()
 {
-    __cmake-3.6.2
+    __cmake-3.7.2
 }
 
 __cogl()
@@ -2219,19 +2220,19 @@ __iana-etc()
     __iana-etc-2.30
 }
 
-__icu-56.1()
+__icu-58.2()
 {
     __dep llvm
 
-    __wget http://download.icu-project.org/files/icu4c/56.1/icu4c-56_1-src.tgz
-    __decord icu4c-56_1-src
+    __wget http://download.icu-project.org/files/icu4c/58.2/icu4c-58_2-src.tgz
+    __decord icu4c-58_2-src
     __cd icu/source
     __bld-common-simple
 }
 
 __icu()
 {
-    __icu-56.1
+    __icu-58.2
 }
 
 __imagemagick-6.9.2.5()
@@ -2417,16 +2418,14 @@ __mako()
     sudo python3 setup.py install --optimize=1
 }
 
-__mesalib-11.1.2()
+__mesalib-13.0.3()
 {
     __dep xorg-lib libdrm
 
-    __wget ftp://ftp.freedesktop.org/pub/mesa/11.1.2/mesa-11.1.2.tar.xz
-    __wget http://www.linuxfromscratch.org/patches/blfs/svn/mesa-11.1.2-llvm_3_7-1.patch
-    __wget http://www.linuxfromscratch.org/patches/blfs/svn/mesa-11.1.2-add_xdemos-1.patch
-    __dcd mesa-11.1.2
-    patch -Np1 -i $SRC_DIR/mesa-11.1.2-add_xdemos-1.patch
-    patch -Np1 -i $SRC_DIR/mesa-11.1.2-llvm_3_7-1.patch
+    __wget ftp://ftp.freedesktop.org/pub/mesa/13.0.3/mesa-13.0.3.tar.xz
+    __wget http://www.linuxfromscratch.org/patches/blfs/svn/mesa-13.0.3-add_xdemos-1.patch
+    __dcd mesa-13.0.3
+    patch -Np1 -i $SRC_DIR/mesa-13.0.3-add_xdemos-1.patch
     GLL_DRV="nouveau,swrast,i915"
     ./autogen.sh CFLAGS='-O4' CXXFLAGS='-O4'     \
 		 --prefix=/usr                   \
@@ -2447,7 +2446,21 @@ __mesalib-11.1.2()
 
 __mesalib()
 {
-    __mesalib-11.1.2
+    __mesalib-13.0.3
+}
+
+__krita-git()
+{
+    __dep ""
+
+    __git-clone https://github.com/KDE/krita.git
+    __cd krita
+
+    mkdir -v build
+    cd build
+    cmake -DCMAKE_INSTALL_PREFIX=/usr -DKDE_NO_DEBUG_OUTPUT=1 -DKRITA_ENABLE_BROKEN_TESTS=0 ..
+    __mk
+    __mkinst
 }
 
 __kmod()
@@ -2696,12 +2709,12 @@ __libcrypt()
     __libcrypt-1.6.2
 }
 
-__libdrm-2.4.66()
+__libdrm-2.4.74()
 {
     __dep ""
 
-    __wget http://dri.freedesktop.org/libdrm/libdrm-2.4.66.tar.bz2
-    __dcd libdrm-2.4.66
+    __wget http://dri.freedesktop.org/libdrm/libdrm-2.4.74.tar.bz2
+    __dcd libdrm-2.4.74
     sed -e "/pthread-stubs/d" -i configure.ac
     autoreconf -fiv
     __bld-common --enable-udev --disable-valgrind
@@ -2709,7 +2722,7 @@ __libdrm-2.4.66()
 
 __libdrm()
 {
-    __libdrm-2.4.66
+    __libdrm-2.4.74
 }
 
 __libdvdread-5.0.3()
@@ -4269,6 +4282,17 @@ __openmpi()
     __openmpi-1.10.0
 }
 
+__openscad-git()
+{
+    __dep "cmake flex"
+
+    __git-clone https://github.com/openscad/openscad.git
+
+    __cd openscad
+    cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr .
+     __mk
+    __mkinst
+}
 
 __openssh-7.4p1()
 {
@@ -5763,6 +5787,24 @@ __valgrind()
     __valgrind-3.12.0
 }
 
+__vc-git()
+{
+    __dep cmake
+
+    __git-clone https://github.com/VcDevel/Vc.git
+    __cd Vc
+    mkdir build
+    cd build
+    cmake -DCMAKE_INSTALL_PREFIX=/usr -DBUILD_TESTING=OFF ..
+    __mk
+    __mkinst
+}
+
+__vc()
+{
+    __vc-git
+}
+
 __vte()
 {
     __dep gtk-introspection
@@ -5834,13 +5876,12 @@ __wayland-protocols()
     __wayland-protocols-git
 }
 
-__webkitgtk-2.10.7()
+__webkitgtk-2.14.3()
 {
-    __dep cmake gst-plugin-base gtk+3 icu libgudev libsecret libsoup libwebp mesa ruby sqlite which gobject-introspection
+    __dep cairo cmake enchant gst-plugins-base gtk+2 gtk+3 icu libgudev libsecret libsoup libwebp mesa ruby sqlite which
 
-    __wget http://webkitgtk.org/releases/webkitgtk-2.10.7.tar.xz
-    __dcd webkitgtk-2.10.7
-    sed -e 's/“/\"/' -e 's/”/\"/' \ -i Source/WebCore/xml/XMLViewer.{css,js}
+    __wget http://webkitgtk.org/releases/webkitgtk-2.14.3.tar.xz
+    __dcd webkitgtk-2.14.3
     mkdir build
     cd build
     cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_SKIP_RPATH=ON \
@@ -5851,7 +5892,7 @@ __webkitgtk-2.10.7()
 
 __webkitgtk()
 {
-    __webkitgtk-2.10.7
+    __webkitgtk-2.14.3
 }
 
 __weston-git()
