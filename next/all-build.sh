@@ -2418,15 +2418,13 @@ __mako()
     sudo python3 setup.py install --optimize=1
 }
 
-__mesalib-13.0.3()
+__mesalib-18.1.6()
 {
     __dep xorg-lib libdrm
 
-    __wget ftp://ftp.freedesktop.org/pub/mesa/13.0.3/mesa-13.0.3.tar.xz
-    __wget http://www.linuxfromscratch.org/patches/blfs/svn/mesa-13.0.3-add_xdemos-1.patch
-    __dcd mesa-13.0.3
-    patch -Np1 -i $SRC_DIR/mesa-13.0.3-add_xdemos-1.patch
-    GLL_DRV="nouveau,swrast,i915"
+    __wget https://mesa.freedesktop.org/archive/mesa-18.1.6.tar.xz
+    __dcd mesa-18.1.6
+    GLL_DRV="nouveau,swrast,virgl,i915"
     ./autogen.sh CFLAGS='-O4' CXXFLAGS='-O4'     \
 		 --prefix=/usr                   \
 		 --sysconfdir=/etc               \
@@ -2437,7 +2435,7 @@ __mesalib-13.0.3()
 		 --enable-xa                     \
 		 --enable-gbm                    \
 		 --enable-glx-tls                \
-		 --with-egl-platforms="drm,x11"  \
+		 --with-egl-platforms="drm,x11,wayland"  \
 		 --with-gallium-drivers=$GLL_DRV
     unset GLL_DRV
     __mk
@@ -2446,7 +2444,7 @@ __mesalib-13.0.3()
 
 __mesalib()
 {
-    __mesalib-13.0.3
+    __mesalib-18.1.6
 }
 
 __krita-git()
@@ -2458,9 +2456,14 @@ __krita-git()
 
     mkdir -v build
     cd build
-    cmake -DCMAKE_INSTALL_PREFIX=/usr -DKDE_NO_DEBUG_OUTPUT=1 -DKRITA_ENABLE_BROKEN_TESTS=0 ..
+    cmake -DCMAKE_INSTALL_PREFIX=/usr ..
     __mk
     __mkinst
+}
+
+__krita()
+{
+    __krita-git
 }
 
 __kmod()
@@ -2709,20 +2712,22 @@ __libcrypt()
     __libcrypt-1.6.2
 }
 
-__libdrm-2.4.74()
+__libdrm-2.4.93()
 {
-    __dep ""
+    __dep meson
 
-    __wget http://dri.freedesktop.org/libdrm/libdrm-2.4.74.tar.bz2
-    __dcd libdrm-2.4.74
-    sed -e "/pthread-stubs/d" -i configure.ac
-    autoreconf -fiv
-    __bld-common --enable-udev --disable-valgrind
+    __wget http://dri.freedesktop.org/libdrm/libdrm-2.4.93.tar.bz2
+    __dcd libdrm-2.4.93
+    mkdir build
+    cd build
+    meson --prefix=/usr -Dudev=true
+    ninja
+    sudo ninja install
 }
 
 __libdrm()
 {
-    __libdrm-2.4.74
+    __libdrm-2.4.93
 }
 
 __libdvdread-5.0.3()
@@ -4827,29 +4832,103 @@ __python-modules()
     __lxml
 }
 
-__qemu-2.3.0-rc4()
+__qemu-3.0.0()
 {
     __dep glib python27 sdl xorg alsa check curl mesalib
 
-    __wget http://wiki.qemu-project.org/download/qemu-2.3.0-rc4.tar.bz2
-    __dcd qemu-2.3.0-rc4
-    sed -i '/resource/ i#include <sys/xattr.h>' fsdev/virtfs-proxy-helper.c
+    __wget https://download.qemu.org/qemu-3.0.0.tar.xz
+    __dcd qemu-3.0.0
     ./configure --prefix=/usr \
         --sysconfdir=/etc \
-        --docdir=/usr/share/doc/qemu-2.3.0-rc4 \
+        --docdir=/usr/share/doc/qemu-3.0.0 \
 	--audio-drv-list="alsa sdl" \
         --target-list="x86_64-softmmu arm-softmmu x86_64-linux-user arm-linux-user armeb-linux-user" \
+	--enable-tools \
+	--enable-kvm \
+	--enable-libusb \
 	--disable-xen \
 	--disable-werror \
-	--enable-sdl
+	--enable-sdl --with-sdlabi=2.0 \
+	--enable-gtk --with-gtkabi=3.0 \
+	--enable-opengl --enable-virglrenderer \
+	--enable-spice \
+
     __mk
     __mkinst
-    [ -e  /usr/lib/libcacard.so ] && chmod -v 755 /usr/lib/libcacard.so
+}
+
+__qemu-2.10.2()
+{
+    __dep glib python27 sdl xorg alsa check curl mesalib
+
+    __wget https://download.qemu.org/qemu-2.10.2.tar.xz
+    __dcd qemu-2.10.2
+    ./configure --prefix=/usr \
+        --sysconfdir=/etc \
+        --docdir=/usr/share/doc/qemu-3.0.0 \
+	--audio-drv-list="alsa sdl" \
+        --target-list="x86_64-softmmu arm-softmmu x86_64-linux-user arm-linux-user armeb-linux-user" \
+	--enable-kvm \
+	--enable-libusb \
+	--disable-xen \
+	--disable-werror \
+	--enable-sdl --with-sdlabi=2.0 \
+	--enable-gtk --with-gtkabi=3.0 \
+	--enable-opengl --enable-virglrenderer \
+
+    __mk
+    __mkinst
+}
+
+__qemu-2.4.1()
+{
+    __dep glib python27 sdl xorg alsa check curl mesalib
+
+    __wget https://download.qemu.org/qemu-2.4.1.tar.xz
+    __dcd qemu-2.4.1
+    ./configure --prefix=/usr \
+        --sysconfdir=/etc \
+        --docdir=/usr/share/doc/qemu-3.0.0 \
+	--audio-drv-list="alsa sdl" \
+        --target-list="x86_64-softmmu arm-softmmu x86_64-linux-user arm-linux-user armeb-linux-user" \
+	--enable-kvm \
+	--enable-libusb \
+	--disable-xen \
+	--disable-werror \
+	--enable-sdl --with-sdlabi=2.0 \
+	--enable-gtk --with-gtkabi=3.0 \
+	--enable-opengl \
+
+    __mk
+    __mkinst
+}
+
+__qemu-2.3.1()
+{
+    __dep glib python27 sdl xorg alsa check curl mesalib
+
+    __wget https://download.qemu.org/qemu-2.3.1.tar.xz
+    __dcd qemu-2.3.1
+    ./configure --prefix=/usr \
+        --sysconfdir=/etc \
+        --docdir=/usr/share/doc/qemu-3.0.0 \
+	--audio-drv-list="alsa sdl" \
+        --target-list="x86_64-softmmu arm-softmmu x86_64-linux-user arm-linux-user armeb-linux-user" \
+	--enable-kvm \
+	--enable-libusb \
+	--disable-xen \
+	--disable-werror \
+	--enable-sdl --with-sdlabi=2.0 \
+	--enable-gtk --with-gtkabi=3.0 \
+	--enable-opengl \
+
+    __mk
+    __mkinst
 }
 
 __qemu()
 {
-    __qemu-2.3.0-rc4
+    __qemu-3.0.0
 }
 
 __raptor-2.0.15()
