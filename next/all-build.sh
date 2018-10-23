@@ -357,6 +357,18 @@ __certificate-authority-certificates()
     sudo c_rehash
 }
 
+__cgal-git()
+{
+    __git-clone https://github.com/CGAL/cgal.git
+    __cd cgal
+    __bld-common
+}
+
+__cgal()
+{
+    __cgal-git
+}
+
 __clucene-2.3.3.4()
 {
     __dep cmake
@@ -4299,6 +4311,11 @@ __openscad-git()
     __mkinst
 }
 
+__openscad()
+{
+    __openscad-git
+}
+
 __openssh-7.4p1()
 {
     __dep openssl linux-pam
@@ -5386,6 +5403,20 @@ __soundtouch-git()
 __soundtouch()
 {
     __soundtouch-git
+}
+
+__source-code-pro-git()
+{
+    __dep "makeotf"
+
+    __git-clone https://github.com/adobe-fonts/source-code-pro.git
+    __cd source-code-pro
+    ./build.sh
+}
+
+__source-code-pro()
+{
+    __source-code-pro-git
 }
 
 __sudo()
